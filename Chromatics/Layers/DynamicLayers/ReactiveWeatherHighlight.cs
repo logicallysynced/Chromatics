@@ -81,6 +81,12 @@ namespace Chromatics.Layers.DynamicLayers
             {
                 layergroup = _layergroups[layer.layerID].FirstOrDefault();
                 layergroup.ZIndex = layer.zindex;
+
+                if (layer.requestUpdate)
+                {
+                    layergroup.RemoveLeds(layergroup);
+                    layergroup.AddLeds(ledArray);
+                }
             }
             else
             {
@@ -96,16 +102,6 @@ namespace Chromatics.Layers.DynamicLayers
                 layergroup.Detach();
             }
 
-            if (layer.requestUpdate)
-            {
-                foreach (var led in layergroup)
-                {
-                    layergroup.RemoveLed(led);
-                }
-
-                layergroup.AddLeds(ledArray);
-            }
-
             if (!layer.Enabled)
             {
                 layergroup.Detach();
@@ -119,69 +115,69 @@ namespace Chromatics.Layers.DynamicLayers
                 if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
                 {
                     var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
-                    if (getCurrentPlayer.Entity == null) return;
-
-                    var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
-
-                    // Single-per-tick snapshot of game state (InInstance + current weather + name).
-                    var gameState = _memoryHandler.Reader.GetGameState();
-                    bool inInstance = gameState.InInstance;
-
-                    ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
-
-                    var chatLogEntries = readResult.ChatLogItems;
-
-                    if (readResult.PreviousArrayIndex != _previousArrayIndex)
+                    if (getCurrentPlayer.Entity != null)
                     {
-                        if (chatLogEntries.Count > 0)
+                        var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
+
+                        // Single-per-tick snapshot of game state (InInstance + current weather + name).
+                        var gameState = _memoryHandler.Reader.GetGameState();
+                        bool inInstance = gameState.InInstance;
+
+                        ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
+
+                        var chatLogEntries = readResult.ChatLogItems;
+
+                        if (readResult.PreviousArrayIndex != _previousArrayIndex)
                         {
-                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)", RegexOptions.IgnoreCase))
+                            if (chatLogEntries.Count > 0)
                             {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
+                                if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)", RegexOptions.IgnoreCase))
+                                {
+                                    dutyComplete = true;
+                                    raidEffectsRunning = false;
+                                    bossNames = null;
+                                }
+                                else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
+                                {
+                                    dutyComplete = false;
+                                }
+                                else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\.", RegexOptions.IgnoreCase))
+                                {
+                                    dutyComplete = true;
+                                    raidEffectsRunning = false;
+                                    bossNames = null;
+                                }
+                                else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
+                                {
+                                    dutyComplete = true;
+                                    raidEffectsRunning = false;
+                                    bossNames = null;
+                                }
+                                else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
+                                {
+                                    dutyComplete = true;
+                                    raidEffectsRunning = false;
+                                    bossNames = null;
+                                }
                             }
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = false;
-                            }
-                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                            }
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                            }
-                            else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                            }
+
+                            _previousArrayIndex = readResult.PreviousArrayIndex;
+                            _previousOffset = readResult.PreviousOffset;
                         }
 
-                        _previousArrayIndex = readResult.PreviousArrayIndex;
-                        _previousOffset = readResult.PreviousOffset;
-                    }
-
-                    if (currentZone != "???" && currentZone != "")
-                    {
-                        var currentWeather = gameState.CurrentWeatherName;
-                        if (string.IsNullOrEmpty(currentWeather)) return;
-
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != inInstance || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
+                        if (currentZone != "???" && currentZone != "")
                         {
-                            SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, inInstance);
+                            var currentWeather = gameState.CurrentWeatherName;
+                            if (!string.IsNullOrEmpty(currentWeather) && currentWeather != "CutScene" &&
+                                (model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != inInstance || model._dutyComplete != dutyComplete))
+                            {
+                                SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, inInstance);
 
-                            model._currentWeather = currentWeather;
-                            model._currentZone = currentZone;
-                            model._inInstance = inInstance;
-                            model._dutyComplete = dutyComplete;
+                                model._currentWeather = currentWeather;
+                                model._currentZone = currentZone;
+                                model._inInstance = inInstance;
+                                model._dutyComplete = dutyComplete;
+                            }
                         }
                     }
                 }
@@ -275,7 +271,15 @@ namespace Chromatics.Layers.DynamicLayers
                         {
                             color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5KeyHighlight.Color);
                             raidEffectsRunning = true;
-                            bossNames = ["Cloud of Darkness"];
+                            bossNames = ["Dancing Green"];
+                        }
+                        break;
+                    case "Rebel Ring":
+                        if (effectSettings.effect_raideffects)
+                        {
+                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6KeyHighlight.Color);
+                            raidEffectsRunning = true;
+                            bossNames = ["Sugar Riot"];
                         }
                         break;
                 }
