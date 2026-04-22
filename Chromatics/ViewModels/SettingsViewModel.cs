@@ -47,6 +47,7 @@ namespace Chromatics.ViewModels
             _checkUpdates = s.checkupdates;
             _betaChannel = s.betaChannel;
             _alwaysRunAsAdmin = s.alwaysRunAsAdmin;
+            _closeWithGame = s.closeWithGame;
             _globalBrightness = s.globalbrightness;
 
             foreach (var t in Enum.GetValues(typeof(Theme)).Cast<Theme>())
@@ -308,6 +309,21 @@ namespace Chromatics.ViewModels
                 {
                     var s = AppSettings.GetSettings();
                     s.alwaysRunAsAdmin = value;
+                    AppSettings.SaveSettings(s);
+                }
+            }
+        }
+
+        private bool _closeWithGame;
+        public bool CloseWithGame
+        {
+            get => _closeWithGame;
+            set
+            {
+                if (SetProperty(ref _closeWithGame, value))
+                {
+                    var s = AppSettings.GetSettings();
+                    s.closeWithGame = value;
                     AppSettings.SaveSettings(s);
                 }
             }

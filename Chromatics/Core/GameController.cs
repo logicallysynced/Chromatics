@@ -56,6 +56,7 @@ namespace Chromatics.Core
         // memory-handler teardown. Without this, GameLoop (thread pool) and Exit()
         // (UI thread) can race on StopGameLoop and hit ObjectDisposedException.
         private static readonly System.Threading.Lock _shutdownLock = new();
+        public static System.Action OnGameExited { get; set; }
         public static void Setup()
         {
             if (gameSetup) return;
@@ -250,6 +251,12 @@ namespace Chromatics.Core
                     _onTitle = false;
 
                     Logger.WriteConsole(LoggerTypes.FFXIV, @"Lost connection to FFXIV. Will attempt to reconnect.");
+
+                    if (AppSettings.GetSettings().closeWithGame)
+                    {
+                        Logger.WriteConsole(LoggerTypes.FFXIV, "Closing Chromatics (Close with Game is enabled).");
+                        OnGameExited?.Invoke();
+                    }
 
                     if (!_isShuttingDown)
                         StopGameLoop(true);

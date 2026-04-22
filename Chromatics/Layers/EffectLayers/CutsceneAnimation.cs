@@ -118,16 +118,17 @@ namespace Chromatics.Layers
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
             {
-                var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
+                var reader = _memoryHandler.Reader;
+                var getCurrentPlayer = reader.GetCurrentPlayer();
                 if (getCurrentPlayer.Entity == null) return;
 
-                // InInstance = ContentsFinderQueueState >= 4 (Accepted / InContent). See Sharlayan GameStateResult.
-                var gameState = _memoryHandler.Reader.GetGameState();
-                bool inInstance = gameState.InInstance;
+                var gameStateResult = reader.GetGameState();
+                bool inCutscene = gameStateResult.WatchingCutscene && !gameStateResult.IsTeleporting;
+                bool inInstance = gameStateResult.InInstance;
 
-                if (model._inCutscene != getCurrentPlayer.Entity.InCutscene || model._inInstance != inInstance || model.wasDisabled || layer.requestUpdate)
+                if (model._inCutscene != inCutscene || model._inInstance != inInstance || model.wasDisabled || layer.requestUpdate)
                 {
-                    if (getCurrentPlayer.Entity.InCutscene && !inInstance)
+                    if (inCutscene && !inInstance)
                     {
                         if (runningEffects.Contains(layergroup))
                         {
@@ -155,7 +156,7 @@ namespace Chromatics.Layers
                         }
                     }
 
-                    model._inCutscene = getCurrentPlayer.Entity.InCutscene;
+                    model._inCutscene = inCutscene;
                     model._inInstance = inInstance;
                 }
 

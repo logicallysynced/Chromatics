@@ -32,6 +32,9 @@
                     <CheckBox Content="{loc:Tr Key='Check for updates on startup.'}"
                               IsChecked="{Binding CheckUpdates, Mode=TwoWay}"
                               ToolTip.Tip="{loc:Tr Key='Default: Enabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Close Chromatics when FFXIV closes.'}"
+                              IsChecked="{Binding CloseWithGame, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
                 </StackPanel>
             </HeaderedContentControl>
 

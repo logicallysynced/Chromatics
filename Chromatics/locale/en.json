@@ -690,6 +690,7 @@
     "Minimise to system tray on close.":  "Minimise to system tray on close.",
     "Start Chromatics minimised to the tray.":  "Start Chromatics minimised to the tray.",
     "Check for updates on startup.":  "Check for updates on startup.",
+    "Close Chromatics when FFXIV closes.":  "Close Chromatics when FFXIV closes.",
     "Default: Disabled":  "Default: Disabled",
     "Default: Enabled":  "Default: Enabled",
     "Appearance \u0026 Language":  "Appearance \u0026 Language",
