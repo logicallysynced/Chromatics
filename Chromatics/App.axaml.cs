@@ -48,6 +48,15 @@ namespace Chromatics
             {
                 desktop.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
+                GameController.OnGameExited = () =>
+                {
+                    Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+                    {
+                        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime d)
+                            d.Shutdown();
+                    });
+                };
+
                 var settings = AppSettings.GetSettings();
                 if (settings.firstrun)
                 {

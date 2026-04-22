@@ -726,5 +726,6 @@
   "Wooting": "Wooting",
   "Novation": "Novation",
   "OpenRGB": "OpenRGB",
-  "Copy All": "全部复制"
+  "Copy All": "全部复制",
+  "Close Chromatics when FFXIV closes.": "当 FFXIV 关闭时关闭 Chromatics。"
 }
