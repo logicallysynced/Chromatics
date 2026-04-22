@@ -252,7 +252,7 @@ namespace Chromatics.Models
         public ColorMapping WeatherFairSkiesBase = new("Fair Skies (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherFairSkiesHighlight = new("Fair Skies (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
         public ColorMapping WeatherCloudsBase = new("Clouds (Base)", PaletteTypes.ReactiveWeather, Color.LightSlateGray);
-        public ColorMapping WeatherCloudsHighlight = new("Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x162CFB));
+        public ColorMapping WeatherCloudsHighlight = new("Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherFogBase = new("Fog (Base)", PaletteTypes.ReactiveWeather, Color.LightSlateGray);
         public ColorMapping WeatherFogHighlight = new("Fog (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkBlue);
         public ColorMapping WeatherWindBase = new("Wind (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
@@ -591,6 +591,12 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectM6Highlight2 = new("Arcadion M6 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x0064FF));
         public ColorMapping RaidEffectM6Highlight3 = new("Arcadion M6 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFC800));
         public ColorMapping RaidEffectM6Highlight4 = new("Arcadion M6 (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x2BFF00));
+
+        public ColorMapping RaidEffectM7Base = new("Arcadion M7 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM7KeyHighlight = new("Arcadion M7 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x1300FF));
+        public ColorMapping RaidEffectM7Highlight1 = new("Arcadion M7 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
+        public ColorMapping RaidEffectM7Highlight2 = new("Arcadion M7 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFA308));
+        public ColorMapping RaidEffectM7Highlight3 = new("Arcadion M7 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x6900FF));
 
         public ColorMapping RaidEffectCoDBase = new("The Cloud of Darkness (Base)", PaletteTypes.RaidEffects, Color.MediumPurple);
         public ColorMapping RaidEffectCoDKeyHighlight = new("The Cloud of Darkness (Key Highlights)", PaletteTypes.RaidEffects, Color.Purple);

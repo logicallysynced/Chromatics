@@ -762,7 +762,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     // ── Code snippet generator ──────────────────────────────────────────
 
-    public static string[] CodeModes { get; } = ["Raid Effect", "Reactive Weather"];
+    public static string[] CodeModes { get; } = ["Raid Effect", "Raid Effect (Phase Transition)", "Reactive Weather"];
     [ObservableProperty] private string _selectedCodeMode = "Raid Effect";
     [ObservableProperty] private string _generatedCode = "";
 
@@ -821,7 +821,6 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     private string BuildCodeSnippet(EffectEntry effect)
     {
-        var isRaid = SelectedCodeMode == "Raid Effect";
         var t = "    ";
 
         var effectName = effect.Name;
@@ -1035,37 +1034,80 @@ public partial class MainViewModel : ObservableObject, IDisposable
             _ => $"// Select an effect to generate code",
         };
 
-        return WrapInContext(inner, isRaid, t);
+        return WrapInContext(inner, SelectedCodeMode, t);
     }
 
-    private static string WrapInContext(string inner, bool isRaid, string t)
+    // Wraps the per-effect inner snippet with the appropriate switch-case scaffolding.
+    //
+    // Raid Effect templates target the current standalone RaidEffectProcessor pattern:
+    // qualified `RaidEffectState.raidEffectsRunning`, init guard inside the case,
+    // `return RaidEffectState.raidEffectsRunning;` as the fall-through return so the
+    // overlay stays attached on subsequent ticks without rebuilding.
+    //
+    // The Phase Transition variant additionally rebuilds on currentBgmId change and
+    // wraps the build code in a BGM switch with a single placeholder phase branch
+    // that the user is expected to customize for their fight's phase-2 visual.
+    private static string WrapInContext(string inner, string mode, string t)
     {
         var lines = inner.Split('\n');
-        if (isRaid)
+
+        if (mode == "Raid Effect")
         {
-            var indented = string.Join("\n", lines.Select(l => l.Length > 0 ? t + t + t + l : ""));
+            var indented = string.Join("\n", lines.Select(l => l.Length > 0 ? t + t + t + t + l : ""));
             return
                 $"{t}{t}case \"<ZoneName>\":\n" +
-                $"{t}{t}{t}if (effectSettings.effect_raideffects && !raidEffectsRunning)\n" +
+                $"{t}{t}{t}if (!RaidEffectState.raidEffectsRunning)\n" +
                 $"{t}{t}{t}{{\n" +
                 indented + "\n\n" +
-                $"{t}{t}{t}{t}raidEffectsRunning = true;\n\n" +
+                $"{t}{t}{t}{t}RaidEffectState.raidEffectsRunning = true;\n" +
                 $"{t}{t}{t}{t}return true;\n" +
                 $"{t}{t}{t}}}\n" +
-                $"{t}{t}{t}break;";
+                $"{t}{t}{t}return RaidEffectState.raidEffectsRunning;";
         }
-        else
+
+        if (mode == "Raid Effect (Phase Transition)")
         {
-            var indented = string.Join("\n", lines.Select(l => l.Length > 0 ? t + t + t + t + t + l : ""));
+            // Inner block sits 6 levels deep: case → if → switch → case/default → block.
+            var indented = string.Join("\n", lines.Select(l => l.Length > 0 ? t + t + t + t + t + t + l : ""));
             return
-                $"{t}{t}{t}case \"<WeatherName>\":\n" +
-                $"{t}{t}{t}{t}if (reactiveWeatherEffects && effectSettings.weather_<name>_animation)\n" +
+                $"{t}{t}case \"<ZoneName>\":\n" +
+                $"{t}{t}{t}// Rebuild on first activation OR when BGM transitions to a new phase.\n" +
+                $"{t}{t}{t}if (!RaidEffectState.raidEffectsRunning ||\n" +
+                $"{t}{t}{t}    currentBgmId != RaidEffectState.currentRaidBgmId)\n" +
+                $"{t}{t}{t}{{\n" +
+                $"{t}{t}{t}{t}switch (currentBgmId)\n" +
                 $"{t}{t}{t}{t}{{\n" +
-                indented + "\n\n" +
-                $"{t}{t}{t}{t}{t}return true;\n" +
-                $"{t}{t}{t}{t}}}\n" +
-                $"{t}{t}{t}{t}break;";
+                $"{t}{t}{t}{t}{t}case 0u: // TODO: replace 0u with the real phase BGM id\n" +
+                $"{t}{t}{t}{t}{t}{{\n" +
+                $"{t}{t}{t}{t}{t}{t}// TODO: customize this branch for the phase visual.\n" +
+                $"{t}{t}{t}{t}{t}{t}// Placeholder duplicates the default below — swap the\n" +
+                $"{t}{t}{t}{t}{t}{t}// decorator type, BPM, palette indices, etc. as needed.\n" +
+                indented + "\n" +
+                $"{t}{t}{t}{t}{t}{t}break;\n" +
+                $"{t}{t}{t}{t}{t}}}\n" +
+                $"{t}{t}{t}{t}{t}default:\n" +
+                $"{t}{t}{t}{t}{t}{{\n" +
+                indented + "\n" +
+                $"{t}{t}{t}{t}{t}{t}break;\n" +
+                $"{t}{t}{t}{t}{t}}}\n" +
+                $"{t}{t}{t}{t}}}\n\n" +
+                $"{t}{t}{t}{t}RaidEffectState.raidEffectsRunning = true;\n" +
+                $"{t}{t}{t}{t}RaidEffectState.currentRaidBgmId = currentBgmId;\n" +
+                $"{t}{t}{t}{t}return true;\n" +
+                $"{t}{t}{t}}}\n" +
+                $"{t}{t}{t}return RaidEffectState.raidEffectsRunning;";
         }
+
+        // Reactive Weather (unchanged).
+        var indentedW = string.Join("\n", lines.Select(l => l.Length > 0 ? t + t + t + t + t + l : ""));
+        return
+            $"{t}{t}{t}case \"<WeatherName>\":\n" +
+            $"{t}{t}{t}{t}if (reactiveWeatherEffects && effectSettings.weather_<name>_animation)\n" +
+            $"{t}{t}{t}{t}{{\n" +
+            indentedW + "\n\n" +
+            $"{t}{t}{t}{t}{t}return true;\n" +
+            $"{t}{t}{t}{t}}}\n" +
+            $"{t}{t}{t}{t}break;";
     }
 
     // ── Effect factory ───────────────────────────────────────────────────
