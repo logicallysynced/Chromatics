@@ -88,7 +88,12 @@ namespace Chromatics.Layers
             // before a phase transition. Black out only the base-layer overlay;
             // highlight and other layers continue unaffected. Reset raidEffectsRunning
             // so the decorator rebuilds cleanly when the music returns.
-            if (currentBgmId == RaidEffectState.SilenceBgmId && RaidEffectState.raidEffectsRunning)
+            // Gate on lastSeenBgmId != 0 so this only fires AFTER real raid music
+            // has actually played — otherwise zone-entry / loading-screen silence
+            // would trigger blackout immediately and stay stuck in a thrash loop.
+            if (currentBgmId == RaidEffectState.SilenceBgmId
+                && RaidEffectState.raidEffectsRunning
+                && RaidEffectState.lastSeenBgmId != 0)
             {
                 if (_gradientEffects.TryGetValue(layer.layerID, out var silenceGrads))
                 {
@@ -354,6 +359,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Demolition Site":
+                case "Containment Bay P1T6":
                     if (!RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
@@ -366,7 +372,7 @@ namespace Chromatics.Layers
                     }
                     return RaidEffectState.raidEffectsRunning;
 
-                // BGM-based phase switching demo. Test zones (Mist / Limsa) let
+                // BGM-based phase switching demo. Test zones (Containment Bay S1T7) let
                 // the effect fire in open-world for visual development.
                 case "Hunter's Ring":
                 case "Hunting Ground":
@@ -384,7 +390,7 @@ namespace Chromatics.Layers
 
                         switch (currentBgmId)
                         {
-                            case 186u: // TODO: replace with real phase-2 BGM ID
+                            case 366: // TODO: replace with real phase-2 BGM ID
                             {
                                 var chase = new BPMChaseDecorator(layer, 178, 2, colors, surface, baseCol);
                                 SetEffect(chase, layer, runningEffects);

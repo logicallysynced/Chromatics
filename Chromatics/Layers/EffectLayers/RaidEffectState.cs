@@ -23,6 +23,11 @@ namespace Chromatics.Layers
         // current BGM so opt-in raid cases can rebuild their decorator on
         // phase transitions.
         public static uint currentRaidBgmId = 0;
+        // Most recent non-silence BGM observed during this duty. Used to
+        // distinguish "silence after real music played" (a dramatic pause —
+        // blackout) from "silence on zone entry / loading screen" (no music
+        // yet — keep the effect running). Reset when leaving the instance.
+        public static uint lastSeenBgmId = 0;
 
         // Per-tick state update. Called by RaidEffectProcessor before any
         // raid case fires so duty-end and out-of-instance resets stay in
@@ -41,6 +46,12 @@ namespace Chromatics.Layers
                 raidEffectsRunning = false;
                 currentRaidBgmId = 0;
                 dutyComplete = false;
+                lastSeenBgmId = 0;
+            }
+
+            if (currentBgmId != SilenceBgmId && currentBgmId != 0)
+            {
+                lastSeenBgmId = currentBgmId;
             }
         }
     }
