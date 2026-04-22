@@ -34,12 +34,27 @@ namespace Chromatics.Layers
         // transition by RaidEffectProcessor, which then resets raidEffectsRunning
         // exactly once to trigger a clean decorator rebuild.
         public static bool silenced = false;
+        // Last zone name observed. Zone changes reset raid state so a lingering
+        // lastSeenBgmId / raidEffectsRunning from a previous zone (e.g. the Mist
+        // demo) can't make the silence blackout fire on the new zone's loading
+        // screen before its own music has started.
+        public static string lastZoneName = string.Empty;
 
         // Per-tick state update. Called by RaidEffectProcessor before any
         // raid case fires so duty-end and out-of-instance resets stay in
         // one place.
-        public static void UpdateState(bool inInstance, uint currentBgmId)
+        public static void UpdateState(bool inInstance, uint currentBgmId, string currentZone)
         {
+            if (!string.IsNullOrEmpty(currentZone) && currentZone != "???" && currentZone != lastZoneName)
+            {
+                raidEffectsRunning = false;
+                currentRaidBgmId = 0;
+                dutyComplete = false;
+                lastSeenBgmId = 0;
+                silenced = false;
+                lastZoneName = currentZone;
+            }
+
             if (currentBgmId == VictoryBgmId && raidEffectsRunning)
             {
                 dutyComplete = true;
@@ -54,6 +69,7 @@ namespace Chromatics.Layers
                 dutyComplete = false;
                 lastSeenBgmId = 0;
                 silenced = false;
+                lastZoneName = string.Empty;
             }
 
             if (currentBgmId != SilenceBgmId && currentBgmId != 0)

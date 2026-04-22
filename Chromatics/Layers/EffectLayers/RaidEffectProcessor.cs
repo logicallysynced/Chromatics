@@ -8,6 +8,7 @@ using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Chromatics.Layers
@@ -30,6 +31,17 @@ namespace Chromatics.Layers
         private readonly Dictionary<int, HashSet<LinearGradient>> _gradientEffects = new();
         private bool _disposed;
 
+        // TEMP: state-change-throttled debug log so we can see why the silence
+        // blackout is firing on instance entry. Remove once root cause is fixed.
+        private readonly Dictionary<int, string> _lastDbg = new();
+        private void Dbg(int layerID, string tag, string zone, uint bgm)
+        {
+            var s = $"{tag} zone='{zone}' bgm={bgm} last={RaidEffectState.lastSeenBgmId} run={RaidEffectState.raidEffectsRunning} sil={RaidEffectState.silenced} done={RaidEffectState.dutyComplete}";
+            if (_lastDbg.TryGetValue(layerID, out var prev) && prev == s) return;
+            _lastDbg[layerID] = s;
+            Debug.WriteLine($"[RaidEffect:L{layerID}] {s}");
+        }
+
         // Higher than user layer ZIndexes (typically 1-10) so the raid
         // effect visibly overrides them. Lower than 1000 (CutsceneAnimation)
         // so cutscenes still take priority over gameplay raid effects.
@@ -47,6 +59,7 @@ namespace Chromatics.Layers
 
             if (!layer.Enabled || !effectSettings.effect_raideffects)
             {
+                Dbg(layer.layerID, "DETACH:disabled", "?", 0);
                 DetachOverlay(layer.layerID);
                 return;
             }
@@ -54,6 +67,7 @@ namespace Chromatics.Layers
             var handler = GameController.GetGameData();
             if (handler?.Reader == null || !handler.Reader.CanGetActors())
             {
+                Dbg(layer.layerID, "DETACH:no-reader", "?", 0);
                 DetachOverlay(layer.layerID);
                 return;
             }
@@ -61,6 +75,7 @@ namespace Chromatics.Layers
             var player = handler.Reader.GetCurrentPlayer();
             if (player.Entity == null)
             {
+                Dbg(layer.layerID, "DETACH:no-player", "?", 0);
                 DetachOverlay(layer.layerID);
                 return;
             }
@@ -72,10 +87,13 @@ namespace Chromatics.Layers
 
             // Single per-tick state update. Multiple BaseLayers (one per
             // device) call this same method but the result is idempotent.
-            RaidEffectState.UpdateState(inInstance, currentBgmId);
+            RaidEffectState.UpdateState(inInstance, currentBgmId, zone);
+
+            Dbg(layer.layerID, $"TICK inInstance={inInstance}", zone, currentBgmId);
 
             if (RaidEffectState.dutyComplete || string.IsNullOrEmpty(zone) || zone == "???")
             {
+                Dbg(layer.layerID, "DETACH:duty-or-zone", zone, currentBgmId);
                 DetachOverlay(layer.layerID);
                 return;
             }
@@ -96,6 +114,7 @@ namespace Chromatics.Layers
                 && RaidEffectState.raidEffectsRunning
                 && RaidEffectState.lastSeenBgmId != 0)
             {
+                Dbg(layer.layerID, "BLACKOUT", zone, currentBgmId);
                 if (!RaidEffectState.silenced)
                 {
                     if (_gradientEffects.TryGetValue(layer.layerID, out var silenceGrads))
@@ -116,6 +135,7 @@ namespace Chromatics.Layers
             // and re-init the decorator with the new BGM.
             if (RaidEffectState.silenced && currentBgmId != RaidEffectState.SilenceBgmId)
             {
+                Dbg(layer.layerID, "EXIT-SILENCE", zone, currentBgmId);
                 RaidEffectState.silenced = false;
                 RaidEffectState.raidEffectsRunning = false;
             }
@@ -125,15 +145,41 @@ namespace Chromatics.Layers
             bool applied = ApplyRaidEffect(overlay, zone, palette, currentBgmId, runningEffects, layer);
             if (applied)
             {
-                overlay.Attach(surface);
+                Dbg(layer.layerID, "APPLY:suppress-base", zone, currentBgmId);
+                // Decorators write LED colors directly via Update() and detach their
+                // host group inside OnAttached so the brush doesn't overpaint them.
+                // For that to be visible, NO other group can be painting these LEDs.
+                // The user's base layer group (Reactive Weather etc.) sits at a lower
+                // ZIndex and paints these same LEDs every tick — its brush would win
+                // the surface composite and hide the decorator. Detach it so the
+                // decorator's writes survive. The base processor re-attaches it next
+                // tick and we detach again; net effect per-frame is "base suppressed,
+                // decorator visible". When the raid effect ends (zone change, duty
+                // complete), DetachOverlay below stops detaching and the base layer
+                // re-attaches normally.
+                SuppressBaseLayerGroups(layer.layerID);
             }
             else
             {
+                Dbg(layer.layerID, "APPLY:no-match-detach", zone, currentBgmId);
                 DetachOverlay(layer.layerID);
             }
         }
 
         public override void CleanupLayer(int layerID) => DetachOverlay(layerID);
+
+        // Detach any groups the user's base-layer processor registered for layerID so
+        // their brush rendering doesn't paint over the decorator's direct LED writes.
+        // The base processor re-attaches them every tick; we re-detach every tick.
+        private static void SuppressBaseLayerGroups(int layerID)
+        {
+            var liveGroups = RGBController.GetLiveLayerGroups();
+            if (!liveGroups.TryGetValue(layerID, out var groups)) return;
+            foreach (var g in groups)
+            {
+                g?.Detach();
+            }
+        }
 
         private ListLedGroup GetOrCreateOverlay(int layerID, Led[] ledArray)
         {
@@ -352,6 +398,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight3.Color) };
                         var ripple = new BPMRippleDecorator(layer, 60, 2, 5, colors, surface, baseCol);
 
+                        layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(ripple, layer, runningEffects);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -365,6 +412,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight4.Color) };
                         var chase = new BPMChaseDecorator(layer, 160, 5, colors, surface, baseCol);
 
+                        layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(chase, layer, runningEffects);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -379,6 +427,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight3.Color) };
                         var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
 
+                        layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(ripple, layer, runningEffects);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -390,8 +439,7 @@ namespace Chromatics.Layers
                 case "Hunter's Ring":
                 case "Hunting Ground":
                 case "Containment Bay S1T7":
-                    if (!RaidEffectState.raidEffectsRunning ||
-                        (currentBgmId != 0 && currentBgmId != RaidEffectState.currentRaidBgmId))
+                    if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
                         var colors = new Color[]
@@ -401,6 +449,7 @@ namespace Chromatics.Layers
                             ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight3.Color)
                         };
 
+                        layer.Brush = new SolidColorBrush(baseCol);
                         switch (currentBgmId)
                         {
                             case 366: // TODO: replace with real phase-2 BGM ID
