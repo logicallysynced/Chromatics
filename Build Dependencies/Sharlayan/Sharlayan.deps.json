@@ -6,12 +6,12 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v10.0": {
-      "Sharlayan/9.0.5": {
+      "Sharlayan/9.0.7": {
         "dependencies": {
           "Lumina": "7.3.0",
           "Lumina.Excel": "7.4.3",
-          "NLog": "5.1.0",
-          "Newtonsoft.Json": "13.0.2",
+          "NLog": "6.1.2",
+          "Newtonsoft.Json": "13.0.4",
           "FFXIVClientStructs": "0.0.7777.0",
           "InteropGenerator.Runtime": "1.0.0.0"
         },
@@ -69,19 +69,19 @@
           }
         }
       },
-      "Newtonsoft.Json/13.0.2": {
+      "Newtonsoft.Json/13.0.4": {
         "runtime": {
           "lib/net6.0/Newtonsoft.Json.dll": {
             "assemblyVersion": "13.0.0.0",
-            "fileVersion": "13.0.2.27524"
+            "fileVersion": "13.0.4.30916"
           }
         }
       },
-      "NLog/5.1.0": {
+      "NLog/6.1.2": {
         "runtime": {
-          "lib/netstandard2.0/NLog.dll": {
-            "assemblyVersion": "5.0.0.0",
-            "fileVersion": "5.1.0.1480"
+          "lib/netstandard2.1/NLog.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.1.2.5163"
           }
         }
       },
@@ -104,7 +104,7 @@
     }
   },
   "libraries": {
-    "Sharlayan/9.0.5": {
+    "Sharlayan/9.0.7": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -144,19 +144,19 @@
       "path": "microsoft.extensions.objectpool/10.0.0",
       "hashPath": "microsoft.extensions.objectpool.10.0.0.nupkg.sha512"
     },
-    "Newtonsoft.Json/13.0.2": {
+    "Newtonsoft.Json/13.0.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg==",
-      "path": "newtonsoft.json/13.0.2",
-      "hashPath": "newtonsoft.json.13.0.2.nupkg.sha512"
+      "sha512": "sha512-pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A==",
+      "path": "newtonsoft.json/13.0.4",
+      "hashPath": "newtonsoft.json.13.0.4.nupkg.sha512"
     },
-    "NLog/5.1.0": {
+    "NLog/6.1.2": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oW7ekrkRG9okpDMUcEglunWj8Qf2RY8qkgl+/chJoavzg3dbT13y32t19R54FKkmq80fKzw4ZekZkCrRGanKgQ==",
-      "path": "nlog/5.1.0",
-      "hashPath": "nlog.5.1.0.nupkg.sha512"
+      "sha512": "sha512-y/3o6RVhHHeAMDaUdETeEtisYyypZApxeKd3k8HIH4IdqFzJNF5sXuJ07hNtAq6hLMup+yh3zuTckpFJqucOrw==",
+      "path": "nlog/6.1.2",
+      "hashPath": "nlog.6.1.2.nupkg.sha512"
     },
     "FFXIVClientStructs/0.0.7777.0": {
       "type": "reference",

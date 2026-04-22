@@ -149,7 +149,7 @@ namespace Chromatics.Layers
                 if (!reactiveWeatherEffects)
                 {
                     StopEffects(layergroup, model._gradientEffects);
-                    
+                    raidEffectsRunning = false;
                 }
             }
 
@@ -158,6 +158,7 @@ namespace Chromatics.Layers
                 if (!raidEffects)
                 {
                     StopEffects(layergroup, model._gradientEffects);
+                    raidEffectsRunning = false;
                 }
             }
 
@@ -525,6 +526,21 @@ namespace Chromatics.Layers
                             SetEffect(ripple, layer, runningEffects);
                             raidEffectsRunning = true;
                             bossNames = ["Dancing Green"];
+
+                            return true;
+                        }
+                        break;
+                    case "Rebel Ring":
+                        if (effectSettings.effect_raideffects && !raidEffectsRunning)
+                        {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Base.Color);
+                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight4.Color) };
+                        var chase = new BPMChaseDecorator(layer, 160, 5, colors, surface, baseCol);
+
+                        SetEffect(chase, layer, runningEffects);
+
+                            raidEffectsRunning = true;
+                            bossNames = ["Sugar Riot"];
 
                             return true;
                         }
