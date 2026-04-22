@@ -1049,8 +1049,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 $"{t}{t}{t}if (effectSettings.effect_raideffects && !raidEffectsRunning)\n" +
                 $"{t}{t}{t}{{\n" +
                 indented + "\n\n" +
-                $"{t}{t}{t}{t}raidEffectsRunning = true;\n" +
-                $"{t}{t}{t}{t}bossNames = [\"<BossName>\"];\n\n" +
+                $"{t}{t}{t}{t}raidEffectsRunning = true;\n\n" +
                 $"{t}{t}{t}{t}return true;\n" +
                 $"{t}{t}{t}}}\n" +
                 $"{t}{t}{t}break;";

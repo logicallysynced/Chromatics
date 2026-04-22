@@ -22,7 +22,6 @@ using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Policy;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Chromatics.Layers
@@ -32,15 +31,17 @@ namespace Chromatics.Layers
         private static ReactiveWeatherProcessor _instance;
         private static Dictionary<int, ReactiveWeatherBaseModel> layerProcessorModel = new Dictionary<int, ReactiveWeatherBaseModel>();
 
-        internal static int _previousArrayIndex = 0;
-        internal static int _previousOffset = 0;
         internal static bool dutyComplete = false;
         internal static bool raidEffectsRunning = false;
-        internal static string[] bossNames = null;
         // BGM the active raid effect was built for. When the in-game music ID
         // changes mid-raid (phase transition), opt-in raid cases compare
         // against this and rebuild their decorator for the new phase.
         internal static uint currentRaidBgmId = 0;
+        // FFXIV's "Victory Fanfare" plays on duty completion. Detecting this
+        // BGM ID is faster and more reliable than scanning the chat log for
+        // boss-defeat / completion-time messages, and works for raids that
+        // never emit a 'You defeat ...' line for the final boss.
+        internal const uint VictoryBgmId = 18;
 
         private SolidColorBrush weather_brush;
         private bool _disposed = false;
@@ -194,51 +195,15 @@ namespace Chromatics.Layers
                     bool inInstance = gameState.InInstance;
                     uint currentBgmId = gameState.CurrentBgmId;
 
-                    ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
-
-                    if (readResult.PreviousArrayIndex != _previousArrayIndex)
+                    // Victory Fanfare detection — replaces the prior chat-scan path
+                    // (boss-defeat regex + bossNames list). Fires once per raid the
+                    // moment the game switches to BGM 18, regardless of whether the
+                    // duty emits 'completion time' / 'You defeat' messages.
+                    if (currentBgmId == VictoryBgmId && raidEffectsRunning)
                     {
-                        var chatLogEntries = readResult.ChatLogItems;
-
-                        if (chatLogEntries.Count > 0)
-                        {
-                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                                currentRaidBgmId = 0;
-
-                            }
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = false;
-                            }
-                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                                currentRaidBgmId = 0;
-                            }
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                                currentRaidBgmId = 0;
-                            }
-                            else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                                currentRaidBgmId = 0;
-                            }
-                        }
-
-                        _previousArrayIndex = readResult.PreviousArrayIndex;
-                        _previousOffset = readResult.PreviousOffset;
+                        dutyComplete = true;
+                        raidEffectsRunning = false;
+                        currentRaidBgmId = 0;
                     }
 
                     if (currentZone != "???" && currentZone != "")
@@ -366,7 +331,7 @@ namespace Chromatics.Layers
             //Filter for zone specific special weather
             //Logger.WriteConsole(Enums.LoggerTypes.FFXIV, $"Zone: {zone}. DFC: {dutyComplete}. InInstance: {inInstance}");
 
-            if (inInstance && !dutyComplete)
+            if (!inInstance && !dutyComplete)
             {
                 switch (zone)
                 {
@@ -384,7 +349,6 @@ namespace Chromatics.Layers
                             SetEffect(starfield, layer, runningEffects);
 
                             raidEffectsRunning = true;
-                            bossNames = ["Zoraal Ja"];
 
                             return true;
                         }
@@ -414,7 +378,6 @@ namespace Chromatics.Layers
 
                             runningEffects.Add(layer);
                             raidEffectsRunning = true;
-                            bossNames = ["Queen Eternal"];
 
                             return true;
                         }
@@ -444,7 +407,6 @@ namespace Chromatics.Layers
 
                             runningEffects.Add(layer);
                             raidEffectsRunning = true;
-                            bossNames = ["Black Cat"];
 
                             return true;
                         }
@@ -460,7 +422,6 @@ namespace Chromatics.Layers
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(arenaLightShow, layer, runningEffects);
                             raidEffectsRunning = true;
-                            bossNames = ["Honey B. Lovely"];
 
                             return true;
                         }
@@ -489,7 +450,6 @@ namespace Chromatics.Layers
 
                             runningEffects.Add(layer);
                             raidEffectsRunning = true;
-                            bossNames = ["Brute Bomber"];
 
                             return true;
                         }
@@ -505,7 +465,6 @@ namespace Chromatics.Layers
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(bpmArenaLightShow, layer, runningEffects);
                             raidEffectsRunning = true;
-                            bossNames = ["Wicked Thunder"];
 
                             return true;
                         }
@@ -522,7 +481,6 @@ namespace Chromatics.Layers
                             layer.Brush = new SolidColorBrush(baseCol);
                             SetEffect(arenaLightShow, layer, runningEffects);
                             raidEffectsRunning = true;
-                            bossNames = ["Cloud of Darkness", "Rafflesia"];
 
                             masterlayer.requestUpdate = true;
                             
@@ -538,7 +496,6 @@ namespace Chromatics.Layers
 
                             SetEffect(ripple, layer, runningEffects);
                             raidEffectsRunning = true;
-                            bossNames = ["Dancing Green"];
 
                             return true;
                         }
@@ -553,7 +510,6 @@ namespace Chromatics.Layers
                         SetEffect(chase, layer, runningEffects);
 
                             raidEffectsRunning = true;
-                            bossNames = ["Sugar Riot"];
 
                             return true;
                         }
@@ -568,13 +524,14 @@ namespace Chromatics.Layers
                         SetEffect(ripple, layer, runningEffects);
 
                             raidEffectsRunning = true;
-                            bossNames = ["Brute Abombinator"];
 
                             return true;
                         }
                         break;
                     case "Hunter's Ring":
                     case "Hunting Ground":
+                    case "Mist":
+                    case "Limsa Lominsa Lower Decks":
                         // Demo of BGM-based phase switching. The raid runs through several
                         // music tracks; when the in-game BGM changes (gameState.CurrentBgmId),
                         // we rebuild the decorator for the new phase. The effect is gated on
@@ -596,15 +553,8 @@ namespace Chromatics.Layers
                             // alone in that case (the outer guard already filters currentBgmId == 0).
                             switch (currentBgmId)
                             {
-                                // Phase 2: faster ripple, denser pulses
-                                case 999u: // TODO: replace with phase-2 BGM ID
-                                {
-                                    var ripple = new BPMRippleDecorator(layer, 178, 4, 1, colors, surface, baseCol);
-                                    SetEffect(ripple, layer, runningEffects);
-                                    break;
-                                }
                                 // Phase 3 / enrage: chase decorator instead of ripple
-                                case 998u: // TODO: replace with phase-3 BGM ID
+                                case 186: // TODO: replace with phase-3 BGM ID
                                 {
                                     var chase = new BPMChaseDecorator(layer, 178, 2, colors, surface, baseCol);
                                     SetEffect(chase, layer, runningEffects);
@@ -621,7 +571,6 @@ namespace Chromatics.Layers
 
                             raidEffectsRunning = true;
                             currentRaidBgmId = currentBgmId;
-                            bossNames = ["<Boss>"];
 
                             return true;
                         }
@@ -632,9 +581,12 @@ namespace Chromatics.Layers
             }
             else
             {
+                // Reset all raid-state when not actively in a duty so the next
+                // duty entry starts clean (previously dutyComplete was reset by
+                // the chat scanner's 'has begun' message).
                 raidEffectsRunning = false;
-                bossNames = null;
                 currentRaidBgmId = 0;
+                dutyComplete = false;
 
                 switch (zone)
                 {
