@@ -83,6 +83,25 @@ namespace Chromatics.Layers
             var palette = RGBController.GetActivePalette();
             var ledArray = GetLedArray(layer);
             var overlay = GetOrCreateOverlay(layer.layerID, ledArray);
+
+            // Silence (BGM=1) during an active raid effect means a dramatic pause
+            // before a phase transition. Black out only the base-layer overlay;
+            // highlight and other layers continue unaffected. Reset raidEffectsRunning
+            // so the decorator rebuilds cleanly when the music returns.
+            if (currentBgmId == RaidEffectState.SilenceBgmId && RaidEffectState.raidEffectsRunning)
+            {
+                if (_gradientEffects.TryGetValue(layer.layerID, out var silenceGrads))
+                {
+                    foreach (var g in silenceGrads) g.RemoveAllDecorators();
+                    silenceGrads.Clear();
+                }
+                overlay.RemoveAllDecorators();
+                overlay.Brush = new SolidColorBrush(new Color(0, 0, 0));
+                overlay.Attach(surface);
+                RaidEffectState.raidEffectsRunning = false;
+                return;
+            }
+
             var runningEffects = RGBController.GetRunningEffects();
 
             bool applied = ApplyRaidEffect(overlay, zone, palette, currentBgmId, runningEffects, layer);
@@ -351,8 +370,7 @@ namespace Chromatics.Layers
                 // the effect fire in open-world for visual development.
                 case "Hunter's Ring":
                 case "Hunting Ground":
-                case "Mist":
-                case "Limsa Lominsa Lower Decks":
+                case "Containment Bay S1T7":
                     if (!RaidEffectState.raidEffectsRunning ||
                         (currentBgmId != 0 && currentBgmId != RaidEffectState.currentRaidBgmId))
                     {
