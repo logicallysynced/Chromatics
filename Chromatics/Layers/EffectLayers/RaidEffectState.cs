@@ -11,6 +11,11 @@ namespace Chromatics.Layers
         // messages, and it works for raids where the final boss never emits
         // a "You defeat ..." line.
         public const uint VictoryBgmId = 18;
+        // BGM id used during silence (no music) — e.g. dramatic pauses before
+        // a phase transition. RaidEffectProcessor blacks out the base layer
+        // overlay and resets raidEffectsRunning so the decorator rebuilds when
+        // music returns.
+        public const uint SilenceBgmId = 1;
 
         public static bool dutyComplete = false;
         public static bool raidEffectsRunning = false;
