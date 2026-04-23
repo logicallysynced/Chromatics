@@ -125,19 +125,26 @@ namespace Chromatics.Core
                 // reference, which ApplySettings swaps in once AppSettings has
                 // loaded. Defaults are enableCrashReports=true, so early-startup
                 // crashes are reported until the user has explicitly opted out.
-                // Verbose-log every drop so post-mortem can confirm whether an
-                // event was suppressed by consent vs lost to network.
+                // Capture _settings to a local — it can be transiently null if
+                // ApplySettings was passed null (e.g. AppSettings.Startup failed
+                // to parse settings.chromatics4) and we'd NRE inside the SDK's
+                // hot path otherwise.
                 o.SetBeforeSend((evt, _) =>
                 {
-                    if (_settings.enableCrashReports) return evt;
+                    var s = _settings;
+                    if (s == null || s.enableCrashReports) return evt;
                     Logger.WriteVerbose($"[Sentry] BeforeSend dropped event {evt.EventId} — consent disabled");
                     return null;
                 });
-                o.SetBeforeBreadcrumb((b, _) => _settings.enableCrashReports ? b : null);
+                o.SetBeforeBreadcrumb((b, _) =>
+                {
+                    var s = _settings;
+                    return (s == null || s.enableCrashReports) ? b : null;
+                });
             });
 
             _initialized = true;
-            Logger.WriteVerbose($"[Sentry] Initialize complete: enabled={SentrySdk.IsEnabled}, defaultConsent={_settings.enableCrashReports}");
+            Logger.WriteVerbose($"[Sentry] Initialize complete: enabled={SentrySdk.IsEnabled}, defaultConsent={_settings?.enableCrashReports ?? true}");
         }
 
         /// <summary>
@@ -151,6 +158,17 @@ namespace Chromatics.Core
             if (!_initialized)
             {
                 Logger.WriteVerbose("[Sentry] ApplySettings skipped: SDK not initialized");
+                return;
+            }
+
+            // Defensive: AppSettings.Startup can hand us null when settings
+            // deserialization fails (malformed settings.chromatics4). The
+            // previous version blindly assigned _settings = null and then
+            // NRE'd on the next field access, which cascaded into BeforeSend
+            // and CaptureCrash failures and broke the themed crash dialog.
+            if (settings == null)
+            {
+                Logger.WriteVerbose("[Sentry] ApplySettings skipped: settings is null — keeping defaults");
                 return;
             }
 
@@ -211,7 +229,13 @@ namespace Chromatics.Core
 
             ex.Data["Chromatics.HandledByCrashDialog"] = true;
             var id = SentrySdk.CaptureException(ex);
-            Logger.WriteVerbose($"[Sentry] CaptureCrash captured id={id}, consent={_settings.enableCrashReports}, type={ex.GetType().Name}");
+            // Defensive: _settings can be null transiently if ApplySettings
+            // has not yet run (early-startup crashes); use ?? so the log line
+            // doesn't NRE — which would then propagate up out of CaptureCrash
+            // and break the CrashApp dialog bootstrap (caller catches it
+            // and falls back to the unthemed Win32 MessageBox).
+            var consent = _settings?.enableCrashReports ?? true;
+            Logger.WriteVerbose($"[Sentry] CaptureCrash captured id={id}, consent={consent}, type={ex.GetType().Name}");
 
             try { SentrySdk.Flush(TimeSpan.FromSeconds(5)); } catch (Exception flushEx) { Logger.WriteVerbose($"[Sentry] CaptureCrash flush threw: {flushEx.Message}"); }
             Logger.WriteVerbose($"[Sentry] CaptureCrash flush complete for id={id}");
@@ -239,7 +263,7 @@ namespace Chromatics.Core
         public static void SubmitFeedback(SentryId eventId, string comments)
         {
             if (!IsActive || eventId == SentryId.Empty) return;
-            if (!_settings.enableCrashReports) return;
+            if (_settings != null && !_settings.enableCrashReports) return;
             if (string.IsNullOrWhiteSpace(comments)) return;
 
             try
