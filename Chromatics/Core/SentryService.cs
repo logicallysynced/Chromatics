@@ -49,8 +49,7 @@ namespace Chromatics.Core
             if (_initialized) return;
             if (string.IsNullOrWhiteSpace(Dsn))
             {
-                // DSN not configured — skip silently. Runtime toggle in Settings
-                // becomes a no-op rather than a crash.
+                Logger.WriteVerbose("[Sentry] Initialize skipped: DSN not configured");
                 return;
             }
 
@@ -59,7 +58,11 @@ namespace Chromatics.Core
             // integrations that would intercept exceptions before the IDE's
             // normal break-on-unhandled flow. Skipping init keeps the IDE
             // experience identical to a clean (non-Sentry) debug session.
-            if (Debugger.IsAttached) return;
+            if (Debugger.IsAttached)
+            {
+                Logger.WriteVerbose("[Sentry] Initialize skipped: debugger attached");
+                return;
+            }
 
             var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.0.0";
 
@@ -117,6 +120,7 @@ namespace Chromatics.Core
             });
 
             _initialized = true;
+            Logger.WriteVerbose($"[Sentry] Initialize complete: enabled={SentrySdk.IsEnabled}, defaultConsent={_settings.enableCrashReports}");
         }
 
         /// <summary>
@@ -127,9 +131,14 @@ namespace Chromatics.Core
         /// </summary>
         public static void ApplySettings(SettingsModel settings)
         {
-            if (!_initialized) return;
+            if (!_initialized)
+            {
+                Logger.WriteVerbose("[Sentry] ApplySettings skipped: SDK not initialized");
+                return;
+            }
 
             _settings = settings;
+            Logger.WriteVerbose($"[Sentry] ApplySettings: consent={settings.enableCrashReports}, channel={(settings.betaChannel ? "beta" : "stable")}");
 
             SentrySdk.ConfigureScope(scope =>
             {
@@ -162,15 +171,35 @@ namespace Chromatics.Core
         }
 
         /// <summary>
-        /// Captures the exception and returns the Sentry event id so the
-        /// caller can associate user feedback with the crash.
+        /// Captures the exception, force-flushes the SDK so the event leaves
+        /// the process before the caller continues, and returns the Sentry
+        /// event id so the caller can associate user feedback with the crash.
+        ///
+        /// The synchronous flush is critical: CaptureException is normally
+        /// queued for an async background worker. In the early-startup-crash
+        /// path we then bootstrap a fresh Avalonia lifetime (CrashApp), and
+        /// the post-dialog code path calls Environment.Exit(1) — both of
+        /// which can drop the queued event before the worker has a chance to
+        /// transmit it. Flushing inline costs a few seconds in the crash
+        /// flow but makes "the dialog appeared but no event arrived" stop
+        /// being a possible outcome.
         /// </summary>
         public static SentryId CaptureCrash(Exception ex)
         {
-            if (!IsActive) return SentryId.Empty;
+            if (!IsActive)
+            {
+                Logger.WriteVerbose($"[Sentry] CaptureCrash skipped: IsActive=false (initialized={_initialized}, sdkEnabled={SentrySdk.IsEnabled})");
+                return SentryId.Empty;
+            }
 
             ex.Data["Chromatics.HandledByCrashDialog"] = true;
-            return SentrySdk.CaptureException(ex);
+            var id = SentrySdk.CaptureException(ex);
+            Logger.WriteVerbose($"[Sentry] CaptureCrash captured id={id}, consent={_settings.enableCrashReports}, type={ex.GetType().Name}");
+
+            try { SentrySdk.Flush(TimeSpan.FromSeconds(5)); } catch (Exception flushEx) { Logger.WriteVerbose($"[Sentry] CaptureCrash flush threw: {flushEx.Message}"); }
+            Logger.WriteVerbose($"[Sentry] CaptureCrash flush complete for id={id}");
+
+            return id;
         }
 
         /// <summary>
