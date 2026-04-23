@@ -777,5 +777,15 @@
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Zeigt den Wirkfortschritt des Charakters auf den ausgewählten Tasten an.\n[Unterstützte Modi: Interpolieren, Ausblenden]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "Zeigt unterschiedliche Farben auf den ausgewählten Tasten abhängig von der aktuellen Klasse des Charakters an.\nVerwendet die Farben der Hervorhebungsebene.",
   "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Zeigt unterschiedliche Farben auf den ausgewählten Tasten abhängig vom aktuellen Wetter an.\nVerwendet die Farben der Hervorhebungsebene.",
-  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Animierte Schlachtzugszonen-Effekte. Überschreibt die Basisebene für die Dauer unterstützter Schlachtzugsbegegnungen."
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Animierte Schlachtzugszonen-Effekte. Überschreibt die Basisebene für die Dauer unterstützter Schlachtzugsbegegnungen.",
+  "Send anonymous crash reports and performance data to help improve Chromatics.": "Senden Sie anonyme Absturzberichte und Leistungsdaten, um Chromatics zu verbessern.",
+  "Default: Enabled. Crash reports contain no personally identifying information. See the Privacy section of the README for details.": "Standard: Aktiviert. Absturzberichte enthalten keine personenbezogenen Informationen. Weitere Details finden Sie im Abschnitt „Datenschutz“ der README.",
+  "Chromatics has crashed": "Chromatics ist abgestürzt",
+  "Chromatics has encountered an unexpected error and needs to close.": "Bei Chromatics ist ein unerwarteter Fehler aufgetreten, und das Programm muss geschlossen werden.",
+  "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.": "Sie können uns helfen, das Problem zu beheben, indem Sie einen Absturzbericht senden. Es werden keine personenbezogenen Informationen erfasst. Eine kurze Beschreibung dessen, was Sie gerade getan haben, erleichtert die Reproduktion erheblich.",
+  "What were you doing when this happened? (optional)": "Was haben Sie getan, als dies passiert ist? (optional)",
+  "Name (optional)": "Name (optional)",
+  "Email (optional)": "E-Mail (optional)",
+  "Don't Send": "Nicht senden",
+  "Send Report": "Bericht senden"
 }

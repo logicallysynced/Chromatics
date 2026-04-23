@@ -1,6 +1,7 @@
 using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Models;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -41,12 +42,45 @@ namespace Chromatics.Core
 
             AppendToVerboseLog($"[{timestamp}] [{type}] {message}");
 
+            ForwardToSentry(type, message);
+
             lock (_gate)
             {
                 if (_buffer.Count >= MaxBuffered)
                     _buffer.RemoveAt(0);
                 _buffer.Add(args);
                 OnConsoleLogged(null, args);
+            }
+        }
+
+        // Mirrors the console line into the Sentry SDK as breadcrumb context
+        // (so when an unrelated exception is captured later, the surrounding
+        // log lines come along) and, for errors, as a captured message so the
+        // dashboard surfaces them even if no exception was thrown. Honours the
+        // user's enableCrashReports toggle automatically — SentrySdk.IsEnabled
+        // is false when consent has been withheld.
+        private static void ForwardToSentry(LoggerTypes type, string message)
+        {
+            if (!SentrySdk.IsEnabled) return;
+
+            try
+            {
+                var level = type switch
+                {
+                    LoggerTypes.Error => BreadcrumbLevel.Error,
+                    LoggerTypes.Devices => BreadcrumbLevel.Info,
+                    LoggerTypes.System => BreadcrumbLevel.Info,
+                    _ => BreadcrumbLevel.Info,
+                };
+
+                SentrySdk.AddBreadcrumb(message, category: type.ToString(), level: level);
+
+                if (type == LoggerTypes.Error)
+                    SentrySdk.CaptureMessage($"[{type}] {message}", SentryLevel.Error);
+            }
+            catch
+            {
+                // Logging must never throw.
             }
         }
 

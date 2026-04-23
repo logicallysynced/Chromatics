@@ -47,6 +47,7 @@ namespace Chromatics.ViewModels
             _checkUpdates = s.checkupdates;
             _betaChannel = s.betaChannel;
             _alwaysRunAsAdmin = s.alwaysRunAsAdmin;
+            _enableCrashReports = s.enableCrashReports;
             _closeWithGame = s.closeWithGame;
             _globalBrightness = s.globalbrightness;
 
@@ -310,6 +311,22 @@ namespace Chromatics.ViewModels
                     var s = AppSettings.GetSettings();
                     s.alwaysRunAsAdmin = value;
                     AppSettings.SaveSettings(s);
+                }
+            }
+        }
+
+        private bool _enableCrashReports;
+        public bool EnableCrashReports
+        {
+            get => _enableCrashReports;
+            set
+            {
+                if (SetProperty(ref _enableCrashReports, value))
+                {
+                    var s = AppSettings.GetSettings();
+                    s.enableCrashReports = value;
+                    AppSettings.SaveSettings(s);
+                    Chromatics.Core.SentryService.ApplyConsent(value);
                 }
             }
         }

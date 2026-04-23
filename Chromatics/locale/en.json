@@ -820,5 +820,15 @@
     "Enable/disable Wooting device library. Default: Enabled":  "Enable/disable Wooting device library. Default: Enabled",
     "Enable/disable Novation device library. Default: Enabled":  "Enable/disable Novation device library. Default: Enabled",
     "Enable/disable OpenRGB device library. Default: Disabled":  "Enable/disable OpenRGB device library. Default: Disabled",
-    "[BETA] Enable/disable Philips HUE device library. Default: Disabled":  "[BETA] Enable/disable Philips HUE device library. Default: Disabled"
+    "[BETA] Enable/disable Philips HUE device library. Default: Disabled":  "[BETA] Enable/disable Philips HUE device library. Default: Disabled",
+    "Send anonymous crash reports and performance data to help improve Chromatics.":  "Send anonymous crash reports and performance data to help improve Chromatics.",
+    "Default: Enabled. Crash reports contain no personally identifying information. See the Privacy section of the README for details.":  "Default: Enabled. Crash reports contain no personally identifying information. See the Privacy section of the README for details.",
+    "Chromatics has crashed":  "Chromatics has crashed",
+    "Chromatics has encountered an unexpected error and needs to close.":  "Chromatics has encountered an unexpected error and needs to close.",
+    "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.":  "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.",
+    "What were you doing when this happened? (optional)":  "What were you doing when this happened? (optional)",
+    "Name (optional)":  "Name (optional)",
+    "Email (optional)":  "Email (optional)",
+    "Don't Send":  "Don't Send",
+    "Send Report":  "Send Report"
 }

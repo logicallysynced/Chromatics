@@ -777,5 +777,15 @@
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Affiche la progression d’incantation du personnage sur les touches sélectionnées.\n[Modes pris en charge : Interpolation, Fondu]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "Affiche différentes couleurs sur les touches sélectionnées en fonction de la classe actuelle du personnage.\nUtilise les couleurs de la couche de surbrillance.",
   "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Affiche différentes couleurs sur les touches sélectionnées en fonction de la météo actuelle.\nUtilise les couleurs de la couche de surbrillance.",
-  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Effets animés de zone de raid. Remplace la couche de base pendant la durée des rencontres de raid prises en charge."
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Effets animés de zone de raid. Remplace la couche de base pendant la durée des rencontres de raid prises en charge.",
+  "Send anonymous crash reports and performance data to help improve Chromatics.": "Envoyez des rapports de plantage anonymes et des données de performance pour aider à améliorer Chromatics.",
+  "Default: Enabled. Crash reports contain no personally identifying information. See the Privacy section of the README for details.": "Par défaut : activé. Les rapports de plantage ne contiennent aucune information permettant de vous identifier personnellement. Consultez la section Confidentialité du README pour plus de détails.",
+  "Chromatics has crashed": "Chromatics a planté",
+  "Chromatics has encountered an unexpected error and needs to close.": "Chromatics a rencontré une erreur inattendue et doit se fermer.",
+  "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.": "Vous pouvez nous aider à corriger ce problème en envoyant un rapport de plantage. Aucune information permettant de vous identifier personnellement n’est collectée. Ajouter une courte description de ce que vous faisiez facilite grandement la reproduction du problème.",
+  "What were you doing when this happened? (optional)": "Que faisiez-vous lorsque cela s’est produit ? (facultatif)",
+  "Name (optional)": "Nom (facultatif)",
+  "Email (optional)": "E-mail (facultatif)",
+  "Don't Send": "Ne pas envoyer",
+  "Send Report": "Envoyer le rapport"
 }

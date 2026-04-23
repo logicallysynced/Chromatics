@@ -777,5 +777,15 @@
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "在选中的按键上显示角色的施法进度。\n[支持的模式：插值、淡化]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "根据角色当前职业，在选中的按键上显示不同颜色。\n使用高亮层颜色。",
   "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "根据当前天气，在选中的按键上显示不同颜色。\n使用高亮层颜色。",
-  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "动态团队副本区域效果。在受支持的团队副本战斗期间会覆盖基础图层。"
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "动态团队副本区域效果。在受支持的团队副本战斗期间会覆盖基础图层。",
+  "Send anonymous crash reports and performance data to help improve Chromatics.": "发送匿名崩溃报告和性能数据，以帮助改进 Chromatics。",
+  "Default: Enabled. Crash reports contain no personally identifying information. See the Privacy section of the README for details.": "默认：启用。崩溃报告不包含任何可识别个人身份的信息。详情请参阅 README 中的隐私部分。",
+  "Chromatics has crashed": "Chromatics 已崩溃",
+  "Chromatics has encountered an unexpected error and needs to close.": "Chromatics 遇到了意外错误，需要关闭。",
+  "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.": "您可以通过发送崩溃报告来帮助我们修复此问题。我们不会收集任何可识别个人身份的信息。添加一段关于您当时正在做什么的简短描述，将使问题更容易复现。",
+  "What were you doing when this happened? (optional)": "发生此情况时，您正在做什么？（可选）",
+  "Name (optional)": "姓名（可选）",
+  "Email (optional)": "电子邮件（可选）",
+  "Don't Send": "不发送",
+  "Send Report": "发送报告"
 }

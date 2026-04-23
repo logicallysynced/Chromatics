@@ -777,5 +777,15 @@
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Muestra el progreso de lanzamiento del personaje en las teclas seleccionadas.\n[Modos compatibles: Interpolar, Desvanecer]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "Muestra diferentes colores en las teclas seleccionadas según la clase actual del personaje.\nUsa los colores de la capa de resaltado.",
   "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Muestra diferentes colores en las teclas seleccionadas según el clima actual.\nUsa los colores de la capa de resaltado.",
-  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Efectos animados de zona de banda. Sobrescribe la capa base durante la duración de los encuentros de banda compatibles."
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Efectos animados de zona de banda. Sobrescribe la capa base durante la duración de los encuentros de banda compatibles.",
+  "Send anonymous crash reports and performance data to help improve Chromatics.": "Enviar informes de fallos anónimos y datos de rendimiento para ayudar a mejorar Chromatics.",
+  "Default: Enabled. Crash reports contain no personally identifying information. See the Privacy section of the README for details.": "Predeterminado: Activado. Los informes de fallos no contienen información de identificación personal. Consulta la sección de Privacidad del README para obtener más detalles.",
+  "Chromatics has crashed": "Chromatics se ha bloqueado",
+  "Chromatics has encountered an unexpected error and needs to close.": "Chromatics ha encontrado un error inesperado y necesita cerrarse.",
+  "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.": "Puedes ayudarnos a solucionar esto enviando un informe de fallos. No se recopila ninguna información de identificación personal. Añadir una breve descripción de lo que estabas haciendo facilita mucho la reproducción del problema.",
+  "What were you doing when this happened? (optional)": "¿Qué estabas haciendo cuando ocurrió esto? (opcional)",
+  "Name (optional)": "Nombre (opcional)",
+  "Email (optional)": "Correo electrónico (opcional)",
+  "Don't Send": "No enviar",
+  "Send Report": "Enviar informe"
 }
