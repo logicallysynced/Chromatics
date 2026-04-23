@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Velopack;
 
@@ -23,6 +24,16 @@ namespace Chromatics
         private const uint MB_ICONERROR    = 0x10;
         private const uint MB_ICONQUESTION = 0x20;
         private const int  IDYES           = 6;
+
+        // Per-session mutex name. Stable GUID so future builds match. Held
+        // for the lifetime of the process and released by the OS on exit
+        // (whether clean shutdown, crash, or hard kill), which is why this
+        // is more reliable than enumerating Process.GetProcesses(): a
+        // lingering background thread can't keep us "alive" in the eyes of
+        // the next launch, and elevated instances are visible to non-elevated
+        // ones (and vice versa) without admin rights to enumerate.
+        private const string SingleInstanceMutexName = "Chromatics-SingleInstance-{6E5F8A4D-2B4C-4F7E-9D1A-3E8B5C2F1A0D}";
+        private static Mutex _singleInstanceMutex;
 
         [STAThread]
         static void Main(string[] args)
@@ -199,29 +210,48 @@ namespace Chromatics
 
         private static bool ThereCanOnlyBeOne()
         {
-            var thisprocessname = Process.GetCurrentProcess().ProcessName;
-            var otherProcesses = Process.GetProcesses()
-                .Where(p => p.ProcessName == thisprocessname)
-                .Where(p => p.Id != Process.GetCurrentProcess().Id)
-                .ToList();
-
-            if (!otherProcesses.Any()) return true;
+            // Try to claim the single-instance mutex. createdNew is true iff
+            // we're the first process to ask for this name in the current
+            // session; a stale mutex from a crashed previous instance is
+            // released by the OS as soon as the previous process exits, so
+            // there's no zombie state to clean up.
+            _singleInstanceMutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out bool createdNew);
+            if (createdNew) return true;
 
             int result = MessageBoxW(IntPtr.Zero,
                 "Another instance of Chromatics is currently running, and only one can run at a time. Would you like to close the other instance and use this one?",
                 "Already running", MB_YESNO | MB_ICONQUESTION);
 
-            if (result == IDYES)
+            if (result != IDYES)
+                return false;
+
+            // User asked us to take over. Find any "Chromatics" process other
+            // than us, kill it, and re-acquire the mutex once the OS has
+            // released it. We only enumerate by name *after* the mutex check
+            // confirms there really is another instance — the previous
+            // implementation enumerated unconditionally and false-positived
+            // on lingering background threads in our own process.
+            var thisProcess = Process.GetCurrentProcess();
+            var siblings = Process.GetProcesses()
+                .Where(p => p.ProcessName == thisProcess.ProcessName)
+                .Where(p => p.Id != thisProcess.Id)
+                .ToList();
+
+            foreach (var process in siblings)
             {
-                foreach (var process in otherProcesses)
+                try
                 {
                     process.Kill();
                     process.WaitForExit(5000);
                 }
-                return true;
+                catch { /* may not have rights to kill an elevated sibling */ }
             }
 
-            return false;
+            // Drop the previous handle and re-acquire — the OS only releases
+            // the prior holder's mutex once that process has fully exited.
+            _singleInstanceMutex.Dispose();
+            _singleInstanceMutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out createdNew);
+            return createdNew;
         }
     }
 }
