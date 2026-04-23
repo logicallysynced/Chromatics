@@ -102,6 +102,12 @@ namespace Chromatics.Core
                 // user-visible Console tab is already replayed via Logger.
                 o.MaxBreadcrumbs = 100;
 
+                // Enable the Logs product (separate from Issues). Once on,
+                // SentrySdk.Logger.LogInfo/LogWarning/LogError accept
+                // structured log entries that show up in the dashboard's
+                // Logs tab. Logger.cs forwards every WriteConsole line here.
+                o.EnableLogs = true;
+
                 // Honour the consent toggle by reading from the live _settings
                 // reference, which ApplySettings swaps in once AppSettings has
                 // loaded. Defaults are enableCrashReports=true, so early-startup
