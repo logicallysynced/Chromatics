@@ -828,5 +828,7 @@
     "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.":  "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.",
     "What were you doing when this happened? (optional)":  "What were you doing when this happened? (optional)",
     "Don't Send":  "Don't Send",
-    "Send Report":  "Send Report"
+    "Send Report":  "Send Report",
+    "Reference ID:":  "Reference ID:",
+    "Copy":  "Copy"
 }

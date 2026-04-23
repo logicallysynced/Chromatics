@@ -118,14 +118,13 @@ namespace Chromatics
             {
                 // Avalonia startup or message-loop crash. AppDomain handler
                 // doesn't always fire for these because the runtime sometimes
-                // unwinds out of Main first. Report and show feedback dialog
-                // (unless we're in a debug session — let it propagate then).
+                // unwinds out of Main first. Route through CrashHandler so
+                // the dialog + Sentry + force-kill flow runs regardless of
+                // which entry point caught the exception.
                 if (Debugger.IsAttached)
                     throw;
 
-                SentryService.CaptureCrash(ex);
-                CrashFeedbackDialog.ShowBlocking(ex);
-                ForceTerminate(1);
+                CrashHandler.HandleCrash(ex);
             }
             finally
             {
@@ -192,39 +191,23 @@ namespace Chromatics
         private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
             var ex = e.ExceptionObject as Exception ?? new Exception("Unknown unhandled exception (non-CLR object thrown)");
-
-            // Under a debugger, let the IDE handle the exception so the dev can
-            // inspect it. Otherwise capture, then show the user feedback form
-            // so they can submit context alongside the crash report.
-            if (Debugger.IsAttached)
-            {
-                MessageBoxW(IntPtr.Zero, "Unhandled exception caught: " + ex.Message, "Chromatics Error", MB_OK | MB_ICONERROR);
-                return;
-            }
-
-            try
-            {
-                CrashFeedbackDialog.ShowBlocking(ex);
-            }
-            catch
-            {
-                // Last-resort fallback if Avalonia is too dead to spin up the dialog.
-                try { SentryService.CaptureCrash(ex); } catch { }
-                MessageBoxW(IntPtr.Zero, "Unhandled exception caught: " + ex.Message, "Chromatics Error", MB_OK | MB_ICONERROR);
-            }
-            finally
-            {
-                ForceTerminate(1);
-            }
+            CrashHandler.HandleCrash(ex);
         }
 
         private static void UnobservedTaskExceptionHandler(object sender, UnobservedTaskExceptionEventArgs e)
         {
-            // These don't terminate the process by default in modern .NET, so
-            // we capture without showing the dialog. Marking observed prevents
-            // the legacy "rethrow on finalize" behaviour from kicking in.
-            try { SentryService.CaptureCrash(e.Exception); } catch { }
+            // .NET 5+ no longer terminates the process for unobserved task
+            // exceptions, but for Chromatics these almost always represent
+            // a fatal failure in a core background task (RGB.NET update tick,
+            // Sharlayan polling, Hue update queue, etc.) that the user can't
+            // recover from. Treat them as fatal: capture, show the dialog,
+            // force-kill — same as any other unhandled exception. Without
+            // this, the user previously saw "no dialog, but a zombie
+            // Chromatics.exe in task manager" because Sentry's automatic
+            // UnobservedTaskExceptionIntegration captured the event but our
+            // code did nothing to surface or terminate.
             e.SetObserved();
+            CrashHandler.HandleCrash(e.Exception);
         }
 
         private static bool ThereCanOnlyBeOne()

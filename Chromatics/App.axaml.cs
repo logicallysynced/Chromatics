@@ -64,6 +64,13 @@ namespace Chromatics
                 };
 
                 var settings = AppSettings.GetSettings();
+                // MainWindow construction kicks off the entire chain that
+                // loads effects.chromatics4, palette.chromatics4, and the
+                // device providers. Any of those throwing during ctor
+                // previously left the app in a tray-only zombie state with
+                // no UI and no crash dialog. Funnel any failure through
+                // CrashHandler so the user sees the themed dialog and the
+                // process actually terminates.
                 if (settings.firstrun)
                 {
                     // Defer MainWindow construction entirely until the wizard
@@ -73,20 +80,34 @@ namespace Chromatics
                     var wizard = new FirstRunDialog();
                     wizard.Closed += (_, _) =>
                     {
-                        var mainWindow = new MainWindow();
-                        desktop.MainWindow = mainWindow;
-                        mainWindow.Show();
+                        try
+                        {
+                            var mainWindow = new MainWindow();
+                            desktop.MainWindow = mainWindow;
+                            mainWindow.Show();
+                        }
+                        catch (Exception ex)
+                        {
+                            CrashHandler.HandleCrash(ex);
+                        }
                     };
                     wizard.Show();
                 }
                 else
                 {
-                    var mainWindow = new MainWindow();
-                    desktop.MainWindow = mainWindow;
-                    if (settings.trayonstartup)
-                        mainWindow.Hide();
-                    else
-                        mainWindow.Show();
+                    try
+                    {
+                        var mainWindow = new MainWindow();
+                        desktop.MainWindow = mainWindow;
+                        if (settings.trayonstartup)
+                            mainWindow.Hide();
+                        else
+                            mainWindow.Show();
+                    }
+                    catch (Exception ex)
+                    {
+                        CrashHandler.HandleCrash(ex);
+                    }
                 }
             }
 

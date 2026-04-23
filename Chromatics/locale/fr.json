@@ -787,5 +787,6 @@
   "Name (optional)": "Nom (facultatif)",
   "Email (optional)": "E-mail (facultatif)",
   "Don't Send": "Ne pas envoyer",
-  "Send Report": "Envoyer le rapport"
+  "Send Report": "Envoyer le rapport",
+  "Reference ID:": "ID de référence :"
 }

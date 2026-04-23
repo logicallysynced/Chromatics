@@ -787,5 +787,6 @@
   "Name (optional)": "名前（任意）",
   "Email (optional)": "メールアドレス（任意）",
   "Don't Send": "送信しない",
-  "Send Report": "レポートを送信"
+  "Send Report": "レポートを送信",
+  "Reference ID:": "参照ID:"
 }

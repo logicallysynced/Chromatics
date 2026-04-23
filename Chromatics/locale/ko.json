@@ -787,5 +787,6 @@
   "Name (optional)": "이름 (선택 사항)",
   "Email (optional)": "이메일 (선택 사항)",
   "Don't Send": "보내지 않음",
-  "Send Report": "보고서 보내기"
+  "Send Report": "보고서 보내기",
+  "Reference ID:": "참조 ID:"
 }

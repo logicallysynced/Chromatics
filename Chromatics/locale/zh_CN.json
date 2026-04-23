@@ -787,5 +787,6 @@
   "Name (optional)": "姓名（可选）",
   "Email (optional)": "电子邮件（可选）",
   "Don't Send": "不发送",
-  "Send Report": "发送报告"
+  "Send Report": "发送报告",
+  "Reference ID:": "参考编号："
 }
