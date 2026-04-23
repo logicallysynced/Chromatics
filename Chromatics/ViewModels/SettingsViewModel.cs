@@ -40,7 +40,6 @@ namespace Chromatics.ViewModels
         {
             var s = AppSettings.GetSettings();
 
-            _localCache = s.localcache;
             _winStart = s.winstart;
             _minimizeTray = s.minimizetray;
             _trayOnStartup = s.trayonstartup;
@@ -195,21 +194,6 @@ namespace Chromatics.ViewModels
                     unload();
                     saveFlag(false);
                 });
-        }
-
-        private bool _localCache;
-        public bool LocalCache
-        {
-            get => _localCache;
-            set
-            {
-                if (SetProperty(ref _localCache, value))
-                {
-                    var s = AppSettings.GetSettings();
-                    s.localcache = value;
-                    AppSettings.SaveSettings(s);
-                }
-            }
         }
 
         private bool _winStart;

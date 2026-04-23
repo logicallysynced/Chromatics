@@ -17,9 +17,6 @@
             <!-- General -->
             <HeaderedContentControl Header="{loc:Tr Key=General}">
                 <StackPanel Spacing="8" Margin="4,8,4,0">
-                    <CheckBox Content="{loc:Tr Key='Use saved cache for FFXIV data instead of online source.'}"
-                              IsChecked="{Binding LocalCache, Mode=TwoWay}"
-                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
                     <CheckBox Content="{loc:Tr Key='Start Chromatics when Windows starts.'}"
                               IsChecked="{Binding WinStart, Mode=TwoWay}"
                               ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
