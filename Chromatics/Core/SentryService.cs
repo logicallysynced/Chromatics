@@ -115,7 +115,14 @@ namespace Chromatics.Core
                 // reference, which ApplySettings swaps in once AppSettings has
                 // loaded. Defaults are enableCrashReports=true, so early-startup
                 // crashes are reported until the user has explicitly opted out.
-                o.SetBeforeSend((evt, _) => _settings.enableCrashReports ? evt : null);
+                // Verbose-log every drop so post-mortem can confirm whether an
+                // event was suppressed by consent vs lost to network.
+                o.SetBeforeSend((evt, _) =>
+                {
+                    if (_settings.enableCrashReports) return evt;
+                    Logger.WriteVerbose($"[Sentry] BeforeSend dropped event {evt.EventId} — consent disabled");
+                    return null;
+                });
                 o.SetBeforeBreadcrumb((b, _) => _settings.enableCrashReports ? b : null);
             });
 
