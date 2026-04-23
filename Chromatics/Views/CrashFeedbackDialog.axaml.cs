@@ -115,6 +115,7 @@ namespace Chromatics.Views
             SentryId preCapturedEventId = SentryId.Empty;
             try { preCapturedEventId = SentryService.CaptureCrash(ex); } catch { }
 
+            bool crashAppShown = false;
             try
             {
                 CrashApp.PendingException = ex;
@@ -123,8 +124,21 @@ namespace Chromatics.Views
                     .UsePlatformDetect()
                     .WithInterFont()
                     .StartWithClassicDesktopLifetime(Array.Empty<string>());
+                crashAppShown = true;
             }
-            catch
+            catch (Exception bootstrapEx)
+            {
+                // Verbose-log the actual exception so a user reporting "the
+                // crash dialog is the basic Windows one, not the themed one"
+                // produces enough context to diagnose without running a
+                // debugger. CrashApp bootstrap failures (XAML resource not
+                // found, Avalonia init failure, etc.) silently fell back to
+                // MessageBox before, hiding the root cause.
+                Logger.WriteVerbose($"[CrashDialog] CrashApp bootstrap failed: {bootstrapEx.GetType().Name}: {bootstrapEx.Message}");
+                Logger.WriteVerbose($"[CrashDialog] Stack: {bootstrapEx.StackTrace}");
+            }
+
+            if (!crashAppShown)
             {
                 try
                 {

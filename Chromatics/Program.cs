@@ -235,6 +235,23 @@ namespace Chromatics
             _singleInstanceMutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out bool createdNew);
             if (createdNew) return true;
 
+            // Mutex is held by another process. Two common cases where the
+            // holder is about to die: (a) we're the elevated child of an
+            // admin relaunch and the non-admin parent is in the process of
+            // calling Process.Kill on itself, or (b) the previous launch
+            // is finishing its shutdown teardown. Either way, wait briefly
+            // for them to release before bothering the user with a prompt.
+            try
+            {
+                if (_singleInstanceMutex.WaitOne(TimeSpan.FromSeconds(3)))
+                    return true;
+            }
+            catch (AbandonedMutexException)
+            {
+                // Previous holder died without releasing — we now own it.
+                return true;
+            }
+
             int result = MessageBoxW(IntPtr.Zero,
                 "Another instance of Chromatics is currently running, and only one can run at a time. Would you like to close the other instance and use this one?",
                 "Already running", MB_YESNO | MB_ICONQUESTION);
