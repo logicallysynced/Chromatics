@@ -177,10 +177,23 @@ namespace Chromatics.Core
         /// Submits anonymous comments attached to a previously captured event
         /// id. The dialog deliberately does not collect name/email — comments
         /// are the only user-supplied field on the wire.
+        ///
+        /// We send the comment through THREE channels so it's visible no
+        /// matter where in the dashboard the maintainer is looking:
+        ///   1. SentrySdk.CaptureFeedback — User Feedback product (separate
+        ///      sidebar entry; shows up on the event detail page too).
+        ///   2. SentrySdk.Logger.LogInfo with the associated event id as a
+        ///      structured property — appears in the Logs tab, filterable
+        ///      by event id.
+        ///   3. SentrySdk.CaptureMessage with the event id as a tag — shows
+        ///      up as its own entry in the Issues list, linking back to the
+        ///      crash. This is the most visible place for free-tier users
+        ///      who haven't customised their dashboard.
         /// </summary>
         public static void SubmitFeedback(SentryId eventId, string comments)
         {
             if (!IsActive || eventId == SentryId.Empty) return;
+            if (!_settings.enableCrashReports) return;
             if (string.IsNullOrWhiteSpace(comments)) return;
 
             try
@@ -190,15 +203,31 @@ namespace Chromatics.Core
                     contactEmail: null,
                     name: null,
                     associatedEventId: eventId);
-
                 SentrySdk.CaptureFeedback(feedback);
-                SentrySdk.Flush(TimeSpan.FromSeconds(5));
             }
-            catch
+            catch { }
+
+            try { SentrySdk.Logger.LogInfo("User feedback for {EventId}: {Comment}", eventId.ToString(), comments); } catch { }
+
+            try
             {
-                // Feedback submission must never throw — the user is in the
-                // middle of a crash dialog already.
+                SentrySdk.CaptureMessage(
+                    $"User feedback: {comments}",
+                    scope =>
+                    {
+                        scope.SetTag("associated_event_id", eventId.ToString());
+                        scope.SetTag("kind", "user_feedback");
+                        scope.SetExtra("crash_event_id", eventId.ToString());
+                    },
+                    SentryLevel.Info);
             }
+            catch { }
+
+            // Block long enough for all three to leave the process. The
+            // dialog is about to close and the process about to exit, so a
+            // 5s flush is the difference between feedback arriving or being
+            // dropped on shutdown.
+            try { SentrySdk.Flush(TimeSpan.FromSeconds(5)); } catch { }
         }
 
         /// <summary>

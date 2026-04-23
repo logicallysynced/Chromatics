@@ -31,12 +31,16 @@ namespace Chromatics.Views
             InitializeComponent();
         }
 
-        public CrashFeedbackDialog(Exception ex) : this()
+        public CrashFeedbackDialog(Exception ex, SentryId preCapturedEventId = default) : this()
         {
-            // Capture the exception immediately so that even if the user closes
-            // the dialog with the X (no feedback), Sentry still gets the crash.
-            // Feedback, if provided, is associated with this event id afterward.
-            _eventId = SentryService.CaptureCrash(ex);
+            // If the caller already captured the exception (early-startup
+            // crash path), reuse that event id to avoid double-billing the
+            // same crash. Otherwise capture it now so that even if the user
+            // dismisses the dialog with no feedback, Sentry still gets the
+            // crash. Feedback, when provided, is associated with this id.
+            _eventId = preCapturedEventId != SentryId.Empty
+                ? preCapturedEventId
+                : SentryService.CaptureCrash(ex);
 
             ErrorSummary.Text = $"{ex.GetType().Name}: {ex.Message}";
         }
@@ -101,11 +105,20 @@ namespace Chromatics.Views
         // Win32 MessageBox so the user at least sees something.
         private static void ShowFallback(Exception ex)
         {
-            try { SentryService.CaptureCrash(ex); } catch { }
+            // Capture once up front and pass the event id through to the
+            // dialog so it doesn't capture again. Without this, both this
+            // path and the dialog's constructor would fire CaptureCrash on
+            // the same exception, producing two events in the same Issue —
+            // and any feedback would be associated with the second event,
+            // making it look like comments "didn't arrive" because users
+            // were viewing the first one in the Issues list.
+            SentryId preCapturedEventId = SentryId.Empty;
+            try { preCapturedEventId = SentryService.CaptureCrash(ex); } catch { }
 
             try
             {
                 CrashApp.PendingException = ex;
+                CrashApp.PendingEventId = preCapturedEventId;
                 AppBuilder.Configure<CrashApp>()
                     .UsePlatformDetect()
                     .WithInterFont()
