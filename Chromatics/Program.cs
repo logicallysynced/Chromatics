@@ -74,6 +74,17 @@ namespace Chromatics
             // below) are captured even if they never reach the Console tab.
             Logger.SetLogDirectory(FileOperationsHelper.GetConfigDirectory());
 
+            // Initialize Sentry BEFORE settings load and admin elevation so
+            // early-startup crashes (malformed settings.chromatics4, missing
+            // dependencies, etc.) get captured. The non-admin parent and the
+            // elevated child both init their own SDK instance; that's fine
+            // because each process has its own state and AdminElevationHelper.
+            // RelaunchAsAdmin calls SentryService.Shutdown before Process.Kill,
+            // so the parent's pending events flush before it dies.
+            SentryService.Initialize();
+            if (!Debugger.IsAttached)
+                TaskScheduler.UnobservedTaskException += UnobservedTaskExceptionHandler;
+
             // Relocate any user data files from the exe directory into
             // %AppData%\Chromatics first — the Velopack portable updater wipes
             // the install tree on every update, so exe-dir storage is unsafe.
@@ -85,24 +96,12 @@ namespace Chromatics
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
 
-            // Run admin elevation BEFORE Sentry init so only the surviving
-            // process (the one that's actually going to keep running) starts
-            // Sentry. Previously the non-admin parent and the elevated child
-            // both initialized Sentry — verbose.log showed two complete init
-            // cycles, the parent's SDK was thrown away when Process.Kill
-            // fired, and the child's SDK could compete with the parent's
-            // teardown for the envelope cache / DSN session handle. Trade-off:
-            // an exception in AppSettings.Startup itself (above) won't reach
-            // Sentry — accept that for the malformed-settings edge case.
+            // Apply real consent / channel / language tags now that settings
+            // are loaded. Captures from this point forward use these values.
+            SentryService.ApplySettings(appSettings);
+
             if (!Debugger.IsAttached)
                 AdminElevationHelper.CheckAndElevateIfNeeded(appSettings);
-
-            // Initialize Sentry now that we know we're the surviving process.
-            // No-op under a debugger.
-            SentryService.Initialize();
-            SentryService.ApplySettings(appSettings);
-            if (!Debugger.IsAttached)
-                TaskScheduler.UnobservedTaskException += UnobservedTaskExceptionHandler;
 
             // First-run device-provider wizard runs after Avalonia boots — see
             // App.axaml.cs / FirstRunDialog. The expansion migration is
