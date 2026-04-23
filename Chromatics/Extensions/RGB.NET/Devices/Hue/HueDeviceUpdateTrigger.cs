@@ -19,17 +19,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         #region Properties & Fields
 
         private long _lastUpdateTimestamp;
-        public Dictionary<LocalHueApi, List<string>> ClientLights { get; }
-
-        #endregion
-
-        #region IDisposable
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            ClientLights.Clear();
-        }
 
         #endregion
 
@@ -39,9 +28,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         ///     Initializes a new instance of the <see cref="HueDeviceUpdateTrigger" /> class.
         /// </summary>
         public HueDeviceUpdateTrigger()
-        {
-            ClientLights = new Dictionary<LocalHueApi, List<string>>();
-        }
+        { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="HueDeviceUpdateTrigger" /> class.
@@ -49,9 +36,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         /// <param name="updateRateHardLimit">The hard limit of the update rate of this trigger.</param>
         public HueDeviceUpdateTrigger(double updateRateHardLimit)
             : base(updateRateHardLimit)
-        {
-            ClientLights = new Dictionary<LocalHueApi, List<string>>();
-        }
+        { }
 
         #endregion
 
@@ -72,8 +57,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
                     if (UpdateFrequency > 0)
                     {
-                        double lastUpdateTime = (_lastUpdateTimestamp - preUpdateTicks) / (double)TimeSpan.TicksPerMillisecond;
-                        int sleep = (int)(UpdateFrequency * 1000.0 - lastUpdateTime);
+                        // Operands were swapped here previously (lastUpdateTimestamp - preUpdateTicks),
+                        // which yielded a negative or zero elapsed value and caused the throttle
+                        // to always sleep the full UpdateFrequency window.
+                        double elapsedMs = (Stopwatch.GetTimestamp() - preUpdateTicks) / (double)TimeSpan.TicksPerMillisecond;
+                        int sleep = (int)(UpdateFrequency * 1000.0 - elapsedMs);
                         if (sleep > 0)
                             Thread.Sleep(sleep);
                     }
@@ -90,15 +78,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         {
             base.OnUpdate(updateData);
             _lastUpdateTimestamp = Stopwatch.GetTimestamp();
-
-            if (ClientLights == null)
-                return;
-
-            foreach (var clientLights in ClientLights)
-            {
-                var client = clientLights.Key;
-                var lightIds = clientLights.Value;
-            }
         }
 
         #endregion

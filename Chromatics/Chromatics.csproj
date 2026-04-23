@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows7.0</TargetFramework>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.0.71.0</Version>
+    <Version>4.0.72.0</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>logicallysynced 2026</Copyright>
@@ -63,7 +63,7 @@
     <PackageReference Include="HueApi" Version="3.2.0" />
     <PackageReference Include="HueApi.ColorConverters" Version="3.1.0" />
     <PackageReference Include="HueApi.Entertainment" Version="3.1.0" />
-    <PackageReference Include="System.Drawing.Common" Version="10.0.6" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.7" />
     <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="6.1.2" />

@@ -161,12 +161,11 @@ namespace Chromatics.Layers
                 // demo case in RaidEffectProcessor.
                 case "Hunter's Ring":
                 case "Hunting Ground":
-                case "Mist":
-                case "Limsa Lominsa Lower Decks":
+                case "Akh Afah Amphitheatre":
                     color = currentBgmId switch
                     {
-                        186u => ColorHelper.ColorToRGBColor(palette.RaidEffectM7Highlight2.Color), // TODO: real phase-2 BGM ID
-                        _    => ColorHelper.ColorToRGBColor(palette.RaidEffectM7KeyHighlight.Color),
+                        231 => ColorHelper.ColorToRGBColor(palette.RaidEffectM5KeyHighlight.Color), // TODO: real phase-2 BGM ID
+                        _    => ColorHelper.ColorToRGBColor(palette.RaidEffectM4KeyHighlight.Color),
                     };
                     RaidEffectState.raidEffectsRunning = true;
                     RaidEffectState.currentRaidBgmId = currentBgmId;

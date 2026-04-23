@@ -45,7 +45,9 @@ namespace Chromatics.Views
             SubmitButton.Content = "Connecting…";
             StatusText.Text = "";
 
-            var provider = new HueRGBDeviceProvider();
+            // Use the singleton — the constructor throws if _instance is
+            // already set (which it is after first launch / first connect).
+            var provider = HueRGBDeviceProvider.Instance;
             provider.ClientDefinitions.Clear();
             var bridge = new HueClientDefinition(ip, "chromatics", "");
             provider.ClientDefinitions.Add(bridge);
