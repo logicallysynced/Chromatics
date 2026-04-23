@@ -54,6 +54,12 @@ namespace Chromatics
                     {
                         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime d)
                             d.Shutdown();
+
+                        // Same rationale as OnTrayCloseClick: cooperative
+                        // shutdown leaves background threads alive, which
+                        // zombies the process and breaks the next launch.
+                        try { Chromatics.Core.SentryService.Shutdown(); } catch { }
+                        try { System.Diagnostics.Process.GetCurrentProcess().Kill(); } catch { }
                     });
                 };
 
@@ -103,6 +109,19 @@ namespace Chromatics
             {
                 desktop.Shutdown();
             }
+
+            // desktop.Shutdown() ends the Avalonia message loop but leaves
+            // background threads (Sentry.Profiling EventPipe, RGB.NET update
+            // timer, Sharlayan polling, Hue update trigger) alive — none of
+            // them respect a cooperative shutdown signal. Without an explicit
+            // Process.Kill the "closed" Chromatics survives as a zombie that
+            // holds the single-instance mutex AND Sentry's envelope cache,
+            // making the next launch see "Already running" and silently
+            // dropping crash events. SentryService.Shutdown does a sync
+            // 3-second flush first so any pending events leave the wire
+            // before we kill the process.
+            try { Chromatics.Core.SentryService.Shutdown(); } catch { }
+            try { System.Diagnostics.Process.GetCurrentProcess().Kill(); } catch { }
         }
 
         private void ShowMainWindow()

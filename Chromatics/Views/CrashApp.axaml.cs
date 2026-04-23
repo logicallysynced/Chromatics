@@ -2,6 +2,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
+using Chromatics.Helpers;
 using Sentry;
 using System;
 
@@ -25,6 +27,23 @@ namespace Chromatics.Views
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
+
+            // ThemeVariant "Default" in Avalonia 12 does NOT fall through to
+            // the Dark/Light ThemeDictionary entries we declared in XAML, so
+            // the ChromaticsBanner brush resolves to transparent and the
+            // header bar renders flat/unthemed. Pick an explicit variant
+            // based on the Windows system theme so the Chromatics brand
+            // colours actually bind.
+            try
+            {
+                RequestedThemeVariant = SystemHelpers.IsDarkModeEnabled()
+                    ? ThemeVariant.Dark
+                    : ThemeVariant.Light;
+            }
+            catch
+            {
+                RequestedThemeVariant = ThemeVariant.Dark;
+            }
         }
 
         public override void OnFrameworkInitializationCompleted()
