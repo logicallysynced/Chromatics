@@ -148,16 +148,19 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // bridge returns to a clean off state when the user disables Hue in
         // Settings or closes Chromatics.
         //
-        // All work runs inside Task.Run so it executes on the thread pool with no
-        // ambient synchronisation context. The previous implementation called
-        // TurnOffAsync() directly on the Avalonia UI thread, then blocked that
-        // thread with .Wait(). The HTTP response continuations were scheduled
-        // back onto the Avalonia dispatcher — which was blocked — so only the
-        // very first request (already in-flight before the Wait started) could
-        // complete. Task.Run breaks that cycle.
+        // Sequential, not parallel: the Hue bridge throttles concurrent CLIP v2
+        // PUTs aggressively (and the HueApi LocalHueApi instance is shared across
+        // all bulbs), so firing N requests at once silently dropped all but the
+        // first one. Sequential with a short pacing delay matches the bridge's
+        // ~10 req/s budget and gets every bulb.
         //
-        // After the parallel off-pass, clearing _instance lets the next Instance
-        // access construct a fresh provider (prevents ObjectDisposedException on
+        // All work runs inside Task.Run so HueApi's HTTP continuations don't
+        // capture the Avalonia dispatcher (which the outer .Wait would block).
+        // Per-bulb timeout is 2s; total budget grows with device count, capped
+        // so a dead bridge can't hang shutdown forever.
+        //
+        // After the off-pass, clearing _instance lets the next Instance access
+        // construct a fresh provider (prevents ObjectDisposedException on
         // HueBridgeDialog reconnect or Settings re-toggle).
         protected override void Dispose(bool disposing)
         {
@@ -168,15 +171,25 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     var devices = Devices.OfType<HueDevice>().ToList();
                     if (devices.Count > 0)
                     {
+                        int totalBudgetSec = Math.Min(15, 2 + devices.Count);
                         Task.Run(async () =>
                         {
-                            var tasks = devices.Select(async d =>
+                            foreach (var d in devices)
                             {
-                                try { await d.TurnOffAsync().ConfigureAwait(false); }
-                                catch { }
-                            });
-                            await Task.WhenAll(tasks).ConfigureAwait(false);
-                        }).Wait(TimeSpan.FromSeconds(3));
+                                try
+                                {
+                                    var off = d.TurnOffAsync();
+                                    var completed = await Task.WhenAny(off, Task.Delay(2000)).ConfigureAwait(false);
+                                    if (completed != off)
+                                        Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] TurnOff timed out for {d.DeviceInfo.DeviceName}");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] TurnOff failed for {d.DeviceInfo.DeviceName}: {ex.Message}");
+                                }
+                                await Task.Delay(120).ConfigureAwait(false);
+                            }
+                        }).Wait(TimeSpan.FromSeconds(totalBudgetSec));
                     }
                 }
                 catch { }
