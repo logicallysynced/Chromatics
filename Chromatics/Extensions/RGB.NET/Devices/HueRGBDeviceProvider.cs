@@ -144,10 +144,17 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             return new HueDeviceUpdateTrigger();
         }
 
-        // Before tearing down the provider, send TurnOff to every bulb in parallel
-        // so the bridge returns to a clean off state when the user disables Hue in
-        // Settings or closes Chromatics. We wait up to 3 seconds total; a dead or
-        // slow bridge is silently ignored — shutdown must never block.
+        // Before tearing down the provider, send TurnOff to every bulb so the
+        // bridge returns to a clean off state when the user disables Hue in
+        // Settings or closes Chromatics.
+        //
+        // All work runs inside Task.Run so it executes on the thread pool with no
+        // ambient synchronisation context. The previous implementation called
+        // TurnOffAsync() directly on the Avalonia UI thread, then blocked that
+        // thread with .Wait(). The HTTP response continuations were scheduled
+        // back onto the Avalonia dispatcher — which was blocked — so only the
+        // very first request (already in-flight before the Wait started) could
+        // complete. Task.Run breaks that cycle.
         //
         // After the parallel off-pass, clearing _instance lets the next Instance
         // access construct a fresh provider (prevents ObjectDisposedException on
@@ -158,11 +165,19 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             {
                 try
                 {
-                    var tasks = Devices.OfType<HueDevice>()
-                                       .Select(d => d.TurnOffAsync())
-                                       .ToArray();
-                    if (tasks.Length > 0)
-                        Task.WhenAll(tasks).Wait(TimeSpan.FromSeconds(3));
+                    var devices = Devices.OfType<HueDevice>().ToList();
+                    if (devices.Count > 0)
+                    {
+                        Task.Run(async () =>
+                        {
+                            var tasks = devices.Select(async d =>
+                            {
+                                try { await d.TurnOffAsync().ConfigureAwait(false); }
+                                catch { }
+                            });
+                            await Task.WhenAll(tasks).ConfigureAwait(false);
+                        }).Wait(TimeSpan.FromSeconds(3));
+                    }
                 }
                 catch { }
             }
