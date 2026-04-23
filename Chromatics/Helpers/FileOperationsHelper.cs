@@ -332,8 +332,9 @@ namespace Chromatics.Helpers
             }
             catch (Exception ex)
             {
+                // Log + rethrow — see LoadEffectSettings for rationale.
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Layers: {ex.Message}");
-                return (null, null);
+                throw;
             }
         }
 
@@ -669,8 +670,9 @@ namespace Chromatics.Helpers
             }
             catch (Exception ex)
             {
+                // Log + rethrow — see LoadEffectSettings for rationale.
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Color Palette: {ex.Message}");
-                return null;
+                throw;
             }
         }
 
@@ -843,25 +845,23 @@ namespace Chromatics.Helpers
         {
             var enviroment = GetConfigDirectory();
             var path = Path.Combine(enviroment, EffectsFile);
-            var result = new EffectTypesModel();
 
             try
             {
-                using (var sr = new StreamReader(path))
-                {
-                    result = JsonConvert.DeserializeObject<EffectTypesModel>(sr.ReadToEnd());
-                    sr.Close();
-                }
-
-                if (result != null)
-                    return result;
-
-                return null;
+                using var sr = new StreamReader(path);
+                return JsonConvert.DeserializeObject<EffectTypesModel>(sr.ReadToEnd());
             }
             catch (Exception ex)
             {
+                // Log + rethrow. The previous "log + return null" form caused
+                // the app to silently continue with broken/missing effect data
+                // when effects.chromatics4 was corrupted — no exception
+                // reached the crash handler, so the user saw "no dialog, just
+                // a zombie process". Letting it propagate routes through
+                // App.OnFrameworkInitializationCompleted's try/catch into
+                // CrashHandler, which shows the themed dialog and force-kills.
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Effects: {ex.Message}");
-                return null;
+                throw;
             }
         }
 
@@ -907,25 +907,17 @@ namespace Chromatics.Helpers
         {
             var enviroment = GetConfigDirectory();
             var path = Path.Combine(enviroment, SettingsFile);
-            var result = new SettingsModel();
 
             try
             {
-                using (var sr = new StreamReader(path))
-                {
-                    result = JsonConvert.DeserializeObject<SettingsModel>(sr.ReadToEnd());
-                    sr.Close();
-                }
-
-                if (result != null)
-                    return result;
-
-                return null;
+                using var sr = new StreamReader(path);
+                return JsonConvert.DeserializeObject<SettingsModel>(sr.ReadToEnd());
             }
             catch (Exception ex)
             {
+                // Log + rethrow — see LoadEffectSettings for rationale.
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Settings: {ex.Message}");
-                return null;
+                throw;
             }
         }
 
