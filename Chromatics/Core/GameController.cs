@@ -366,8 +366,6 @@ namespace Chromatics.Core
                         GameLanguage = GameLanguage.English,
                     };
 
-                    Debug.WriteLine($"Using Local Cache: {AppSettings.GetSettings().localcache}");
-
                     try
                     {
                         _memoryHandler = SharlayanMemoryManager.Instance.AddHandler(_configuration);

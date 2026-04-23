@@ -13,7 +13,6 @@ namespace Chromatics.Models
         public string version { get; set; } = "2";
         public double? ffxivExpansion { get; set; } = 6.0;
         public bool firstrun { get; set; } = true;
-        public bool localcache { get; set; } = false;
         public bool winstart { get; set; } = false;
         public bool minimizetray { get; set; } = false;
         public bool trayonstartup { get; set; } = false;
