@@ -776,5 +776,6 @@
   "Displays different colours across selected keys depending on whether the character is engaged in battle or not.": "Affiche différentes couleurs sur les touches sélectionnées selon que le personnage est en combat ou non.",
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Affiche la progression d’incantation du personnage sur les touches sélectionnées.\n[Modes pris en charge : Interpolation, Fondu]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "Affiche différentes couleurs sur les touches sélectionnées en fonction de la classe actuelle du personnage.\nUtilise les couleurs de la couche de surbrillance.",
-  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Affiche différentes couleurs sur les touches sélectionnées en fonction de la météo actuelle.\nUtilise les couleurs de la couche de surbrillance."
+  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Affiche différentes couleurs sur les touches sélectionnées en fonction de la météo actuelle.\nUtilise les couleurs de la couche de surbrillance.",
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Effets animés de zone de raid. Remplace la couche de base pendant la durée des rencontres de raid prises en charge."
 }

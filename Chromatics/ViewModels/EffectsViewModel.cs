@@ -73,7 +73,7 @@ namespace Chromatics.ViewModels
 
             Toggles.Add(new EffectToggleItem(
                 "Raid Effects",
-                "Animated raid zone effects instead of reactive weather. Uses Reactive Weather layers.",
+                "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.",
                 "avares://Chromatics/Resources/raid.png",
                 e.effect_raideffects,
                 v => { e.effect_raideffects = v; RGBController.SaveEffectsSettings(); }));

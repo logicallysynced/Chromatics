@@ -776,5 +776,6 @@
   "Displays different colours across selected keys depending on whether the character is engaged in battle or not.": "Muestra diferentes colores en las teclas seleccionadas según si el personaje está en combate o no.",
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Muestra el progreso de lanzamiento del personaje en las teclas seleccionadas.\n[Modos compatibles: Interpolar, Desvanecer]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "Muestra diferentes colores en las teclas seleccionadas según la clase actual del personaje.\nUsa los colores de la capa de resaltado.",
-  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Muestra diferentes colores en las teclas seleccionadas según el clima actual.\nUsa los colores de la capa de resaltado."
+  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Muestra diferentes colores en las teclas seleccionadas según el clima actual.\nUsa los colores de la capa de resaltado.",
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Efectos animados de zona de banda. Sobrescribe la capa base durante la duración de los encuentros de banda compatibles."
 }

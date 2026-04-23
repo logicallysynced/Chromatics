@@ -776,5 +776,6 @@
   "Displays different colours across selected keys depending on whether the character is engaged in battle or not.": "キャラクターが戦闘中かどうかに応じて、選択したキーに異なる色を表示します。",
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "キャラクターの詠唱進行状況を選択したキーに表示します。\n[対応モード: Interpolate, Fade]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "キャラクターの現在のクラスに応じて、選択したキーに異なる色を表示します。\nハイライトレイヤーの色を使用します。",
-  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "現在の天候に応じて、選択したキーに異なる色を表示します。\nハイライトレイヤーの色を使用します。"
+  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "現在の天候に応じて、選択したキーに異なる色を表示します。\nハイライトレイヤーの色を使用します。",
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "アニメーション付きのレイドゾーン効果。対応しているレイド戦の間、ベースレイヤーを上書きします。"
 }
