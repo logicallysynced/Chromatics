@@ -109,6 +109,9 @@
                     <CheckBox Content="{loc:Tr Key='Always relaunch Chromatics as Administrator. Required for reading FFXIV process memory.'}"
                               IsChecked="{Binding AlwaysRunAsAdmin, Mode=TwoWay}"
                               ToolTip.Tip="{loc:Tr Key='When enabled, Chromatics will automatically prompt for administrator privileges on each launch.'}" />
+                    <CheckBox Content="{loc:Tr Key='Send anonymous crash reports and performance data to help improve Chromatics.'}"
+                              IsChecked="{Binding EnableCrashReports, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Enabled. Crash reports contain no personally identifying information. See the Privacy section of the README for details.'}" />
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <Button Content="{loc:Tr Key='Check for Updates'}"
                                 Click="OnCheckUpdatesClick"

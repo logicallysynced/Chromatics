@@ -43,7 +43,7 @@ Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting 
 * Gold Saucer Vegas Mode
 * Title screen & cutscene animations
 <br>
-<img src="https://chromaticsffxiv.com/img/Chromatics4_PaletteScreen.png" alt="Chromatics Palettes">
+<img src="https://chromaticsffxiv.com/img/Chromatics4_MappingScreen.png" alt="Chromatics Palettes">
 <br>
 <br>
 Chromatics is compatible with a wide range of RGB devices, supported by the library RGB.NET. Any devices supported by RGB.NET should be supported by Chromatics.
@@ -57,6 +57,28 @@ If you wish to build Chromatics yourself, you can download the active branch and
 * [Sharlayan](https://github.com/FFXIVAPP/sharlayan) - used for FFXIV memory reading
 * [Artemis](https://github.com/Artemis-RGB/Artemis) - borrowed some code base and RGB.NET profiles, not actually a dependency
 * [FFXIVWeather](https://github.com/karashiiro/FFXIVWeather) - For calculating current weather.
+* [Sentry](https://sentry.io/) - error monitoring, logs, metrics, tracing, and profiling
+<br><br><br>
+### Privacy / Telemetry ###
+Chromatics uses [Sentry](https://sentry.io/) to collect anonymous crash reports, error logs, performance traces, and profiling samples. This data helps us identify and fix bugs that affect real users.
+
+**What we collect:**
+* Unhandled exception stack traces and the immediately preceding log lines
+* The Chromatics version, your operating system version, and the .NET runtime version
+* Performance traces (a 20% sample of update cycles) and profiling data
+* Anonymous session counts used to compute crash-free release health
+* Optional user feedback (name, email, comments) only when you explicitly fill in the crash dialog
+
+**What we do NOT collect:**
+* Your character name, server, free company, or any FFXIV account information
+* Your IP address (Sentry strips this; `SendDefaultPii` is disabled)
+* The contents of your screen, keystrokes, or any input
+* File paths or settings outside of what is directly relevant to a crash
+* Your bridge keys, light IDs, or any device credentials
+
+**Opting out:** Crash reporting is enabled by default but can be turned off at any time from **Settings → Advanced → Send anonymous crash reports**. When disabled, the Sentry SDK is paused and no network traffic is generated.
+
+Beta and stable channel reports are tagged separately so beta-channel issues do not affect the stable crash-free rate.
 <br><br><br>
 ### Disclaimer ###
 Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners.

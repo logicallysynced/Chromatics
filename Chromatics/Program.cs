@@ -2,11 +2,13 @@ using Avalonia;
 using Chromatics.Core;
 using Chromatics.Helpers;
 using Chromatics.Models;
+using Chromatics.Views;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using Velopack;
 
 namespace Chromatics
@@ -67,6 +69,13 @@ namespace Chromatics
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
 
+            // Initialize Sentry as early as possible after settings are loaded
+            // so it can capture exceptions during the rest of startup. The
+            // service honours the user's enableCrashReports toggle internally
+            // and respects beta-vs-stable for release-health bucketing.
+            SentryService.Initialize(appSettings);
+            TaskScheduler.UnobservedTaskException += UnobservedTaskExceptionHandler;
+
             if (!Debugger.IsAttached)
                 AdminElevationHelper.CheckAndElevateIfNeeded(appSettings);
 
@@ -76,8 +85,28 @@ namespace Chromatics
             RunExpansionMigrationIfNeeded(appSettings);
             AppSettings.SaveSettings(appSettings);
 
-            BuildAvaloniaApp()
-                .StartWithClassicDesktopLifetime(args);
+            try
+            {
+                BuildAvaloniaApp()
+                    .StartWithClassicDesktopLifetime(args);
+            }
+            catch (Exception ex)
+            {
+                // Avalonia startup or message-loop crash. AppDomain handler
+                // doesn't always fire for these because the runtime sometimes
+                // unwinds out of Main first. Report and show feedback dialog
+                // (unless we're in a debug session — let it propagate then).
+                if (!Debugger.IsAttached)
+                {
+                    SentryService.CaptureCrash(ex);
+                    CrashFeedbackDialog.ShowBlocking(ex);
+                }
+                throw;
+            }
+            finally
+            {
+                SentryService.Shutdown();
+            }
         }
 
         // Carried over from the old Fm_MainWindow ctor: users upgrading from a build
@@ -114,8 +143,40 @@ namespace Chromatics
 
         private static void UnhandledExceptionHandler(object sender, UnhandledExceptionEventArgs e)
         {
-            var ex = (Exception)e.ExceptionObject;
-            MessageBoxW(IntPtr.Zero, "Unhandled exception caught: " + ex.Message, "Chromatics Error", MB_OK | MB_ICONERROR);
+            var ex = e.ExceptionObject as Exception ?? new Exception("Unknown unhandled exception (non-CLR object thrown)");
+
+            // Under a debugger, let the IDE handle the exception so the dev can
+            // inspect it. Otherwise capture, then show the user feedback form
+            // so they can submit context alongside the crash report.
+            if (Debugger.IsAttached)
+            {
+                MessageBoxW(IntPtr.Zero, "Unhandled exception caught: " + ex.Message, "Chromatics Error", MB_OK | MB_ICONERROR);
+                return;
+            }
+
+            try
+            {
+                CrashFeedbackDialog.ShowBlocking(ex);
+            }
+            catch
+            {
+                // Last-resort fallback if Avalonia is too dead to spin up the dialog.
+                try { SentryService.CaptureCrash(ex); } catch { }
+                MessageBoxW(IntPtr.Zero, "Unhandled exception caught: " + ex.Message, "Chromatics Error", MB_OK | MB_ICONERROR);
+            }
+            finally
+            {
+                SentryService.Shutdown();
+            }
+        }
+
+        private static void UnobservedTaskExceptionHandler(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            // These don't terminate the process by default in modern .NET, so
+            // we capture without showing the dialog. Marking observed prevents
+            // the legacy "rethrow on finalize" behaviour from kicking in.
+            try { SentryService.CaptureCrash(e.Exception); } catch { }
+            e.SetObserved();
         }
 
         private static bool ThereCanOnlyBeOne()

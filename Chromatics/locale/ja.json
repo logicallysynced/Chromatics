@@ -777,5 +777,15 @@
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "キャラクターの詠唱進行状況を選択したキーに表示します。\n[対応モード: Interpolate, Fade]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "キャラクターの現在のクラスに応じて、選択したキーに異なる色を表示します。\nハイライトレイヤーの色を使用します。",
   "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "現在の天候に応じて、選択したキーに異なる色を表示します。\nハイライトレイヤーの色を使用します。",
-  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "アニメーション付きのレイドゾーン効果。対応しているレイド戦の間、ベースレイヤーを上書きします。"
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "アニメーション付きのレイドゾーン効果。対応しているレイド戦の間、ベースレイヤーを上書きします。",
+  "Send anonymous crash reports and performance data to help improve Chromatics.": "Chromatics の改善に役立てるため、匿名のクラッシュレポートとパフォーマンスデータを送信します。",
+  "Default: Enabled. Crash reports contain no personally identifying information. See the Privacy section of the README for details.": "デフォルト: 有効。クラッシュレポートには個人を特定できる情報は含まれません。詳細は README のプライバシーのセクションをご覧ください。",
+  "Chromatics has crashed": "Chromatics がクラッシュしました",
+  "Chromatics has encountered an unexpected error and needs to close.": "Chromatics で予期しないエラーが発生したため、終了する必要があります。",
+  "You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.": "クラッシュレポートを送信していただくことで、この問題の修正にご協力いただけます。個人を特定できる情報は収集されません。発生時に何をしていたかを短く説明していただくと、再現が大幅に容易になります。",
+  "What were you doing when this happened? (optional)": "これが発生したとき、何をしていましたか？（任意）",
+  "Name (optional)": "名前（任意）",
+  "Email (optional)": "メールアドレス（任意）",
+  "Don't Send": "送信しない",
+  "Send Report": "レポートを送信"
 }

@@ -1,0 +1,71 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        x:Class="Chromatics.Views.CrashFeedbackDialog"
+        Title="{loc:Tr Key='Chromatics has crashed'}"
+        Width="520" Height="500"
+        WindowStartupLocation="CenterScreen"
+        CanResize="False"
+        ShowInTaskbar="True"
+        Topmost="True">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto" Margin="20">
+        <TextBlock Grid.Row="0"
+                   Text="{loc:Tr Key='Chromatics has encountered an unexpected error and needs to close.'}"
+                   FontWeight="SemiBold"
+                   FontSize="15"
+                   TextWrapping="Wrap" />
+
+        <TextBlock Grid.Row="1"
+                   Text="{loc:Tr Key='You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.'}"
+                   TextWrapping="Wrap"
+                   Opacity="0.85"
+                   Margin="0,8,0,12" />
+
+        <TextBlock Grid.Row="2"
+                   Text="{loc:Tr Key='What were you doing when this happened? (optional)'}"
+                   Margin="0,4,0,4" />
+
+        <TextBox Grid.Row="3"
+                 Name="CommentsBox"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 Height="120"
+                 VerticalContentAlignment="Top" />
+
+        <Grid Grid.Row="4" ColumnDefinitions="*,*" Margin="0,12,0,0">
+            <StackPanel Grid.Column="0" Margin="0,0,6,0">
+                <TextBlock Text="{loc:Tr Key='Name (optional)'}" Margin="0,0,0,4" />
+                <TextBox Name="NameBox" />
+            </StackPanel>
+            <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                <TextBlock Text="{loc:Tr Key='Email (optional)'}" Margin="0,0,0,4" />
+                <TextBox Name="EmailBox" />
+            </StackPanel>
+        </Grid>
+
+        <TextBlock Grid.Row="6"
+                   Name="ErrorSummary"
+                   FontFamily="Consolas, monospace"
+                   FontSize="11"
+                   Opacity="0.6"
+                   TextWrapping="NoWrap"
+                   TextTrimming="CharacterEllipsis"
+                   Margin="0,12,0,0" />
+
+        <StackPanel Grid.Row="7"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button Name="DontSendButton"
+                    Content="{loc:Tr Key=&quot;Don&apos;t Send&quot;}"
+                    Width="120"
+                    Click="OnDontSend" />
+            <Button Name="SendButton"
+                    Content="{loc:Tr Key='Send Report'}"
+                    Width="140"
+                    Classes="accent"
+                    Click="OnSend" />
+        </StackPanel>
+    </Grid>
+</Window>

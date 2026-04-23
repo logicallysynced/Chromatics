@@ -50,6 +50,7 @@ namespace Chromatics.Models
         public string deviceHueBridgeClientKey { get; set; } = "";
         public double deviceHueBridgeBrightness { get; set; } = -1;
         public bool deviceRazerCheckSDKOverride { get; set; } = false;
+        public bool enableCrashReports { get; set; } = true;
         public Theme systemTheme { get; set; } = Theme.System;
         public Language systemLanguage { get; set; } = Language.English;
 
