@@ -45,7 +45,12 @@ namespace Chromatics
                 return;
             }
 
-            AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
+            // Only install our crash hooks when no debugger is attached. Under
+            // a debugger we want the IDE's exception break / continue flow to
+            // work exactly as if Sentry didn't exist — no MessageBox, no
+            // Sentry capture, no feedback dialog.
+            if (!Debugger.IsAttached)
+                AppDomain.CurrentDomain.UnhandledException += UnhandledExceptionHandler;
 
             // The Velopack installer declares this prerequisite via --framework and
             // installs it before first run, so Setup.exe users never see this warning.
@@ -71,10 +76,12 @@ namespace Chromatics
 
             // Initialize Sentry as early as possible after settings are loaded
             // so it can capture exceptions during the rest of startup. The
-            // service honours the user's enableCrashReports toggle internally
-            // and respects beta-vs-stable for release-health bucketing.
+            // service honours the user's enableCrashReports toggle internally,
+            // respects beta-vs-stable for release-health bucketing, and is a
+            // no-op under a debugger.
             SentryService.Initialize(appSettings);
-            TaskScheduler.UnobservedTaskException += UnobservedTaskExceptionHandler;
+            if (!Debugger.IsAttached)
+                TaskScheduler.UnobservedTaskException += UnobservedTaskExceptionHandler;
 
             if (!Debugger.IsAttached)
                 AdminElevationHelper.CheckAndElevateIfNeeded(appSettings);

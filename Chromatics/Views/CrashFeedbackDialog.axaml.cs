@@ -78,11 +78,9 @@ namespace Chromatics.Views
         {
             try
             {
-                SentryService.SubmitFeedback(
-                    _eventId,
-                    CommentsBox.Text ?? string.Empty,
-                    EmailBox.Text ?? string.Empty,
-                    NameBox.Text ?? string.Empty);
+                // Comments only — name and email fields were removed so the
+                // form cannot collect personally identifying information.
+                SentryService.SubmitFeedback(_eventId, CommentsBox.Text ?? string.Empty);
             }
             catch { }
             Close();
