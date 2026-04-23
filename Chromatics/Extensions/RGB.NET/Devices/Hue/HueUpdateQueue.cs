@@ -22,13 +22,19 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
         private readonly Light _light;
         private readonly LocalHueApi _client;
+        // Hardware model id (e.g. "LCA001") used by HueColorConverter to pick the
+        // correct gamut triangle when computing xy chromaticity from RGB. Default
+        // gamut "LCT001" (used when this is empty) only matches first-gen A19
+        // bulbs — modern wide-gamut lights (LCA series, light strips, etc.) get
+        // visibly desaturated/wrong colors without their real model id.
+        private readonly string _modelId;
         private readonly Lock _lock = new();
 
         #endregion
 
         #region Constructors
 
-        public HueUpdateQueue(IDeviceUpdateTrigger updateTrigger, Light light, LocalHueApi client)
+        public HueUpdateQueue(IDeviceUpdateTrigger updateTrigger, Light light, string modelId, LocalHueApi client)
             : base(updateTrigger)
         {
             _client = client;
@@ -37,6 +43,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             // on GetAllAsync().Result inside the constructor, which could deadlock
             // if the Hue bridge was unreachable.
             _light = light;
+            _modelId = modelId ?? "";
         }
 
         #endregion
@@ -104,8 +111,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         req = new UpdateLight()
                             .SetSpeed(0)
                             .TurnOn()
-                            .SetBrightness(brightness)
-                            .SetColor(rgbColorHue);
+                            .SetBrightness(brightness);
+
+                        if (!string.IsNullOrEmpty(_modelId))
+                            req.SetColor(rgbColorHue, _modelId);
+                        else
+                            req.SetColor(rgbColorHue);
                     }
 
                     try

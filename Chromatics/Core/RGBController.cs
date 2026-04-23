@@ -591,6 +591,14 @@ namespace Chromatics.Core
 
             foreach (var device in devices)
             {
+                // Skip single-LED devices (Philips Hue bulbs, single-zone strips,
+                // etc.) — a moving gradient on one LED is just a flashing cycling
+                // color, not a startup animation. At ZIndex 1000 it also overrides
+                // the user's configured base layer (their static color, etc.) and
+                // ignores the layer's enable toggle, so users see "fading colors
+                // I can't disable" on Hue lights when the game isn't connected.
+                if (device.Count() <= 1) continue;
+
                 var gradient = new RainbowGradient();
                 var ledgroup = new ListLedGroup(surface);
 
@@ -610,7 +618,7 @@ namespace Chromatics.Core
                 {
                     ledgroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), gradient));
                 }
-                    
+
 
                 _runningEffects.Add(ledgroup);
             }
