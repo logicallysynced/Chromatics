@@ -74,6 +74,30 @@ namespace Chromatics.Views
                 return;
             }
 
+            // If we're already on the UI thread (e.g. App.OnFrameworkInitializationCompleted
+            // catching a MainWindow ctor failure), Dispatcher.UIThread.Post + .Wait()
+            // is a guaranteed deadlock: the post can't be processed because we're
+            // blocking the very thread that would process it. Manifests as "zombie
+            // Chromatics.exe in task manager, no dialog ever appears". Show the
+            // dialog inline and run a nested dispatcher message loop until the
+            // dialog closes.
+            if (Dispatcher.UIThread.CheckAccess())
+            {
+                try
+                {
+                    var dlg = new CrashFeedbackDialog(ex);
+                    var cts = new CancellationTokenSource();
+                    dlg.Closed += (_, _) => cts.Cancel();
+                    dlg.Show();
+                    Dispatcher.UIThread.MainLoop(cts.Token);
+                }
+                catch
+                {
+                    ShowFallback(ex);
+                }
+                return;
+            }
+
             try
             {
                 var done = new ManualResetEventSlim();
