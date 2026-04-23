@@ -20,11 +20,11 @@ namespace Chromatics.Core
     /// </summary>
     public static class SentryService
     {
-        // DSN: public, project ID 4511267934437376 (slug "chromatics").
-        // The host/org-id portion of the DSN must be filled in from the Sentry
-        // project's Client Keys page before shipping a release. Until then the
-        // SDK runs in a no-op state if the DSN is left blank.
-        private const string Dsn = "https://<publickey>@o<orgid>.ingest.us.sentry.io/4511267934437376";
+        // DSN: public ingestion key for the Chromatics project (ID 4511267934437376,
+        // slug "chromatics"). Sentry DSNs are not secrets — they are write-only
+        // event-ingest tokens that must be embedded in client builds. Exposing
+        // them in OSS source is the documented Sentry pattern.
+        private const string Dsn = "https://281bff0891576e4f10d8722ce3bf6837@o4511267928735744.ingest.us.sentry.io/4511267934437376";
 
         private static IDisposable _sdkHandle;
         private static bool _initialized;
@@ -40,12 +40,19 @@ namespace Chromatics.Core
         public static void Initialize(SettingsModel settings)
         {
             if (_initialized) return;
-            if (string.IsNullOrWhiteSpace(Dsn) || Dsn.Contains("<publickey>"))
+            if (string.IsNullOrWhiteSpace(Dsn))
             {
                 // DSN not configured — skip silently. Runtime toggle in Settings
                 // becomes a no-op rather than a crash.
                 return;
             }
+
+            // Under a debugger, do nothing. The Sentry SDK installs its own
+            // AppDomain.UnhandledException + TaskScheduler.UnobservedTaskException
+            // integrations that would intercept exceptions before the IDE's
+            // normal break-on-unhandled flow. Skipping init keeps the IDE
+            // experience identical to a clean (non-Sentry) debug session.
+            if (Debugger.IsAttached) return;
 
             var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.0.0";
 
@@ -143,19 +150,21 @@ namespace Chromatics.Core
         }
 
         /// <summary>
-        /// Submits user feedback (name optional, email optional, comments
-        /// required) attached to a previously captured event id.
+        /// Submits anonymous comments attached to a previously captured event
+        /// id. The dialog deliberately does not collect name/email — comments
+        /// are the only user-supplied field on the wire.
         /// </summary>
-        public static void SubmitFeedback(SentryId eventId, string comments, string email, string name)
+        public static void SubmitFeedback(SentryId eventId, string comments)
         {
             if (!IsActive || eventId == SentryId.Empty) return;
+            if (string.IsNullOrWhiteSpace(comments)) return;
 
             try
             {
                 var feedback = new SentryFeedback(
-                    message: string.IsNullOrWhiteSpace(comments) ? "(no comment)" : comments,
-                    contactEmail: string.IsNullOrWhiteSpace(email) ? null : email,
-                    name: string.IsNullOrWhiteSpace(name) ? null : name,
+                    message: comments,
+                    contactEmail: null,
+                    name: null,
                     associatedEventId: eventId);
 
                 SentrySdk.CaptureFeedback(feedback);

@@ -3,12 +3,12 @@
         xmlns:loc="clr-namespace:Chromatics.Localization"
         x:Class="Chromatics.Views.CrashFeedbackDialog"
         Title="{loc:Tr Key='Chromatics has crashed'}"
-        Width="520" Height="500"
+        Width="520" Height="420"
         WindowStartupLocation="CenterScreen"
         CanResize="False"
         ShowInTaskbar="True"
         Topmost="True">
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto" Margin="20">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto" Margin="20">
         <TextBlock Grid.Row="0"
                    Text="{loc:Tr Key='Chromatics has encountered an unexpected error and needs to close.'}"
                    FontWeight="SemiBold"
@@ -29,21 +29,10 @@
                  Name="CommentsBox"
                  AcceptsReturn="True"
                  TextWrapping="Wrap"
-                 Height="120"
+                 Height="160"
                  VerticalContentAlignment="Top" />
 
-        <Grid Grid.Row="4" ColumnDefinitions="*,*" Margin="0,12,0,0">
-            <StackPanel Grid.Column="0" Margin="0,0,6,0">
-                <TextBlock Text="{loc:Tr Key='Name (optional)'}" Margin="0,0,0,4" />
-                <TextBox Name="NameBox" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Margin="6,0,0,0">
-                <TextBlock Text="{loc:Tr Key='Email (optional)'}" Margin="0,0,0,4" />
-                <TextBox Name="EmailBox" />
-            </StackPanel>
-        </Grid>
-
-        <TextBlock Grid.Row="6"
+        <TextBlock Grid.Row="5"
                    Name="ErrorSummary"
                    FontFamily="Consolas, monospace"
                    FontSize="11"
@@ -52,7 +41,7 @@
                    TextTrimming="CharacterEllipsis"
                    Margin="0,12,0,0" />
 
-        <StackPanel Grid.Row="7"
+        <StackPanel Grid.Row="6"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Spacing="8"

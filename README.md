@@ -67,9 +67,10 @@ Chromatics uses [Sentry](https://sentry.io/) to collect anonymous crash reports,
 * The Chromatics version, your operating system version, and the .NET runtime version
 * Performance traces (a 20% sample of update cycles) and profiling data
 * Anonymous session counts used to compute crash-free release health
-* Optional user feedback (name, email, comments) only when you explicitly fill in the crash dialog
+* Optional free-text comments only when you explicitly type into the crash dialog
 
 **What we do NOT collect:**
+* Your name, email, or any other personally identifying information — the crash dialog asks only for free-text comments
 * Your character name, server, free company, or any FFXIV account information
 * Your IP address (Sentry strips this; `SendDefaultPii` is disabled)
 * The contents of your screen, keystrokes, or any input
