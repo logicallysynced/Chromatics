@@ -123,12 +123,46 @@ namespace Chromatics
 
                 SentryService.CaptureCrash(ex);
                 CrashFeedbackDialog.ShowBlocking(ex);
-                SentryService.Shutdown();
-                Environment.Exit(1);
+                ForceTerminate(1);
             }
             finally
             {
                 SentryService.Shutdown();
+            }
+
+            // Normal exit path: Avalonia lifetime ended cleanly. Force-terminate
+            // anyway because Sentry.Profiling's EventPipe session, the RGB.NET
+            // update timer, the Sharlayan polling thread, and the Hue device
+            // update trigger don't all exit when desktop.Shutdown() returns.
+            // Without this, a "closed" Chromatics stays as a zombie process —
+            // holding the single-instance mutex AND Sentry's envelope cache
+            // lock, which manifests as both "Already running" prompts on the
+            // next launch AND no events ever leaving subsequent Sentry inits.
+            ForceTerminate(0);
+        }
+
+        // Hard process termination. Tries Environment.Exit first (gives
+        // ProcessExit handlers and finalizers one shot to run), but falls
+        // through to Process.Kill if Exit hangs — Sentry's AppDomain.ProcessExit
+        // flush and Sentry.Profiling's EventPipe teardown can both block
+        // indefinitely on a slow network or stuck pipe, leaving the visible
+        // process tree alive for minutes.
+        private static void ForceTerminate(int exitCode)
+        {
+            try { SentryService.Shutdown(); } catch { }
+
+            // Kick off Environment.Exit on a thread-pool thread with a hard
+            // deadline so we can't be held hostage by a misbehaving handler.
+            var done = new System.Threading.ManualResetEventSlim();
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                try { Environment.Exit(exitCode); } catch { }
+                done.Set();
+            });
+
+            if (!done.Wait(TimeSpan.FromSeconds(3)))
+            {
+                try { Process.GetCurrentProcess().Kill(); } catch { }
             }
         }
 
@@ -189,13 +223,7 @@ namespace Chromatics
             }
             finally
             {
-                SentryService.Shutdown();
-                // Force termination — without this, a stuck background thread
-                // (Sharlayan polling, Hue update trigger, RGB.NET timer, etc.)
-                // can keep the process alive indefinitely after the dialog
-                // closes, leaving a zombie in task manager that trips the
-                // single-instance guard on the user's next launch attempt.
-                Environment.Exit(1);
+                ForceTerminate(1);
             }
         }
 
