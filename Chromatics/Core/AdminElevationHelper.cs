@@ -66,12 +66,23 @@ namespace Chromatics.Core
             {
                 var exePath = Environment.ProcessPath ?? Process.GetCurrentProcess().MainModule!.FileName;
                 Process.Start(new ProcessStartInfo(exePath) { Verb = "runas", UseShellExecute = true });
-                Environment.Exit(0);
             }
             catch
             {
                 // User cancelled the UAC prompt — continue without admin.
+                return;
             }
+
+            // Force-kill the non-admin parent immediately. Environment.Exit
+            // here hangs on Sentry's AppDomain.ProcessExit flush handler,
+            // leaving the parent alive holding the single-instance mutex AND
+            // Sentry's envelope cache. The elevated child then sees the
+            // mutex held and prompts "Already running?" on every launch
+            // (and its Sentry can't write events into the locked cache).
+            // SentryService.Shutdown does a sync flush first so any pending
+            // events leave the wire before TerminateProcess fires.
+            try { SentryService.Shutdown(); } catch { }
+            try { Process.GetCurrentProcess().Kill(); } catch { }
         }
     }
 }
