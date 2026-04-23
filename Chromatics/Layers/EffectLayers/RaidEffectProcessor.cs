@@ -10,6 +10,7 @@ using RGB.NET.Presets.Textures.Gradients;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Chromatics.Layers
 {
@@ -29,6 +30,15 @@ namespace Chromatics.Layers
         private static RaidEffectProcessor _instance;
         private readonly Dictionary<int, ListLedGroup> _overlays = new();
         private readonly Dictionary<int, HashSet<LinearGradient>> _gradientEffects = new();
+        // Layer IDs whose user-side base groups must stay detached while the
+        // raid overlay is active. Detached on every surface.Updating tick (not
+        // just every game-loop tick) so the base processor's ~5fps re-attach
+        // can't slip through the ~50-100Hz surface render before the next
+        // game-loop suppress fires. Without this hook the user briefly sees
+        // their normal base layer between game-loop ticks.
+        private readonly HashSet<int> _suppressedLayerIds = new();
+        private readonly Lock _suppressLock = new();
+        private bool _hookedUpdating;
         private bool _disposed;
 
         // Higher than user layer ZIndexes (typically 1-10) so the raid
@@ -166,8 +176,6 @@ namespace Chromatics.Layers
 
             var runningEffects = RGBController.GetRunningEffects();
 
-            overlay.ZIndex = RaidOverlayZIndex;
-
             bool applied = ApplyRaidEffect(overlay, zone, palette, currentBgmId, runningEffects, layer);
             if (applied)
             {
@@ -175,9 +183,12 @@ namespace Chromatics.Layers
 
                 if (overlay.Decorators.Count > 0)
                 {
-                    // Decorator writes LEDs directly — alpha-0 keeps the device in the
-                    // surface's active set without the brush competing with the decorator.
-                    overlay.Brush = new SolidColorBrush(new Color((byte)0, (byte)0, (byte)0, (byte)0));
+                    // Decorator effect: BPMRipple/BPMChase/etc. write LEDs directly via
+                    // surface.Updating. Their OnAttached already detached the overlay so
+                    // brushes don't overwrite the writes. Don't re-attach — a transparent
+                    // brush at ZIndex 500 would override every lower layer (including
+                    // DamageFlash) with (0,0,0,0). Matches ReactiveWeather's pattern of
+                    // leaving the decorator-driven group detached.
                 }
                 else
                 {
@@ -185,8 +196,8 @@ namespace Chromatics.Layers
                     // TextureBrush is already set. Render at the base layer's ZIndex so
                     // dynamic layers paint over it — same behaviour as ReactiveWeather.
                     overlay.ZIndex = layer.zindex;
+                    overlay.Attach(surface);
                 }
-                overlay.Attach(surface);
             }
             else
             {
@@ -196,16 +207,45 @@ namespace Chromatics.Layers
 
         public override void CleanupLayer(int layerID) => DetachOverlay(layerID);
 
-        // Detach any groups the user's base-layer processor registered for layerID so
-        // their brush rendering doesn't paint over the decorator's direct LED writes.
-        // The base processor re-attaches them every tick; we re-detach every tick.
-        private static void SuppressBaseLayerGroups(int layerID)
+        // Mark layerID as suppressed and detach its base-layer groups now. The
+        // surface.Updating hook re-detaches every render tick so the base
+        // processor's re-attach (game-loop ~5fps) can't briefly leak between
+        // suppress fires (~50-100Hz surface render). DetachOverlay clears the
+        // mark when the overlay tears down.
+        private void SuppressBaseLayerGroups(int layerID)
         {
+            EnsureUpdatingHook();
+            lock (_suppressLock)
+            {
+                _suppressedLayerIds.Add(layerID);
+            }
             var liveGroups = RGBController.GetLiveLayerGroups();
             if (!liveGroups.TryGetValue(layerID, out var groups)) return;
             foreach (var g in groups)
             {
                 g?.Detach();
+            }
+        }
+
+        private void EnsureUpdatingHook()
+        {
+            if (_hookedUpdating || surface == null) return;
+            surface.Updating += OnSurfaceUpdating;
+            _hookedUpdating = true;
+        }
+
+        private void OnSurfaceUpdating(UpdatingEventArgs args)
+        {
+            var liveGroups = RGBController.GetLiveLayerGroups();
+            lock (_suppressLock)
+            {
+                foreach (var id in _suppressedLayerIds)
+                {
+                    if (liveGroups.TryGetValue(id, out var groups))
+                    {
+                        foreach (var g in groups) g?.Detach();
+                    }
+                }
             }
         }
 
@@ -231,6 +271,11 @@ namespace Chromatics.Layers
 
         private void DetachOverlay(int layerID)
         {
+            lock (_suppressLock)
+            {
+                _suppressedLayerIds.Remove(layerID);
+            }
+
             if (!_overlays.TryGetValue(layerID, out var overlay)) return;
 
             if (_gradientEffects.TryGetValue(layerID, out var grads))
@@ -463,7 +508,6 @@ namespace Chromatics.Layers
                 case "Hunter's Ring":
                 case "Hunting Ground":
                 case "Akh Afah Amphitheatre":
-                case "Containment Bay S1T7":
                     if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
@@ -508,6 +552,15 @@ namespace Chromatics.Layers
             {
                 if (disposing)
                 {
+                    if (_hookedUpdating && surface != null)
+                    {
+                        surface.Updating -= OnSurfaceUpdating;
+                        _hookedUpdating = false;
+                    }
+                    lock (_suppressLock)
+                    {
+                        _suppressedLayerIds.Clear();
+                    }
                     foreach (var overlay in _overlays.Values)
                     {
                         overlay.RemoveAllDecorators();
