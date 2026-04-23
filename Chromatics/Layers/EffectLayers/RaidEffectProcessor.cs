@@ -508,6 +508,7 @@ namespace Chromatics.Layers
                 case "Hunter's Ring":
                 case "Hunting Ground":
                 case "Akh Afah Amphitheatre":
+                case "The Abyssal Fracture":
                     if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);

@@ -22,8 +22,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
         private readonly Light _light;
         private readonly LocalHueApi _client;
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-        private SettingsModel appSettings;
+        private readonly Lock _lock = new();
 
         #endregion
 
@@ -38,7 +37,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             // on GetAllAsync().Result inside the constructor, which could deadlock
             // if the Hue bridge was unreachable.
             _light = light;
-            appSettings = AppSettings.GetSettings();
         }
 
         #endregion
@@ -47,31 +45,37 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
         protected override bool Update(ReadOnlySpan<(object key, Color color)> dataSet)
         {
-            _semaphore.WaitAsync().GetAwaiter().GetResult(); // Wait asynchronously within the synchronous context
-            try
+            // Update() is called sequentially by the trigger thread, but guard
+            // anyway in case the trigger is shared by multiple queues.
+            lock (_lock)
             {
-                if (_light == null)
+                try
                 {
-                    HueRGBDeviceProvider.Instance.Throw(new Exception("Light not found."));
-                    return false;
-                }
+                    if (_light == null)
+                    {
+                        HueRGBDeviceProvider.Instance.Throw(new Exception("Light not found."));
+                        return false;
+                    }
 
-                // RGB.NET occasionally flushes an empty dataSet (device initialised
-                // with no LEDs mapped yet, or a mid-reconnect tick). Indexing into
-                // an empty span would throw IndexOutOfRange on the caller thread.
-                if (dataSet.IsEmpty) return true;
+                    // RGB.NET occasionally flushes an empty dataSet (device initialised
+                    // with no LEDs mapped yet, or a mid-reconnect tick). Indexing into
+                    // an empty span would throw IndexOutOfRange on the caller thread.
+                    if (dataSet.IsEmpty) return true;
 
-                Color color = dataSet[0].color;
-                var rgbColorHue = new HueApi.ColorConverters.RGBColor(color.R, color.G, color.B);
-                double brightness = 100;
+                    // Refresh per-tick: the user can adjust bridge brightness in
+                    // Settings while Chromatics is running. A snapshot at construction
+                    // time would never reflect those changes.
+                    var appSettings = AppSettings.GetSettings();
 
-                if (appSettings.deviceHueBridgeBrightness == -1)
-                {
-                    brightness = color.A * 100;
-                }
-                else
-                {
-                    if (appSettings.deviceHueBridgeBrightness < -1)
+                    Color color = dataSet[0].color;
+                    var rgbColorHue = new HueApi.ColorConverters.RGBColor(color.R, color.G, color.B);
+                    double brightness;
+
+                    if (appSettings.deviceHueBridgeBrightness == -1)
+                    {
+                        brightness = color.A * 100;
+                    }
+                    else if (appSettings.deviceHueBridgeBrightness < 0)
                     {
                         brightness = 0;
                     }
@@ -83,31 +87,34 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     {
                         brightness = appSettings.deviceHueBridgeBrightness;
                     }
-                }
 
-                if (color.R == 0 && color.G == 0 && color.B == 0)
-                {
-                    brightness = 0;
-                }
+                    bool isBlack = color.R == 0 && color.G == 0 && color.B == 0;
 
-                // Create the light update command
-                var req = new UpdateLight()
-                    .SetSpeed(0)
-                    .SetDuration(250)
-                    .TurnOn()
-                    .SetBrightness(brightness)
-                    .SetColor(rgbColorHue);
+                    // Bridge firmware rejects on:true with brightness 0 — minimum
+                    // brightness in CLIP v2 is ~1%. Send an explicit off instead so
+                    // black LEDs actually turn the bulb off rather than snapping to
+                    // minimum brightness or returning an error.
+                    UpdateLight req;
+                    if (isBlack || brightness <= 0)
+                    {
+                        req = new UpdateLight().TurnOff();
+                    }
+                    else
+                    {
+                        req = new UpdateLight()
+                            .SetSpeed(0)
+                            .TurnOn()
+                            .SetBrightness(brightness)
+                            .SetColor(rgbColorHue);
+                    }
 
-                // Send the update command to the light
-                if (req != null)
-                {
                     try
                     {
-                        var result = _client.Light.UpdateAsync(_light.Id, req).GetAwaiter().GetResult(); // Execute the async method synchronously
+                        _client.Light.UpdateAsync(_light.Id, req).GetAwaiter().GetResult();
                     }
-                    catch (JsonException aggEx)
+                    catch (JsonException jsonEx)
                     {
-                        Logger.WriteConsole(LoggerTypes.Error, $"[Hue] JSON Exception: {aggEx.Message}");
+                        Logger.WriteConsole(LoggerTypes.Error, $"[Hue] JSON Exception: {jsonEx.Message}");
                     }
                     catch (AggregateException aggEx)
                     {
@@ -115,7 +122,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         {
                             if (innerEx is JsonException)
                             {
-                                Logger.WriteConsole(LoggerTypes.Error, $"[Hue] JSON Exception: {aggEx.Message}");
+                                Logger.WriteConsole(LoggerTypes.Error, $"[Hue] JSON Exception: {innerEx.Message}");
                             }
                             else
                             {
@@ -124,20 +131,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                             }
                         }
                     }
+
+                    return true;
                 }
-
-                return true;
+                catch (Exception ex)
+                {
+                    HueRGBDeviceProvider.Instance.Throw(ex);
+                    return false;
+                }
             }
-            catch (Exception ex)
-            {
-                HueRGBDeviceProvider.Instance.Throw(ex);
-            }
-            finally
-            {
-                _semaphore.Release(); // Ensure the semaphore is always released
-            }
-
-            return false;
         }
 
         #endregion

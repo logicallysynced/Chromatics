@@ -181,7 +181,12 @@ namespace Chromatics.Core
                         {
                             //HueRGBDeviceProvider.Instance.Exception += (sender, e) => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue Device Error: {e.Exception.Message}");
 
-                            var hueBridge = new HueClientDefinition(appSettings.deviceHueBridgeIP, "chromatics", "pvpGWu0ets21cUUZGOHqd63Eb28i2QEx");
+                            // ClientKey is the entertainment-streaming PSK and is
+                            // unused by the CLIP-based HueUpdateQueue. Leave empty
+                            // until/unless we add an entertainment streaming path
+                            // (which would also require persisting the streaming
+                            // key returned by LocalHueApi.RegisterAsync).
+                            var hueBridge = new HueClientDefinition(appSettings.deviceHueBridgeIP, "chromatics", "");
 
                             HueRGBDeviceProvider.Instance.ClientDefinitions.Add(hueBridge);
                             LoadDeviceProvider(HueRGBDeviceProvider.Instance);
