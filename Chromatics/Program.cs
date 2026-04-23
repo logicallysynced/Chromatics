@@ -141,29 +141,18 @@ namespace Chromatics
             ForceTerminate(0);
         }
 
-        // Hard process termination. Tries Environment.Exit first (gives
-        // ProcessExit handlers and finalizers one shot to run), but falls
-        // through to Process.Kill if Exit hangs — Sentry's AppDomain.ProcessExit
-        // flush and Sentry.Profiling's EventPipe teardown can both block
-        // indefinitely on a slow network or stuck pipe, leaving the visible
-        // process tree alive for minutes.
+        // Hard process termination via OS TerminateProcess. SentryService.Shutdown
+        // does a 3-second sync flush first so pending events leave the wire,
+        // then Process.Kill is uninterruptible — no risk of being held hostage
+        // by Sentry's AppDomain.ProcessExit handler or Sentry.Profiling's
+        // EventPipe teardown, both of which can stall Environment.Exit
+        // indefinitely on a slow network.
         private static void ForceTerminate(int exitCode)
         {
             try { SentryService.Shutdown(); } catch { }
-
-            // Kick off Environment.Exit on a thread-pool thread with a hard
-            // deadline so we can't be held hostage by a misbehaving handler.
-            var done = new System.Threading.ManualResetEventSlim();
-            System.Threading.Tasks.Task.Run(() =>
-            {
-                try { Environment.Exit(exitCode); } catch { }
-                done.Set();
-            });
-
-            if (!done.Wait(TimeSpan.FromSeconds(3)))
-            {
-                try { Process.GetCurrentProcess().Kill(); } catch { }
-            }
+            try { Process.GetCurrentProcess().Kill(); } catch { }
+            // Should never reach here — Kill terminates synchronously.
+            Environment.Exit(exitCode);
         }
 
         // Carried over from the old Fm_MainWindow ctor: users upgrading from a build
