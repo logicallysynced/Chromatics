@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Sentry;
 using System;
 
 namespace Chromatics.Views
@@ -15,8 +16,11 @@ namespace Chromatics.Views
     public partial class CrashApp : Application
     {
         // Static handoff: AppBuilder.Configure<T> instantiates T with no args,
-        // so we stash the exception on the type before calling Start.
+        // so we stash the exception (and its pre-captured Sentry event id) on
+        // the type before calling Start. Pre-capturing in ShowFallback rather
+        // than in the dialog ctor avoids double-capturing the same crash.
         public static Exception PendingException { get; set; }
+        public static SentryId PendingEventId { get; set; } = SentryId.Empty;
 
         public override void Initialize()
         {
@@ -29,7 +33,7 @@ namespace Chromatics.Views
             {
                 desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
-                var dlg = new CrashFeedbackDialog(PendingException);
+                var dlg = new CrashFeedbackDialog(PendingException, PendingEventId);
                 desktop.MainWindow = dlg;
             }
 
