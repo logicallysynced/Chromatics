@@ -1,14 +1,20 @@
 using RGB.NET.Core;
 using System;
+using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.RGB.NET.Devices.Hue;
 
 public class HueDevice : AbstractRGBDevice<HueDeviceInfo>
 {
+    private readonly HueUpdateQueue _updateQueue;
+
     public HueDevice(HueDeviceInfo deviceInfo, HueUpdateQueue updateQueue) : base(deviceInfo, updateQueue)
     {
+        _updateQueue = updateQueue;
         InitializeLayout();
     }
+
+    public Task TurnOffAsync() => _updateQueue.TurnOffAsync();
 
     // Hue model id → RGB.NET layout (LedId + size). Specific models match
     // first; family prefixes catch newer/related SKUs that aren't in the
