@@ -1,5 +1,6 @@
 using Chromatics.Models;
 using Sentry;
+using Sentry.Extensibility;
 using Sentry.Profiling;
 using System;
 using System.Diagnostics;
@@ -104,6 +105,15 @@ namespace Chromatics.Core
                 // Don't auto-capture WriteLine output — it's noisy and the
                 // user-visible Console tab is already replayed via Logger.
                 o.MaxBreadcrumbs = 100;
+
+                // Route Sentry SDK's internal diagnostics to verbose.log so
+                // any send/queue/flush failure surfaces something searchable.
+                // Without this, transport errors (DNS failure, TLS reject,
+                // 4xx/5xx responses) are silently swallowed and the user
+                // just observes "no events arrived".
+                o.Debug = true;
+                o.DiagnosticLevel = SentryLevel.Debug;
+                o.DiagnosticLogger = new SentryToVerboseLogLogger();
 
                 // Enable the Logs product (separate from Issues). Once on,
                 // SentrySdk.Logger.LogInfo/LogWarning/LogError accept
@@ -276,6 +286,31 @@ namespace Chromatics.Core
             try { SentrySdk.Flush(TimeSpan.FromSeconds(3)); } catch { }
             _sdkHandle?.Dispose();
             _initialized = false;
+        }
+    }
+
+    /// <summary>
+    /// Bridges Sentry's IDiagnosticLogger into Chromatics's verbose.log.
+    /// Captures everything the SDK normally writes to its own debug stream:
+    /// envelope queueing, transport HTTP responses, BeforeSend invocations,
+    /// rate limit handling. Lets us diagnose "no events arriving" without
+    /// attaching a network sniffer.
+    /// </summary>
+    internal sealed class SentryToVerboseLogLogger : IDiagnosticLogger
+    {
+        public bool IsEnabled(SentryLevel level) => true;
+
+        public void Log(SentryLevel logLevel, string message, Exception exception = null, params object[] args)
+        {
+            try
+            {
+                var formatted = (args == null || args.Length == 0) ? message : string.Format(message, args);
+                var line = $"[Sentry SDK {logLevel}] {formatted}";
+                if (exception != null)
+                    line += $" — {exception.GetType().Name}: {exception.Message}";
+                Logger.WriteVerbose(line);
+            }
+            catch { /* never let diagnostic logging throw */ }
         }
     }
 }
