@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
-      "version": "4.0.66",
+      "version": "4.0.97",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -165,9 +165,17 @@
               "target": "Package",
               "version": "[3.2.0, )"
             },
+            "Sentry": {
+              "target": "Package",
+              "version": "[6.4.1, )"
+            },
+            "Sentry.Profiling": {
+              "target": "Package",
+              "version": "[6.4.1, )"
+            },
             "System.Drawing.Common": {
               "target": "Package",
-              "version": "[10.0.6, )"
+              "version": "[10.0.7, )"
             },
             "Velopack": {
               "target": "Package",

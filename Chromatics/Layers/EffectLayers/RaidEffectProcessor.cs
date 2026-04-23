@@ -528,7 +528,6 @@ namespace Chromatics.Layers
                         switch (currentBgmId)
                         {
                             case 366: // TODO: replace with real phase-2 BGM ID
-                            case 231:
                             {
                                 var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
                                 SetEffect(ripple, layer, runningEffects);

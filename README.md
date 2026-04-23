@@ -9,7 +9,7 @@
 
 [Join Support Discord](https://discord.gg/sK47yFE)
 <br>
-[Documentation](https://docs.chromaticsffxiv.com/chromatics-3)
+[Documentation](https://docs.chromaticsffxiv.com/chromatics-4)
 <br>
 <br>
 ***Important:** This is the Chromatics 4.x series. It is a complete rebuild of Chromatics from the ground up in .NET 10. It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did.*
@@ -60,14 +60,14 @@ If you wish to build Chromatics yourself, you can download the active branch and
 * [Sentry](https://sentry.io/) - error monitoring, logs, metrics, tracing, and profiling
 <br><br><br>
 ### Privacy / Telemetry ###
-Chromatics uses [Sentry](https://sentry.io/) to collect anonymous crash reports, error logs, performance traces, and profiling samples. This data helps us identify and fix bugs that affect real users.
+Chromatics uses [Sentry](https://sentry.io/) to collect anonymous crash reports, error logs, performance traces and profiling samples. This data helps us identify and fix bugs that affect real users.
 
 **What we collect:**
 * Unhandled exception stack traces and the immediately preceding log lines
 * The Chromatics version, your operating system version, and the .NET runtime version
 * Performance traces (a 20% sample of update cycles) and profiling data
 * Anonymous session counts used to compute crash-free release health
-* Optional free-text comments only when you explicitly type into the crash dialog
+* Optional comments only when you explicitly type into the crash dialog
 
 **What we do NOT collect:**
 * Your name, email, or any other personally identifying information — the crash dialog asks only for free-text comments
@@ -79,7 +79,6 @@ Chromatics uses [Sentry](https://sentry.io/) to collect anonymous crash reports,
 
 **Opting out:** Crash reporting is enabled by default but can be turned off at any time from **Settings → Advanced → Send anonymous crash reports**. When disabled, the Sentry SDK is paused and no network traffic is generated.
 
-Beta and stable channel reports are tagged separately so beta-channel issues do not affect the stable crash-free rate.
 <br><br><br>
 ### Disclaimer ###
 Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners.
