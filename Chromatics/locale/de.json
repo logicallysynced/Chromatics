@@ -776,5 +776,6 @@
   "Displays different colours across selected keys depending on whether the character is engaged in battle or not.": "Zeigt unterschiedliche Farben auf den ausgewählten Tasten an, abhängig davon, ob sich der Charakter im Kampf befindet oder nicht.",
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Zeigt den Wirkfortschritt des Charakters auf den ausgewählten Tasten an.\n[Unterstützte Modi: Interpolieren, Ausblenden]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "Zeigt unterschiedliche Farben auf den ausgewählten Tasten abhängig von der aktuellen Klasse des Charakters an.\nVerwendet die Farben der Hervorhebungsebene.",
-  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Zeigt unterschiedliche Farben auf den ausgewählten Tasten abhängig vom aktuellen Wetter an.\nVerwendet die Farben der Hervorhebungsebene."
+  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "Zeigt unterschiedliche Farben auf den ausgewählten Tasten abhängig vom aktuellen Wetter an.\nVerwendet die Farben der Hervorhebungsebene.",
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "Animierte Schlachtzugszonen-Effekte. Überschreibt die Basisebene für die Dauer unterstützter Schlachtzugsbegegnungen."
 }

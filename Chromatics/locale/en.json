@@ -647,7 +647,7 @@
     "Animation on devices when on title and character selection screen.":  "Animation on devices when on title and character selection screen.",
     "Animation on devices when cutscenes play.":  "Animation on devices when cutscenes play.",
     "Color cycle devices when in the Gold Saucer.":  "Color cycle devices when in the Gold Saucer.",
-    "Animated raid zone effects instead of reactive weather. Uses Reactive Weather layers.":  "Animated raid zone effects instead of reactive weather. Uses Reactive Weather layers.",
+    "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.":  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.",
     "No Devices Detected":  "No Devices Detected",
     "Enable/Disable Layer":  "Enable/Disable Layer",
     "Select the type of Layer":  "Select the type of Layer",

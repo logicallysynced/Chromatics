@@ -474,14 +474,19 @@ namespace Chromatics.Core
                     {
                         surface.Detach(device);
 
-                        if (_activeDevices.ContainsKey(device))
+                        // Remove from _devices so the GUID slot is freed. Without this,
+                        // re-enabling the same provider constructs fresh device objects with the
+                        // same names, hits the GUID-collision loop, and registers them under
+                        // counter-suffixed GUIDs — leaving stale entries that show up as
+                        // phantom duplicates in the Mapping tab.
+                        lock (_devicesLock)
                         {
-                            _activeDevices[device] = false;
+                            var key = _devices.FirstOrDefault(kvp => ReferenceEquals(kvp.Value, device)).Key;
+                            if (key != default)
+                                _devices.Remove(key);
                         }
-                        else
-                        {
-                            _activeDevices.Add(device, false);
-                        }
+
+                        _activeDevices.Remove(device);
                     }
 
                     provider.Exception -= deviceExceptionEventHandler;
@@ -495,7 +500,7 @@ namespace Chromatics.Core
             }
             catch (Exception ex)
             {
-                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault().DeviceInfo.DeviceName}] UnloadDeviceProvider Error: {ex.Message}");
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault()?.DeviceInfo.DeviceName}] UnloadDeviceProvider Error: {ex.Message}");
             }
 
         }
@@ -591,14 +596,6 @@ namespace Chromatics.Core
 
             foreach (var device in devices)
             {
-                // Skip single-LED devices (Philips Hue bulbs, single-zone strips,
-                // etc.) — a moving gradient on one LED is just a flashing cycling
-                // color, not a startup animation. At ZIndex 1000 it also overrides
-                // the user's configured base layer (their static color, etc.) and
-                // ignores the layer's enable toggle, so users see "fading colors
-                // I can't disable" on Hue lights when the game isn't connected.
-                if (device.Count() <= 1) continue;
-
                 var gradient = new RainbowGradient();
                 var ledgroup = new ListLedGroup(surface);
 

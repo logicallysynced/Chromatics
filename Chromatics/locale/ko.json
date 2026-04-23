@@ -776,5 +776,6 @@
   "Displays different colours across selected keys depending on whether the character is engaged in battle or not.": "캐릭터가 전투 중인지 여부에 따라 선택한 키 전체에 서로 다른 색상을 표시합니다.",
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "캐릭터의 시전 진행도를 선택한 키 전체에 표시합니다.\n[지원 모드: Interpolate, Fade]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "캐릭터의 현재 클래스에 따라 선택한 키 전체에 서로 다른 색상을 표시합니다.\n강조 레이어 색상을 사용합니다.",
-  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "현재 날씨에 따라 선택한 키 전체에 서로 다른 색상을 표시합니다.\n강조 레이어 색상을 사용합니다."
+  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "현재 날씨에 따라 선택한 키 전체에 서로 다른 색상을 표시합니다.\n강조 레이어 색상을 사용합니다.",
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "애니메이션 처리된 공격대 지역 효과입니다. 지원되는 공격대 전투가 진행되는 동안 기본 레이어를 덮어씁니다."
 }

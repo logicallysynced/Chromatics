@@ -776,5 +776,6 @@
   "Displays different colours across selected keys depending on whether the character is engaged in battle or not.": "根据角色是否处于战斗中，在选中的按键上显示不同颜色。",
   "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "在选中的按键上显示角色的施法进度。\n[支持的模式：插值、淡化]",
   "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.": "根据角色当前职业，在选中的按键上显示不同颜色。\n使用高亮层颜色。",
-  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "根据当前天气，在选中的按键上显示不同颜色。\n使用高亮层颜色。"
+  "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.": "根据当前天气，在选中的按键上显示不同颜色。\n使用高亮层颜色。",
+  "Animated raid zone effects. Overwrites the base layer for the duration of supported raid encounters.": "动态团队副本区域效果。在受支持的团队副本战斗期间会覆盖基础图层。"
 }
