@@ -103,12 +103,13 @@ namespace Chromatics
                 // doesn't always fire for these because the runtime sometimes
                 // unwinds out of Main first. Report and show feedback dialog
                 // (unless we're in a debug session — let it propagate then).
-                if (!Debugger.IsAttached)
-                {
-                    SentryService.CaptureCrash(ex);
-                    CrashFeedbackDialog.ShowBlocking(ex);
-                }
-                throw;
+                if (Debugger.IsAttached)
+                    throw;
+
+                SentryService.CaptureCrash(ex);
+                CrashFeedbackDialog.ShowBlocking(ex);
+                SentryService.Shutdown();
+                Environment.Exit(1);
             }
             finally
             {
@@ -174,6 +175,12 @@ namespace Chromatics
             finally
             {
                 SentryService.Shutdown();
+                // Force termination — without this, a stuck background thread
+                // (Sharlayan polling, Hue update trigger, RGB.NET timer, etc.)
+                // can keep the process alive indefinitely after the dialog
+                // closes, leaving a zombie in task manager that trips the
+                // single-instance guard on the user's next launch attempt.
+                Environment.Exit(1);
             }
         }
 
