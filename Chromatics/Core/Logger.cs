@@ -53,30 +53,40 @@ namespace Chromatics.Core
             }
         }
 
-        // Mirrors the console line into the Sentry SDK as breadcrumb context
-        // (so when an unrelated exception is captured later, the surrounding
-        // log lines come along) and, for errors, as a captured message so the
-        // dashboard surfaces them even if no exception was thrown. Honours the
-        // user's enableCrashReports toggle automatically — SentrySdk.IsEnabled
-        // is false when consent has been withheld.
+        // Forwards each console line to Sentry via three channels:
+        //   1. AddBreadcrumb — buffered locally on the SDK, attached to any
+        //      subsequent captured exception so error reports include the
+        //      surrounding context.
+        //   2. SentrySdk.Logger.Log* — structured entry sent to the Logs
+        //      product (separate from Issues). Requires options.EnableLogs.
+        //   3. CaptureMessage for Error-tier lines only — so non-exception
+        //      failures (e.g. device init errors) appear in the Issues tab.
+        // Honours the user's enableCrashReports toggle automatically —
+        // SentrySdk.IsEnabled is false when consent has been withheld.
         private static void ForwardToSentry(LoggerTypes type, string message)
         {
             if (!SentrySdk.IsEnabled) return;
 
             try
             {
-                var level = type switch
+                var breadcrumbLevel = type switch
                 {
                     LoggerTypes.Error => BreadcrumbLevel.Error,
-                    LoggerTypes.Devices => BreadcrumbLevel.Info,
-                    LoggerTypes.System => BreadcrumbLevel.Info,
                     _ => BreadcrumbLevel.Info,
                 };
 
-                SentrySdk.AddBreadcrumb(message, category: type.ToString(), level: level);
+                SentrySdk.AddBreadcrumb(message, category: type.ToString(), level: breadcrumbLevel);
 
-                if (type == LoggerTypes.Error)
-                    SentrySdk.CaptureMessage($"[{type}] {message}", SentryLevel.Error);
+                switch (type)
+                {
+                    case LoggerTypes.Error:
+                        SentrySdk.Logger.LogError("{Category}: {Message}", type.ToString(), message);
+                        SentrySdk.CaptureMessage($"[{type}] {message}", SentryLevel.Error);
+                        break;
+                    default:
+                        SentrySdk.Logger.LogInfo("{Category}: {Message}", type.ToString(), message);
+                        break;
+                }
             }
             catch
             {
