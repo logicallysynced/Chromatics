@@ -93,6 +93,20 @@ namespace Chromatics.Views
             {
                 desktop.Shutdown();
             }
+
+            // desktop.Shutdown() ends Avalonia's loop but background threads
+            // (Sentry.Profiling EventPipe, RGB.NET update timer that wasn't
+            // fully torn down by RGBController.Unload, Sharlayan polling,
+            // Hue update trigger) keep the process alive — and Environment.Exit
+            // can stall on Sentry's AppDomain.ProcessExit flush handler. Without
+            // an explicit Process.Kill the "closed" Chromatics survives as a
+            // zombie that holds the single-instance mutex AND Sentry's envelope
+            // cache, causing both "Already running" prompts on the next launch
+            // AND silent crash-event drops. SentryService.Shutdown does a sync
+            // 3-second flush first so any pending events leave the wire before
+            // we kill the process.
+            try { Chromatics.Core.SentryService.Shutdown(); } catch { }
+            try { Process.GetCurrentProcess().Kill(); } catch { }
         }
 
         private void OnHelpClick(object sender, RoutedEventArgs e)
