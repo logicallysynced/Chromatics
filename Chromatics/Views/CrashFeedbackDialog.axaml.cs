@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using Chromatics.Core;
 using Sentry;
@@ -43,6 +44,13 @@ namespace Chromatics.Views
                 : SentryService.CaptureCrash(ex);
 
             ErrorSummary.Text = $"{ex.GetType().Name}: {ex.Message}";
+
+            // Show the Sentry event id so the user can paste it into a
+            // support thread / GitHub issue. SentryId is a 32-char hex GUID
+            // without dashes — present it in a readable form.
+            ReferenceIdText.Text = _eventId == SentryId.Empty
+                ? "(unavailable — Sentry was not initialised)"
+                : _eventId.ToString();
         }
 
         /// <summary>
@@ -168,6 +176,22 @@ namespace Chromatics.Views
         private void OnDontSend(object sender, Avalonia.Interactivity.RoutedEventArgs e)
         {
             Close();
+        }
+
+        private async void OnCopyReference(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            if (_eventId == SentryId.Empty) return;
+            try
+            {
+                var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
+                if (clipboard != null)
+                    await clipboard.SetTextAsync(_eventId.ToString());
+            }
+            catch
+            {
+                // Copy is convenience-only — failures are silent (the user
+                // can still triple-click the SelectableTextBlock to copy).
+            }
         }
     }
 }
