@@ -514,7 +514,6 @@ namespace Chromatics.Layers
                 //case "Akh Afah Amphitheatre":
                     if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
-                        layer.Brush = new SolidColorBrush(baseCol);
                         switch (currentBgmId)
                         {
                             case 20150:
@@ -523,6 +522,7 @@ namespace Chromatics.Layers
                                 var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight3.Color) };
                                 var pulse = new BPMCircularPulseEffect(layer, 164, 4, 12, 2, colors, surface, baseCol);
 
+                                layer.Brush = new SolidColorBrush(baseCol);
                                 SetEffect(pulse, layer, runningEffects);
                                 break;
                             }
