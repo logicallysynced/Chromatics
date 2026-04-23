@@ -144,16 +144,31 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             return new HueDeviceUpdateTrigger();
         }
 
-        // RGBController.UnloadDeviceProvider calls provider.Dispose(), but the
-        // singleton's static _instance still pointed at the disposed object —
-        // any later access (HueBridgeDialog reconnect, Settings re-toggle,
-        // surface.Attach iterating provider.Devices) hit ObjectDisposedException
-        // because AbstractRGBDeviceProvider's internal state checks throw on
-        // Devices/etc. once disposed. Clearing _instance lets the next Instance
-        // access construct a fresh provider.
+        // Before tearing down the provider, send TurnOff to every bulb in parallel
+        // so the bridge returns to a clean off state when the user disables Hue in
+        // Settings or closes Chromatics. We wait up to 3 seconds total; a dead or
+        // slow bridge is silently ignored — shutdown must never block.
+        //
+        // After the parallel off-pass, clearing _instance lets the next Instance
+        // access construct a fresh provider (prevents ObjectDisposedException on
+        // HueBridgeDialog reconnect or Settings re-toggle).
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                try
+                {
+                    var tasks = Devices.OfType<HueDevice>()
+                                       .Select(d => d.TurnOffAsync())
+                                       .ToArray();
+                    if (tasks.Length > 0)
+                        Task.WhenAll(tasks).Wait(TimeSpan.FromSeconds(3));
+                }
+                catch { }
+            }
+
             base.Dispose(disposing);
+
             if (ReferenceEquals(_instance, this))
                 _instance = null;
         }

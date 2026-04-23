@@ -50,6 +50,24 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
         #region Methods
 
+        // Called by HueRGBDeviceProvider.Dispose before the trigger/client are torn
+        // down so the bridge returns to a known-off state on provider unload or app
+        // close. Fire-and-forget from the caller's perspective — exceptions are
+        // swallowed so a dead bridge never blocks shutdown.
+        public Task TurnOffAsync()
+        {
+            if (_light == null || _client == null) return Task.CompletedTask;
+            try
+            {
+                return _client.Light.UpdateAsync(_light.Id, new UpdateLight().TurnOff())
+                                    .ContinueWith(_ => { }, TaskContinuationOptions.ExecuteSynchronously);
+            }
+            catch
+            {
+                return Task.CompletedTask;
+            }
+        }
+
         protected override bool Update(ReadOnlySpan<(object key, Color color)> dataSet)
         {
             // Update() is called sequentially by the trigger thread, but guard
