@@ -115,46 +115,50 @@ namespace Chromatics.Layers
         // ReactiveWeatherHighlightProcessor.SetReactiveWeather. Returns
         // false when the zone has no raid highlight, so the overlay can be
         // detached.
+        //
+        // IMPORTANT: this is a pure consumer of RaidEffectState — it must
+        // NOT mutate raidEffectsRunning or currentRaidBgmId. Layer iteration
+        // ordering means this can run BEFORE RaidEffectProcessor (when the
+        // user's highlight dynamic layer has a lower zindex than the base
+        // layer). If we set raidEffectsRunning=true here, ApplyRaidEffect's
+        // !running guard sees true and skips its setup — the BPM decorator
+        // is never added, the base raid effect never starts, and the user
+        // sees only the highlight color until they toggle the feature off
+        // and on (which resets raidEffectsRunning to false). The base
+        // processor owns all running-state mutations.
         private static bool TryGetRaidHighlightColor(string zone, PaletteColorModel palette, uint currentBgmId, out Color color)
         {
             switch (zone)
             {
                 case "Summit of Everkeep":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectEverkeepKeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
                     return true;
                 case "Interphos":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectInterphosKeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
                     return true;
                 case "Scratching Ring":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectM1KeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
                     return true;
                 case "Lovely Lovering":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectM2KeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
                     return true;
                 case "Blasting Ring":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectM3KeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
                     return true;
                 case "The Thundering":
-                case "Sphere of Naught":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectM4KeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
+                    return true;
+                case "Sphere of Naught":
+                    color = ColorHelper.ColorToRGBColor(palette.RaidEffectCoDKeyHighlight.Color);
                     return true;
                 case "Groovy Ring":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectM5KeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
                     return true;
                 case "Rebel Ring":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectM6KeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
                     return true;
                 case "Demolition Site":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectM7KeyHighlight.Color);
-                    RaidEffectState.raidEffectsRunning = true;
                     return true;
 
                 // BGM-based phase switching demo. Mirrors the base-layer
@@ -167,8 +171,6 @@ namespace Chromatics.Layers
                         231 => ColorHelper.ColorToRGBColor(palette.RaidEffectM5KeyHighlight.Color), // TODO: real phase-2 BGM ID
                         _    => ColorHelper.ColorToRGBColor(palette.RaidEffectM4KeyHighlight.Color),
                     };
-                    RaidEffectState.raidEffectsRunning = true;
-                    RaidEffectState.currentRaidBgmId = currentBgmId;
                     return true;
 
                 default:

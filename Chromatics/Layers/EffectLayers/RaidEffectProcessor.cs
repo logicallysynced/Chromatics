@@ -124,6 +124,12 @@ namespace Chromatics.Layers
             // music starts + the configured start delay. Fires for any instance; if
             // ApplyRaidEffect returns false for this zone the hold expires and the
             // normal base layer resumes.
+            //
+            // This also doubles as a stability gate on zone-in: BGM often blips to
+            // silence briefly during loading finalization. Without the hold-black,
+            // ApplyRaidEffect would start the effect on tick 1, then the phase
+            // trigger would fire on the silence blip and rebuild, causing a visible
+            // restart. Holding black until the first stable music tick avoids that.
             if (RaidEffectState.delayedStartUntil == DateTime.MinValue
                 && inInstance
                 && !RaidEffectState.raidEffectsRunning
@@ -508,7 +514,6 @@ namespace Chromatics.Layers
                 case "Hunter's Ring":
                 case "Hunting Ground":
                 case "Akh Afah Amphitheatre":
-                case "The Abyssal Fracture":
                     if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
