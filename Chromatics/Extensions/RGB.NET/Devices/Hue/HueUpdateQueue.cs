@@ -29,6 +29,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // visibly desaturated/wrong colors without their real model id.
         private readonly string _modelId;
         private readonly Lock _lock = new();
+        private volatile bool _shuttingDown;
 
         #endregion
 
@@ -49,6 +50,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         #endregion
 
         #region Methods
+
+        // Set by the provider before sending TurnOff so any in-flight or queued
+        // Update() calls from the trigger thread become no-ops. Without this, the
+        // trigger could fire one more color update for some bulbs after we've
+        // already sent TurnOff, racing the bridge into the wrong final state.
+        public void BeginShutdown() => _shuttingDown = true;
 
         // Called by HueRGBDeviceProvider.Dispose (inside Task.Run) before the
         // trigger/client are torn down so the bridge returns to a known-off state
@@ -73,6 +80,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             // anyway in case the trigger is shared by multiple queues.
             lock (_lock)
             {
+                // Provider has begun teardown — drop the update so it can't race
+                // ahead of (or behind) the explicit TurnOff sequence.
+                if (_shuttingDown) return true;
+
                 try
                 {
                     if (_light == null)
