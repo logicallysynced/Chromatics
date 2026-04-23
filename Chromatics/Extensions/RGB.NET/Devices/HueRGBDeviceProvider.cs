@@ -171,9 +171,27 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     var devices = Devices.OfType<HueDevice>().ToList();
                     if (devices.Count > 0)
                     {
+                        // Step 1: gate every queue so the trigger thread stops sending
+                        // colour updates before we issue TurnOff. Without this gate the
+                        // trigger could fire one more Update() per bulb after we've
+                        // already sent the off command, racing the bridge into the
+                        // wrong final state — which manifested as "sometimes only one
+                        // bulb actually turned off".
+                        foreach (var d in devices)
+                            d.BeginShutdown();
+
                         int totalBudgetSec = Math.Min(15, 2 + devices.Count);
                         Task.Run(async () =>
                         {
+                            // Step 2: brief grace window so any Update() that was already
+                            // mid-flight (holding _lock) finishes its HTTP send before we
+                            // start TurnOff. New Update() calls hit the _shuttingDown
+                            // gate and return immediately.
+                            await Task.Delay(150).ConfigureAwait(false);
+
+                            // Step 3: sequential TurnOff with pacing — Hue bridge throttles
+                            // concurrent CLIP v2 PUTs and will silently drop most of them
+                            // when fired in parallel.
                             foreach (var d in devices)
                             {
                                 try
@@ -187,7 +205,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                                 {
                                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] TurnOff failed for {d.DeviceInfo.DeviceName}: {ex.Message}");
                                 }
-                                await Task.Delay(120).ConfigureAwait(false);
+                                await Task.Delay(150).ConfigureAwait(false);
                             }
                         }).Wait(TimeSpan.FromSeconds(totalBudgetSec));
                     }

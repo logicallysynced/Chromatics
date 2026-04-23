@@ -14,6 +14,7 @@ public class HueDevice : AbstractRGBDevice<HueDeviceInfo>
         InitializeLayout();
     }
 
+    public void BeginShutdown() => _updateQueue.BeginShutdown();
     public Task TurnOffAsync() => _updateQueue.TurnOffAsync();
 
     // Hue model id → RGB.NET layout (LedId + size). Specific models match
