@@ -165,13 +165,13 @@ namespace Chromatics.Layers
                 // demo case in RaidEffectProcessor.
                 case "Hunter's Ring":
                 case "Hunting Ground":
-                case "Akh Afah Amphitheatre":
+                //case "Akh Afah Amphitheatre":
                     color = currentBgmId switch
                     {
-                        231 => ColorHelper.ColorToRGBColor(palette.RaidEffectM5KeyHighlight.Color), // TODO: real phase-2 BGM ID
-                        _    => ColorHelper.ColorToRGBColor(palette.RaidEffectM4KeyHighlight.Color),
+                        20150 => ColorHelper.ColorToRGBColor(palette.RaidEffectM8SKeyHighlight.Color),
+                        _    => ColorHelper.ColorToRGBColor(palette.RaidEffectM8KeyHighlight.Color),
                     };
-                    return true;
+                    return true; //20149
 
                 default:
                     color = default;

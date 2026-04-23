@@ -509,34 +509,31 @@ namespace Chromatics.Layers
                     }
                     return RaidEffectState.raidEffectsRunning;
 
-                // BGM-based phase switching demo. Test zones (Containment Bay S1T7) let
-                // the effect fire in open-world for visual development.
                 case "Hunter's Ring":
                 case "Hunting Ground":
-                case "Akh Afah Amphitheatre":
+                //case "Akh Afah Amphitheatre":
                     if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
-                        var colors = new Color[]
-                        {
-                            ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight1.Color),
-                            ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight2.Color),
-                            ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight3.Color)
-                        };
-
                         layer.Brush = new SolidColorBrush(baseCol);
                         switch (currentBgmId)
                         {
-                            case 366: // TODO: replace with real phase-2 BGM ID
+                            case 20150:
                             {
-                                var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
-                                SetEffect(ripple, layer, runningEffects);
+                                var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SBase.Color);
+                                var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight3.Color) };
+                                var pulse = new BPMCircularPulseEffect(layer, 164, 4, 12, 2, colors, surface, baseCol);
+
+                                SetEffect(pulse, layer, runningEffects);
                                 break;
                             }
-                            default:
+                            default: //20149
                             {
-                                var chase = new BPMChaseDecorator(layer, 178, 2, colors, surface, baseCol);
-                                SetEffect(chase, layer, runningEffects);
+                                var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8Base.Color);
+                                var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8Highlight3.Color) };
+                                var starfield = new BPMStarfieldDecorator(layer, layer.Count() / 6, 272, 500, animationCol, surface, 2, false, baseCol);
+
+                                layer.Brush = new SolidColorBrush(baseCol);
+                                SetEffect(starfield, layer, runningEffects);
                                 break;
                             }
                         }
