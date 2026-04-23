@@ -93,21 +93,37 @@ namespace Chromatics.Views
             }
         }
 
-        // Capture the crash, then surface a Win32 MessageBox so the user
-        // knows the report was sent. Used when no Avalonia UI thread is
-        // available (early startup crashes, or post-shutdown crashes).
+        // Bootstrap a minimal Avalonia lifetime (CrashApp) just to show the
+        // themed crash dialog when the main app's Avalonia hasn't started.
+        // StartWithClassicDesktopLifetime blocks until the dialog window is
+        // closed (CrashApp uses ShutdownMode.OnMainWindowClose). If that
+        // bootstrap itself fails (rare), fall back to the unthemed
+        // Win32 MessageBox so the user at least sees something.
         private static void ShowFallback(Exception ex)
         {
             try { SentryService.CaptureCrash(ex); } catch { }
-            try { SentryService.Shutdown(); } catch { }
+
             try
             {
-                MessageBoxW(IntPtr.Zero,
-                    $"Chromatics encountered an unexpected error and could not continue:\n\n{ex.GetType().Name}: {ex.Message}\n\nA crash report has been sent automatically.",
-                    "Chromatics Error",
-                    0x10 /* MB_ICONERROR */);
+                CrashApp.PendingException = ex;
+                AppBuilder.Configure<CrashApp>()
+                    .UsePlatformDetect()
+                    .WithInterFont()
+                    .StartWithClassicDesktopLifetime(Array.Empty<string>());
             }
-            catch { }
+            catch
+            {
+                try
+                {
+                    MessageBoxW(IntPtr.Zero,
+                        $"Chromatics encountered an unexpected error and could not continue:\n\n{ex.GetType().Name}: {ex.Message}\n\nA crash report has been sent automatically.",
+                        "Chromatics Error",
+                        0x10 /* MB_ICONERROR */);
+                }
+                catch { }
+            }
+
+            try { SentryService.Shutdown(); } catch { }
         }
 
         private void OnSend(object sender, Avalonia.Interactivity.RoutedEventArgs e)

@@ -63,6 +63,15 @@ namespace Chromatics
             // below) are captured even if they never reach the Console tab.
             Logger.SetLogDirectory(FileOperationsHelper.GetConfigDirectory());
 
+            // Bootstrap Sentry BEFORE any code that can throw (settings load,
+            // file migrations) so even those early failures are captured.
+            // Real user settings (consent toggle, beta channel) are layered
+            // on later via SentryService.ApplySettings once they've loaded.
+            // No-op under a debugger.
+            SentryService.Initialize();
+            if (!Debugger.IsAttached)
+                TaskScheduler.UnobservedTaskException += UnobservedTaskExceptionHandler;
+
             // Relocate any user data files from the exe directory into
             // %AppData%\Chromatics first — the Velopack portable updater wipes
             // the install tree on every update, so exe-dir storage is unsafe.
@@ -74,14 +83,9 @@ namespace Chromatics
             AppSettings.Startup();
             var appSettings = AppSettings.GetSettings();
 
-            // Initialize Sentry as early as possible after settings are loaded
-            // so it can capture exceptions during the rest of startup. The
-            // service honours the user's enableCrashReports toggle internally,
-            // respects beta-vs-stable for release-health bucketing, and is a
-            // no-op under a debugger.
-            SentryService.Initialize(appSettings);
-            if (!Debugger.IsAttached)
-                TaskScheduler.UnobservedTaskException += UnobservedTaskExceptionHandler;
+            // Apply real consent / channel / language tags now that settings
+            // are loaded. Captures from this point onward use these values.
+            SentryService.ApplySettings(appSettings);
 
             if (!Debugger.IsAttached)
                 AdminElevationHelper.CheckAndElevateIfNeeded(appSettings);

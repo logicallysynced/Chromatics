@@ -1,0 +1,29 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Chromatics.Views.CrashApp"
+             RequestedThemeVariant="Default">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="ChromaticsBanner" Color="#080E18" />
+                    <SolidColorBrush x:Key="ChromaticsAccent" Color="#00A0FF" />
+                    <SolidColorBrush x:Key="ChromaticsAccentHover" Color="#22B8FF" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="ChromaticsBanner" Color="#F0F6FF" />
+                    <SolidColorBrush x:Key="ChromaticsAccent" Color="#00A0FF" />
+                    <SolidColorBrush x:Key="ChromaticsAccentHover" Color="#0090EE" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+
+    <Application.Styles>
+        <FluentTheme />
+        <Style Selector="Button">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+    </Application.Styles>
+</Application>

@@ -3,58 +3,80 @@
         xmlns:loc="clr-namespace:Chromatics.Localization"
         x:Class="Chromatics.Views.CrashFeedbackDialog"
         Title="{loc:Tr Key='Chromatics has crashed'}"
-        Width="520" Height="420"
+        Width="540" Height="460"
         WindowStartupLocation="CenterScreen"
         CanResize="False"
         ShowInTaskbar="True"
-        Topmost="True">
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto" Margin="20">
-        <TextBlock Grid.Row="0"
-                   Text="{loc:Tr Key='Chromatics has encountered an unexpected error and needs to close.'}"
-                   FontWeight="SemiBold"
-                   FontSize="15"
-                   TextWrapping="Wrap" />
+        Topmost="True"
+        Icon="avares://Chromatics/Resources/Chromatics_icon_128x128.png">
+    <Grid RowDefinitions="Auto,*">
+        <!-- Branded header bar matching the main Chromatics window -->
+        <Border Grid.Row="0"
+                Background="{DynamicResource ChromaticsBanner}"
+                Padding="20,14">
+            <StackPanel Orientation="Horizontal" Spacing="14" VerticalAlignment="Center">
+                <Image Source="avares://Chromatics/Resources/Chromatics_icon_128x128.png"
+                       Width="36" Height="36"
+                       VerticalAlignment="Center" />
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Chromatics"
+                               FontSize="16"
+                               FontWeight="SemiBold" />
+                    <TextBlock Text="{loc:Tr Key='Chromatics has crashed'}"
+                               FontSize="12"
+                               Opacity="0.75" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
 
-        <TextBlock Grid.Row="1"
-                   Text="{loc:Tr Key='You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.'}"
-                   TextWrapping="Wrap"
-                   Opacity="0.85"
-                   Margin="0,8,0,12" />
+        <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" Margin="20,16,20,16">
+            <TextBlock Grid.Row="0"
+                       Text="{loc:Tr Key='Chromatics has encountered an unexpected error and needs to close.'}"
+                       FontWeight="SemiBold"
+                       FontSize="14"
+                       TextWrapping="Wrap" />
 
-        <TextBlock Grid.Row="2"
-                   Text="{loc:Tr Key='What were you doing when this happened? (optional)'}"
-                   Margin="0,4,0,4" />
+            <TextBlock Grid.Row="1"
+                       Text="{loc:Tr Key='You can help us fix this by sending a crash report. No personally identifying information is collected. Adding a short description of what you were doing makes it much easier to reproduce.'}"
+                       TextWrapping="Wrap"
+                       Opacity="0.85"
+                       Margin="0,8,0,12" />
 
-        <TextBox Grid.Row="3"
-                 Name="CommentsBox"
-                 AcceptsReturn="True"
-                 TextWrapping="Wrap"
-                 Height="160"
-                 VerticalContentAlignment="Top" />
+            <TextBlock Grid.Row="2"
+                       Text="{loc:Tr Key='What were you doing when this happened? (optional)'}"
+                       Margin="0,4,0,4" />
 
-        <TextBlock Grid.Row="5"
-                   Name="ErrorSummary"
-                   FontFamily="Consolas, monospace"
-                   FontSize="11"
-                   Opacity="0.6"
-                   TextWrapping="NoWrap"
-                   TextTrimming="CharacterEllipsis"
-                   Margin="0,12,0,0" />
+            <TextBox Grid.Row="3"
+                     Name="CommentsBox"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     MinHeight="120"
+                     VerticalContentAlignment="Top" />
 
-        <StackPanel Grid.Row="6"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Spacing="8"
-                    Margin="0,16,0,0">
-            <Button Name="DontSendButton"
-                    Content="{loc:Tr Key=&quot;Don&apos;t Send&quot;}"
-                    Width="120"
-                    Click="OnDontSend" />
-            <Button Name="SendButton"
-                    Content="{loc:Tr Key='Send Report'}"
-                    Width="140"
-                    Classes="accent"
-                    Click="OnSend" />
-        </StackPanel>
+            <TextBlock Grid.Row="4"
+                       Name="ErrorSummary"
+                       FontFamily="Consolas, monospace"
+                       FontSize="11"
+                       Opacity="0.55"
+                       TextWrapping="NoWrap"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0,12,0,0" />
+
+            <StackPanel Grid.Row="5"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Spacing="8"
+                        Margin="0,16,0,0">
+                <Button Name="DontSendButton"
+                        Content="{loc:Tr Key=&quot;Don&apos;t Send&quot;}"
+                        Width="120"
+                        Click="OnDontSend" />
+                <Button Name="SendButton"
+                        Content="{loc:Tr Key='Send Report'}"
+                        Width="140"
+                        Classes="accent"
+                        Click="OnSend" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

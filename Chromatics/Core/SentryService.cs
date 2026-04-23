@@ -29,15 +29,22 @@ namespace Chromatics.Core
         private static IDisposable _sdkHandle;
         private static bool _initialized;
 
+        // Mutable so ApplySettings can swap it in after AppSettings.Startup
+        // succeeds. The BeforeSend / BeforeBreadcrumb callbacks below close
+        // over a getter that returns the current value, so consent changes
+        // take effect immediately on the next captured event.
+        private static SettingsModel _settings = new SettingsModel();
+
         public static bool IsActive => _initialized && SentrySdk.IsEnabled;
 
         /// <summary>
-        /// Boots Sentry once, capturing every subsequent uncaught exception,
-        /// errors logged via Logger, and (when consent is given) a profiling
-        /// + tracing sample. Safe to call when crash reporting is disabled —
-        /// the hub is started in a paused state and resumed on consent.
+        /// Bootstraps Sentry as early as possible — BEFORE AppSettings.Startup
+        /// runs — so that a crash in settings deserialization itself can still
+        /// be captured. Uses defaults from a fresh SettingsModel for the
+        /// init-locked options (environment, release). Real user settings are
+        /// layered on after AppSettings loads via ApplySettings().
         /// </summary>
-        public static void Initialize(SettingsModel settings)
+        public static void Initialize()
         {
             if (_initialized) return;
             if (string.IsNullOrWhiteSpace(Dsn))
@@ -65,9 +72,11 @@ namespace Chromatics.Core
                 // convention and lets the dashboard group beta vs stable.
                 o.Release = $"chromatics@{version}";
 
-                // Environment splits the dashboard between stable and beta so
-                // beta-channel crashes don't pollute the stable crash-free rate.
-                o.Environment = settings.betaChannel ? "beta" : "production";
+                // Environment can only be set at init time. Default to
+                // production here; ApplySettings switches the per-event
+                // "channel" tag to "beta" if the user is on the beta channel,
+                // which is what the dashboard groups by once we filter on it.
+                o.Environment = "production";
 
                 // Auto session tracking is what powers the Release Health UI
                 // (sessions, crash-free users, adoption). On by default in v5.x
@@ -93,28 +102,37 @@ namespace Chromatics.Core
                 // user-visible Console tab is already replayed via Logger.
                 o.MaxBreadcrumbs = 100;
 
-                // Honour the consent toggle by short-circuiting all transport
-                // when the user has opted out. Sentry 5.x exposes these as
-                // setter methods rather than properties.
-                o.SetBeforeSend((evt, _) => settings.enableCrashReports ? evt : null);
-                o.SetBeforeBreadcrumb((b, _) => settings.enableCrashReports ? b : null);
+                // Honour the consent toggle by reading from the live _settings
+                // reference, which ApplySettings swaps in once AppSettings has
+                // loaded. Defaults are enableCrashReports=true, so early-startup
+                // crashes are reported until the user has explicitly opted out.
+                o.SetBeforeSend((evt, _) => _settings.enableCrashReports ? evt : null);
+                o.SetBeforeBreadcrumb((b, _) => _settings.enableCrashReports ? b : null);
             });
 
             _initialized = true;
+        }
 
-            // Static tags shown on every event. ProcessId helps when a user
-            // submits multiple consecutive crashes from the same session.
+        /// <summary>
+        /// Layers real user settings onto the bootstrap init: applies consent,
+        /// adds tags (beta/stable channel, language, admin elevation), and
+        /// starts/ends the Release Health session based on the current consent.
+        /// Safe to call multiple times if settings change at runtime.
+        /// </summary>
+        public static void ApplySettings(SettingsModel settings)
+        {
+            if (!_initialized) return;
+
+            _settings = settings;
+
             SentrySdk.ConfigureScope(scope =>
             {
                 scope.SetTag("channel", settings.betaChannel ? "beta" : "stable");
                 scope.SetTag("language", settings.systemLanguage.ToString());
                 scope.SetTag("admin", settings.alwaysRunAsAdmin ? "true" : "false");
-                scope.SetExtra("processId", Process.GetCurrentProcess().Id);
+                scope.SetExtra("processId", Environment.ProcessId);
             });
 
-            // Apply current consent immediately. If the user has crash reports
-            // disabled at startup, pause the SDK so it acts as a no-op until
-            // they re-enable it from Settings.
             ApplyConsent(settings.enableCrashReports);
         }
 
