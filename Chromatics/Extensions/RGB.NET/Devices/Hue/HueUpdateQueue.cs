@@ -121,23 +121,28 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
                     Color color = dataSet[0].color;
                     var rgbColorHue = new HueApi.ColorConverters.RGBColor(color.R, color.G, color.B);
-                    double brightness;
 
+                    // Start brightness at the legacy hard cap (0-100) when the
+                    // user has set one, otherwise start at full and let the
+                    // slider multipliers below drive the whole value.
+                    //
+                    // Previously this path did `brightness = color.A * 100`
+                    // which looked sensible but broke the slider: several
+                    // RGB.NET brush / decorator paths leave `color.A` at 0
+                    // while still painting a visible R/G/B (Hue only sees xy
+                    // anyway, so brush code doesn't bother setting alpha).
+                    // A=0 → brightness=0 → the `brightness <= 0` guard below
+                    // hits TurnOff() every tick, and the sliders have nothing
+                    // to modulate. Starting at 100 makes the slider the
+                    // authoritative source of bulb luminance.
+                    double brightness;
                     if (appSettings.deviceHueBridgeBrightness == -1)
                     {
-                        brightness = color.A * 100;
-                    }
-                    else if (appSettings.deviceHueBridgeBrightness < 0)
-                    {
-                        brightness = 0;
-                    }
-                    else if (appSettings.deviceHueBridgeBrightness > 100)
-                    {
-                        brightness = 100;
+                        brightness = 100.0;
                     }
                     else
                     {
-                        brightness = appSettings.deviceHueBridgeBrightness;
+                        brightness = Math.Clamp(appSettings.deviceHueBridgeBrightness, 0, 100);
                     }
 
                     // Hue maps RGB to xy chromaticity + a separate brightness value,
@@ -146,16 +151,20 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     // xy is invariant to uniform RGB scaling. Apply both the
                     // global multiplier and the per-device multiplier to the
                     // bridge brightness here so the slider drives bulb luminance.
-                    brightness *= GlobalBrightnessCorrection.Instance.BrightnessPercent / 100.0;
-                    if (_perDeviceBrightness != null)
-                        brightness *= _perDeviceBrightness.BrightnessPercent / 100.0;
+                    int globalPct = GlobalBrightnessCorrection.Instance.BrightnessPercent;
+                    int perDevicePct = _perDeviceBrightness?.BrightnessPercent ?? 100;
+                    brightness *= globalPct / 100.0;
+                    brightness *= perDevicePct / 100.0;
 
                     bool isBlack = color.R == 0 && color.G == 0 && color.B == 0;
 
                     // Bridge firmware rejects on:true with brightness 0 — minimum
                     // brightness in CLIP v2 is ~1%. Send an explicit off instead so
                     // black LEDs actually turn the bulb off rather than snapping to
-                    // minimum brightness or returning an error.
+                    // minimum brightness or returning an error. Clamp to [1, 100]
+                    // otherwise: the bridge silently rejects fractional values
+                    // below 1%, which at very-low slider values would manifest as
+                    // "bulb stays at last-seen brightness" (the slider looks dead).
                     UpdateLight req;
                     if (isBlack || brightness <= 0)
                     {
@@ -163,10 +172,21 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     }
                     else
                     {
-                        req = new UpdateLight()
-                            .SetSpeed(0)
-                            .TurnOn()
-                            .SetBrightness(brightness);
+                        double finalBrightness = Math.Clamp(brightness, 1.0, 100.0);
+
+                        // Set the request fields DIRECTLY instead of via
+                        // SetBrightness/SetColor extension methods so we can
+                        // see the exact payload being assembled. The extension
+                        // methods each do `req.Dimming = new Dimming{...}` or
+                        // `req.Color = new ColorInfo{...}` and return the req;
+                        // inlining removes any chance of extension-method
+                        // ordering or return-value discarding hiding a bug.
+                        req = new UpdateLight
+                        {
+                            On = new On { IsOn = true },
+                            Dynamics = new Dynamics { Speed = 0 },
+                            Dimming = new Dimming { Brightness = finalBrightness },
+                        };
 
                         if (!string.IsNullOrEmpty(_modelId))
                             req.SetColor(rgbColorHue, _modelId);

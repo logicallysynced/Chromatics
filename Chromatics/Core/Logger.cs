@@ -53,22 +53,19 @@ namespace Chromatics.Core
             }
         }
 
-        // Forwards each console line to Sentry via three channels:
+        // Forwards ERROR-tier lines only to Sentry. Two channels:
         //   1. AddBreadcrumb — buffered locally on the SDK, attached to any
         //      subsequent captured exception so error reports include the
-        //      surrounding context.
-        //   2. SentrySdk.Logger.Log* — structured entry sent to the Logs
-        //      product (separate from Issues). Requires options.EnableLogs.
-        //   3. CaptureMessage for Error-tier lines only — so non-exception
-        //      failures (e.g. device init errors) appear in the Issues tab.
+        //      surrounding context. Cheap; kept for all error lines.
+        //   2. CaptureMessage at Error level — surfaces non-exception
+        //      failures (e.g. device init errors) in the Issues tab.
         // Honours the user's enableCrashReports toggle automatically —
         // SentrySdk.IsEnabled is false when consent has been withheld.
         //
-        // Template uses POSITIONAL placeholders ({0}, {1}) not named ones
-        // ({Category}, {Message}). SentryStructuredLogger calls String.Format
-        // under the hood — named placeholders throw FormatException and the
-        // log is silently dropped. Serilog-style named placeholders are NOT
-        // supported by this API in Sentry .NET 6.x.
+        // Info/system/device/etc. lines deliberately do NOT forward. They
+        // were useful for ad-hoc debugging but were noisy in the Sentry
+        // Logs tab and counted against event quota. Breadcrumbs still
+        // capture the preceding ~100 lines on any error that fires.
         private static void ForwardToSentry(LoggerTypes type, string message)
         {
             if (!SentrySdk.IsEnabled) return;
@@ -81,23 +78,15 @@ namespace Chromatics.Core
                     _ => BreadcrumbLevel.Info,
                 };
 
+                // Breadcrumbs for every line (preserves surrounding context
+                // on errors) — they don't leave the SDK until an event is
+                // actually captured, so cost is negligible.
                 SentrySdk.AddBreadcrumb(message, category: type.ToString(), level: breadcrumbLevel);
 
-                // Category is stamped as a structured attribute via configureLog
-                // so the dashboard can filter on it without needing to put it
-                // in the message template.
-                var category = type.ToString();
-                Action<Sentry.SentryLog> setAttrs = log => log.SetAttribute("category", category);
-
-                switch (type)
+                // Only errors actually ship to Sentry.
+                if (type == LoggerTypes.Error)
                 {
-                    case LoggerTypes.Error:
-                        SentrySdk.Logger.LogError(setAttrs, "{0}", new object[] { message });
-                        SentrySdk.CaptureMessage($"[{type}] {message}", SentryLevel.Error);
-                        break;
-                    default:
-                        SentrySdk.Logger.LogInfo(setAttrs, "{0}", new object[] { message });
-                        break;
+                    SentrySdk.CaptureMessage($"[{type}] {message}", SentryLevel.Error);
                 }
             }
             catch

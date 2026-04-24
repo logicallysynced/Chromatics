@@ -143,25 +143,41 @@ namespace Chromatics.Core
                 // Logs tab. Logger.cs forwards every WriteConsole line here.
                 o.EnableLogs = true;
 
-                // Honour the consent toggle by reading from the live _settings
-                // reference, which ApplySettings swaps in once AppSettings has
-                // loaded. Defaults are enableCrashReports=true, so early-startup
-                // crashes are reported until the user has explicitly opted out.
-                // Capture _settings to a local — it can be transiently null if
-                // ApplySettings was passed null (e.g. AppSettings.Startup failed
-                // to parse settings.chromatics4) and we'd NRE inside the SDK's
-                // hot path otherwise.
+                // Consent model: the opt-out toggle governs ONGOING telemetry
+                // (breadcrumbs, non-crash error messages, performance data,
+                // heartbeat). Crash reports bypass consent because the user
+                // explicitly confirms by clicking "Send" in the post-crash
+                // dialog — treating that click as a second, localised consent
+                // to ship this one event.
+                //
+                // Crashes are tagged via Exception.Data["Chromatics.HandledByCrashDialog"]
+                // (set by CaptureCrash). BeforeSend lets those through and
+                // drops everything else when consent is off.
                 o.SetBeforeSend((evt, _) =>
                 {
                     var s = _settings;
-                    if (s == null || s.enableCrashReports) return evt;
-                    Logger.WriteVerbose($"[Sentry] BeforeSend dropped event {evt.EventId} — consent disabled");
+                    bool consent = s == null || s.enableCrashReports;
+                    bool isCrash = evt.Exception?.Data.Contains("Chromatics.HandledByCrashDialog") == true
+                                   || evt.Tags.TryGetValue("kind", out var k) && k == "user_feedback";
+                    if (consent || isCrash) return evt;
+                    Logger.WriteVerbose($"[Sentry] BeforeSend dropped event {evt.EventId} — consent disabled (non-crash)");
                     return null;
                 });
-                o.SetBeforeBreadcrumb((b, _) =>
+
+                // Transactions = performance / profiling. No bypass for these
+                // — if the user opts out, no performance data ships.
+                o.SetBeforeSendTransaction((tx, _) =>
                 {
                     var s = _settings;
-                    return (s == null || s.enableCrashReports) ? b : null;
+                    return (s == null || s.enableCrashReports) ? tx : null;
+                });
+
+                o.SetBeforeBreadcrumb((b, _) =>
+                {
+                    // Breadcrumbs are buffered locally and only egress as part
+                    // of a captured event. Let them through unconditionally —
+                    // BeforeSend decides whether the containing event ships.
+                    return b;
                 });
             });
 
@@ -183,10 +199,42 @@ namespace Chromatics.Core
                 try
                 {
                     if (!SentrySdk.IsEnabled) return;
-                    var tx = SentrySdk.StartTransaction("app.heartbeat", "periodic heartbeat for performance observability");
-                    // Trivial work so the transaction has a measurable duration
-                    // and the profiler captures at least a few samples. Reading
-                    // process working-set is a cheap, meaningful stat to stamp.
+                    // Consent gate: no telemetry during normal runtime when
+                    // opted out. Transactions are also dropped by
+                    // BeforeSendTransaction, but skipping the work entirely
+                    // saves the allocation + profiler overhead.
+                    var s = _settings;
+                    if (s != null && !s.enableCrashReports) return;
+
+                    // Op is "task" — a Sentry-standard category for
+                    // background work. Custom descriptive op strings
+                    // aren't indexed by the Traces explorer the same way
+                    // standard ops are; transactions arrive but don't
+                    // surface in the default view. See
+                    // https://develop.sentry.dev/sdk/performance/span-operations/
+                    var tx = SentrySdk.StartTransaction("app.heartbeat", "task");
+                    tx.Description = "Periodic process-metrics heartbeat";
+
+                    // Sentry's Trace Explorer default filter hides
+                    // transactions tagged in_foreground=false — a scenario
+                    // that fires whenever another Windows app has focus,
+                    // even if Chromatics is visible. Override both fields
+                    // so the heartbeat shows up regardless of which window
+                    // the user happens to have focused.
+                    try
+                    {
+                        tx.Contexts.App.InForeground = true;
+                    }
+                    catch { }
+                    // Span-less transactions that finish in ~0ms are often
+                    // hidden by the Sentry dashboard's Trace/Insights views
+                    // (they're treated as trivial / unusable). Wrap the stat
+                    // collection in an explicit child span and give the
+                    // transaction a real, non-zero duration so it renders
+                    // in the UI. The span also gives us a place to stamp
+                    // the collected metrics as both tags (filterable) and
+                    // extras (displayed in the event detail panel).
+                    var span = tx.StartChild("metrics.collect", "collect process metrics");
                     try
                     {
                         using var p = System.Diagnostics.Process.GetCurrentProcess();
@@ -194,20 +242,36 @@ namespace Chromatics.Core
                         // Memory: working set (resident physical memory),
                         // private bytes (committed), and managed heap size.
                         // All in MB for readability in the Sentry UI.
-                        tx.SetTag("working_set_mb", (p.WorkingSet64 / 1024 / 1024).ToString());
-                        tx.SetTag("private_memory_mb", (p.PrivateMemorySize64 / 1024 / 1024).ToString());
+                        long workingSetMb = p.WorkingSet64 / 1024 / 1024;
+                        long privateMb = p.PrivateMemorySize64 / 1024 / 1024;
+                        long managedHeapMb = GC.GetTotalMemory(forceFullCollection: false) / 1024 / 1024;
+                        int gc0 = GC.CollectionCount(0);
+                        int gc1 = GC.CollectionCount(1);
+                        int gc2 = GC.CollectionCount(2);
+                        int threads = p.Threads.Count;
 
-                        var managedHeap = GC.GetTotalMemory(forceFullCollection: false);
-                        tx.SetTag("managed_heap_mb", (managedHeap / 1024 / 1024).ToString());
+                        // Tags: searchable / aggregatable in Dashboards, but
+                        // cardinality-sensitive (Sentry limits them). Stamp
+                        // on BOTH the transaction AND the span so either
+                        // view surfaces them.
+                        tx.SetTag("working_set_mb", workingSetMb.ToString());
+                        tx.SetTag("private_memory_mb", privateMb.ToString());
+                        tx.SetTag("managed_heap_mb", managedHeapMb.ToString());
+                        tx.SetTag("gc_gen0", gc0.ToString());
+                        tx.SetTag("gc_gen1", gc1.ToString());
+                        tx.SetTag("gc_gen2", gc2.ToString());
+                        tx.SetTag("thread_count", threads.ToString());
 
-                        // Per-generation GC counts are a steady-state diagnostic
-                        // for spotting memory-pressure regressions between
-                        // releases.
-                        tx.SetTag("gc_gen0", GC.CollectionCount(0).ToString());
-                        tx.SetTag("gc_gen1", GC.CollectionCount(1).ToString());
-                        tx.SetTag("gc_gen2", GC.CollectionCount(2).ToString());
-
-                        tx.SetTag("thread_count", p.Threads.Count.ToString());
+                        // Span data: visible in the event detail view under
+                        // "Additional Data". Numeric so Dashboards can plot
+                        // them directly without a string→int coercion.
+                        span.SetData("working_set_mb", workingSetMb);
+                        span.SetData("private_memory_mb", privateMb);
+                        span.SetData("managed_heap_mb", managedHeapMb);
+                        span.SetData("gc_gen0", gc0);
+                        span.SetData("gc_gen1", gc1);
+                        span.SetData("gc_gen2", gc2);
+                        span.SetData("thread_count", threads);
 
                         // CPU usage: percent of a single core used since the
                         // last heartbeat. Divided by core count so the value
@@ -224,15 +288,45 @@ namespace Chromatics.Core
                             if (wallDelta > 0)
                             {
                                 var cores = Math.Max(1, Environment.ProcessorCount);
-                                var cpuPct = (cpuDelta / (wallDelta * cores)) * 100.0;
-                                tx.SetTag("cpu_percent", Math.Round(Math.Clamp(cpuPct, 0, 100), 1).ToString("F1"));
+                                var cpuPct = Math.Round(Math.Clamp((cpuDelta / (wallDelta * cores)) * 100.0, 0, 100), 1);
+                                tx.SetTag("cpu_percent", cpuPct.ToString("F1"));
+                                span.SetData("cpu_percent", cpuPct);
                             }
                         }
                         _lastProcessorTime = cpuTime;
                         _lastSampleTime = now;
+
+                        // Longer sleep (300ms) so the transaction's wall-
+                        // clock duration is well above any minimum-duration
+                        // filter Sentry's Trace Explorer might apply. 100ms
+                        // was borderline — 300ms is comfortably visible in
+                        // every default view. Runs on the thread pool so
+                        // zero impact on user-visible latency.
+                        System.Threading.Thread.Sleep(300);
                     }
                     catch { /* non-critical */ }
+                    span.Finish(SpanStatus.Ok);
                     tx.Finish(SpanStatus.Ok);
+
+                    // Belt-and-suspenders: also capture an Info-level
+                    // message for the Issues tab. Unlike transactions,
+                    // Sentry renders CaptureMessage events unconditionally
+                    // in the Issues list, so if this line shows up but the
+                    // app.heartbeat transaction doesn't, it definitively
+                    // narrows the problem to transaction-filter-side.
+                    // Tagged so it can be grouped / filtered out of regular
+                    // issue triage.
+                    try
+                    {
+                        SentrySdk.CaptureMessage(
+                            "app.heartbeat pulse",
+                            scope =>
+                            {
+                                scope.SetTag("kind", "heartbeat");
+                                scope.Level = SentryLevel.Info;
+                            });
+                    }
+                    catch { }
                 }
                 catch { /* heartbeat must never throw */ }
             }, null, TimeSpan.FromSeconds(HeartbeatIntervalSeconds), TimeSpan.FromSeconds(HeartbeatIntervalSeconds));
@@ -321,6 +415,14 @@ namespace Chromatics.Core
                 return;
             }
 
+            // Consent gate — skip the transaction entirely when opted out.
+            var s = _settings;
+            if (s != null && !s.enableCrashReports)
+            {
+                work();
+                return;
+            }
+
             ITransactionTracer tx = null;
             try
             {
@@ -352,9 +454,14 @@ namespace Chromatics.Core
         /// </summary>
         public static SentryId CaptureCrash(Exception ex)
         {
-            if (!IsActive)
+            // Crash capture IGNORES the consent toggle because the user sees
+            // the CrashFeedbackDialog and has to click "Send" — the click is a
+            // per-crash consent. The toggle only governs ongoing/silent
+            // telemetry. BeforeSend detects these via ex.Data and lets them
+            // through unconditionally.
+            if (!_initialized || !SentrySdk.IsEnabled)
             {
-                Logger.WriteVerbose($"[Sentry] CaptureCrash skipped: IsActive=false (initialized={_initialized}, sdkEnabled={SentrySdk.IsEnabled})");
+                Logger.WriteVerbose($"[Sentry] CaptureCrash skipped: SDK not available (initialized={_initialized}, sdkEnabled={SentrySdk.IsEnabled})");
                 return SentryId.Empty;
             }
 
@@ -393,8 +500,10 @@ namespace Chromatics.Core
         /// </summary>
         public static void SubmitFeedback(SentryId eventId, string comments)
         {
-            if (!IsActive || eventId == SentryId.Empty) return;
-            if (_settings != null && !_settings.enableCrashReports) return;
+            // Feedback submission IGNORES the consent toggle, same reasoning
+            // as CaptureCrash — the Send click is the per-crash consent.
+            // BeforeSend allows `kind=user_feedback` events through regardless.
+            if (!_initialized || !SentrySdk.IsEnabled || eventId == SentryId.Empty) return;
             if (string.IsNullOrWhiteSpace(comments)) return;
 
             try
