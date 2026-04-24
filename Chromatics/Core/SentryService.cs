@@ -39,6 +39,12 @@ namespace Chromatics.Core
         private static System.Threading.Timer _heartbeatTimer;
         private const double HeartbeatIntervalSeconds = 60.0;
 
+        // CPU usage is computed from deltas between heartbeats, so we keep
+        // the last-sampled values here. Initial call returns 0% (no baseline
+        // to diff against).
+        private static TimeSpan _lastProcessorTime;
+        private static DateTime _lastSampleTime;
+
         // Mutable so ApplySettings can swap it in after AppSettings.Startup
         // succeeds. The BeforeSend / BeforeBreadcrumb callbacks below close
         // over a getter that returns the current value, so consent changes
@@ -184,8 +190,46 @@ namespace Chromatics.Core
                     try
                     {
                         using var p = System.Diagnostics.Process.GetCurrentProcess();
+
+                        // Memory: working set (resident physical memory),
+                        // private bytes (committed), and managed heap size.
+                        // All in MB for readability in the Sentry UI.
                         tx.SetTag("working_set_mb", (p.WorkingSet64 / 1024 / 1024).ToString());
+                        tx.SetTag("private_memory_mb", (p.PrivateMemorySize64 / 1024 / 1024).ToString());
+
+                        var managedHeap = GC.GetTotalMemory(forceFullCollection: false);
+                        tx.SetTag("managed_heap_mb", (managedHeap / 1024 / 1024).ToString());
+
+                        // Per-generation GC counts are a steady-state diagnostic
+                        // for spotting memory-pressure regressions between
+                        // releases.
+                        tx.SetTag("gc_gen0", GC.CollectionCount(0).ToString());
+                        tx.SetTag("gc_gen1", GC.CollectionCount(1).ToString());
+                        tx.SetTag("gc_gen2", GC.CollectionCount(2).ToString());
+
                         tx.SetTag("thread_count", p.Threads.Count.ToString());
+
+                        // CPU usage: percent of a single core used since the
+                        // last heartbeat. Divided by core count so the value
+                        // is normalised (100% = one core fully saturated,
+                        // capped at 100% even on machines with many cores).
+                        // First sample is 0% — we need two points to compute
+                        // a delta.
+                        var now = DateTime.UtcNow;
+                        var cpuTime = p.TotalProcessorTime;
+                        if (_lastSampleTime != DateTime.MinValue)
+                        {
+                            var cpuDelta = (cpuTime - _lastProcessorTime).TotalMilliseconds;
+                            var wallDelta = (now - _lastSampleTime).TotalMilliseconds;
+                            if (wallDelta > 0)
+                            {
+                                var cores = Math.Max(1, Environment.ProcessorCount);
+                                var cpuPct = (cpuDelta / (wallDelta * cores)) * 100.0;
+                                tx.SetTag("cpu_percent", Math.Round(Math.Clamp(cpuPct, 0, 100), 1).ToString("F1"));
+                            }
+                        }
+                        _lastProcessorTime = cpuTime;
+                        _lastSampleTime = now;
                     }
                     catch { /* non-critical */ }
                     tx.Finish(SpanStatus.Ok);
@@ -364,7 +408,16 @@ namespace Chromatics.Core
             }
             catch { }
 
-            try { SentrySdk.Logger.LogInfo("User feedback for {EventId}: {Comment}", eventId.ToString(), comments); } catch { }
+            // Positional args only — SentryStructuredLogger uses String.Format, not Serilog templates.
+            try
+            {
+                var evIdStr = eventId.ToString();
+                SentrySdk.Logger.LogInfo(
+                    log => { log.SetAttribute("associated_event_id", evIdStr); log.SetAttribute("kind", "user_feedback"); },
+                    "User feedback: {0}",
+                    new object[] { comments });
+            }
+            catch { }
 
             try
             {

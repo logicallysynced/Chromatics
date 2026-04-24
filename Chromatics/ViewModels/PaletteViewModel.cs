@@ -95,12 +95,33 @@ namespace Chromatics.ViewModels
             ApplyFilter();
         }
 
+        // Categories with no corresponding ColorMapping entries, or whose
+        // functionality has not yet been reimplemented on 4.x. Hidden from
+        // the dropdown AND filtered out of the All view so the user doesn't
+        // see dead entries.
+        private static readonly PaletteTypes[] _hiddenCategories =
+        {
+            PaletteTypes.Abilities,
+            PaletteTypes.StatusEffects,
+        };
+
+        // Individual entries hidden regardless of category. Pull Countdown
+        // is grouped under Notifications but the feature hasn't been
+        // reimplemented yet — hide until it lands.
+        private static readonly string[] _hiddenFieldNames =
+        {
+            "PullCountdownTick",
+            "PullCountdownEmpty",
+            "PullCountdownEngage",
+        };
+
         private void BuildCategories()
         {
             Categories.Clear();
             for (int i = 0; i <= Palette.TypeCount; i++)
             {
                 var t = (PaletteTypes)i;
+                if (_hiddenCategories.Contains(t)) continue;
                 var displayAttr = typeof(PaletteTypes)
                     .GetMember(t.ToString())[0]
                     .GetCustomAttribute<DisplayAttribute>();
@@ -115,6 +136,7 @@ namespace Chromatics.ViewModels
             foreach (var field in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
             {
                 if (field.FieldType != typeof(ColorMapping)) continue;
+                if (_hiddenFieldNames.Contains(field.Name)) continue;
                 _allItems.Add(new PaletteMappingItem(active, field));
             }
         }
@@ -124,7 +146,8 @@ namespace Chromatics.ViewModels
             Items.Clear();
             if (_selectedCategory == null || _selectedCategory.Value == PaletteTypes.All)
             {
-                foreach (var it in _allItems) Items.Add(it);
+                foreach (var it in _allItems.Where(i => !_hiddenCategories.Contains(i.Category)))
+                    Items.Add(it);
             }
             else
             {

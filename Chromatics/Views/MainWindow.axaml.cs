@@ -44,6 +44,17 @@ namespace Chromatics.Views
                     "Chromatics backend init (keyboard hook + RGB provider load)",
                     () =>
                     {
+                        // LoadMappings runs first so it's populated BEFORE
+                        // RGBController.Setup fires DeviceConnectionChanged.
+                        // Off the UI thread because it deserialises the whole
+                        // layers.chromatics4 file — the single largest UI-thread
+                        // blocker during startup. LoadMappings uses
+                        // ConcurrentDictionary internally so concurrent reads
+                        // from the UI thread are safe.
+                        if (!Chromatics.Layers.MappingLayers.LoadMappings())
+                        {
+                            Logger.WriteConsole(LoggerTypes.System, "No layer file found. Defaults will be created per device.");
+                        }
                         KeyController.Setup();
                         RGBController.Setup();
                     });
