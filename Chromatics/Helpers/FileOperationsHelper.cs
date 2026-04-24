@@ -232,7 +232,8 @@ namespace Chromatics.Helpers
         private static readonly System.Threading.Lock _layerSaveLock = new();
 
         public static void SaveLayerMappings(ConcurrentDictionary<int, Layer> mappings,
-            IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
+            IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null,
+            IDictionary<Guid, int> deviceBrightness = null)
         {
             var enviroment = GetConfigDirectory();
             var path = Path.Combine(enviroment, LayersFile);
@@ -269,11 +270,19 @@ namespace Chromatics.Helpers
                     }
                 }
 
+                var brightnessSnapshot = new Dictionary<Guid, int>();
+                if (deviceBrightness != null)
+                {
+                    foreach (var kvp in deviceBrightness)
+                        brightnessSnapshot[kvp.Key] = kvp.Value;
+                }
+
                 var wrapper = new MappingFileV3
                 {
-                    schemaVersion = 3,
+                    schemaVersion = 4,
                     layers = layersSnapshot,
-                    deviceLayouts = layoutsSnapshot
+                    deviceLayouts = layoutsSnapshot,
+                    deviceBrightness = brightnessSnapshot
                 };
 
                 WriteJsonAtomic(path, wrapper);
@@ -312,11 +321,13 @@ namespace Chromatics.Helpers
         }
 
         // V2 of the file was a bare ConcurrentDictionary<int, Layer>; V3 wraps
-        // that dict in an object with deviceLayouts. Detect via JObject having
-        // a "schemaVersion" key. Legacy files load with an empty layouts map
-        // and upgrade to V3 on the next save.
+        // that dict in an object with deviceLayouts. V4 adds deviceBrightness.
+        // Detect via JObject having a "schemaVersion" key. Legacy files
+        // (chromatics3 / V2) load with empty layouts + brightness maps and
+        // upgrade to the latest schema on the next save.
         public static (ConcurrentDictionary<int, Layer> layers,
-                       Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
+                       Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts,
+                       Dictionary<Guid, int> deviceBrightness)
             LoadLayerMappings()
         {
             var enviroment = GetConfigDirectory();
@@ -448,16 +459,17 @@ namespace Chromatics.Helpers
         }
 
         private static (ConcurrentDictionary<int, Layer> layers,
-                        Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
+                        Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts,
+                        Dictionary<Guid, int> deviceBrightness)
             ParseMappingFile(string json)
         {
-            if (string.IsNullOrWhiteSpace(json)) return (null, null);
+            if (string.IsNullOrWhiteSpace(json)) return (null, null, null);
 
             JToken token;
             try { token = JToken.Parse(json); }
-            catch (JsonException) { return (null, null); }
+            catch (JsonException) { return (null, null, null); }
 
-            if (token is not JObject obj) return (null, null);
+            if (token is not JObject obj) return (null, null, null);
 
             // Current schema-versioned format.
             if (obj["schemaVersion"] != null && obj["layers"] != null)
@@ -474,20 +486,26 @@ namespace Chromatics.Helpers
                         .ToObject<Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>>()
                         ?? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>();
 
-                    return (layers, deviceLayouts);
+                    // Optional: present from schemaVersion 4 onward. V3 files
+                    // and chromatics3 imports come back with an empty map.
+                    var deviceBrightness = obj["deviceBrightness"]?
+                        .ToObject<Dictionary<Guid, int>>()
+                        ?? new Dictionary<Guid, int>();
+
+                    return (layers, deviceLayouts, deviceBrightness);
                 }
                 catch (Exception ex)
                 {
                     Logger.WriteConsole(Enums.LoggerTypes.Error,
                         $"Failed to parse layer file (schema format): {ex.Message}");
-                    return (null, null);
+                    return (null, null, null);
                 }
             }
 
             // Legacy format: all top-level keys are integer layer IDs.
             // Guard against non-layer files (e.g. palette/settings files with string keys).
             if (!obj.Properties().All(p => int.TryParse(p.Name, out _)))
-                return (null, null);
+                return (null, null, null);
 
             try
             {
@@ -496,13 +514,15 @@ namespace Chromatics.Helpers
                     {
                         Converters = { new DictionaryConverter() }
                     }));
-                return (legacy, new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>());
+                return (legacy,
+                    new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(),
+                    new Dictionary<Guid, int>());
             }
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error,
                     $"Failed to parse layer file (legacy format): {ex.Message}");
-                return (null, null);
+                return (null, null, null);
             }
         }
 
@@ -522,10 +542,11 @@ namespace Chromatics.Helpers
 
         // Import — callers supply the path (picked via Avalonia StorageProvider).
         public static (ConcurrentDictionary<int, Layer> layers,
-                       Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts)
+                       Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts,
+                       Dictionary<Guid, int> deviceBrightness)
             ImportLayerMappingsFromPath(string path)
         {
-            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return (null, null);
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return (null, null, null);
 
             Logger.WriteConsole(Enums.LoggerTypes.System, @"Importing Layers..");
 
@@ -542,12 +563,13 @@ namespace Chromatics.Helpers
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error importing layers. Error: {ex.Message}");
-                return (null, null);
+                return (null, null, null);
             }
         }
 
         public static void ExportLayerMappingsToPath(ConcurrentDictionary<int, Layer> layers, string path,
-            IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null)
+            IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null,
+            IDictionary<Guid, int> deviceBrightness = null)
         {
             if (string.IsNullOrWhiteSpace(path) || layers == null) return;
 
@@ -561,11 +583,14 @@ namespace Chromatics.Helpers
 
                 var wrapper = new MappingFileV3
                 {
-                    schemaVersion = 3,
+                    schemaVersion = 4,
                     layers = layersCopy,
                     deviceLayouts = deviceLayouts != null
                         ? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(deviceLayouts)
-                        : new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>()
+                        : new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(),
+                    deviceBrightness = deviceBrightness != null
+                        ? new Dictionary<Guid, int>(deviceBrightness)
+                        : new Dictionary<Guid, int>()
                 };
 
                 WriteJsonAtomic(path, wrapper);

@@ -51,6 +51,30 @@ namespace Chromatics.ViewModels.Mapping
         // user. Flipped by MappingViewModel when the lock toggle changes.
         [ObservableProperty] private bool _isDraggable;
 
+        // Per-device brightness 0..100. Composes with the global brightness
+        // slider; global remains the master cap. Persisted in layers.chromatics4.
+        private int _brightness = 100;
+        public int Brightness
+        {
+            get => _brightness;
+            set
+            {
+                if (value < 0) value = 0;
+                else if (value > 100) value = 100;
+                if (SetProperty(ref _brightness, value))
+                {
+                    OnPropertyChanged(nameof(BrightnessLabel));
+                    OnPropertyChanged(nameof(IsBrightnessReduced));
+                    MappingLayers.SetDeviceBrightness(DeviceId, value);
+                }
+            }
+        }
+
+        public string BrightnessLabel => $"{_brightness}%";
+        public bool IsBrightnessReduced => _brightness < 100;
+
+        public void ResetBrightness() => Brightness = 100;
+
         public bool SupportsDragReposition => DeviceType != RGBDeviceType.Keyboard;
 
         private Action<LedId> _pickKeyCallback;
@@ -82,6 +106,7 @@ namespace Chromatics.ViewModels.Mapping
             Keycaps = keycaps;
             _width = width;
             _height = height;
+            _brightness = MappingLayers.GetDeviceBrightness(deviceId);
         }
 
         // Keyboards: always render the full printed layout. The old Uc_VirtualKeyboard

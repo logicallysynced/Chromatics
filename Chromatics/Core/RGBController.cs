@@ -45,6 +45,14 @@ namespace Chromatics.Core
 
         private static Dictionary<IRGBDevice, bool> _activeDevices = new Dictionary<IRGBDevice, bool>();
 
+        // Per-device brightness corrections, keyed by the device GUID stamped in
+        // by DevicesChanged. Lazily created on first device-add and reused if
+        // the same device is re-attached. Composes multiplicatively with the
+        // global GlobalBrightnessCorrection so the global value remains the
+        // master cap (e.g. global=50, perDevice=80 → 40% effective).
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, PerDeviceBrightnessCorrection> _perDeviceBrightness
+            = new System.Collections.Concurrent.ConcurrentDictionary<Guid, PerDeviceBrightnessCorrection>();
+
         private static Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
 
         private static List<Led> _layergroupledcollection = new List<Led>();
@@ -269,6 +277,35 @@ namespace Chromatics.Core
                 corrections.Add(GlobalBrightnessCorrection.Instance);
         }
 
+        // Per-device brightness needs the device GUID, which is only known
+        // once DevicesChanged.Added fires. Called from there after the GUID
+        // has been computed; idempotent on re-attach.
+        private static void AttachPerDeviceBrightness(IRGBDevice device, Guid deviceGuid)
+        {
+            if (device == null || deviceGuid == Guid.Empty) return;
+
+            var correction = _perDeviceBrightness.GetOrAdd(deviceGuid, _ => new PerDeviceBrightnessCorrection());
+            correction.BrightnessPercent = Layers.MappingLayers.GetDeviceBrightness(deviceGuid);
+
+            var corrections = device.ColorCorrections;
+            if (corrections != null && !corrections.Contains(correction))
+                corrections.Add(correction);
+
+            // Hue applies brightness via the bridge's separate brightness
+            // channel — RGB scaling alone leaves xy chromaticity unchanged.
+            if (device is Chromatics.Extensions.RGB.NET.Devices.Hue.HueDevice hueDevice)
+                hueDevice.SetPerDeviceBrightness(correction);
+        }
+
+        // Pushes a new per-device brightness value to the active correction.
+        // Called by MappingLayers.SetDeviceBrightness after persisting; the
+        // next render frame picks up the new value via _brightnessPercent.
+        public static void SetDeviceBrightness(Guid deviceGuid, int value)
+        {
+            if (_perDeviceBrightness.TryGetValue(deviceGuid, out var correction))
+                correction.BrightnessPercent = value;
+        }
+
         private static void DevicesChanged(object sender, DevicesChangedEventArgs e)
         {
             var device = e.Device;
@@ -324,6 +361,7 @@ namespace Chromatics.Core
                 }
 
                 AttachGlobalBrightness(device);
+                AttachPerDeviceBrightness(device, guid);
 
                 #if DEBUG
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {guid}).");
