@@ -805,5 +805,7 @@
   "The Audio Visualizer base layer turns your devices into a music spectrum analyser — pulses to whatever's playing on your PC.": "音频可视化基础图层会将你的设备变成音乐频谱分析器——会随着电脑上正在播放的声音而律动。",
   "The Reactive Weather base layer changes colour based on the in-game weather and time of day.": "响应式天气基础图层会根据游戏内的天气和一天中的时间改变颜色。",
   "Unsupported device? If you have OpenRGB installed and running, enable it in Settings → Device Providers — it covers many third-party devices.": "设备不受支持？如果你已安装并运行 OpenRGB，请在“设置”→“设备提供程序”中启用它——它支持许多第三方设备。",
-  "The Battle Stance dynamic layer reacts to whether you're in combat — great for ambient lighting cues.": "战斗姿态动态图层会根据你是否处于战斗中作出反应——非常适合作为环境灯光提示。"
+  "The Battle Stance dynamic layer reacts to whether you're in combat — great for ambient lighting cues.": "战斗姿态动态图层会根据你是否处于战斗中作出反应——非常适合作为环境灯光提示。",
+  "Send anonymous performance and error telemetry to help improve Chromatics.": "发送匿名的性能和错误遥测数据，以帮助改进 Chromatics。",
+  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "默认：启用。控制后台遥测（性能指标、非致命错误）。崩溃报告是独立的——如果 Chromatics 崩溃，在发送任何内容之前都会先征求您的同意。不会收集任何可识别个人身份的信息。详情请参阅 README 中的隐私部分。"
 }

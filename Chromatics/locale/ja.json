@@ -805,5 +805,8 @@
   "The Audio Visualizer base layer turns your devices into a music spectrum analyser — pulses to whatever's playing on your PC.": "オーディオビジュアライザのベースレイヤーを使うと、デバイスが音楽スペクトラムアナライザーになり、PCで再生中の音に合わせて脈動します。",
   "The Reactive Weather base layer changes colour based on the in-game weather and time of day.": "リアクティブ天候ベースレイヤーは、ゲーム内の天候や時間帯に応じて色が変化します。",
   "Unsupported device? If you have OpenRGB installed and running, enable it in Settings → Device Providers — it covers many third-party devices.": "未対応のデバイスですか？ OpenRGB をインストールして起動している場合は、設定 → デバイスプロバイダーで有効にしてください。多くのサードパーティ製デバイスに対応しています。",
-  "The Battle Stance dynamic layer reacts to whether you're in combat — great for ambient lighting cues.": "バトルスタンス動的レイヤーは戦闘中かどうかに反応するため、環境ライティングの合図として最適です。"
+  "The Battle Stance dynamic layer reacts to whether you're in combat — great for ambient lighting cues.": "バトルスタンス動的レイヤーは戦闘中かどうかに反応するため、環境ライティングの合図として最適です。",
+  "Send anonymous performance and error telemetry to help improve Chromatics.": "Chromatics の改善に役立てるため、匿名のパフォーマンスおよびエラーテレメトリを送信します。",
+  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "既定: 有効。バックグラウンド テレメトリ（パフォーマンス指標、致命的でないエラー）を制御します。クラッシュ レポートは独立しており、Chromatics がクラッシュした場合は、何かが送信される前に必ず確認を求められます。個人を特定できる情報は収集されません。詳細については、README の Privacy セクションを参照してください。",
+  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "デフォルト: 有効。バックグラウンド テレメトリ（パフォーマンス指標、致命的でないエラー）を制御します。クラッシュ レポートは独立しており、Chromatics がクラッシュした場合は、何かが送信される前に必ず確認を求められます。個人を特定できる情報は収集されません。詳細については、README の Privacy セクションを参照してください。"
 }
