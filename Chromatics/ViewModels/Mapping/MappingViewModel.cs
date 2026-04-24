@@ -4,6 +4,7 @@ using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Helpers;
 using Chromatics.Layers;
+using Chromatics.Localization;
 using Chromatics.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -11,6 +12,7 @@ using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -69,12 +71,85 @@ namespace Chromatics.ViewModels.Mapping
 
             AppSettings.KeyboardLayoutChanged += OnKeyboardLayoutChanged;
             GameController.jobChanged += OnJobChanged;
+            LocalizationService.Instance.PropertyChanged += OnLocalizationVersionChanged;
+
+            RefreshRotatingTip();
+        }
+
+        // Rotating tips shown above the layer list. Source strings are kept
+        // here as English keys so they round-trip through LocalizationService —
+        // every entry must also be present in Chromatics/locale/en.json so
+        // translate.py can fan it out to the other locales.
+        private static readonly string[] _tipKeys = new[]
+        {
+            "Drag layers in the list to reorder how they stack — higher layers paint over lower ones.",
+            "Each device has its own brightness slider — open the sun icon in the device toolbar.",
+            "Disable the global brightness or per-device brightness slider to silence a device without removing its layers.",
+            "Use the Highlight layer to keep important keys (skills, gauges) a single colour so they stand out from background effects.",
+            "On non-keyboard devices, unlock the keys (padlock icon) to drag them into custom shapes — rings, crosses, anything.",
+            "Click the reset (↺) icon to restore the default key positions for a non-keyboard device.",
+            "Effect layers add temporary bursts of lighting on top of your base layer — they fire automatically for raid mechanics, weather changes, and other in-game events.",
+            "Switch keyboard layout (QWERTY / QWERTZ / AZERTY) in Settings — your keybinds remap automatically.",
+            "Use the Job Gauge layer types to mirror your in-game gauges directly onto your devices.",
+            "Export your layer configuration from the Mapping tab to share it or back it up before experimenting.",
+            "The Audio Visualizer base layer turns your devices into a music spectrum analyser — pulses to whatever's playing on your PC.",
+            "The Reactive Weather base layer changes colour based on the in-game weather and time of day.",
+            "Unsupported device? If you have OpenRGB installed and running, enable it in Settings → Device Providers — it covers many third-party devices.",
+            "The Battle Stance dynamic layer reacts to whether you're in combat — great for ambient lighting cues.",
+        };
+
+        // Stored as the English key, not the resolved string, so the property
+        // re-localises on every read. Without this, switching language while
+        // the Mapping tab is showing a tip leaves the previously-rendered
+        // English text in place until the next tab visit.
+        private string _rotatingTipKey = string.Empty;
+
+        public string RotatingTip =>
+            string.IsNullOrEmpty(_rotatingTipKey)
+                ? string.Empty
+                : LocalizationService.Instance[_rotatingTipKey];
+
+        // Track the previously shown index so the next rotation always lands
+        // on a different tip — random-with-replacement on a small list lands
+        // on the same string roughly every N visits, which is jarring.
+        private static int _lastTipIndex = -1;
+        private static readonly Random _tipRandom = new Random();
+
+        public void RefreshRotatingTip()
+        {
+            if (_tipKeys.Length == 0) return;
+
+            int idx;
+            if (_tipKeys.Length == 1)
+            {
+                idx = 0;
+            }
+            else
+            {
+                do { idx = _tipRandom.Next(_tipKeys.Length); }
+                while (idx == _lastTipIndex);
+            }
+
+            _lastTipIndex = idx;
+            _rotatingTipKey = _tipKeys[idx];
+            OnPropertyChanged(nameof(RotatingTip));
+        }
+
+        // Forwarded from LocalizationService.PropertyChanged in the ctor — when
+        // the user switches language, re-render whatever tip is currently
+        // showing. The property getter does the lookup against the new
+        // language's translation table.
+        private void OnLocalizationVersionChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(LocalizationService.Version))
+                OnPropertyChanged(nameof(RotatingTip));
         }
 
         public void Dispose()
         {
             AppSettings.KeyboardLayoutChanged -= OnKeyboardLayoutChanged;
             GameController.jobChanged -= OnJobChanged;
+            LocalizationService.Instance.PropertyChanged -= OnLocalizationVersionChanged;
             RGBController.ClearAvaloniaPreviewCallback();
         }
 

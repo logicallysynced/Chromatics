@@ -35,10 +35,15 @@
             <Setter Property="BorderThickness"  Value="2" />
         </Style>
 
-        <!-- Floating padlock toggle pinned to the bottom-right of the device
-             area. Padlock glyph switches between locked (🔒) and unlocked (🔓)
-             via the checked-state style below. -->
-        <Style Selector="ToggleButton.lockToggle">
+        <!-- Floating round toolbar buttons pinned to the bottom-right of the
+             device area. :is(Button) so the rule matches both ToggleButton
+             (lock + brightness) and plain Button (reset position) — without
+             this, the reset button falls back to Avalonia's default
+             rectangular Button chrome and breaks the row's visual rhythm.
+             FontSize 14 (was 16) gives the 🔒/🔓 emoji glyphs enough
+             vertical headroom to render fully inside the circular clip
+             — at 16 the lock's shackle was clipped by the corner radius. -->
+        <Style Selector=":is(Button).lockToggle">
             <Setter Property="Width"              Value="36" />
             <Setter Property="Height"             Value="36" />
             <Setter Property="Padding"            Value="0" />
@@ -46,7 +51,7 @@
             <Setter Property="Background"         Value="{DynamicResource ChromaticsTileOff}" />
             <Setter Property="BorderBrush"        Value="{DynamicResource ChromaticsTileBorderOff}" />
             <Setter Property="BorderThickness"    Value="1" />
-            <Setter Property="FontSize"           Value="16" />
+            <Setter Property="FontSize"           Value="14" />
             <Setter Property="FontFamily"         Value="Segoe UI Emoji, Segoe UI Symbol" />
             <Setter Property="Cursor"             Value="Hand" />
             <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -118,27 +123,55 @@
             </ScrollViewer>
         </Border>
 
-        <!-- Brightness + lock + reset toolbar. Brightness shows for every
-             device type (keyboards too, where lock/reset don't apply); lock
-             and reset stay gated on SupportsDragReposition. -->
+        <!-- Reset position + lock + brightness toolbar. Lock and reset stay
+             gated on SupportsDragReposition; brightness shows for every
+             device type (keyboards too, where lock/reset don't apply) and
+             sits at the right end of the toolbar. -->
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,10,10"
                     Spacing="6">
+            <Button Classes="lockToggle"
+                    IsVisible="{Binding SupportsDragReposition}"
+                    Click="OnResetLayoutClick"
+                    ToolTip.Tip="{loc:Tr Key='Reset all keys to default positions'}">
+                <TextBlock Text="&#x21BA;"
+                           FontFamily="Segoe UI Emoji, Segoe UI Symbol" />
+            </Button>
+            <ToggleButton Classes="lockToggle"
+                          IsVisible="{Binding SupportsDragReposition}"
+                          IsChecked="{Binding IsDraggable, Mode=TwoWay}"
+                          ToolTip.Tip="{loc:Tr Key='Lock / unlock keys for drag repositioning'}">
+                <Grid>
+                    <TextBlock Text="&#x1F512;" IsVisible="{Binding !IsDraggable}" />
+                    <TextBlock Text="&#x1F513;" IsVisible="{Binding IsDraggable}" />
+                </Grid>
+            </ToggleButton>
             <ToggleButton Name="BrightnessToggle"
                           Classes="lockToggle"
                           ToolTip.Tip="{loc:Tr Key='Adjust per-device brightness'}">
-                <Grid>
-                    <TextBlock Text="&#x2600;"
-                               FontFamily="Segoe UI Emoji, Segoe UI Symbol" />
+                <Grid Width="36" Height="36">
+                    <!-- Hollow sun: chunky ring + 8 short stubby rays with
+                         rounded caps. Ray inner ends sit just outside the
+                         ring so a clear gap reads at the toolbar size. -->
+                    <Path Data="M 7,12 A 5,5 0 1,0 17,12 A 5,5 0 1,0 7,12 Z M 12,2 L 12,4.5 M 12,19.5 L 12,22 M 2,12 L 4.5,12 M 19.5,12 L 22,12 M 4.93,4.93 L 7.05,7.05 M 19.07,4.93 L 16.95,7.05 M 4.93,19.07 L 7.05,16.95 M 19.07,19.07 L 16.95,16.95"
+                          Stretch="Uniform"
+                          Width="20" Height="20"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Stroke="{Binding $parent[ToggleButton].Foreground}"
+                          StrokeThickness="2.5"
+                          StrokeLineCap="Round"
+                          Fill="{x:Null}"
+                          Opacity="0.55" />
                     <Border IsVisible="{Binding IsBrightnessReduced}"
                             Background="{DynamicResource ChromaticsAccent}"
-                            CornerRadius="6"
+                            CornerRadius="5"
                             Width="10" Height="10"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Top"
-                            Margin="0,-2,-2,0"
+                            Margin="0,2,2,0"
                             IsHitTestVisible="False" />
                 </Grid>
                 <ToggleButton.Flyout>
@@ -163,22 +196,6 @@
                         </StackPanel>
                     </Flyout>
                 </ToggleButton.Flyout>
-            </ToggleButton>
-            <Button Classes="lockToggle"
-                    IsVisible="{Binding SupportsDragReposition}"
-                    Click="OnResetLayoutClick"
-                    ToolTip.Tip="{loc:Tr Key='Reset all keys to default positions'}">
-                <TextBlock Text="&#x21BA;"
-                           FontFamily="Segoe UI Emoji, Segoe UI Symbol" />
-            </Button>
-            <ToggleButton Classes="lockToggle"
-                          IsVisible="{Binding SupportsDragReposition}"
-                          IsChecked="{Binding IsDraggable, Mode=TwoWay}"
-                          ToolTip.Tip="{loc:Tr Key='Lock / unlock keys for drag repositioning'}">
-                <Grid>
-                    <TextBlock Text="&#x1F512;" IsVisible="{Binding !IsDraggable}" />
-                    <TextBlock Text="&#x1F513;" IsVisible="{Binding IsDraggable}" />
-                </Grid>
             </ToggleButton>
         </StackPanel>
     </Grid>
