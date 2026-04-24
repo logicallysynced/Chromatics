@@ -82,15 +82,28 @@ namespace Chromatics.Layers
 
             if (!layer.Enabled || !effectSettings.effect_cutscenes)
             {
-                layergroup.RemoveAllDecorators();
+                // GameController dispatches every effect processor on every
+                // EffectLayer (DF Bell, Damage Flash, Vegas, Cutscene all
+                // share the same layergroup). If we wipe the layergroup
+                // unconditionally here, we clobber whatever DF Bell or
+                // Damage Flash has just painted on the same tick. Only do
+                // the wipe when this processor was actually painting (i.e.
+                // a cutscene was running) — that's a one-shot teardown of
+                // OUR contribution. Outside a cutscene, leave the
+                // layergroup alone so other processors' work survives.
+                if (model._inCutscene)
+                {
+                    layergroup.RemoveAllDecorators();
 
-                if (runningEffects.Contains(layergroup))
-                    runningEffects.Remove(layergroup);
+                    if (runningEffects.Contains(layergroup))
+                        runningEffects.Remove(layergroup);
 
-                layergroup.Brush = new SolidColorBrush(Color.Transparent);
-                layergroup.Detach();
+                    layergroup.Brush = new SolidColorBrush(Color.Transparent);
+                    layergroup.Detach();
 
-                model._inCutscene = false;
+                    model._inCutscene = false;
+                }
+
                 model.wasDisabled = true;
                 return;
             }
