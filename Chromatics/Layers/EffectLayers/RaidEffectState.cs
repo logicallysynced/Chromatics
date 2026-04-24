@@ -70,7 +70,14 @@ namespace Chromatics.Layers
         // from a zone case (or wherever per-fight tuning lives) to swap the
         // default for that fight only. Lookup helpers below fall back to the
         // defaults above when no entry exists.
-        public static readonly Dictionary<string, double> instanceStartDelayOverrides = new();
+        public static readonly Dictionary<string, double> instanceStartDelayOverrides = new()
+        {
+            // Arcadia's choreography hinges on an internal 11.5s timer that
+            // begins the moment the first BGM track starts. The default 2s
+            // anticipation hold would push the timer's start past the music
+            // cue and desync the flash, so the start delay is forced to 0.
+            { "Arcadia", 0.0 },
+        };
         public static readonly Dictionary<string, double> instanceTransitionDelayOverrides = new();
 
         public static double GetInstanceStartDelay(string zone) =>

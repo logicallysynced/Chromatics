@@ -46,6 +46,40 @@ namespace Chromatics.Layers
         // so cutscenes still take priority over gameplay raid effects.
         private const int RaidOverlayZIndex = 500;
 
+        // Mirrors DamageFlash.FlashPriorityZIndex (private over there). Used
+        // by the Arcadia case to bump the overlay above every other layer
+        // for the duration of its scripted red flash.
+        private const int FlashPriorityZIndex = 700;
+
+        // One-off choreography state for the Arcadia raid encounter.
+        // Phase 1 (BGM 20241): Effect 1 plays for 11.5s, then a 0.5s
+        // full-device red flash, then Effect 2 for the rest of the phase.
+        // Phase 2 (BGM 20242) uses the standard phase-change rebuild path.
+        // Static lifetime intentional — there's only ever one in-game
+        // encounter active at a time, and zone changes reset via the
+        // freshStart branch of the case body.
+        private static class ArcadiaState
+        {
+            public const string ZoneName = "Private Mansion - Mist"; //"Arcadia";
+            public const uint Phase1BgmId = 20241;
+            public const uint Phase2BgmId = 20242;
+            public const double Phase1FlashAtSec = 11.5;
+            public const double FlashDurationSec = 0.5;
+
+            public static DateTime phase1Start = DateTime.MinValue;
+            public static DateTime flashEnd = DateTime.MinValue;
+            public static bool flashFired = false;
+            public static bool postFlashApplied = false;
+
+            public static void Reset()
+            {
+                phase1Start = DateTime.MinValue;
+                flashEnd = DateTime.MinValue;
+                flashFired = false;
+                postFlashApplied = false;
+            }
+        }
+
         private RaidEffectProcessor() { }
 
         public static RaidEffectProcessor Instance => _instance ??= new RaidEffectProcessor();
@@ -201,8 +235,16 @@ namespace Chromatics.Layers
                     // Gradient: decorator lives on the LinearGradient, not the overlay.
                     // TextureBrush is already set. Render at the base layer's ZIndex so
                     // dynamic layers paint over it — same behaviour as ReactiveWeather.
-                    overlay.ZIndex = layer.zindex;
-                    overlay.Attach(surface);
+                    //
+                    // Skip the attach + ZIndex reset if the case body has already
+                    // attached the overlay itself (e.g. Arcadia's flash window
+                    // pins it at FlashPriorityZIndex). Otherwise this branch
+                    // would clobber the elevated ZIndex back down to layer.zindex.
+                    if (overlay.Surface == null)
+                    {
+                        overlay.ZIndex = layer.zindex;
+                        overlay.Attach(surface);
+                    }
                 }
             }
             else
@@ -295,6 +337,22 @@ namespace Chromatics.Layers
             overlay.Detach();
         }
 
+        // Used by zone cases that want to give keyboards priority when more
+        // than one base layer is competing for a global single-device effect
+        // (e.g. Arcadia's choreography). Returns true iff there is at least
+        // one enabled base layer mapped to a keyboard device. Cheap scan —
+        // base layer counts are typically tiny (<10).
+        private static bool HasEnabledKeyboardBaseLayer()
+        {
+            foreach (var entry in MappingLayers.GetLayers().Values)
+            {
+                if (!entry.Enabled) continue;
+                if (entry.rootLayerType != Enums.LayerType.BaseLayer) continue;
+                if (entry.deviceType == RGBDeviceType.Keyboard) return true;
+            }
+            return false;
+        }
+
         private static void SetEffect(ILedGroupDecorator effect, ListLedGroup layer, List<ListLedGroup> runningEffects)
         {
             if (runningEffects.Contains(layer)) runningEffects.Remove(layer);
@@ -339,6 +397,21 @@ namespace Chromatics.Layers
         // so existing in-game behaviour is preserved.
         private bool ApplyRaidEffect(ListLedGroup layer, string zone, PaletteColorModel _colorPalette, uint currentBgmId, List<ListLedGroup> runningEffects, IMappingLayer masterlayer)
         {
+            // Prefer keyboards globally. Only one device can win the build
+            // (raidEffectsRunning is a global flag) and the per-tick call
+            // order across base layers isn't deterministic. If this layer
+            // is on a non-keyboard device AND any enabled keyboard base
+            // layer exists in the mapping configuration, defer — the
+            // keyboard's call later this tick (or next) will grab the
+            // effect. Returning false here detaches this device's overlay
+            // so the user's normal base layer renders on it instead of
+            // leaving it with a blank suppressed overlay.
+            if (masterlayer.deviceType != RGBDeviceType.Keyboard
+                && HasEnabledKeyboardBaseLayer())
+            {
+                return false;
+            }
+
             switch (zone)
             {
                 case "Summit of Everkeep":
@@ -511,7 +584,7 @@ namespace Chromatics.Layers
 
                 case "Hunter's Ring":
                 case "Hunting Ground":
-                //case "Akh Afah Amphitheatre":
+                case "Akh Afah Amphitheatre":
                     if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
                         switch (currentBgmId)
@@ -543,6 +616,118 @@ namespace Chromatics.Layers
                         return true;
                     }
                     return RaidEffectState.raidEffectsRunning;
+                
+                case ArcadiaState.ZoneName:
+                {
+                    // Custom multi-stage choreography. Phase 1 (BGM 20241):
+                    // Effect 1 plays for 11.5s, then a 0.5s full-device red
+                    // flash, then Effect 2 for the rest of phase 1. Phase 2
+                    // (BGM 20242): single Effect uses the standard
+                    // raidEffectsRunning rebuild path. Both effects are
+                    // placeholders pending final design.
+                    bool freshStart = !RaidEffectState.raidEffectsRunning
+                        || currentBgmId != RaidEffectState.currentRaidBgmId;
+
+                    if (freshStart)
+                    {
+                        ArcadiaState.Reset();
+                        // Reset overlay ZIndex in case the previous tick left
+                        // it at FlashPriorityZIndex (e.g. zone-out mid-flash).
+                        layer.ZIndex = RaidOverlayZIndex;
+
+                        switch (currentBgmId)
+                        {
+                            case ArcadiaState.Phase1BgmId:
+                            {
+                                ArcadiaState.phase1Start = DateTime.UtcNow;
+
+                                // Effect 1.
+
+                                var baseCol = new Color(0, 0, 0);
+                                var animationCol = new Color[] { new Color(255, 255, 255) };
+                                var starfield = new BPMStarfieldDecorator(layer, layer.Count() / 6, 360, 2000, animationCol, surface, 1, false, baseCol);
+
+                                layer.Brush = new SolidColorBrush(baseCol);
+                                SetEffect(starfield, layer, runningEffects);
+                                break;
+                            }
+                            case ArcadiaState.Phase2BgmId:
+                            {
+                                // PLACEHOLDER — Phase 2 effect.
+                                var baseCol = new Color(12, 255, 0);
+                                var colors = new Color[] { new Color(255, 255, 255) };
+                                var pulse = new BPMCircularPulseEffect(layer, 180, 2, 15, 2, colors, surface, baseCol);
+
+                                SetEffect(pulse, layer, runningEffects);
+
+                                layer.Brush = new SolidColorBrush(baseCol);
+                                break;
+                            }
+                            default:
+                                // Unknown BGM in Arcadia (e.g. ambient pre-pull
+                                // music) — let the base layer render normally.
+                                return false;
+                        }
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        RaidEffectState.currentRaidBgmId = currentBgmId;
+                        return true;
+                    }
+
+                    // Per-tick choreography during phase 1: 11.5s timer,
+                    // then 0.5s red flash, then build Effect 2.
+                    if (currentBgmId == ArcadiaState.Phase1BgmId
+                        && ArcadiaState.phase1Start != DateTime.MinValue)
+                    {
+                        var elapsed = (DateTime.UtcNow - ArcadiaState.phase1Start).TotalSeconds;
+
+                        if (!ArcadiaState.flashFired && elapsed >= ArcadiaState.Phase1FlashAtSec)
+                        {
+                            // Stop Effect 1 and start the red flash. Pin the
+                            // overlay above DamageFlash's ZIndex so the red
+                            // visibly covers every dynamic / highlight layer.
+                            // Manual Attach because the standard post-Apply
+                            // path would otherwise reset ZIndex to layer.zindex.
+                            layer.RemoveAllDecorators();
+                            layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)255, (byte)0, (byte)0));
+                            layer.ZIndex = FlashPriorityZIndex;
+                            layer.Attach(surface);
+
+                            ArcadiaState.flashEnd = DateTime.UtcNow.AddSeconds(ArcadiaState.FlashDurationSec);
+                            ArcadiaState.flashFired = true;
+                            return true;
+                        }
+
+                        if (ArcadiaState.flashFired && !ArcadiaState.postFlashApplied)
+                        {
+                            if (DateTime.UtcNow < ArcadiaState.flashEnd)
+                            {
+                                // Hold the red brush for the rest of the
+                                // 0.5s window. Already attached above.
+                                return true;
+                            }
+
+                            // Flash done — drop ZIndex back and build Effect 2.
+                            layer.ZIndex = RaidOverlayZIndex;
+
+                            // PLACEHOLDER — Effect 2.
+                            var baseCol = new Color((byte)255, (byte)80, (byte)0, (byte)40);
+                            var animationCol = new Color[]
+                            {
+                                new Color((byte)255, (byte)200, (byte)100, (byte)0),
+                                new Color((byte)255, (byte)255, (byte)200, (byte)100),
+                            };
+                            var effect2 = new BPMStarfieldDecorator(layer, layer.Count() / 6, 80, 250, animationCol, surface, 2.0, false, baseCol);
+
+                            layer.Brush = new SolidColorBrush(baseCol);
+                            SetEffect(effect2, layer, runningEffects);
+                            ArcadiaState.postFlashApplied = true;
+                            return true;
+                        }
+                    }
+
+                    return RaidEffectState.raidEffectsRunning;
+                }
             }
 
             return false;
