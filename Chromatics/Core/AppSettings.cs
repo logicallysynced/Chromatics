@@ -42,6 +42,8 @@ namespace Chromatics.Core
                 Logger.WriteConsole(LoggerTypes.System, @"No settings file found. Creating default settings..");
                 SaveSettings(_settings);
             }
+
+            Chromatics.Extensions.RGB.NET.ColorCorrections.GlobalBrightnessCorrection.Instance.BrightnessPercent = _settings.globalbrightness;
         }
 
         public static SettingsModel GetSettings()

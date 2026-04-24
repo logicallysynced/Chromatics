@@ -1,4 +1,5 @@
-﻿using Chromatics.Extensions.RGB.NET.Devices;
+﻿using Chromatics.Extensions.RGB.NET.ColorCorrections;
+using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Helpers;
 using Chromatics.Layers;
@@ -246,7 +247,8 @@ namespace Chromatics.Core
             if (surface != null && device != null && !surface.Devices.Contains(device))
             {
                 surface.Attach(device);
-                
+                AttachGlobalBrightness(device);
+
                 if (_activeDevices.ContainsKey(device))
                 {
                     _activeDevices[device] = true;
@@ -257,6 +259,14 @@ namespace Chromatics.Core
                 }
 
             }
+        }
+
+        private static void AttachGlobalBrightness(IRGBDevice device)
+        {
+            var corrections = device.ColorCorrections;
+            if (corrections == null) return;
+            if (!corrections.Contains(GlobalBrightnessCorrection.Instance))
+                corrections.Add(GlobalBrightnessCorrection.Instance);
         }
 
         private static void DevicesChanged(object sender, DevicesChangedEventArgs e)
@@ -312,6 +322,8 @@ namespace Chromatics.Core
                     }
                     _devices.Add(guid, device);
                 }
+
+                AttachGlobalBrightness(device);
 
                 #if DEBUG
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {guid}).");
@@ -426,6 +438,7 @@ namespace Chromatics.Core
                     {
                         Console.WriteLine(@"Device: " + device.DeviceInfo.DeviceName);
                         surface.Attach(device);
+                        AttachGlobalBrightness(device);
                     }
 
                     var showErrors = AppSettings.GetSettings().showDeviceErrors;

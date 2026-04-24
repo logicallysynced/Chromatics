@@ -1,5 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Enums;
+using Chromatics.Extensions.RGB.NET.ColorCorrections;
 using Chromatics.Models;
 using HueApi;
 using HueApi.ColorConverters.Original.Extensions;
@@ -122,6 +123,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     {
                         brightness = appSettings.deviceHueBridgeBrightness;
                     }
+
+                    // Hue maps RGB to xy chromaticity + a separate brightness value,
+                    // so the global IColorCorrection (which scales R/G/B uniformly)
+                    // doesn't change the bulb's perceived brightness on its own —
+                    // xy is invariant to uniform RGB scaling. Apply the global
+                    // brightness percentage to the bridge brightness here as well.
+                    brightness *= GlobalBrightnessCorrection.Instance.BrightnessPercent / 100.0;
 
                     bool isBlack = color.R == 0 && color.G == 0 && color.B == 0;
 
