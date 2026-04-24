@@ -307,26 +307,6 @@ namespace Chromatics.Core
                     catch { /* non-critical */ }
                     span.Finish(SpanStatus.Ok);
                     tx.Finish(SpanStatus.Ok);
-
-                    // Belt-and-suspenders: also capture an Info-level
-                    // message for the Issues tab. Unlike transactions,
-                    // Sentry renders CaptureMessage events unconditionally
-                    // in the Issues list, so if this line shows up but the
-                    // app.heartbeat transaction doesn't, it definitively
-                    // narrows the problem to transaction-filter-side.
-                    // Tagged so it can be grouped / filtered out of regular
-                    // issue triage.
-                    try
-                    {
-                        SentrySdk.CaptureMessage(
-                            "app.heartbeat pulse",
-                            scope =>
-                            {
-                                scope.SetTag("kind", "heartbeat");
-                                scope.Level = SentryLevel.Info;
-                            });
-                    }
-                    catch { }
                 }
                 catch { /* heartbeat must never throw */ }
             }, null, TimeSpan.FromSeconds(HeartbeatIntervalSeconds), TimeSpan.FromSeconds(HeartbeatIntervalSeconds));
