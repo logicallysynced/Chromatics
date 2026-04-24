@@ -200,6 +200,34 @@
                                 <TextBlock Text="Beats per Cycle"/>
                                 <NumericUpDown Value="{Binding ParamBeatsPerCycle}" Minimum="0.05" Maximum="32" Increment="0.25" FormatString="0.##"/>
                             </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowSimultaneousBeams}">
+                                <TextBlock Text="Simultaneous Beams"/>
+                                <NumericUpDown Value="{Binding ParamSimultaneousBeams}" Minimum="1" Maximum="20" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFlickerOpacity}">
+                                <TextBlock Text="Flicker Opacity (0-1)"/>
+                                <NumericUpDown Value="{Binding ParamFlickerOpacity}" Minimum="0" Maximum="1" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowMatrixDir}">
+                                <TextBlock Text="Matrix Direction"/>
+                                <ComboBox ItemsSource="{Binding MatrixDirections}" SelectedItem="{Binding ParamMatrixDir}" Width="130"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFadeBetween}">
+                                <TextBlock Text="Fade Between (s)"/>
+                                <NumericUpDown Value="{Binding ParamFadeBetween}" Minimum="0" Maximum="5" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowAccentEvery}">
+                                <TextBlock Text="Accent Every N"/>
+                                <NumericUpDown Value="{Binding ParamAccentEvery}" Minimum="1" Maximum="32" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowDecay}">
+                                <TextBlock Text="Decay (s)"/>
+                                <NumericUpDown Value="{Binding ParamDecay}" Minimum="0.05" Maximum="5" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowWedgeDegrees}">
+                                <TextBlock Text="Wedge (degrees)"/>
+                                <NumericUpDown Value="{Binding ParamWedgeDegrees}" Minimum="5" Maximum="180" Increment="5" FormatString="0"/>
+                            </StackPanel>
                         </WrapPanel>
 
                         <Separator Margin="0,4"/>

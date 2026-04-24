@@ -120,6 +120,16 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                         if (currentBrightness[led.Key] >= maxBrightness)
                         {
+                            // Clamp to max so a deltaTime spike (GC pause,
+                            // game-state read stall, thread contention)
+                            // can't carry the brightness past 1.0 — without
+                            // this, the fade-out path has to walk the
+                            // overshoot back down at normal speed, leaving
+                            // the LED occupied for many extra ticks. With
+                            // enough overshoots in flight, the available
+                            // pool depletes and the keyboard fills up
+                            // instead of cycling cleanly.
+                            currentBrightness[led.Key] = maxBrightness;
                             fadingOutLeds.TryAdd(led.Key, currentColors[led.Key]);
                             fadingInLeds.TryRemove(led);
                         }
@@ -143,6 +153,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                     if (currentBrightness[led.Key] <= minBrightness)
                     {
+                        // Symmetric clamp on the bottom: a spike on the
+                        // fade-out side could otherwise drive brightness
+                        // negative and then waste the next several ticks
+                        // climbing back through 0 if the LED gets re-picked
+                        // before the cleanup below runs.
+                        currentBrightness[led.Key] = minBrightness;
                         fadingOutLeds.TryRemove(led);
                         currentBrightness.Remove(led.Key);
                         currentColors.Remove(led.Key);
