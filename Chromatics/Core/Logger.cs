@@ -63,6 +63,12 @@ namespace Chromatics.Core
         //      failures (e.g. device init errors) appear in the Issues tab.
         // Honours the user's enableCrashReports toggle automatically —
         // SentrySdk.IsEnabled is false when consent has been withheld.
+        //
+        // Template uses POSITIONAL placeholders ({0}, {1}) not named ones
+        // ({Category}, {Message}). SentryStructuredLogger calls String.Format
+        // under the hood — named placeholders throw FormatException and the
+        // log is silently dropped. Serilog-style named placeholders are NOT
+        // supported by this API in Sentry .NET 6.x.
         private static void ForwardToSentry(LoggerTypes type, string message)
         {
             if (!SentrySdk.IsEnabled) return;
@@ -77,14 +83,20 @@ namespace Chromatics.Core
 
                 SentrySdk.AddBreadcrumb(message, category: type.ToString(), level: breadcrumbLevel);
 
+                // Category is stamped as a structured attribute via configureLog
+                // so the dashboard can filter on it without needing to put it
+                // in the message template.
+                var category = type.ToString();
+                Action<Sentry.SentryLog> setAttrs = log => log.SetAttribute("category", category);
+
                 switch (type)
                 {
                     case LoggerTypes.Error:
-                        SentrySdk.Logger.LogError("{Category}: {Message}", type.ToString(), message);
+                        SentrySdk.Logger.LogError(setAttrs, "{0}", new object[] { message });
                         SentrySdk.CaptureMessage($"[{type}] {message}", SentryLevel.Error);
                         break;
                     default:
-                        SentrySdk.Logger.LogInfo("{Category}: {Message}", type.ToString(), message);
+                        SentrySdk.Logger.LogInfo(setAttrs, "{0}", new object[] { message });
                         break;
                 }
             }

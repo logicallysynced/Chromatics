@@ -52,15 +52,11 @@ namespace Chromatics.ViewModels
         }
 
         // Called once RGBController.Setup has finished (from MainWindow.OnOpened).
-        // At this point device enumeration is synchronous and LoadMappings can
-        // migrate inline without racing the default-seeding in RefreshDevices.
+        // MappingLayers.LoadMappings has ALREADY run in the background Task.Run
+        // before RGBController.Setup, so subscribing to DeviceConnectionChanged
+        // here is safe — any devices surfaced now have their layers ready.
         public void InitializeAfterRgb()
         {
-            if (!MappingLayers.LoadMappings())
-            {
-                Logger.WriteConsole(LoggerTypes.System, "No layer file found. Defaults will be created per device.");
-            }
-
             // Subscribe only after LoadMappings so Setup()-era device events
             // don't race the layer store before it's populated.
             RGBController.DeviceConnectionChanged += OnDeviceConnectionChanged;

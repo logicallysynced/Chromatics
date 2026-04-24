@@ -33,11 +33,16 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         private volatile bool _shuttingDown;
         private PerDeviceBrightnessCorrection _perDeviceBrightness;
 
-        // Rate-limit per-light error logs. The bridge replies with HTML
-        // (e.g. an error page) when we exceed its ~10 req/s budget; that
-        // breaks JSON parsing and would otherwise spam Logger every tick.
-        private DateTime _lastJsonErrorLog = DateTime.MinValue;
-        private DateTime _lastGenericErrorLog = DateTime.MinValue;
+        // Rate-limit error logs GLOBALLY across every HueUpdateQueue
+        // instance. The bridge replies with HTML (e.g. an error page) when
+        // we exceed its ~10 req/s budget; that breaks JSON parsing and
+        // would otherwise spam Logger every tick. Per-bulb rate limiting
+        // produced N logs per window on multi-bulb setups; making the
+        // throttle static means the user sees at most one line per window
+        // total, regardless of how many bulbs are connected.
+        private static DateTime _lastJsonErrorLog = DateTime.MinValue;
+        private static DateTime _lastGenericErrorLog = DateTime.MinValue;
+        private static readonly System.Threading.Lock _errorLogLock = new();
         private static readonly TimeSpan ErrorLogInterval = TimeSpan.FromSeconds(15);
 
         #endregion
@@ -206,22 +211,31 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // Rate-limited error logging. The bridge can return HTML error
         // pages on every request when over its req/s budget; without
         // throttling we'd flood Logger with one line per tick (~20/sec).
-        private void LogJsonError(string message)
+        // Static + locked so every HueUpdateQueue instance shares the
+        // same 15s window — a user with 4 bulbs shouldn't see 4 lines
+        // per window.
+        private static void LogJsonError(string message)
         {
-            var now = DateTime.UtcNow;
-            if (now - _lastJsonErrorLog < ErrorLogInterval) return;
-            _lastJsonErrorLog = now;
-            Logger.WriteConsole(LoggerTypes.Error,
-                $"[Hue] JSON Exception (suppressed for {ErrorLogInterval.TotalSeconds:F0}s): {message}");
+            lock (_errorLogLock)
+            {
+                var now = DateTime.UtcNow;
+                if (now - _lastJsonErrorLog < ErrorLogInterval) return;
+                _lastJsonErrorLog = now;
+                Logger.WriteConsole(LoggerTypes.Error,
+                    $"[Hue] JSON Exception (suppressed for {ErrorLogInterval.TotalSeconds:F0}s): {message}");
+            }
         }
 
-        private void LogGenericError(string message)
+        private static void LogGenericError(string message)
         {
-            var now = DateTime.UtcNow;
-            if (now - _lastGenericErrorLog < ErrorLogInterval) return;
-            _lastGenericErrorLog = now;
-            Logger.WriteConsole(LoggerTypes.Error,
-                $"[Hue] Exception (suppressed for {ErrorLogInterval.TotalSeconds:F0}s): {message}");
+            lock (_errorLogLock)
+            {
+                var now = DateTime.UtcNow;
+                if (now - _lastGenericErrorLog < ErrorLogInterval) return;
+                _lastGenericErrorLog = now;
+                Logger.WriteConsole(LoggerTypes.Error,
+                    $"[Hue] Exception (suppressed for {ErrorLogInterval.TotalSeconds:F0}s): {message}");
+            }
         }
 
         #endregion

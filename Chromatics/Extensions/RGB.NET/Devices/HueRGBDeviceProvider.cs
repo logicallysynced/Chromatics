@@ -141,7 +141,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
         protected override IDeviceUpdateTrigger CreateUpdateTrigger(int id, double updateRateHardLimit)
         {
-            return new HueDeviceUpdateTrigger();
+            // 100ms per bulb = 10 Hz. Without an explicit UpdateFrequency
+            // the trigger's Thread.Sleep throttle is skipped (gated on
+            // UpdateFrequency > 0) and every decorator tick produces an
+            // HTTP request, which blows past the bridge's ~10 req/s budget
+            // and causes it to reply with HTML error pages. JSON parsing
+            // then chokes and the `[Hue] JSON Exception` log fires. 10Hz/bulb
+            // keeps a single-bulb setup at the limit and multi-bulb setups
+            // at a manageable overshoot that the bridge usually absorbs.
+            return new HueDeviceUpdateTrigger(0.1);
         }
 
         // Before tearing down the provider, send TurnOff to every bulb so the
