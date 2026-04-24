@@ -51,6 +51,12 @@ namespace Chromatics.Layers
         // for the duration of its scripted red flash.
         private const int FlashPriorityZIndex = 700;
 
+        // Dev-only switch: when true, the Cutscene Viewer in Private Mansion
+        // - Mist is treated as an in-instance state for the Arcadia case so
+        // the opening choreography can be iterated without zoning into the
+        // actual encounter. Keep false for production.
+        private const bool CutsceneViewerTestMode = false;
+
         // One-off choreography state for the Arcadia raid encounter.
         // Phase 1 (BGM 20241): Effect 1 plays for 11.5s, then a 0.5s
         // full-device red flash, then Effect 2 for the rest of the phase.
@@ -60,23 +66,31 @@ namespace Chromatics.Layers
         // freshStart branch of the case body.
         private static class ArcadiaState
         {
-            public const string ZoneName = "Private Mansion - Mist"; //"Arcadia";
+            public const string ZoneName = "Akh Afah Amphitheatre"; //"Arcadia";
             public const uint Phase1BgmId = 20241;
             public const uint Phase2BgmId = 20242;
-            public const double Phase1FlashAtSec = 11.5;
-            public const double FlashDurationSec = 0.5;
+            public const double Phase1FlashAtSec = 10.8;
+            public const double FlashDurationSec = 0.4;
 
+            // phase1Start is genuinely global — the in-game timer is one
+            // countdown shared across every device in the choreography. The
+            // flash and post-flash transitions, however, are PER-LAYER:
+            // each device's overlay progresses through its own
+            // Effect 1 → Flash → Effect 2 pipeline. Using global flags
+            // caused the first layer's transition to "consume" the state
+            // so subsequent layers skipped both branches and stayed
+            // stuck on Effect 1.
             public static DateTime phase1Start = DateTime.MinValue;
-            public static DateTime flashEnd = DateTime.MinValue;
-            public static bool flashFired = false;
-            public static bool postFlashApplied = false;
+            public static readonly HashSet<int> layersFlashed = [];
+            public static readonly Dictionary<int, DateTime> flashEndByLayer = [];
+            public static readonly HashSet<int> layersPostFlashApplied = [];
 
             public static void Reset()
             {
                 phase1Start = DateTime.MinValue;
-                flashEnd = DateTime.MinValue;
-                flashFired = false;
-                postFlashApplied = false;
+                layersFlashed.Clear();
+                flashEndByLayer.Clear();
+                layersPostFlashApplied.Clear();
             }
         }
 
@@ -121,6 +135,23 @@ namespace Chromatics.Layers
             var gameState = handler.Reader.GetGameState();
             bool inInstance = gameState.InInstance;
             uint currentBgmId = gameState.CurrentBgmId;
+
+            // Cutscene-viewer test mode (off by default for production).
+            // When true, watching a cutscene in Private Mansion - Mist is
+            // treated as if the player were in an instance, which lets the
+            // Arcadia opening choreography fire from the Cutscene Viewer
+            // for iterating without zoning into the actual encounter. The
+            // Cutscene Viewer (Mist, MapId 284) is not normally an instance
+            // so the standard Arcadia path skips it. CutsceneAnimation's
+            // painter is also gated on `inCutscene && !inInstance`, so the
+            // override also stops it from competing with the raid overlay.
+            // Set to false before shipping.
+            if (CutsceneViewerTestMode
+                && gameState.WatchingCutscene
+                && zone == "Private Mansion - Mist")
+            {
+                inInstance = true;
+            }
 
             // Single per-tick state update. Multiple BaseLayers (one per
             // device) call this same method but the result is idempotent.
@@ -337,22 +368,6 @@ namespace Chromatics.Layers
             overlay.Detach();
         }
 
-        // Used by zone cases that want to give keyboards priority when more
-        // than one base layer is competing for a global single-device effect
-        // (e.g. Arcadia's choreography). Returns true iff there is at least
-        // one enabled base layer mapped to a keyboard device. Cheap scan —
-        // base layer counts are typically tiny (<10).
-        private static bool HasEnabledKeyboardBaseLayer()
-        {
-            foreach (var entry in MappingLayers.GetLayers().Values)
-            {
-                if (!entry.Enabled) continue;
-                if (entry.rootLayerType != Enums.LayerType.BaseLayer) continue;
-                if (entry.deviceType == RGBDeviceType.Keyboard) return true;
-            }
-            return false;
-        }
-
         private static void SetEffect(ILedGroupDecorator effect, ListLedGroup layer, List<ListLedGroup> runningEffects)
         {
             if (runningEffects.Contains(layer)) runningEffects.Remove(layer);
@@ -397,25 +412,20 @@ namespace Chromatics.Layers
         // so existing in-game behaviour is preserved.
         private bool ApplyRaidEffect(ListLedGroup layer, string zone, PaletteColorModel _colorPalette, uint currentBgmId, List<ListLedGroup> runningEffects, IMappingLayer masterlayer)
         {
-            // Prefer keyboards globally. Only one device can win the build
-            // (raidEffectsRunning is a global flag) and the per-tick call
-            // order across base layers isn't deterministic. If this layer
-            // is on a non-keyboard device AND any enabled keyboard base
-            // layer exists in the mapping configuration, defer — the
-            // keyboard's call later this tick (or next) will grab the
-            // effect. Returning false here detaches this device's overlay
-            // so the user's normal base layer renders on it instead of
-            // leaving it with a blank suppressed overlay.
-            if (masterlayer.deviceType != RGBDeviceType.Keyboard
-                && HasEnabledKeyboardBaseLayer())
-            {
-                return false;
-            }
+            // Each base layer has its own per-device overlay (`layer`), so
+            // every case-body's "should I build?" check is per-overlay
+            // (Decorators.Count == 0) rather than the global
+            // raidEffectsRunning flag. That lets every device build its
+            // own decorator independently — keyboards, mice, headsets,
+            // Hue bulbs all get the raid effect on their own overlay.
+            // The global flag is still set/cleared so Process's entry
+            // and phase-transition gates know whether anything is active,
+            // but it no longer gates per-layer rebuilds.
 
             switch (zone)
             {
                 case "Summit of Everkeep":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepBase.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepHighlight3.Color) };
@@ -429,7 +439,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Interphos":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosBase.Color);
                         var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosHighlight1.Color);
@@ -452,7 +462,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Scratching Ring":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Base.Color);
                         var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Highlight1.Color);
@@ -475,7 +485,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Lovely Lovering":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Base.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2Highlight2.Color) };
@@ -489,7 +499,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Blasting Ring":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Base.Color);
                         var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Highlight1.Color);
@@ -512,7 +522,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "The Thundering":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Base.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4Highlight4.Color) };
@@ -526,7 +536,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Sphere of Naught":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectCoDBase.Color);
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectCoDHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectCoDHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectCoDHighlight3.Color) };
@@ -541,7 +551,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Groovy Ring":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Base.Color);
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM5Highlight3.Color) };
@@ -555,7 +565,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Rebel Ring":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Base.Color);
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM6Highlight4.Color) };
@@ -569,7 +579,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Demolition Site":
-                    if (!RaidEffectState.raidEffectsRunning)
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Base.Color);
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM7Highlight3.Color) };
@@ -584,8 +594,8 @@ namespace Chromatics.Layers
 
                 case "Hunter's Ring":
                 case "Hunting Ground":
-                case "Akh Afah Amphitheatre":
-                    if (!RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
+                //case "Akh Afah Amphitheatre":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
                         switch (currentBgmId)
                         {
@@ -617,6 +627,31 @@ namespace Chromatics.Layers
                     }
                     return RaidEffectState.raidEffectsRunning;
                 
+                //USED FOR TESTING
+                case "Akh Afah Amphitheatre2":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
+                    {
+                        switch (currentBgmId)
+                        {
+                            default: //20149
+                            {
+                                var baseCol = new Color(0, 0, 0);
+                                var animationCol = new Color[] { new Color(255, 255, 255) };
+                                var starfield = new BPMStarfieldDecorator(layer, 6, 360, 2000, animationCol, surface, 1, false, baseCol);
+
+                                layer.Brush = new SolidColorBrush(baseCol);
+                                SetEffect(starfield, layer, runningEffects);
+                                break;
+                            }
+                        }
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        RaidEffectState.currentRaidBgmId = currentBgmId;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
+                
+                //M12/M12S
                 case ArcadiaState.ZoneName:
                 {
                     // Custom multi-stage choreography. Phase 1 (BGM 20241):
@@ -625,8 +660,22 @@ namespace Chromatics.Layers
                     // (BGM 20242): single Effect uses the standard
                     // raidEffectsRunning rebuild path. Both effects are
                     // placeholders pending final design.
-                    bool freshStart = !RaidEffectState.raidEffectsRunning
-                        || currentBgmId != RaidEffectState.currentRaidBgmId;
+                    // Suppress freshStart while this layer is mid-
+                    // choreography (flashed but Effect 2 not yet built).
+                    // During the flash window we RemoveAllDecorators and
+                    // hold a red brush, so Decorators.Count == 0 — without
+                    // this guard the next tick would treat that as "needs
+                    // rebuild", wipe ArcadiaState, and restart Effect 1
+                    // instead of letting the per-tick branch finish the
+                    // flash → Effect 2 transition.
+                    int lidForFresh = masterlayer.layerID;
+                    bool midChoreography = ArcadiaState.layersFlashed.Contains(lidForFresh)
+                        && !ArcadiaState.layersPostFlashApplied.Contains(lidForFresh);
+
+                    bool freshStart = !midChoreography
+                        && (layer.Decorators.Count == 0
+                            || !RaidEffectState.raidEffectsRunning
+                            || currentBgmId != RaidEffectState.currentRaidBgmId);
 
                     if (freshStart)
                     {
@@ -641,11 +690,11 @@ namespace Chromatics.Layers
                             {
                                 ArcadiaState.phase1Start = DateTime.UtcNow;
 
-                                // Effect 1.
+                                // Phase 1 Effect 1 - Intro
 
                                 var baseCol = new Color(0, 0, 0);
                                 var animationCol = new Color[] { new Color(255, 255, 255) };
-                                var starfield = new BPMStarfieldDecorator(layer, layer.Count() / 6, 360, 2000, animationCol, surface, 1, false, baseCol);
+                                var starfield = new BPMStarfieldDecorator(layer, 6, 360, 2000, animationCol, surface, 1, false, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
                                 SetEffect(starfield, layer, runningEffects);
@@ -653,20 +702,44 @@ namespace Chromatics.Layers
                             }
                             case ArcadiaState.Phase2BgmId:
                             {
-                                // PLACEHOLDER — Phase 2 effect.
-                                var baseCol = new Color(12, 255, 0);
-                                var colors = new Color[] { new Color(255, 255, 255) };
-                                var pulse = new BPMCircularPulseEffect(layer, 180, 2, 15, 2, colors, surface, baseCol);
-
-                                SetEffect(pulse, layer, runningEffects);
+                                // Phase 2 effect.
+                                var baseCol = new Color(0, 0, 0);
+                                var colors = new Color[] { new Color(255, 0, 4), new Color(93, 0, 255), new Color(255, 117, 0), new Color(249, 255, 0) };
+                                var pulse = new BPMCircularPulseEffect(layer, 165, 4, 12, 1, colors, surface, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
+                                SetEffect(pulse, layer, runningEffects);
+
+                                
                                 break;
                             }
                             default:
-                                // Unknown BGM in Arcadia (e.g. ambient pre-pull
-                                // music) — let the base layer render normally.
-                                return false;
+                            {
+                                // Unknown BGM in Arcadia — e.g. ambient pre-pull
+                                // music, or the cutscene-viewer ticks before the
+                                // encounter track starts. Paint the overlay
+                                // solid black at the base layer ZIndex so the
+                                // user's normal base layer doesn't poke through;
+                                // the choreography is scripted to begin at the
+                                // exact moment Phase1BgmId hits, not whatever
+                                // ambient cue is playing beforehand.
+                                //
+                                // We DON'T set raidEffectsRunning=true so that
+                                // freshStart stays true and the switch is re-
+                                // entered every tick — that lets a later
+                                // transition to Phase1BgmId / Phase2BgmId fire
+                                // the choreography normally.
+                                //
+                                // Duty complete (Victory Fanfare BGM 18) is
+                                // handled at the top of Process via
+                                // dutyComplete → DetachOverlay → base layer
+                                // renders, so this black hold ends naturally
+                                // when the fight finishes.
+                                layer.RemoveAllDecorators();
+                                layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)0, (byte)0, (byte)0));
+                                layer.ZIndex = masterlayer.zindex;
+                                return true;
+                            }
                         }
 
                         RaidEffectState.raidEffectsRunning = true;
@@ -674,54 +747,59 @@ namespace Chromatics.Layers
                         return true;
                     }
 
-                    // Per-tick choreography during phase 1: 11.5s timer,
-                    // then 0.5s red flash, then build Effect 2.
+                    // Per-tick choreography during phase 1: timer, flash,
+                    // then Effect 2. Per-layer state so each device's
+                    // overlay (keyboard / mouse / Hue / etc.) walks
+                    // through the pipeline independently.
                     if (currentBgmId == ArcadiaState.Phase1BgmId
                         && ArcadiaState.phase1Start != DateTime.MinValue)
                     {
                         var elapsed = (DateTime.UtcNow - ArcadiaState.phase1Start).TotalSeconds;
+                        int lid = masterlayer.layerID;
+                        bool thisLayerFlashed = ArcadiaState.layersFlashed.Contains(lid);
+                        bool thisLayerPostFlash = ArcadiaState.layersPostFlashApplied.Contains(lid);
 
-                        if (!ArcadiaState.flashFired && elapsed >= ArcadiaState.Phase1FlashAtSec)
+                        if (!thisLayerFlashed && elapsed >= ArcadiaState.Phase1FlashAtSec)
                         {
-                            // Stop Effect 1 and start the red flash. Pin the
-                            // overlay above DamageFlash's ZIndex so the red
-                            // visibly covers every dynamic / highlight layer.
-                            // Manual Attach because the standard post-Apply
-                            // path would otherwise reset ZIndex to layer.zindex.
+                            // Stop Effect 1 on THIS overlay and start its
+                            // red flash. Bumped above DamageFlash so the
+                            // red visibly covers every dynamic / highlight
+                            // layer. Manual Attach because the standard
+                            // post-Apply path would otherwise reset ZIndex.
                             layer.RemoveAllDecorators();
                             layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)255, (byte)0, (byte)0));
                             layer.ZIndex = FlashPriorityZIndex;
                             layer.Attach(surface);
 
-                            ArcadiaState.flashEnd = DateTime.UtcNow.AddSeconds(ArcadiaState.FlashDurationSec);
-                            ArcadiaState.flashFired = true;
+                            ArcadiaState.flashEndByLayer[lid] = DateTime.UtcNow.AddSeconds(ArcadiaState.FlashDurationSec);
+                            ArcadiaState.layersFlashed.Add(lid);
                             return true;
                         }
 
-                        if (ArcadiaState.flashFired && !ArcadiaState.postFlashApplied)
+                        if (thisLayerFlashed && !thisLayerPostFlash)
                         {
-                            if (DateTime.UtcNow < ArcadiaState.flashEnd)
+                            if (ArcadiaState.flashEndByLayer.TryGetValue(lid, out var end)
+                                && DateTime.UtcNow < end)
                             {
-                                // Hold the red brush for the rest of the
-                                // 0.5s window. Already attached above.
+                                // Hold the red brush on THIS overlay for
+                                // the rest of its flash window. Already
+                                // attached above on this layer's flash tick.
                                 return true;
                             }
 
-                            // Flash done — drop ZIndex back and build Effect 2.
+                            // Flash done for this layer — drop ZIndex back
+                            // and build Effect 2 on this overlay.
                             layer.ZIndex = RaidOverlayZIndex;
 
-                            // PLACEHOLDER — Effect 2.
-                            var baseCol = new Color((byte)255, (byte)80, (byte)0, (byte)40);
-                            var animationCol = new Color[]
-                            {
-                                new Color((byte)255, (byte)200, (byte)100, (byte)0),
-                                new Color((byte)255, (byte)255, (byte)200, (byte)100),
-                            };
-                            var effect2 = new BPMStarfieldDecorator(layer, layer.Count() / 6, 80, 250, animationCol, surface, 2.0, false, baseCol);
+                            // Phase 1 Effect 2
+                            var baseCol = new Color(1, 40, 5);
+                            var colors = new Color[] { new Color(255, 220, 180), new Color(0, 255, 43) };
+                            var strike = new BPMThunderstrikeEffect(layer, 360, 4, 0.6, colors, surface, baseCol);
 
                             layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(effect2, layer, runningEffects);
-                            ArcadiaState.postFlashApplied = true;
+                            SetEffect(strike, layer, runningEffects);
+
+                            ArcadiaState.layersPostFlashApplied.Add(lid);
                             return true;
                         }
                     }

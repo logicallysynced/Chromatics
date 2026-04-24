@@ -130,7 +130,15 @@ public partial class MainViewModel : ObservableObject, IDisposable
         new("BPMRippleDecorator",               "Decorators"),
         new("BPMChaseDecorator",                "Decorators"),
         new("BPMLaserEffect",                   "Decorators"),
+        new("BPMLaserEffect2",                  "Decorators"),
         new("BPMCircularPulseEffect",           "Decorators"),
+        new("MatrixEffect",                     "Decorators"),
+        new("BPMMatrixEffect",                  "Decorators"),
+        new("BPMChaseRandom",                   "Decorators"),
+        new("BPMThunderstrikeEffect",           "Decorators"),
+        new("BPMHeartbeatEffect",               "Decorators"),
+        new("BPMEqualizerEffect",               "Decorators"),
+        new("BPMSpinnerEffect",                 "Decorators"),
     ];
 
     public static EffectEntry[] RaidPresets { get; } =
@@ -203,6 +211,16 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty] private string _paramLaserDir = "Random";
     [ObservableProperty] private string _paramBpmSpeed = "Sync";
     [ObservableProperty] private double _paramBeatsPerCycle = 1.0;
+
+    // Params for the new BPM decorators (BPMLaserEffect2, MatrixEffect family,
+    // BPMChaseRandom, Thunderstrike, Heartbeat, Equalizer, Spinner).
+    [ObservableProperty] private int _paramSimultaneousBeams = 3;
+    [ObservableProperty] private double _paramFlickerOpacity = 0.4;
+    [ObservableProperty] private string _paramMatrixDir = "Down";
+    [ObservableProperty] private double _paramFadeBetween = 0.0;
+    [ObservableProperty] private int _paramAccentEvery = 4;
+    [ObservableProperty] private double _paramDecay = 0.5;
+    [ObservableProperty] private double _paramWedgeDegrees = 60;
 
     public static string[] TextureTypes { get; } = ["Linear", "Conical"];
     public static string[] DiagonalDirections { get; } = ["TopLeftToBottomRight", "TopRightToBottomLeft", "BottomLeftToTopRight", "BottomRightToTopLeft", "Random"];
@@ -333,6 +351,17 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty] private bool _showBeatsPerCycle;
     [ObservableProperty] private bool _showColorBase = true;
 
+    // Visibility flags for the new BPM decorators.
+    [ObservableProperty] private bool _showSimultaneousBeams;
+    [ObservableProperty] private bool _showFlickerOpacity;
+    [ObservableProperty] private bool _showMatrixDir;
+    [ObservableProperty] private bool _showFadeBetween;
+    [ObservableProperty] private bool _showAccentEvery;
+    [ObservableProperty] private bool _showDecay;
+    [ObservableProperty] private bool _showWedgeDegrees;
+
+    public static string[] MatrixDirections { get; } = ["Down", "Up", "Left", "Right"];
+
     // ── Live update ──────────────────────────────────────────────────────
 
     [ObservableProperty] private bool _liveUpdate;
@@ -378,12 +407,14 @@ public partial class MainViewModel : ObservableObject, IDisposable
             or "BPMPWMDecorator" or "BPMSINDecorator"
             or "MoveBPMGradientDecorator" or "MoveBPMDiagonalGradientDecorator"
             or "BPMRippleDecorator" or "BPMChaseDecorator"
-            or "BPMLaserEffect" or "BPMCircularPulseEffect";
+            or "BPMLaserEffect" or "BPMLaserEffect2" or "BPMCircularPulseEffect"
+            or "BPMMatrixEffect" or "BPMChaseRandom" or "BPMThunderstrikeEffect"
+            or "BPMHeartbeatEffect" or "BPMEqualizerEffect" or "BPMSpinnerEffect";
 
         // Speed-driven gradient effects
         ShowSpeed = name is "Interphos (Queen Eternal)" or "Wind" or "Gales"
             or "Sandstorms / Dust Storms" or "Umbral Wind" or "Astromagnetic Storm"
-            or "Umbral Static" or "Everlasting Light";
+            or "Umbral Static" or "Everlasting Light" or "MatrixEffect";
 
         // Interval-based effects
         ShowInterval = name is "StarfieldDecorator" or "FastStarfieldDecorator"
@@ -414,7 +445,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             or "The Thundering (Wicked Thunder)" or "ShotFlashDecorator";
 
         ShowGroupSize = name is "BPMPWMDecorator" or "BPMSINDecorator"
-            or "The Thundering (Wicked Thunder)";
+            or "The Thundering (Wicked Thunder)" or "BPMChaseRandom";
 
         ShowSize = name is "Everlasting Light";
         ShowBlocks = name is "BlockFallEffect";
@@ -444,16 +475,27 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ShowFallDir = name is "BlockFallEffect";
 
         ShowIntensity = name is "FireEffect";
-        ShowFlickerSpeed = name is "FireEffect";
-        ShowBeamWidth = name is "LaserEffect" or "BPMLaserEffect";
+        ShowFlickerSpeed = name is "FireEffect" or "MatrixEffect" or "BPMMatrixEffect";
+        ShowBeamWidth = name is "LaserEffect" or "BPMLaserEffect" or "BPMLaserEffect2"
+            or "BPMHeartbeatEffect";
         ShowPulseRadius = name is "CircularPulseEffect" or "BPMCircularPulseEffect";
         ShowFadeWidth = name is "CircularPulseEffect" or "BPMCircularPulseEffect" or "BPMRippleDecorator";
         ShowTailLength = name is "BPMChaseDecorator";
         ShowSpawnInterval = name is "LaserEffect" or "CircularPulseEffect";
         ShowRippleSpeed = name is "CircularPulseEffect"; // non-BPM only; BPM* now uses BpmSpeed
-        ShowLaserDir = name is "LaserEffect" or "BPMLaserEffect";
-        ShowBpmSpeed = name is "BPMLaserEffect" or "BPMCircularPulseEffect" or "BPMRippleDecorator";
+        ShowLaserDir = name is "LaserEffect" or "BPMLaserEffect" or "BPMLaserEffect2";
+        ShowBpmSpeed = name is "BPMLaserEffect" or "BPMLaserEffect2" or "BPMCircularPulseEffect"
+            or "BPMRippleDecorator" or "BPMMatrixEffect" or "BPMSpinnerEffect";
         ShowBeatsPerCycle = ShowBpmSpeed && ParamBpmSpeed == "Custom";
+
+        // New BPM decorator visibility flags
+        ShowSimultaneousBeams = name is "BPMLaserEffect2";
+        ShowFlickerOpacity = name is "MatrixEffect" or "BPMMatrixEffect";
+        ShowMatrixDir = name is "MatrixEffect" or "BPMMatrixEffect";
+        ShowFadeBetween = name is "BPMChaseRandom";
+        ShowAccentEvery = name is "BPMThunderstrikeEffect";
+        ShowDecay = name is "BPMThunderstrikeEffect" or "BPMEqualizerEffect";
+        ShowWedgeDegrees = name is "BPMSpinnerEffect";
 
         ShowColorBase = name is not ("PulseDecorator" or "ShotFlashDecorator"
             or "MoveBPMGradientDecorator" or "MoveBPMDiagonalGradientDecorator");
@@ -677,6 +719,49 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 ColorBase = AvColors.Black;
                 SetColors(ToAv(0, 200, 255), ToAv(255, 0, 200), ToAv(0, 255, 100));
                 break;
+            case "BPMLaserEffect2":
+                ParamBpm = 130; ParamBpmSpeed = "Sync"; ParamBeamWidth = 1.5;
+                ParamSimultaneousBeams = 3; ParamLaserDir = "RandomAll";
+                ColorBase = AvColors.Black;
+                SetColors(AvColors.Cyan, AvColors.Magenta, AvColors.Lime, AvColors.Yellow);
+                break;
+            case "MatrixEffect":
+                ParamSpeed = 8; ParamFlickerOpacity = 0.5; ParamFlickerSpeed = 8.0;
+                ParamMatrixDir = "Down";
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(0, 255, 100), ToAv(0, 200, 60));
+                break;
+            case "BPMMatrixEffect":
+                ParamBpm = 110; ParamBpmSpeed = "Sync";
+                ParamFlickerOpacity = 0.5; ParamFlickerSpeed = 8.0; ParamMatrixDir = "Down";
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(0, 255, 100), ToAv(0, 200, 60));
+                break;
+            case "BPMChaseRandom":
+                ParamBpm = 140; ParamFadeBetween = 0.0; ParamGroupSize = 1;
+                ColorBase = AvColors.Black;
+                SetColors(AvColors.Cyan, AvColors.Magenta, AvColors.Yellow);
+                break;
+            case "BPMThunderstrikeEffect":
+                ParamBpm = 95; ParamAccentEvery = 4; ParamDecay = 0.6;
+                ColorBase = ToAv(40, 0, 0);
+                SetColors(ToAv(255, 220, 180), ToAv(255, 100, 80));
+                break;
+            case "BPMHeartbeatEffect":
+                ParamBpm = 72; ParamBeamWidth = 2.0;
+                ColorBase = ToAv(20, 0, 0);
+                SetColors(ToAv(255, 30, 50), ToAv(255, 100, 100));
+                break;
+            case "BPMEqualizerEffect":
+                ParamBpm = 120; ParamDecay = 0.5;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(0, 255, 0), ToAv(255, 200, 0), ToAv(255, 0, 0));
+                break;
+            case "BPMSpinnerEffect":
+                ParamBpm = 130; ParamBpmSpeed = "Sync"; ParamWedgeDegrees = 60;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(0, 200, 255), ToAv(255, 0, 200), ToAv(255, 200, 0));
+                break;
         }
     }
 
@@ -777,10 +862,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
     partial void OnParamFadeTimeChanged(double value) { RegenerateCode(); LiveRestart(); }
     partial void OnParamGroupSizeChanged(int value) { RegenerateCode(); LiveRestart(); }
     partial void OnParamSizeChanged(int value) { RegenerateCode(); LiveRestart(); }
-    partial void OnParamBlocksChanged(int value) => LiveRestart();
-    partial void OnParamBlockSizeChanged(int value) => LiveRestart();
-    partial void OnParamNumberOfLedsChanged(int value) => LiveRestart();
-    partial void OnParamStepSpeedChanged(int value) => LiveRestart();
+    partial void OnParamBlocksChanged(int value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamBlockSizeChanged(int value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamNumberOfLedsChanged(int value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamStepSpeedChanged(int value) { RegenerateCode(); LiveRestart(); }
     partial void OnParamSustainChanged(double value) { RegenerateCode(); LiveRestart(); }
     partial void OnParamReleaseChanged(double value) { RegenerateCode(); LiveRestart(); }
     partial void OnParamRepetitionsChanged(int value) { RegenerateCode(); LiveRestart(); }
@@ -800,6 +885,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
     partial void OnParamLaserDirChanged(string value) { RegenerateCode(); LiveRestart(); }
     partial void OnParamBpmSpeedChanged(string value) { ShowBeatsPerCycle = ShowBpmSpeed && value == "Custom"; RegenerateCode(); LiveRestart(); }
     partial void OnParamBeatsPerCycleChanged(double value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamSimultaneousBeamsChanged(int value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamFlickerOpacityChanged(double value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamMatrixDirChanged(string value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamFadeBetweenChanged(double value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamAccentEveryChanged(int value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamDecayChanged(double value) { RegenerateCode(); LiveRestart(); }
+    partial void OnParamWedgeDegreesChanged(double value) { RegenerateCode(); LiveRestart(); }
 
     private void RegenerateCode()
     {
@@ -835,25 +927,25 @@ public partial class MainViewModel : ObservableObject, IDisposable
             "Summit of Everkeep (Zoraal Ja)" or "BPMFastStarfieldDecorator" =>
                 $"var baseCol = {bS};\n" +
                 $"var animationCol = {arr};\n" +
-                $"var effect = new BPMFastStarfieldDecorator(layer, layer.Count() / 6, {ParamBpm}, {ParamFadeSpeed}, animationCol, surface, {ParamDensity}, false, baseCol);\n\n" +
+                $"var effect = new BPMFastStarfieldDecorator(layer, {ParamNumberOfLeds}, {ParamBpm}, {ParamFadeSpeed}, animationCol, surface, {ParamDensity}, false, baseCol);\n\n" +
                 "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(effect, layer, runningEffects);",
 
             "BPMStarfieldDecorator" =>
                 $"var baseCol = {bS};\n" +
                 $"var animationCol = {arr};\n" +
-                $"var starfield = new BPMStarfieldDecorator(layer, layer.Count() / 6, {ParamBpm}, {ParamFadeSpeed}, animationCol, surface, {ParamDensity}, false, baseCol);\n\n" +
+                $"var starfield = new BPMStarfieldDecorator(layer, {ParamNumberOfLeds}, {ParamBpm}, {ParamFadeSpeed}, animationCol, surface, {ParamDensity}, false, baseCol);\n\n" +
                 "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(starfield, layer, runningEffects);",
 
             "FastStarfieldDecorator" =>
                 $"var baseCol = {bS};\n" +
                 $"var animationCol = {arr};\n" +
-                $"var starfield = new FastStarfieldDecorator(layer, layer.Count() / 4, {ParamInterval}, {ParamFadeSpeed}, animationCol, surface, {ParamDensity}, false, baseCol);\n\n" +
+                $"var starfield = new FastStarfieldDecorator(layer, {ParamNumberOfLeds}, {ParamInterval}, {ParamFadeSpeed}, animationCol, surface, {ParamDensity}, false, baseCol);\n\n" +
                 "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(starfield, layer, runningEffects);",
 
             "StarfieldDecorator" or "Moon Dust (Mare Lamentorum)" or "Rain" or "Showers" or "Snow" or "Blizzards" =>
                 $"var baseCol = {bS};\n" +
                 $"var animationCol = {arr};\n" +
-                $"var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), {ParamInterval}, {ParamFadeSpeed}, animationCol, surface, false, baseCol);\n\n" +
+                $"var starfield = new StarfieldDecorator(layer, {ParamNumberOfLeds}, {ParamInterval}, {ParamFadeSpeed}, animationCol, surface, false, baseCol);\n\n" +
                 "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(starfield, layer, runningEffects);",
 
             "Interphos (Queen Eternal)" =>
@@ -1030,6 +1122,54 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 $"var colors = {arr};\n" +
                 $"var pulse = new BPMCircularPulseEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamPulseRadius}, {ParamFadeWidth}, colors, surface, baseCol);\n\n" +
                 "SetEffect(pulse, layer, runningEffects);",
+
+            "BPMLaserEffect2" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var laser = new BPMLaserEffect2(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamBeamWidth}, {ParamSimultaneousBeams}, colors, surface, LaserEffect.LaserDirection.{ParamLaserDir}, baseCol);\n\n" +
+                "SetEffect(laser, layer, runningEffects);",
+
+            "MatrixEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var matrix = new MatrixEffect(layer, {ParamSpeed}, {ParamFlickerOpacity}, {ParamFlickerSpeed}, colors, surface, MatrixEffect.MatrixDirection.{ParamMatrixDir}, baseCol);\n\n" +
+                "SetEffect(matrix, layer, runningEffects);",
+
+            "BPMMatrixEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var matrix = new BPMMatrixEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamFlickerOpacity}, {ParamFlickerSpeed}, colors, surface, MatrixEffect.MatrixDirection.{ParamMatrixDir}, baseCol);\n\n" +
+                "SetEffect(matrix, layer, runningEffects);",
+
+            "BPMChaseRandom" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var chase = new BPMChaseRandom(layer, {ParamBpm}, {ParamFadeBetween}, {ParamGroupSize}, colors, surface, baseCol);\n\n" +
+                "SetEffect(chase, layer, runningEffects);",
+
+            "BPMThunderstrikeEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var strike = new BPMThunderstrikeEffect(layer, {ParamBpm}, {ParamAccentEvery}, {ParamDecay}, colors, surface, baseCol);\n\n" +
+                "SetEffect(strike, layer, runningEffects);",
+
+            "BPMHeartbeatEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var heartbeat = new BPMHeartbeatEffect(layer, {ParamBpm}, {ParamBeamWidth}, colors, surface, baseCol);\n\n" +
+                "SetEffect(heartbeat, layer, runningEffects);",
+
+            "BPMEqualizerEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var eq = new BPMEqualizerEffect(layer, {ParamBpm}, {ParamDecay}, colors, surface, baseCol);\n\n" +
+                "SetEffect(eq, layer, runningEffects);",
+
+            "BPMSpinnerEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var spinner = new BPMSpinnerEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamWedgeDegrees}, colors, surface, baseCol);\n\n" +
+                "SetEffect(spinner, layer, runningEffects);",
 
             _ => $"// Select an effect to generate code",
         };
@@ -1388,6 +1528,57 @@ public partial class MainViewModel : ObservableObject, IDisposable
             case "BPMCircularPulseEffect":
             {
                 var dec = new BPMCircularPulseEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamPulseRadius, ParamFadeWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMLaserEffect2":
+            {
+                var dir = Enum.Parse<LaserEffect.LaserDirection>(ParamLaserDir);
+                var dec = new BPMLaserEffect2(group, ParamBpm, ResolveBeatsPerCycle(), ParamBeamWidth, ParamSimultaneousBeams, colors, _surface, dir, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "MatrixEffect":
+            {
+                var dir = Enum.Parse<MatrixEffect.MatrixDirection>(ParamMatrixDir);
+                var dec = new MatrixEffect(group, ParamSpeed, ParamFlickerOpacity, ParamFlickerSpeed, colors, _surface, dir, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMMatrixEffect":
+            {
+                var dir = Enum.Parse<MatrixEffect.MatrixDirection>(ParamMatrixDir);
+                var dec = new BPMMatrixEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamFlickerOpacity, ParamFlickerSpeed, colors, _surface, dir, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMChaseRandom":
+            {
+                var dec = new BPMChaseRandom(group, ParamBpm, ParamFadeBetween, ParamGroupSize, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMThunderstrikeEffect":
+            {
+                var dec = new BPMThunderstrikeEffect(group, ParamBpm, ParamAccentEvery, ParamDecay, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMHeartbeatEffect":
+            {
+                var dec = new BPMHeartbeatEffect(group, ParamBpm, ParamBeamWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMEqualizerEffect":
+            {
+                var dec = new BPMEqualizerEffect(group, ParamBpm, ParamDecay, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMSpinnerEffect":
+            {
+                var dec = new BPMSpinnerEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamWedgeDegrees, colors, _surface, baseCol);
                 group.AddDecorator(dec);
                 return () => group.RemoveDecorator(dec);
             }

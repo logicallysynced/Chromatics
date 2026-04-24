@@ -33,6 +33,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         private volatile bool _shuttingDown;
         private PerDeviceBrightnessCorrection _perDeviceBrightness;
 
+        // Rate-limit per-light error logs. The bridge replies with HTML
+        // (e.g. an error page) when we exceed its ~10 req/s budget; that
+        // breaks JSON parsing and would otherwise spam Logger every tick.
+        private DateTime _lastJsonErrorLog = DateTime.MinValue;
+        private DateTime _lastGenericErrorLog = DateTime.MinValue;
+        private static readonly TimeSpan ErrorLogInterval = TimeSpan.FromSeconds(15);
+
         #endregion
 
         #region Constructors
@@ -168,7 +175,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     }
                     catch (JsonException jsonEx)
                     {
-                        Logger.WriteConsole(LoggerTypes.Error, $"[Hue] JSON Exception: {jsonEx.Message}");
+                        LogJsonError(jsonEx.Message);
                     }
                     catch (AggregateException aggEx)
                     {
@@ -176,11 +183,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         {
                             if (innerEx is JsonException)
                             {
-                                Logger.WriteConsole(LoggerTypes.Error, $"[Hue] JSON Exception: {innerEx.Message}");
+                                LogJsonError(innerEx.Message);
                             }
                             else
                             {
-                                Logger.WriteConsole(LoggerTypes.Error, $"[Hue] Exception: {innerEx.Message}");
+                                LogGenericError(innerEx.Message);
                                 HueRGBDeviceProvider.Instance.Throw(innerEx);
                             }
                         }
@@ -194,6 +201,27 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     return false;
                 }
             }
+        }
+
+        // Rate-limited error logging. The bridge can return HTML error
+        // pages on every request when over its req/s budget; without
+        // throttling we'd flood Logger with one line per tick (~20/sec).
+        private void LogJsonError(string message)
+        {
+            var now = DateTime.UtcNow;
+            if (now - _lastJsonErrorLog < ErrorLogInterval) return;
+            _lastJsonErrorLog = now;
+            Logger.WriteConsole(LoggerTypes.Error,
+                $"[Hue] JSON Exception (suppressed for {ErrorLogInterval.TotalSeconds:F0}s): {message}");
+        }
+
+        private void LogGenericError(string message)
+        {
+            var now = DateTime.UtcNow;
+            if (now - _lastGenericErrorLog < ErrorLogInterval) return;
+            _lastGenericErrorLog = now;
+            Logger.WriteConsole(LoggerTypes.Error,
+                $"[Hue] Exception (suppressed for {ErrorLogInterval.TotalSeconds:F0}s): {message}");
         }
 
         #endregion
