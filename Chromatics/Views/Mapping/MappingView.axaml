@@ -144,9 +144,13 @@
                 Padding="10,6"
                 Background="{DynamicResource ChromaticsTileOff}"
                 CornerRadius="4">
-            <TextBlock Text="{loc:Tr Key='Hold Shift while clicking Duplicate to chain-copy layers.'}"
+            <TextBlock TextWrapping="Wrap"
                        Opacity="0.75"
-                       FontSize="12" />
+                       FontSize="12">
+                <Run FontWeight="Bold" Text="{loc:Tr Key='Tip:'}" />
+                <Run Text=" " />
+                <Run Text="{Binding RotatingTip}" />
+            </TextBlock>
         </Border>
     </Grid>
 </UserControl>

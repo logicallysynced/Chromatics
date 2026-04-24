@@ -15,9 +15,48 @@ namespace Chromatics.Views.Mapping
 {
     public partial class MappingView : UserControl
     {
+        private TabControl _hostTab;
+
         public MappingView()
         {
             InitializeComponent();
+            AttachedToVisualTree += OnAttached;
+            DetachedFromVisualTree += OnDetached;
+        }
+
+        private void OnAttached(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            _hostTab = this.FindAncestorOfType<TabControl>();
+            if (_hostTab != null)
+                _hostTab.SelectionChanged += OnTabSelectionChanged;
+
+            if (DataContext is MappingViewModel vm)
+                vm.RefreshRotatingTip();
+        }
+
+        private void OnDetached(object sender, VisualTreeAttachmentEventArgs e)
+        {
+            if (_hostTab != null)
+            {
+                _hostTab.SelectionChanged -= OnTabSelectionChanged;
+                _hostTab = null;
+            }
+        }
+
+        // Default Avalonia TabControl keeps every TabItem's content materialised
+        // and just hides the inactive ones — so neither AttachedToVisualTree
+        // nor IsVisibleProperty change on this UserControl fire when the user
+        // switches tabs. Subscribing to the parent TabControl's
+        // SelectionChanged is the reliable signal: when the new SelectedContent
+        // is this view, the Mapping tab just became active.
+        private void OnTabSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (sender is TabControl tc
+                && ReferenceEquals(tc.SelectedContent, this)
+                && DataContext is MappingViewModel vm)
+            {
+                vm.RefreshRotatingTip();
+            }
         }
 
         private async void OnImportClick(object sender, RoutedEventArgs e)
