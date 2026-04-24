@@ -30,6 +30,15 @@ namespace Chromatics.Core
         private static IDisposable _sdkHandle;
         private static bool _initialized;
 
+        // Background heartbeat so Sentry has steady trace/profile data even
+        // when the user isn't exercising instrumented paths. Fires every
+        // HeartbeatIntervalSeconds and opens a short-lived transaction that
+        // the profiler attaches to. Cheap — the transaction is a no-op body;
+        // its purpose is to exist so ProfilesSampleRate has something to
+        // sample against.
+        private static System.Threading.Timer _heartbeatTimer;
+        private const double HeartbeatIntervalSeconds = 60.0;
+
         // Mutable so ApplySettings can swap it in after AppSettings.Startup
         // succeeds. The BeforeSend / BeforeBreadcrumb callbacks below close
         // over a getter that returns the current value, so consent changes
@@ -87,14 +96,21 @@ namespace Chromatics.Core
                 // but set explicitly so future SDK changes don't disable it.
                 o.AutoSessionTracking = true;
 
-                // Tracing: 20% sample rate keeps quota usage bounded on the
-                // free tier while still surfacing slow update loops.
-                o.TracesSampleRate = 0.2;
+                // Tracing: capture 100% of started transactions. ProfilesSampleRate
+                // multiplies on top of this, so TracesSampleRate=1.0 + ProfilesSampleRate=1.0
+                // means every transaction we START is profiled. NOTE: this only
+                // matters when we actually call SentrySdk.StartTransaction —
+                // without explicit transactions, no profile data is collected
+                // regardless of the sample rates. See RunInstrumented below.
+                o.TracesSampleRate = 1.0;
 
-                // Profiling: piggybacks on tracing sample rate. Requires the
-                // Sentry.Profiling integration package, which we've added.
+                // Profiling: requires the Sentry.Profiling integration package.
+                // The TimeSpan argument is the startup-grace window — the SDK
+                // waits up to this long during app launch so the profiler is
+                // ready when the first transaction starts. 500ms matches
+                // Sentry's recommended default.
                 o.ProfilesSampleRate = 1.0;
-                o.AddIntegration(new ProfilingIntegration());
+                o.AddIntegration(new ProfilingIntegration(TimeSpan.FromMilliseconds(500)));
 
                 // Strip personally identifiable information. We're an OSS app
                 // and the user is shown a privacy notice in the README; keep
@@ -145,6 +161,37 @@ namespace Chromatics.Core
 
             _initialized = true;
             Logger.WriteVerbose($"[Sentry] Initialize complete: enabled={SentrySdk.IsEnabled}, defaultConsent={_settings?.enableCrashReports ?? true}");
+
+            StartHeartbeat();
+        }
+
+        private static void StartHeartbeat()
+        {
+            // Dev-time note: the heartbeat only emits under the consent gate
+            // because BeforeSend drops events when enableCrashReports is off.
+            // Interval is every 60s — enough to populate the Performance tab
+            // and provide profile samples without eating quota.
+            _heartbeatTimer?.Dispose();
+            _heartbeatTimer = new System.Threading.Timer(_ =>
+            {
+                try
+                {
+                    if (!SentrySdk.IsEnabled) return;
+                    var tx = SentrySdk.StartTransaction("app.heartbeat", "periodic heartbeat for performance observability");
+                    // Trivial work so the transaction has a measurable duration
+                    // and the profiler captures at least a few samples. Reading
+                    // process working-set is a cheap, meaningful stat to stamp.
+                    try
+                    {
+                        using var p = System.Diagnostics.Process.GetCurrentProcess();
+                        tx.SetTag("working_set_mb", (p.WorkingSet64 / 1024 / 1024).ToString());
+                        tx.SetTag("thread_count", p.Threads.Count.ToString());
+                    }
+                    catch { /* non-critical */ }
+                    tx.Finish(SpanStatus.Ok);
+                }
+                catch { /* heartbeat must never throw */ }
+            }, null, TimeSpan.FromSeconds(HeartbeatIntervalSeconds), TimeSpan.FromSeconds(HeartbeatIntervalSeconds));
         }
 
         /// <summary>
@@ -202,6 +249,46 @@ namespace Chromatics.Core
             else
             {
                 SentrySdk.EndSession();
+            }
+        }
+
+        /// <summary>
+        /// Runs <paramref name="work"/> inside a Sentry transaction so the
+        /// profiler (and traces) capture meaningful timing data. Without a
+        /// transaction actively running, ProfilesSampleRate has nothing to
+        /// attach to — Sentry does not auto-instrument background .NET code,
+        /// so profiling + tracing appear empty until we manually open a
+        /// transaction around operations we care about.
+        ///
+        /// Exceptions propagate; the transaction is marked errored and
+        /// finished automatically via the `using` scope.
+        ///
+        /// Call sites: startup setup (one-shot, useful for observing launch
+        /// perf), device provider load/unload (tells us how long hardware
+        /// enumeration takes), and other infrequent high-value operations.
+        /// Do NOT wrap per-tick render or game-state reads — that would
+        /// saturate the SDK with 60Hz transactions.
+        /// </summary>
+        public static void RunInstrumented(string operation, string description, Action work)
+        {
+            if (!_initialized || work == null)
+            {
+                work?.Invoke();
+                return;
+            }
+
+            ITransactionTracer tx = null;
+            try
+            {
+                tx = SentrySdk.StartTransaction(operation, description);
+                SentrySdk.ConfigureScope(s => s.Transaction = tx);
+                work();
+                tx.Finish(SpanStatus.Ok);
+            }
+            catch (Exception ex)
+            {
+                tx?.Finish(ex);
+                throw;
             }
         }
 
@@ -307,6 +394,7 @@ namespace Chromatics.Core
         public static void Shutdown()
         {
             if (!_initialized) return;
+            try { _heartbeatTimer?.Dispose(); _heartbeatTimer = null; } catch { }
             try { SentrySdk.Flush(TimeSpan.FromSeconds(3)); } catch { }
             _sdkHandle?.Dispose();
             _initialized = false;

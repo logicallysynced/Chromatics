@@ -4,7 +4,9 @@ using Chromatics.Interfaces;
 using Chromatics.Models;
 using RGB.NET.Core;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using Color = RGB.NET.Core.Color;
 
 namespace Chromatics.Layers
 {
@@ -160,18 +162,22 @@ namespace Chromatics.Layers
                 case "Demolition Site":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectM7KeyHighlight.Color);
                     return true;
-
-                // BGM-based phase switching demo. Mirrors the base-layer
-                // demo case in RaidEffectProcessor.
                 case "Hunter's Ring":
                 case "Hunting Ground":
-                //case "Akh Afah Amphitheatre":
                     color = currentBgmId switch
                     {
-                        20150 => ColorHelper.ColorToRGBColor(palette.RaidEffectM8SKeyHighlight.Color),
-                        _    => ColorHelper.ColorToRGBColor(palette.RaidEffectM8KeyHighlight.Color),
+                        20150 => ColorHelper.ColorToRGBColor(palette.RaidEffectM8SKeyHighlight.Color), //Phase 2
+                        _    => ColorHelper.ColorToRGBColor(palette.RaidEffectM8KeyHighlight.Color), //Phase 1/Default
                     };
-                    return true; //20149
+                    return true;
+                
+                case "Arcadia":
+                    color = currentBgmId switch
+                    {
+                        20242 => ColorHelper.ColorToRGBColor(palette.RaidEffectM12SKeyHighlight.Color), // Phase 2
+                        _            => ColorHelper.ColorToRGBColor(palette.RaidEffectM12KeyHighlight.Color),  // Phase 1
+                    };
+                    return true;
 
                 default:
                     color = default;

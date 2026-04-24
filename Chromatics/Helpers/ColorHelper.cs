@@ -21,7 +21,19 @@ namespace Chromatics.Helpers
 
         public static RGB.NET.Core.Color ColorToRGBColor(System.Drawing.Color col)
         {
-            return new RGB.NET.Core.Color(col.A, col.R, col.G, col.B);
+            // Palette entries authored as `Color.FromArgb(0xRRGGBB)` end up with
+            // A=0, because the single-int overload interprets the argument as
+            // AARRGGBB and leaves the top byte (alpha) zero. A transparent
+            // palette colour is never intentional — highlights, base colours,
+            // and animation colours all need to be opaque to be visible.
+            // Rather than chase every 0xRRGGBB literal across the palette
+            // model (30+ entries), treat A=0 as "alpha wasn't specified" and
+            // default it to 255. Any caller that genuinely wants a transparent
+            // result should pass Color.FromArgb(0, r, g, b) explicitly — it'll
+            // still arrive here with A=0 and get promoted to 255, which is the
+            // right behaviour for every current call site.
+            byte alpha = col.A == 0 ? (byte)255 : col.A;
+            return new RGB.NET.Core.Color(alpha, col.R, col.G, col.B);
         }
 
         public static System.Drawing.Color GetInterpolatedColor<T>(T current, T min, T max, System.Drawing.Color color1, System.Drawing.Color color2)

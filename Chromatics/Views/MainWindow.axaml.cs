@@ -30,12 +30,24 @@ namespace Chromatics.Views
         {
             // Match Fm_MainWindow's bring-up order so backend subsystems initialize
             // exactly as they did under WinForms. Settings are already loaded by
-            // Program.Main — RGBController.Setup is the only long-running piece,
-            // keep it off the UI thread.
+            // Program.Main. Offload BOTH RGBController.Setup (device enumeration)
+            // AND KeyController.Setup to a background task — KeyController's
+            // SetWindowsHookEx path touches Process.MainModule, which blocks
+            // for hundreds of ms to seconds on Windows while the OS resolves
+            // the loaded-module list, freezing the UI and tab switching.
             Logger.WriteConsole(LoggerTypes.System, "Chromatics is starting up..");
 
-            KeyController.Setup();
-            await Task.Run(() => RGBController.Setup());
+            await Task.Run(() =>
+            {
+                Chromatics.Core.SentryService.RunInstrumented(
+                    "app.startup",
+                    "Chromatics backend init (keyboard hook + RGB provider load)",
+                    () =>
+                    {
+                        KeyController.Setup();
+                        RGBController.Setup();
+                    });
+            });
             GameController.Setup();
 
             // Defer the VM population until after the first full layout/render

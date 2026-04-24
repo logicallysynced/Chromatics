@@ -72,11 +72,23 @@
                 Padding="12">
             <Grid RowDefinitions="Auto,8,Auto,8,*">
 
+                <!-- Avalonia's FallbackValue can't evaluate a nested markup
+                     extension, so a {loc:Tr} fallback gets stringified as
+                     "Avalonia.Data.Binding". Use the same visibility-toggle
+                     pattern as the color-picker overlay below. -->
                 <TextBlock Grid.Row="0"
-                           Text="{Binding SelectedItem.DisplayName, FallbackValue={loc:Tr Key='Select a mapping to edit'}}"
+                           Text="{Binding SelectedItem.DisplayName}"
+                           IsVisible="{Binding EditorEnabled}"
                            FontSize="16"
                            FontWeight="SemiBold"
                            TextWrapping="Wrap" />
+                <TextBlock Grid.Row="0"
+                           Text="{loc:Tr Key='Select a mapping to edit'}"
+                           IsVisible="{Binding !EditorEnabled}"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           TextWrapping="Wrap"
+                           Opacity="0.6" />
 
                 <Border Grid.Row="2"
                         Height="40"

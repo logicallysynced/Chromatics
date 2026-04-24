@@ -80,7 +80,28 @@ namespace Chromatics.Layers
                 layergroup.Detach();
             }
 
-            if (!layer.Enabled || !effectSettings.effect_cutscenes)
+            // Raid-effect override: when a raid effect is active (or held in
+            // entry / phase blackout) we suppress the cutscene animation
+            // without touching the user's cutscene toggle in settings. Raid
+            // effects own the base layer for the duration of the encounter
+            // and cutscene animations firing on top would clobber the overlay.
+            // Evaluated every tick so the override lifts automatically once
+            // the raid effect resets raidEffectsRunning.
+            //
+            // Also suppress while the Victory Fanfare BGM is playing — the
+            // end-of-duty victory cutscene shouldn't get the cutscene
+            // gradient animation at all, since it's a celebratory moment
+            // belonging to the raid encounter itself.
+            bool raidEffectActive = RaidEffectState.raidEffectsRunning
+                || RaidEffectState.delayedStartUntil != DateTime.MinValue;
+
+            var handler = GameController.GetGameData();
+            uint currentBgmId = 0;
+            try { currentBgmId = handler?.Reader?.GetGameState().CurrentBgmId ?? 0; }
+            catch { /* memory read can transiently fail; treat as no BGM */ }
+            bool isVictoryFanfare = currentBgmId == RaidEffectState.VictoryBgmId;
+
+            if (!layer.Enabled || !effectSettings.effect_cutscenes || raidEffectActive || isVictoryFanfare)
             {
                 // GameController dispatches every effect processor on every
                 // EffectLayer (DF Bell, Damage Flash, Vegas, Cutscene all
@@ -91,9 +112,18 @@ namespace Chromatics.Layers
                 // a cutscene was running) — that's a one-shot teardown of
                 // OUR contribution. Outside a cutscene, leave the
                 // layergroup alone so other processors' work survives.
+                //
+                // Tear down the active gradient too: the MoveGradientDecorator
+                // is attached to the gradient object (not the layergroup), so
+                // layergroup.RemoveAllDecorators() alone wouldn't unsubscribe
+                // it from surface.Updating. Without the explicit removal the
+                // decorator keeps firing (invisibly, since the brush is no
+                // longer rendered) and accumulates wasted CPU per cancellation.
                 if (model._inCutscene)
                 {
                     layergroup.RemoveAllDecorators();
+                    model.activeGradient?.RemoveAllDecorators();
+                    model.activeGradient = null;
 
                     if (runningEffects.Contains(layergroup))
                         runningEffects.Remove(layergroup);
@@ -149,8 +179,15 @@ namespace Chromatics.Layers
                         }
 
                         layergroup.RemoveAllDecorators();
+                        // Tear down any previous gradient's decorator chain
+                        // before swapping in a new gradient — without this,
+                        // each cutscene toggle left the prior gradient's
+                        // MoveGradientDecorator subscribed to surface.Updating.
+                        model.activeGradient?.RemoveAllDecorators();
+
                         animationGradient.WrapGradient = true;
                         animationGradient.AddDecorator(gradientMove);
+                        model.activeGradient = animationGradient;
 
                         layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), animationGradient));
                         layergroup.ZIndex = 1000;
@@ -162,6 +199,8 @@ namespace Chromatics.Layers
                         if (!model.wasDisabled && layergroup != null)
                         {
                             layergroup.RemoveAllDecorators();
+                            model.activeGradient?.RemoveAllDecorators();
+                            model.activeGradient = null;
                             layergroup.Brush = new SolidColorBrush(Color.Transparent);
 
                             if (runningEffects.Contains(layergroup))
@@ -214,6 +253,12 @@ namespace Chromatics.Layers
             public bool wasDisabled { get; set; }
             public SolidColorBrush activeBrush { get; set; }
             public bool init { get; set; }
+            // Tracks the currently-painting gradient so cleanup paths
+            // (raid-effect override, natural-exit from cutscene, shutdown)
+            // can unsubscribe its decorator from surface.Updating. Without
+            // this, each cutscene-start left the previous cycle's gradient
+            // decorator orphaned but subscribed — wastes CPU per iteration.
+            public RGB.NET.Presets.Textures.Gradients.LinearGradient activeGradient { get; set; }
         }
     }
 }
