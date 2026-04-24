@@ -788,5 +788,8 @@
   "Email (optional)": "メールアドレス（任意）",
   "Don't Send": "送信しない",
   "Send Report": "レポートを送信",
-  "Reference ID:": "参照ID:"
+  "Reference ID:": "参照ID:",
+  "Adjust per-device brightness": "デバイスごとの明るさを調整",
+  "Device brightness": "デバイスの明るさ",
+  "Reset": "リセット"
 }

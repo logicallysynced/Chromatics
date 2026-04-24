@@ -118,22 +118,61 @@
             </ScrollViewer>
         </Border>
 
-        <!-- Lock toggle + reset — only on devices whose keycaps can be dragged.
-             Reset (↺) uses Button not ToggleButton so it fires Click, not a
-             checked state; both share the lockToggle radius/size style. -->
+        <!-- Brightness + lock + reset toolbar. Brightness shows for every
+             device type (keyboards too, where lock/reset don't apply); lock
+             and reset stay gated on SupportsDragReposition. -->
         <StackPanel Orientation="Horizontal"
-                    IsVisible="{Binding SupportsDragReposition}"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Margin="0,0,10,10"
                     Spacing="6">
+            <ToggleButton Name="BrightnessToggle"
+                          Classes="lockToggle"
+                          ToolTip.Tip="{loc:Tr Key='Adjust per-device brightness'}">
+                <Grid>
+                    <TextBlock Text="&#x2600;"
+                               FontFamily="Segoe UI Emoji, Segoe UI Symbol" />
+                    <Border IsVisible="{Binding IsBrightnessReduced}"
+                            Background="{DynamicResource ChromaticsAccent}"
+                            CornerRadius="6"
+                            Width="10" Height="10"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,-2,-2,0"
+                            IsHitTestVisible="False" />
+                </Grid>
+                <ToggleButton.Flyout>
+                    <Flyout Placement="Top">
+                        <StackPanel Width="220" Spacing="8">
+                            <TextBlock Text="{loc:Tr Key='Device brightness'}"
+                                       FontWeight="SemiBold" />
+                            <Slider Minimum="0" Maximum="100"
+                                    TickFrequency="10"
+                                    IsSnapToTickEnabled="False"
+                                    Value="{Binding Brightness, Mode=TwoWay}" />
+                            <Grid>
+                                <TextBlock Text="{Binding BrightnessLabel}"
+                                           HorizontalAlignment="Left"
+                                           FontSize="11"
+                                           Opacity="0.8" />
+                                <Button Content="{loc:Tr Key='Reset'}"
+                                        Click="OnResetBrightnessClick"
+                                        HorizontalAlignment="Right"
+                                        Padding="8,2" />
+                            </Grid>
+                        </StackPanel>
+                    </Flyout>
+                </ToggleButton.Flyout>
+            </ToggleButton>
             <Button Classes="lockToggle"
+                    IsVisible="{Binding SupportsDragReposition}"
                     Click="OnResetLayoutClick"
                     ToolTip.Tip="{loc:Tr Key='Reset all keys to default positions'}">
                 <TextBlock Text="&#x21BA;"
                            FontFamily="Segoe UI Emoji, Segoe UI Symbol" />
             </Button>
             <ToggleButton Classes="lockToggle"
+                          IsVisible="{Binding SupportsDragReposition}"
                           IsChecked="{Binding IsDraggable, Mode=TwoWay}"
                           ToolTip.Tip="{loc:Tr Key='Lock / unlock keys for drag repositioning'}">
                 <Grid>

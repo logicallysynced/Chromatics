@@ -188,6 +188,11 @@ namespace Chromatics.Views.Mapping
             _dragged = false;
         }
 
+        private void OnResetBrightnessClick(object sender, RoutedEventArgs e)
+        {
+            DeviceVm?.ResetBrightness();
+        }
+
         private async void OnResetLayoutClick(object sender, RoutedEventArgs e)
         {
             var device = DeviceVm;

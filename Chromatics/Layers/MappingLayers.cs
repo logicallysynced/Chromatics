@@ -39,6 +39,12 @@ namespace Chromatics.Layers
         private static ConcurrentDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> _deviceLayouts
             = new ConcurrentDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();
 
+        // Per-device brightness multiplier 0..100 (default 100 = unchanged).
+        // Composes multiplicatively with the global brightness slider; the
+        // global value remains the master cap. Keyed by device GUID.
+        private static ConcurrentDictionary<Guid, int> _deviceBrightness
+            = new ConcurrentDictionary<Guid, int>();
+
 
         public static int AddLayer(int index, LayerType rootLayerType, Guid deviceGuid, RGBDeviceType deviceType, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
         {
@@ -212,11 +218,44 @@ namespace Chromatics.Layers
                 _deviceLayouts[kvp.Key] = kvp.Value;
         }
 
+        public static int GetDeviceBrightness(Guid deviceId)
+        {
+            return _deviceBrightness.TryGetValue(deviceId, out var v) ? v : 100;
+        }
+
+        // Persists the per-device brightness and pushes the new value to the
+        // active correction so the next render frame reflects the change.
+        // Save is fire-and-forget so the slider stays responsive during drag.
+        public static void SetDeviceBrightness(Guid deviceId, int value)
+        {
+            if (value < 0) value = 0;
+            else if (value > 100) value = 100;
+
+            _deviceBrightness[deviceId] = value;
+            _version++;
+
+            RGBController.SetDeviceBrightness(deviceId, value);
+            System.Threading.Tasks.Task.Run(() => SaveMappings());
+        }
+
+        internal static ConcurrentDictionary<Guid, int> GetAllDeviceBrightness()
+        {
+            return _deviceBrightness;
+        }
+
+        public static void ReplaceDeviceBrightness(IDictionary<Guid, int> fresh)
+        {
+            _deviceBrightness.Clear();
+            if (fresh == null) return;
+            foreach (var kvp in fresh)
+                _deviceBrightness[kvp.Key] = kvp.Value;
+        }
+
         public static bool LoadMappings(bool over = false)
         {
             if (!FileOperationsHelper.CheckLayerMappingsExist()) return false;
 
-            var (tempLayers, tempDeviceLayouts) = FileOperationsHelper.LoadLayerMappings();
+            var (tempLayers, tempDeviceLayouts, tempDeviceBrightness) = FileOperationsHelper.LoadLayerMappings();
             if (tempLayers == null) return false;
 
             // Device layout overrides live in a separate top-level field in the
@@ -224,6 +263,7 @@ namespace Chromatics.Layers
             // migration path. Always replace wholesale — partial merges would
             // leak stale overrides from a prior session.
             ReplaceDeviceLayouts(tempDeviceLayouts);
+            ReplaceDeviceBrightness(tempDeviceBrightness);
 
             var flag = false;
             var empty = false;
@@ -302,7 +342,7 @@ namespace Chromatics.Layers
 
         public static bool SaveMappings()
         {
-            FileOperationsHelper.SaveLayerMappings(_layers, _deviceLayouts);
+            FileOperationsHelper.SaveLayerMappings(_layers, _deviceLayouts, _deviceBrightness);
             return true;
         }
 
@@ -414,15 +454,16 @@ namespace Chromatics.Layers
         // pipeline by funnelling through ImportMappings(imported, empty: false).
         public static bool ImportMappingsFromPath(string path)
         {
-            var (loaded, loadedLayouts) = FileOperationsHelper.ImportLayerMappingsFromPath(path);
+            var (loaded, loadedLayouts, loadedBrightness) = FileOperationsHelper.ImportLayerMappingsFromPath(path);
             if (loaded == null) return false;
             ReplaceDeviceLayouts(loadedLayouts);
+            ReplaceDeviceBrightness(loadedBrightness);
             return ImportMappings(loaded);
         }
 
         public static bool ExportMappingsToPath(string path)
         {
-            FileOperationsHelper.ExportLayerMappingsToPath(_layers, path, _deviceLayouts);
+            FileOperationsHelper.ExportLayerMappingsToPath(_layers, path, _deviceLayouts, _deviceBrightness);
             return true;
         }
 
@@ -471,13 +512,19 @@ namespace Chromatics.Layers
     // Previous versions serialized a bare ConcurrentDictionary<int, Layer>;
     // FileOperationsHelper.LoadLayerMappings sniffs the root shape and falls
     // back to that form when it's absent. Incremented whenever we add a new
-    // top-level field that the legacy format can't represent.
+    // top-level field that the legacy format can't represent. Class name
+    // retained for source-history continuity — the schemaVersion field is
+    // the source of truth for the on-disk shape.
+    //   v3: layers + deviceLayouts
+    //   v4: layers + deviceLayouts + deviceBrightness
     public class MappingFileV3
     {
-        public int schemaVersion { get; set; } = 3;
+        public int schemaVersion { get; set; } = 4;
         public ConcurrentDictionary<int, Layer> layers { get; set; } = new ConcurrentDictionary<int, Layer>();
         public Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> deviceLayouts { get; set; }
             = new Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();
+        public Dictionary<Guid, int> deviceBrightness { get; set; }
+            = new Dictionary<Guid, int>();
     }
 
     public class Layer : IMappingLayer

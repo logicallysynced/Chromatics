@@ -1,3 +1,4 @@
+using Chromatics.Extensions.RGB.NET.ColorCorrections;
 using RGB.NET.Core;
 using System;
 using System.Threading.Tasks;
@@ -16,6 +17,11 @@ public class HueDevice : AbstractRGBDevice<HueDeviceInfo>
 
     public void BeginShutdown() => _updateQueue.BeginShutdown();
     public Task TurnOffAsync() => _updateQueue.TurnOffAsync();
+
+    // Forwarded into the update queue so SetBrightness on the bridge picks
+    // up the per-device multiplier — uniform RGB scaling doesn't affect xy.
+    public void SetPerDeviceBrightness(PerDeviceBrightnessCorrection correction)
+        => _updateQueue.SetPerDeviceBrightness(correction);
 
     // Hue model id → RGB.NET layout (LedId + size). Specific models match
     // first; family prefixes catch newer/related SKUs that aren't in the

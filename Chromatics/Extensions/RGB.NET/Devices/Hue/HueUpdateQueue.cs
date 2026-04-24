@@ -31,6 +31,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         private readonly string _modelId;
         private readonly Lock _lock = new();
         private volatile bool _shuttingDown;
+        private PerDeviceBrightnessCorrection _perDeviceBrightness;
 
         #endregion
 
@@ -57,6 +58,9 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // trigger could fire one more color update for some bulbs after we've
         // already sent TurnOff, racing the bridge into the wrong final state.
         public void BeginShutdown() => _shuttingDown = true;
+
+        public void SetPerDeviceBrightness(PerDeviceBrightnessCorrection correction)
+            => _perDeviceBrightness = correction;
 
         // Called by HueRGBDeviceProvider.Dispose (inside Task.Run) before the
         // trigger/client are torn down so the bridge returns to a known-off state
@@ -125,11 +129,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     }
 
                     // Hue maps RGB to xy chromaticity + a separate brightness value,
-                    // so the global IColorCorrection (which scales R/G/B uniformly)
+                    // so the IColorCorrection chain (which scales R/G/B uniformly)
                     // doesn't change the bulb's perceived brightness on its own —
-                    // xy is invariant to uniform RGB scaling. Apply the global
-                    // brightness percentage to the bridge brightness here as well.
+                    // xy is invariant to uniform RGB scaling. Apply both the
+                    // global multiplier and the per-device multiplier to the
+                    // bridge brightness here so the slider drives bulb luminance.
                     brightness *= GlobalBrightnessCorrection.Instance.BrightnessPercent / 100.0;
+                    if (_perDeviceBrightness != null)
+                        brightness *= _perDeviceBrightness.BrightnessPercent / 100.0;
 
                     bool isBlack = color.R == 0 && color.G == 0 && color.B == 0;
 
