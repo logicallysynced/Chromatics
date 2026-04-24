@@ -66,7 +66,7 @@ namespace Chromatics.Layers
         // freshStart branch of the case body.
         private static class ArcadiaState
         {
-            public const string ZoneName = "Akh Afah Amphitheatre"; //"Arcadia";
+            public const string ZoneName = "Arcadia";
             public const uint Phase1BgmId = 20241;
             public const uint Phase2BgmId = 20242;
             public const double Phase1FlashAtSec = 10.8;
@@ -594,7 +594,6 @@ namespace Chromatics.Layers
 
                 case "Hunter's Ring":
                 case "Hunting Ground":
-                //case "Akh Afah Amphitheatre":
                     if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
                         switch (currentBgmId)
@@ -628,7 +627,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
                 
                 //USED FOR TESTING
-                case "Akh Afah Amphitheatre2":
+                case "Akh Afah Amphitheatre":
                     if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
                         switch (currentBgmId)
