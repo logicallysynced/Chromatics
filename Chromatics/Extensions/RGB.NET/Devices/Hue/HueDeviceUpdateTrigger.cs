@@ -12,7 +12,20 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
     {
         #region Constants
 
-        private const long FLUSH_TIMER = 5 * 1000 * TimeSpan.TicksPerMillisecond; // flush the device every 5 seconds to prevent timeouts
+        // HasDataEvent.WaitOne wake-up interval. MUST be finite — the base
+        // class's inherited `Timeout` defaults to Timeout.Infinite, which
+        // means WaitOne blocks forever if no new data arrives. RGB.NET only
+        // signals HasDataEvent when the surface commits a colour that
+        // DIFFERS from the last one pushed to the device. For a Hue bulb
+        // sitting on a static mapping (e.g. a fixed base layer), colours
+        // stop changing after the first frame and WaitOne never returns —
+        // the idle-refresh branch was unreachable, so live brightness
+        // slider moves never propagated to the bridge because our Update()
+        // was never called again. A 1s wake-up interval lets the refresh
+        // branch fire, which re-renders and re-reads the slider value.
+        // Also respects the bridge's ~10 req/s budget even with several
+        // bulbs (3 bulbs × 1 req/s idle = 3 req/s).
+        private const int WaitOneTimeoutMs = 1000;
 
         #endregion
 
@@ -49,7 +62,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
             while (!UpdateToken.IsCancellationRequested)
             {
-                if (HasDataEvent.WaitOne(Timeout))
+                if (HasDataEvent.WaitOne(WaitOneTimeoutMs))
                 {
                     long preUpdateTicks = Stopwatch.GetTimestamp();
 
@@ -66,8 +79,16 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                             Thread.Sleep(sleep);
                     }
                 }
-                else if (_lastUpdateTimestamp > 0 && Stopwatch.GetTimestamp() - _lastUpdateTimestamp > FLUSH_TIMER)
+                else
                 {
+                    // WaitOne timed out without receiving a new HasDataEvent
+                    // signal. Treat the whole timeout window as an idle
+                    // period and fire a refresh. This is the path that
+                    // drives slider responsiveness for static Hue
+                    // mappings — without it, brightness / per-device
+                    // changes would never reach the bridge after the very
+                    // first frame. The WaitOneTimeoutMs (1s) gate keeps
+                    // this well inside the bridge's ~10 req/s budget.
                     OnUpdate(new CustomUpdateData(("refresh", true)));
                 }
             }

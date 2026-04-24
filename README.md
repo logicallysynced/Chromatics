@@ -60,24 +60,29 @@ If you wish to build Chromatics yourself, you can download the active branch and
 * [Sentry](https://sentry.io/) - error monitoring, logs, metrics, tracing, and profiling
 <br><br><br>
 ### Privacy / Telemetry ###
-Chromatics uses [Sentry](https://sentry.io/) to collect anonymous crash reports, error logs, performance traces and profiling samples. This data helps us identify and fix bugs that affect real users.
+Chromatics uses [Sentry](https://sentry.io/) for two independent reporting paths: **background telemetry** (performance metrics, non-fatal errors) and **crash reports** (unhandled exceptions that terminate the app). They are controlled separately — opting out of telemetry does **not** disable the crash dialog, however crashes are never sent without you clicking on "Send", which is optional.
 
-**What we collect:**
-* Unhandled exception stack traces and the immediately preceding log lines
-* The Chromatics version, your operating system version, and the .NET runtime version
-* Performance traces (a 20% sample of update cycles) and profiling data
-* Anonymous session counts used to compute crash-free release health
-* Optional comments only when you explicitly type into the crash dialog
+**Background telemetry (toggleable):**
+* Error-tier log lines only — other log types are kept local
+* Performance transactions and profiling samples
+* Anonymous session counts used to compute crash-free release-health statistics
+* Process metrics: working-set / private memory, managed heap size, CPU percent, GC counts, thread count, stamped on a 60-second heartbeat
+
+**Crash reports (always opt-in per event):**
+* When Chromatics crashes, a dialog appears showing the error type, a Sentry reference id, and an optional free-text comment box
+* Nothing is sent until you click **Send**. Clicking **Don't Send** discards the report
+* The crash report contains the exception stack trace and the ~100 preceding log lines as breadcrumbs, plus the version/OS/runtime fields described above
+* Comments you type are sent as-is — do not include personal information
 
 **What we do NOT collect:**
 * Your name, email, or any other personally identifying information — the crash dialog asks only for free-text comments
 * Your character name, server, free company, or any FFXIV account information
-* Your IP address (Sentry strips this; `SendDefaultPii` is disabled)
+* Your IP address
 * The contents of your screen, keystrokes, or any input
 * File paths or settings outside of what is directly relevant to a crash
 * Your bridge keys, light IDs, or any device credentials
 
-**Opting out:** Crash reporting is enabled by default but can be turned off at any time from **Settings → Advanced → Send anonymous crash reports**. When disabled, the Sentry SDK is paused and no network traffic is generated.
+**Opting out of background telemetry:** Toggle off at **Settings → Advanced → Send anonymous performance and error telemetry**. When disabled, Chromatics sends no performance data, session counts, or error messages — but the Sentry SDK remains loaded so the post-crash dialog can still give you the choice to send (or not send) a crash report on the rare occasion one occurs. If you also want to disable the crash dialog entirely, remove the `Sentry` package from a source build.
 
 <br><br><br>
 ### Disclaimer ###

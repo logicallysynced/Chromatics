@@ -150,6 +150,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
         new("Blasting Ring (Brute Bomber)",          "[RAID] Presets"),
         new("The Thundering (Wicked Thunder)",       "[RAID] Presets"),
         new("Sphere of Naught (Cloud of Darkness)",  "[RAID] Presets"),
+        // Dawntrail M5-M8 single-effect presets
+        new("Groovy Ring (Dancing Green)",           "[RAID] Presets"),
+        new("Rebel Ring (Sugar Riot)",               "[RAID] Presets"),
+        new("Demolition Site (Brute Abombinator)",   "[RAID] Presets"),
+        // M8 floor is BGM-switched: normal (20149) vs savage (20150).
+        // Each variant is its own harness preset so the user can preview
+        // whichever they're building an effect for.
+        new("Hunter's Ring — Howling Blade (M8)",    "[RAID] Presets"),
+        new("Hunter's Ring — Howling Blade (M8S)",   "[RAID] Presets"),
+        // Arcadia (M12/M12S) runs a scripted three-beat choreography in-game.
+        // Each beat is its own preset; the harness cannot replay the per-layer
+        // state machine, so each one is previewable in isolation.
+        new("Arcadia P1 Effect 1 — Intro",           "[RAID] Presets"),
+        new("Arcadia P1 Effect 2 — Post-Flash",      "[RAID] Presets"),
+        new("Arcadia P2 (M12)",                      "[RAID] Presets"),
     ];
 
     public static EffectEntry[] WeatherPresets { get; } =
@@ -409,7 +424,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
             or "BPMRippleDecorator" or "BPMChaseDecorator"
             or "BPMLaserEffect" or "BPMLaserEffect2" or "BPMCircularPulseEffect"
             or "BPMMatrixEffect" or "BPMChaseRandom" or "BPMThunderstrikeEffect"
-            or "BPMHeartbeatEffect" or "BPMEqualizerEffect" or "BPMSpinnerEffect";
+            or "BPMHeartbeatEffect" or "BPMEqualizerEffect" or "BPMSpinnerEffect"
+            or "Groovy Ring (Dancing Green)" or "Rebel Ring (Sugar Riot)"
+            or "Demolition Site (Brute Abombinator)"
+            or "Hunter's Ring — Howling Blade (M8)" or "Hunter's Ring — Howling Blade (M8S)"
+            or "Arcadia P1 Effect 1 — Intro" or "Arcadia P1 Effect 2 — Post-Flash"
+            or "Arcadia P2 (M12)";
 
         // Speed-driven gradient effects
         ShowSpeed = name is "Interphos (Queen Eternal)" or "Wind" or "Gales"
@@ -429,10 +449,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
             or "Summit of Everkeep (Zoraal Ja)"
             or "Moon Dust (Mare Lamentorum)" or "Rain" or "Showers" or "Snow" or "Blizzards"
             or "StrobeDecorator" or "Thunder / Thunderstorms" or "PulseDecorator"
-            or "ShotFlashDecorator" or "BlockFallEffect";
+            or "ShotFlashDecorator" or "BlockFallEffect"
+            or "Hunter's Ring — Howling Blade (M8)" or "Arcadia P1 Effect 1 — Intro";
 
         ShowDensity = name is "FastStarfieldDecorator" or "BPMStarfieldDecorator"
-            or "BPMFastStarfieldDecorator" or "Summit of Everkeep (Zoraal Ja)";
+            or "BPMFastStarfieldDecorator" or "Summit of Everkeep (Zoraal Ja)"
+            or "Hunter's Ring — Howling Blade (M8)" or "Arcadia P1 Effect 1 — Intro";
 
         ShowWaveSpeed = name is "ArenaLightShowDecorator"
             or "Lovely Lovering (Honey B. Lovely)" or "Sphere of Naught (Cloud of Darkness)";
@@ -447,12 +469,19 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ShowGroupSize = name is "BPMPWMDecorator" or "BPMSINDecorator"
             or "The Thundering (Wicked Thunder)" or "BPMChaseRandom";
 
+        // BPMRippleDecorator-based raid presets use ParamFadeWidth as the
+        // ripple width and ParamBpmSpeed (defaulting to /2 or /4) for the
+        // beatsPerCycle divisor.
+        // BPMChaseDecorator-based raid presets use ParamTailLength as the
+        // tail-length parameter.
+
         ShowSize = name is "Everlasting Light";
         ShowBlocks = name is "BlockFallEffect";
         ShowBlockSize = name is "BlockFallEffect";
 
         ShowNumberOfLeds = name is "StarfieldDecorator" or "FastStarfieldDecorator"
-            or "BPMStarfieldDecorator" or "BPMFastStarfieldDecorator";
+            or "BPMStarfieldDecorator" or "BPMFastStarfieldDecorator"
+            or "Hunter's Ring — Howling Blade (M8)" or "Arcadia P1 Effect 1 — Intro";
 
         ShowStepSpeed = name is "PulseDecorator";
 
@@ -478,14 +507,19 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ShowFlickerSpeed = name is "FireEffect" or "MatrixEffect" or "BPMMatrixEffect";
         ShowBeamWidth = name is "LaserEffect" or "BPMLaserEffect" or "BPMLaserEffect2"
             or "BPMHeartbeatEffect";
-        ShowPulseRadius = name is "CircularPulseEffect" or "BPMCircularPulseEffect";
-        ShowFadeWidth = name is "CircularPulseEffect" or "BPMCircularPulseEffect" or "BPMRippleDecorator";
-        ShowTailLength = name is "BPMChaseDecorator";
+        ShowPulseRadius = name is "CircularPulseEffect" or "BPMCircularPulseEffect"
+            or "Hunter's Ring — Howling Blade (M8S)" or "Arcadia P2 (M12)";
+        ShowFadeWidth = name is "CircularPulseEffect" or "BPMCircularPulseEffect" or "BPMRippleDecorator"
+            or "Groovy Ring (Dancing Green)" or "Demolition Site (Brute Abombinator)"
+            or "Hunter's Ring — Howling Blade (M8S)" or "Arcadia P2 (M12)";
+        ShowTailLength = name is "BPMChaseDecorator" or "Rebel Ring (Sugar Riot)";
         ShowSpawnInterval = name is "LaserEffect" or "CircularPulseEffect";
         ShowRippleSpeed = name is "CircularPulseEffect"; // non-BPM only; BPM* now uses BpmSpeed
         ShowLaserDir = name is "LaserEffect" or "BPMLaserEffect" or "BPMLaserEffect2";
         ShowBpmSpeed = name is "BPMLaserEffect" or "BPMLaserEffect2" or "BPMCircularPulseEffect"
-            or "BPMRippleDecorator" or "BPMMatrixEffect" or "BPMSpinnerEffect";
+            or "BPMRippleDecorator" or "BPMMatrixEffect" or "BPMSpinnerEffect"
+            or "Groovy Ring (Dancing Green)" or "Demolition Site (Brute Abombinator)"
+            or "Hunter's Ring — Howling Blade (M8S)" or "Arcadia P2 (M12)";
         ShowBeatsPerCycle = ShowBpmSpeed && ParamBpmSpeed == "Custom";
 
         // New BPM decorator visibility flags
@@ -493,8 +527,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ShowFlickerOpacity = name is "MatrixEffect" or "BPMMatrixEffect";
         ShowMatrixDir = name is "MatrixEffect" or "BPMMatrixEffect";
         ShowFadeBetween = name is "BPMChaseRandom";
-        ShowAccentEvery = name is "BPMThunderstrikeEffect";
-        ShowDecay = name is "BPMThunderstrikeEffect" or "BPMEqualizerEffect";
+        ShowAccentEvery = name is "BPMThunderstrikeEffect" or "Arcadia P1 Effect 2 — Post-Flash";
+        ShowDecay = name is "BPMThunderstrikeEffect" or "BPMEqualizerEffect" or "Arcadia P1 Effect 2 — Post-Flash";
         ShowWedgeDegrees = name is "BPMSpinnerEffect";
 
         ShowColorBase = name is not ("PulseDecorator" or "ShotFlashDecorator"
@@ -551,6 +585,53 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 ParamInterval = 20; ParamWaveSpeed = 3.0; ParamWaveFreq = 1.0;
                 ColorBase = ToAv(147, 112, 219);
                 SetColors(ToAv(255, 0, 255), ToAv(147, 112, 219), ToAv(128, 0, 128));
+                break;
+            // Dawntrail M5-M7 — defaults mirror RaidEffectProcessor.ApplyRaidEffect
+            case "Groovy Ring (Dancing Green)":
+                ParamBpm = 60; ParamBpmSpeed = "/2"; ParamFadeWidth = 5.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(0, 255, 128), ToAv(255, 0, 200), ToAv(0, 200, 255));
+                break;
+            case "Rebel Ring (Sugar Riot)":
+                ParamBpm = 160; ParamTailLength = 5.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 80, 0), ToAv(255, 200, 0), ToAv(255, 40, 120), ToAv(180, 40, 255));
+                break;
+            case "Demolition Site (Brute Abombinator)":
+                ParamBpm = 178; ParamBpmSpeed = "/2"; ParamFadeWidth = 2.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 80, 0), ToAv(255, 200, 0), ToAv(255, 40, 40));
+                break;
+            // M8 Hunter's Ring splits on BGM id (20149 vs 20150 for normal vs savage)
+            case "Hunter's Ring — Howling Blade (M8)":
+                // Normal mode: BPMStarfield at 272 BPM, density 2. In-game uses layer.Count()/6 LEDs;
+                // harness uses ParamNumberOfLeds — leave at default 10 and the user can tune.
+                ParamBpm = 272; ParamFadeSpeed = 500; ParamDensity = 2.0; ParamNumberOfLeds = 10;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 255, 255), ToAv(180, 220, 255), ToAv(120, 180, 255));
+                break;
+            case "Hunter's Ring — Howling Blade (M8S)":
+                ParamBpm = 164; ParamBpmSpeed = "/4"; ParamPulseRadius = 12.0; ParamFadeWidth = 2.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 255, 255), ToAv(180, 220, 255), ToAv(80, 140, 255));
+                break;
+            // Arcadia (M12/M12S) — three scripted visuals. Defaults match the
+            // real-code hardcoded values (see RaidEffectProcessor.ApplyRaidEffect
+            // Arcadia case).
+            case "Arcadia P1 Effect 1 — Intro":
+                ParamBpm = 360; ParamFadeSpeed = 2000; ParamDensity = 1.0; ParamNumberOfLeds = 6;
+                ColorBase = AvColors.Black;
+                SetColors(AvColors.White);
+                break;
+            case "Arcadia P1 Effect 2 — Post-Flash":
+                ParamBpm = 360; ParamAccentEvery = 4; ParamDecay = 0.6;
+                ColorBase = ToAv(1, 40, 5);
+                SetColors(ToAv(255, 220, 180), ToAv(0, 255, 43));
+                break;
+            case "Arcadia P2 (M12)":
+                ParamBpm = 165; ParamBpmSpeed = "/4"; ParamPulseRadius = 12.0; ParamFadeWidth = 1.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 0, 4), ToAv(93, 0, 255), ToAv(255, 117, 0), ToAv(249, 255, 0));
                 break;
             case "Moon Dust (Mare Lamentorum)":
                 ParamInterval = 20; ParamFadeSpeed = 900;
@@ -956,8 +1037,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 "    new GradientStop(0.35f, animationCol2), new GradientStop(0.50f, animationCol3),\n" +
                 "    new GradientStop(0.65f, animationCol1), new GradientStop(0.80f, animationCol2),\n" +
                 "    new GradientStop(0.95f, animationCol3));\n\n" +
-                $"var gradientMove = new MoveGradientDecorator(surface, {ParamSpeed}, true);\n\n" +
-                "SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);",
+                $"var gradientMove = new MoveGradientDecorator(surface, {ParamSpeed}, true);\n" +
+                "SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);",
 
             "Scratching Ring (Black Cat)" =>
                 $"var baseCol = {bS};\n" +
@@ -967,8 +1048,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 "    new GradientStop(0.35f, animationCol2), new GradientStop(0.50f, animationCol3),\n" +
                 "    new GradientStop(0.65f, animationCol1), new GradientStop(0.80f, animationCol2),\n" +
                 "    new GradientStop(0.95f, animationCol3));\n\n" +
-                $"var gradientMove = new MoveBPMGradientDecorator(surface, {ParamBpm}, {ParamDirection.ToString().ToLower()});\n\n" +
-                "SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);",
+                $"var gradientMove = new MoveBPMGradientDecorator(surface, {ParamBpm}, {ParamDirection.ToString().ToLower()});\n" +
+                "SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);",
 
             "Lovely Lovering (Honey B. Lovely)" =>
                 $"var baseCol = {bS};\n" +
@@ -982,6 +1063,36 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 $"var arenaLightShow = new ArenaLightShowDecorator(layer, {ParamInterval}, {ParamWaveSpeed}, {ParamWaveFreq}, animationCol, surface, false, baseCol);\n\n" +
                 "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(arenaLightShow, layer, runningEffects);",
 
+            "Groovy Ring (Dancing Green)" or "Demolition Site (Brute Abombinator)" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var ripple = new BPMRippleDecorator(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamFadeWidth}, colors, surface, baseCol);\n\n" +
+                "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(ripple, layer, runningEffects);",
+
+            "Rebel Ring (Sugar Riot)" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var chase = new BPMChaseDecorator(layer, {ParamBpm}, {ParamTailLength}, colors, surface, baseCol);\n\n" +
+                "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(chase, layer, runningEffects);",
+
+            "Hunter's Ring — Howling Blade (M8)" or "Arcadia P1 Effect 1 — Intro" =>
+                $"var baseCol = {bS};\n" +
+                $"var animationCol = {arr};\n" +
+                $"var starfield = new BPMStarfieldDecorator(layer, {ParamNumberOfLeds}, {ParamBpm}, {ParamFadeSpeed}, animationCol, surface, {ParamDensity}, false, baseCol);\n\n" +
+                "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(starfield, layer, runningEffects);",
+
+            "Hunter's Ring — Howling Blade (M8S)" or "Arcadia P2 (M12)" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var pulse = new BPMCircularPulseEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamPulseRadius}, {ParamFadeWidth}, colors, surface, baseCol);\n\n" +
+                "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(pulse, layer, runningEffects);",
+
+            "Arcadia P1 Effect 2 — Post-Flash" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var strike = new BPMThunderstrikeEffect(layer, {ParamBpm}, {ParamAccentEvery}, {ParamDecay}, colors, surface, baseCol);\n\n" +
+                "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(strike, layer, runningEffects);",
+
             "Blasting Ring (Brute Bomber)" =>
                 $"var baseCol = {bS};\n" +
                 $"var animationCol1 = {s0};\nvar animationCol2 = {s1};\nvar animationCol3 = {s2};\n\n" +
@@ -990,8 +1101,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 "    new GradientStop(0.35f, animationCol2), new GradientStop(0.50f, animationCol3),\n" +
                 "    new GradientStop(0.65f, animationCol1), new GradientStop(0.80f, animationCol2),\n" +
                 "    new GradientStop(0.95f, animationCol3));\n\n" +
-                $"var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, {ParamBpm}, DiagonalDirection.{ParamDiagonalDir});\n\n" +
-                "SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);",
+                $"var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, {ParamBpm}, DiagonalDirection.{ParamDiagonalDir});\n" +
+                "SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);",
 
             "The Thundering (Wicked Thunder)" or "BPMPWMDecorator" =>
                 $"var baseCol = {bS};\n" +
@@ -1174,8 +1285,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
             _ => $"// Select an effect to generate code",
         };
 
-        return WrapInContext(inner, SelectedCodeMode, t);
+        return WrapInContext(inner, SelectedCodeMode, t, IsGradientEffect(effectName));
     }
+
+    // True when the effect installs its decorator on a LinearGradient object
+    // rather than on the overlay ListLedGroup. These effects can't use the
+    // usual `layer.Decorators.Count == 0` rebuild gate (their decorator never
+    // touches `layer`, so Decorators.Count is permanently 0 and the effect
+    // rebuilds every tick → flicker + runaway speed). Rebuild guard on the
+    // overlay's TextureBrush presence instead.
+    private static bool IsGradientEffect(string name) => name is
+        "Interphos (Queen Eternal)"
+        or "Scratching Ring (Black Cat)"
+        or "Blasting Ring (Brute Bomber)"
+        or "MoveBPMGradientDecorator"
+        or "MoveBPMDiagonalGradientDecorator";
 
     // Wraps the per-effect inner snippet with the appropriate switch-case scaffolding.
     //
@@ -1187,16 +1311,30 @@ public partial class MainViewModel : ObservableObject, IDisposable
     // The Phase Transition variant additionally rebuilds on currentBgmId change and
     // wraps the build code in a BGM switch with a single placeholder phase branch
     // that the user is expected to customize for their fight's phase-2 visual.
-    private static string WrapInContext(string inner, string mode, string t)
+    private static string WrapInContext(string inner, string mode, string t, bool isGradient = false)
     {
         var lines = inner.Split('\n');
+
+        // Per-overlay rebuild gate. For decorator-based effects, the decorator
+        // attaches to the overlay, so a rebuild is needed when Decorators.Count
+        // is 0 OR the global state says no raid is running. For gradient-based
+        // effects, the decorator lives on the LinearGradient (not on the
+        // overlay), so Decorators.Count is permanently 0 — gate on the
+        // TextureBrush presence instead to avoid rebuilding every tick.
+        string gate = isGradient
+            ? "layer.Brush is not TextureBrush || !RaidEffectState.raidEffectsRunning"
+            : "layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning";
+
+        string phaseGate = isGradient
+            ? "layer.Brush is not TextureBrush || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId"
+            : "layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId";
 
         if (mode == "Raid Effect")
         {
             var indented = string.Join("\n", lines.Select(l => l.Length > 0 ? t + t + t + t + l : ""));
             return
                 $"{t}{t}case \"<ZoneName>\":\n" +
-                $"{t}{t}{t}if (!RaidEffectState.raidEffectsRunning)\n" +
+                $"{t}{t}{t}if ({gate})\n" +
                 $"{t}{t}{t}{{\n" +
                 indented + "\n\n" +
                 $"{t}{t}{t}{t}RaidEffectState.raidEffectsRunning = true;\n" +
@@ -1211,9 +1349,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
             var indented = string.Join("\n", lines.Select(l => l.Length > 0 ? t + t + t + t + t + t + l : ""));
             return
                 $"{t}{t}case \"<ZoneName>\":\n" +
-                $"{t}{t}{t}// Rebuild on first activation OR when BGM transitions to a new phase.\n" +
-                $"{t}{t}{t}if (!RaidEffectState.raidEffectsRunning ||\n" +
-                $"{t}{t}{t}    currentBgmId != RaidEffectState.currentRaidBgmId)\n" +
+                $"{t}{t}{t}// Rebuild on first activation, on a per-overlay basis, OR when BGM transitions to a new phase.\n" +
+                $"{t}{t}{t}if ({phaseGate})\n" +
                 $"{t}{t}{t}{{\n" +
                 $"{t}{t}{t}{t}switch (currentBgmId)\n" +
                 $"{t}{t}{t}{t}{{\n" +
@@ -1312,6 +1449,44 @@ public partial class MainViewModel : ObservableObject, IDisposable
             {
                 group.Brush = new SolidColorBrush(baseCol);
                 var dec = new ArenaLightShowDecorator(group, ParamInterval, ParamWaveSpeed, ParamWaveFreq, colors, _surface, false, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Groovy Ring (Dancing Green)":
+            case "Demolition Site (Brute Abombinator)":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMRippleDecorator(group, ParamBpm, ResolveBeatsPerCycle(), ParamFadeWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Rebel Ring (Sugar Riot)":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMChaseDecorator(group, ParamBpm, ParamTailLength, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Hunter's Ring — Howling Blade (M8)":
+            case "Arcadia P1 Effect 1 — Intro":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMStarfieldDecorator(group, Math.Max(1, ParamNumberOfLeds), ParamBpm, ParamFadeSpeed, colors, _surface, ParamDensity, false, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Hunter's Ring — Howling Blade (M8S)":
+            case "Arcadia P2 (M12)":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMCircularPulseEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamPulseRadius, ParamFadeWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Arcadia P1 Effect 2 — Post-Flash":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMThunderstrikeEffect(group, ParamBpm, ParamAccentEvery, ParamDecay, colors, _surface, baseCol);
                 group.AddDecorator(dec);
                 return () => group.RemoveDecorator(dec);
             }

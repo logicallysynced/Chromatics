@@ -439,7 +439,15 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Interphos":
-                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    // Gradient effects: the decorator lives on the LinearGradient,
+                    // not on the overlay `layer` — so layer.Decorators.Count is
+                    // ALWAYS 0 here. Gating on that alone rebuilds the gradient +
+                    // decorator every tick, which produces flicker + runaway
+                    // speed. Gate on the presence of the TextureBrush instead:
+                    // once SetRadialGradientEffect installs it, this overlay is
+                    // already painting and doesn't need rebuilding until
+                    // raidEffectsRunning drops.
+                    if (layer.Brush is not TextureBrush || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosBase.Color);
                         var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosHighlight1.Color);
@@ -462,7 +470,9 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Scratching Ring":
-                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    // Gradient effect — see Interphos for rationale on
+                    // gating by brush type instead of Decorators.Count.
+                    if (layer.Brush is not TextureBrush || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Base.Color);
                         var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1Highlight1.Color);
@@ -499,7 +509,9 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
 
                 case "Blasting Ring":
-                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    // Gradient effect — see Interphos for rationale on
+                    // gating by brush type instead of Decorators.Count.
+                    if (layer.Brush is not TextureBrush || !RaidEffectState.raidEffectsRunning)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Base.Color);
                         var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3Highlight1.Color);
@@ -514,7 +526,7 @@ namespace Chromatics.Layers
                             new GradientStop(0.80f, animationCol2),
                             new GradientStop(0.95f, animationCol3));
 
-                        var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, 110 / 4, DiagonalDirection.TopLeftToBottomRight);
+                        var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, 27, DiagonalDirection.TopLeftToBottomRight);
                         SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -627,6 +639,7 @@ namespace Chromatics.Layers
                     return RaidEffectState.raidEffectsRunning;
                 
                 //USED FOR TESTING
+                /*
                 case "Akh Afah Amphitheatre":
                     if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
@@ -649,7 +662,7 @@ namespace Chromatics.Layers
                         return true;
                     }
                     return RaidEffectState.raidEffectsRunning;
-                
+                */
                 //M12/M12S
                 case ArcadiaState.ZoneName:
                 {
