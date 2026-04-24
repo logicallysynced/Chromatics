@@ -342,6 +342,7 @@ namespace Chromatics.ViewModels
                     var s = AppSettings.GetSettings();
                     s.globalbrightness = value;
                     AppSettings.SaveSettings(s);
+                    Chromatics.Extensions.RGB.NET.ColorCorrections.GlobalBrightnessCorrection.Instance.BrightnessPercent = value;
                 }
             }
         }
