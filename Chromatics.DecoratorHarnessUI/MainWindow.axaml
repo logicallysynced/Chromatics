@@ -231,6 +231,22 @@
                         </WrapPanel>
 
                         <Separator Margin="0,4"/>
+                        <TextBlock Text="Diagnostics" FontWeight="Bold" FontSize="14" Margin="0,4,0,0"/>
+                        <WrapPanel Orientation="Horizontal" Margin="0,4">
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140">
+                                <TextBlock Text="Key Highlights"/>
+                                <ToggleSwitch IsChecked="{Binding ParamAsdwHighlight}" OnContent="On" OffContent="Off"
+                                              ToolTip.Tip="Paint a static colour on Keyboard A, S, D, W keys, on top of any running effect. Useful for spotting where the gameplay-movement keys land."/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,6,4">
+                                <TextBlock Text="Highlight colour"/>
+                                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Height="36" Width="80"
+                                        Background="{Binding AsdwHighlightColorBrush}" Cursor="Hand"
+                                        Tapped="OnColorSwatchTapped" Tag="AsdwHighlight"/>
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <Separator Margin="0,4"/>
                         <TextBlock Text="Colors" FontWeight="Bold" FontSize="14" Margin="0,4,0,0"/>
                         <WrapPanel Orientation="Horizontal" Margin="0,4">
                             <StackPanel Spacing="2" Margin="0,0,6,4" IsVisible="{Binding ShowColorBase}">

@@ -33,8 +33,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(JobClassesHighlightProcessor));
+            if (_disposed) return;
 
             // Job Classes Highlight Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();

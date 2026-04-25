@@ -46,6 +46,13 @@ namespace Chromatics.ViewModels
                 {
                     UndoCommand.NotifyCanExecuteChanged();
                     OnPropertyChanged(nameof(EditorEnabled));
+                    // Notify the proxy properties below so the AXAML
+                    // bindings re-evaluate without traversing through a
+                    // null SelectedItem (which Avalonia 12 logs as a
+                    // "Value is null" binding warning every selection
+                    // toggle, despite FallbackValue catching the render).
+                    OnPropertyChanged(nameof(SelectedItemDisplayName));
+                    OnPropertyChanged(nameof(SelectedItemBrush));
 
                     if (value != null)
                     {
@@ -56,6 +63,13 @@ namespace Chromatics.ViewModels
                 }
             }
         }
+
+        // Null-safe proxy properties for AXAML. Bind to these instead of
+        // SelectedItem.X — Avalonia logs binding warnings when traversing
+        // through a null source, even when FallbackValue is set.
+        public string SelectedItemDisplayName => _selectedItem?.DisplayName ?? string.Empty;
+        public Avalonia.Media.IBrush SelectedItemBrush =>
+            _selectedItem?.Brush ?? Avalonia.Media.Brushes.Transparent;
 
         private MediaColor _editorColor = MediaColor.FromArgb(255, 0, 0, 0);
         public MediaColor EditorColor

@@ -53,6 +53,14 @@ namespace Chromatics.Core
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, PerDeviceBrightnessCorrection> _perDeviceBrightness
             = new System.Collections.Concurrent.ConcurrentDictionary<Guid, PerDeviceBrightnessCorrection>();
 
+        // Tagged-effect tracking for animations that need targeted teardown
+        // (e.g. when the user toggles "Startup Animation" off mid-cycle, we
+        // need to stop ONLY the rainbow groups, not every running effect).
+        // Keys are short, hardcoded category names ("startup", "title");
+        // values are the ListLedGroups that belong to that animation.
+        private static readonly Dictionary<string, List<ListLedGroup>> _taggedEffects = new();
+        private static readonly System.Threading.Lock _taggedEffectsLock = new();
+
         private static Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
 
         private static List<Led> _layergroupledcollection = new List<Led>();
@@ -637,6 +645,11 @@ namespace Chromatics.Core
 
             if (!_effects.effect_startupanimation) return;
 
+            // Idempotent: clear any prior startup groups so a re-call (e.g.
+            // user toggles startup off then on while game still
+            // disconnected) doesn't stack duplicates.
+            StopTaggedEffects("startup");
+
             var devices = surface.GetDevices(RGBDeviceType.All);
 
             var move = new MoveGradientDecorator(surface)
@@ -668,7 +681,7 @@ namespace Chromatics.Core
                 }
 
 
-                _runningEffects.Add(ledgroup);
+                RegisterTaggedEffect("startup", ledgroup);
             }
         }
 
@@ -692,6 +705,82 @@ namespace Chromatics.Core
 
             _runningEffects.Clear();
 
+            // Clear all tagged-effect lists too. The groups they pointed at
+            // are now detached (above), so any future StopTaggedEffects(tag)
+            // would no-op anyway — but keeping the dict in sync prevents
+            // stale references piling up across StopEffects() calls.
+            lock (_taggedEffectsLock)
+            {
+                foreach (var groups in _taggedEffects.Values) groups.Clear();
+            }
+        }
+
+        // Register a ListLedGroup as part of a named animation category, so
+        // a later StopTaggedEffects(tag) can detach JUST that animation's
+        // groups without touching unrelated running effects (raid overlays,
+        // weather, etc.). The group is also added to the global
+        // _runningEffects list so existing teardown paths still see it.
+        public static void RegisterTaggedEffect(string tag, ListLedGroup group)
+        {
+            if (group == null || string.IsNullOrEmpty(tag)) return;
+            lock (_taggedEffectsLock)
+            {
+                if (!_taggedEffects.TryGetValue(tag, out var groups))
+                    _taggedEffects[tag] = groups = new List<ListLedGroup>();
+                groups.Add(group);
+            }
+            _runningEffects.Add(group);
+        }
+
+        // Tear down ONLY the groups registered under `tag` — used when the
+        // user disables Startup Animation / Title Screen via the Effects
+        // tab and we need to stop the rainbow / starfield mid-cycle without
+        // killing other running effects on the surface.
+        //
+        // LEDs are painted BLACK and one surface render is forced before
+        // detach so the hardware actually clears, instead of latching at
+        // the last-rendered animation frame. Without this, disabling the
+        // startup rainbow leaves whatever colours were last on the LEDs
+        // (typically a frozen rainbow) until something else paints them.
+        public static void StopTaggedEffects(string tag)
+        {
+            List<ListLedGroup> snapshot;
+            lock (_taggedEffectsLock)
+            {
+                if (!_taggedEffects.TryGetValue(tag, out var groups) || groups.Count == 0) return;
+                snapshot = new List<ListLedGroup>(groups);
+                groups.Clear();
+            }
+
+            // Disable decorators + write black DIRECTLY to each LED's Color
+            // property. We can't rely on `g.Brush = SolidColorBrush(black)`
+            // + surface.Update() because some decorators (e.g.
+            // StarfieldDecorator.OnAttached at line 57) call `ledGroup.Detach()`
+            // when they attach — they paint LEDs directly via the
+            // surface.Updating event and want the group out of the brush
+            // render path. Setting brush on a detached group is silent.
+            // Writing led.Color directly works regardless of attachment
+            // state because device.GetUpdateData reads each LED's current
+            // Color at render time.
+            var black = new Color((byte)0, (byte)0, (byte)0);
+            foreach (var g in snapshot)
+            {
+                foreach (var d in g.Decorators) d.IsEnabled = false;
+                g.RemoveAllDecorators();
+                foreach (var led in g)
+                {
+                    led.Color = black;
+                }
+            }
+
+            // Force a render so the black hits hardware before we detach.
+            try { surface?.Update(); } catch { }
+
+            foreach (var g in snapshot)
+            {
+                g.Detach();
+                _runningEffects.Remove(g);
+            }
         }
 
         public static bool IsBaseLayerEffectRunning()

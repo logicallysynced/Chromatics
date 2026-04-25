@@ -32,8 +32,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(HighlightProcessor));
+            if (_disposed) return;
 
             var _colorPalette = RGBController.GetActivePalette();
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.HighlightColor.Color);

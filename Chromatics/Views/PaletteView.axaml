@@ -75,9 +75,13 @@
                 <!-- Avalonia's FallbackValue can't evaluate a nested markup
                      extension, so a {loc:Tr} fallback gets stringified as
                      "Avalonia.Data.Binding". Use the same visibility-toggle
-                     pattern as the color-picker overlay below. -->
+                     pattern as the color-picker overlay below.
+                     Bindings target null-safe proxy properties on the VM
+                     (SelectedItemDisplayName / SelectedItemBrush) so
+                     Avalonia doesn't log "Value is null" warnings each
+                     selection toggle. -->
                 <TextBlock Grid.Row="0"
-                           Text="{Binding SelectedItem.DisplayName}"
+                           Text="{Binding SelectedItemDisplayName}"
                            IsVisible="{Binding EditorEnabled}"
                            FontSize="16"
                            FontWeight="SemiBold"
@@ -95,7 +99,7 @@
                         CornerRadius="4"
                         BorderBrush="#33000000"
                         BorderThickness="1"
-                        Background="{Binding SelectedItem.Brush, FallbackValue=Transparent}" />
+                        Background="{Binding SelectedItemBrush}" />
 
                 <!-- Color picker with placeholder overlay when nothing selected -->
                 <Panel Grid.Row="4">

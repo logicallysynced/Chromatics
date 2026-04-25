@@ -38,8 +38,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(ExperienceTrackerProcessor));
+            if (_disposed) return;
 
             ExpTrackerDynamicModel model;
 

@@ -208,7 +208,13 @@ namespace Chromatics.Layers
                 model._raidEffects = raidEffects;
             }
 
-            if (!effectApplied && layergroup.Decorators.Count <= 0)
+            // Both can be null during app shutdown: the surface is disposed
+            // by RGBController.Exit while a game-loop tick is still running
+            // this Process(), and `layergroup` resolves to null when the
+            // _layergroups[layer.layerID] array exists but is empty
+            // (FirstOrDefault → null). Either case used to throw a
+            // NullReferenceException occasionally on close.
+            if (!effectApplied && layergroup != null && surface != null && layergroup.Decorators.Count <= 0)
             {
                 layergroup.Attach(surface);
             }
@@ -613,6 +619,142 @@ namespace Chromatics.Layers
                     else
                     {
                         color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormBase.Color);
+                    }
+                    break;
+
+                // ── Dawntrail-era placeholder weathers ─────────────────────
+                // Effect shapes are placeholders (StarfieldDecorator with the
+                // weather's Base + single Highlight palette colour) — replace
+                // with bespoke gradient / decorator stacks when redesigning.
+                // Palette entries (WeatherXxxBase / WeatherXxxHighlight) are
+                // already wired in PaletteColorModel and editable via the
+                // Reactive Weather palette page.
+
+                case "Atmospheric Phantasms":
+                    if (reactiveWeatherEffects && effectSettings.weather_atmosphericphantasms_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 25, 350, animationCol, surface, false, baseCol);
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsBase.Color);
+                    }
+                    break;
+
+                case "Illusory Disturbances":
+                    if (reactiveWeatherEffects && effectSettings.weather_illusorydisturbances_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 30, 280, animationCol, surface, false, baseCol);
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesBase.Color);
+                    }
+                    break;
+
+                case "Gravitational Flux":
+                    if (reactiveWeatherEffects && effectSettings.weather_gravitationalflux_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 40, 600, animationCol, surface, false, baseCol);
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxBase.Color);
+                    }
+                    break;
+
+                case "Meteor Showers":
+                    if (reactiveWeatherEffects && effectSettings.weather_meteorshowers_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMeteorShowersBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMeteorShowersHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 15, 200, animationCol, surface, false, baseCol);
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMeteorShowersBase.Color);
+                    }
+                    break;
+
+                case "Sporing Mist":
+                    if (reactiveWeatherEffects && effectSettings.weather_sporingmist_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSporingMistBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherSporingMistHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 35, 800, animationCol, surface, false, baseCol);
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSporingMistBase.Color);
+                    }
+                    break;
+
+                case "Annealing Winds":
+                    if (reactiveWeatherEffects && effectSettings.weather_annealingwinds_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAnnealingWindsBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherAnnealingWindsHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 400, animationCol, surface, false, baseCol);
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAnnealingWindsBase.Color);
+                    }
+                    break;
+
+                case "Glass Storms":
+                    if (reactiveWeatherEffects && effectSettings.weather_glassstorms_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGlassStormsBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherGlassStormsHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 15, 200, animationCol, surface, false, baseCol);
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGlassStormsBase.Color);
+                    }
+                    break;
+
+                case "Bubble Bloom":
+                    if (reactiveWeatherEffects && effectSettings.weather_bubblebloom_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBubbleBloomBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherBubbleBloomHighlight.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 30, 500, animationCol, surface, false, baseCol);
+                        layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(starfield, layer, runningEffects);
+                        return true;
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBubbleBloomBase.Color);
                     }
                     break;
             }

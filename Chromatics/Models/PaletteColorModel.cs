@@ -633,10 +633,7 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectM8SHighlight1 = new("Arcadion M8 Savage Phase (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
         public ColorMapping RaidEffectM8SHighlight2 = new("Arcadion M8 Savage Phase (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFF501));
         public ColorMapping RaidEffectM8SHighlight3 = new("Arcadion M8 Savage Phase (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF8C00));
-
-
-
-        public ColorMapping RaidEffectM12KeyHighlight = new("Arcadion M12 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x4E00FF));
+        public ColorMapping RaidEffectM12KeyHighlight = new("Arcadion M12 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x990000));
         public ColorMapping RaidEffectM12SKeyHighlight = new("Arcadion M12S Savage Phase (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x00FF80));
 
         public ColorMapping RaidEffectCoDBase = new("The Cloud of Darkness (Base)", PaletteTypes.RaidEffects, Color.MediumPurple);

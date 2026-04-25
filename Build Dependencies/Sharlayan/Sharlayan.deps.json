@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v10.0": {
-      "Sharlayan/9.0.9": {
+      "Sharlayan/9.0.20": {
         "dependencies": {
           "Lumina": "7.3.0",
           "Lumina.Excel": "7.4.3",
@@ -104,7 +104,7 @@
     }
   },
   "libraries": {
-    "Sharlayan/9.0.9": {
+    "Sharlayan/9.0.20": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

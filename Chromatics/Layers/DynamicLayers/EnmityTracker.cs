@@ -35,8 +35,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(EnmityTrackerProcessor));
+            if (_disposed) return;
 
             EnmityDynamicModel model;
 

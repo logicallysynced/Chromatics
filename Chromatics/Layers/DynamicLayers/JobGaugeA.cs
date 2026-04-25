@@ -44,8 +44,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(JobGaugeAProcessor));
+            if (_disposed) return;
 
             JobGaugeADynamicModel model;
 
