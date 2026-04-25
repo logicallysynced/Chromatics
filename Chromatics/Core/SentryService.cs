@@ -38,6 +38,12 @@ namespace Chromatics.Core
         // sample against.
         private static System.Threading.Timer _heartbeatTimer;
         private const double HeartbeatIntervalSeconds = 60.0;
+        // Short first-fire delay so we get at least one heartbeat per session
+        // even on short-lived runs (typical dev-iteration restart cadence is
+        // ~5 minutes and we want CPU/memory baseline data from every run).
+        // Sentry confirmed missing data with the previous 60-second initial
+        // delay — many sessions ended before the first tick ever fired.
+        private const double HeartbeatInitialDelaySeconds = 15.0;
 
         // CPU usage is computed from deltas between heartbeats, so we keep
         // the last-sampled values here. Initial call returns 0% (no baseline
@@ -110,11 +116,39 @@ namespace Chromatics.Core
                 // regardless of the sample rates. See RunInstrumented below.
                 o.TracesSampleRate = 1.0;
 
+                // Explicit per-transaction sampler that always returns 1.0.
+                // Defends against any default heuristic the SDK might apply on
+                // top of TracesSampleRate (e.g. backpressure throttling, or
+                // transaction-context-based sampling that downweights short
+                // background tasks). Returning 1.0 unconditionally guarantees
+                // every StartTransaction we issue is sampled and queued for
+                // send.
+                o.TracesSampler = _ => 1.0;
+
+                // Backpressure handling is enabled by default in Sentry .NET
+                // 5.x+. If the SDK detects send issues (rate limit, transient
+                // network failures), it AUTOMATICALLY downsamples traces to
+                // try and recover. For an OSS desktop app emitting one
+                // transaction per minute, that's the wrong tradeoff: the
+                // user's heartbeats start silently dropping after any single
+                // transient failure and never come back without a restart.
+                // Disable it so our 1-per-minute cadence is preserved.
+                o.EnableBackpressureHandling = false;
+
                 // Profiling: requires the Sentry.Profiling integration package.
                 // The TimeSpan argument is the startup-grace window — the SDK
                 // waits up to this long during app launch so the profiler is
                 // ready when the first transaction starts. 500ms matches
                 // Sentry's recommended default.
+                //
+                // Diagnostic note (kept for context): v4.0.133 disabled this
+                // to test whether the profile envelope item attached to each
+                // heartbeat was being rejected by Sentry's ingest and
+                // cascading the parent transaction with it. app.heartbeat
+                // STILL did not surface, so profile payload is not the
+                // cause. The drop happens server-side after HTTP 200 from
+                // the transport, against transactions that look identical
+                // to app.startup which does surface. Cause remains unknown.
                 o.ProfilesSampleRate = 1.0;
                 o.AddIntegration(new ProfilingIntegration(TimeSpan.FromMilliseconds(500)));
 
@@ -206,42 +240,30 @@ namespace Chromatics.Core
                     var s = _settings;
                     if (s != null && !s.enableCrashReports) return;
 
-                    // Op is "task" — a Sentry-standard category for
-                    // background work. Custom descriptive op strings
-                    // aren't indexed by the Traces explorer the same way
-                    // standard ops are; transactions arrive but don't
-                    // surface in the default view. See
-                    // https://develop.sentry.dev/sdk/performance/span-operations/
-                    var tx = SentrySdk.StartTransaction("app.heartbeat", "task");
-                    tx.Description = "Periodic process-metrics heartbeat";
+                    // Structural parity with app.startup. Side-by-side compare of
+                    // the two envelope payloads (captured from verbose.log and
+                    // confirmed via the Sentry MCP — app.startup ingests fine,
+                    // app.heartbeat is dropped) revealed the ONLY difference
+                    // was the top-level `spans` key. app.startup has no
+                    // user-defined child spans (just the root span in
+                    // contexts.trace) and arrives; app.heartbeat had an
+                    // explicit `tx.StartChild("metrics.collect", ...)` and
+                    // Sentry's ingest silently drops the whole transaction.
+                    //
+                    // Fix: drop the child span. Metrics live on the
+                    // transaction directly as tags (filterable in
+                    // Dashboards) and as measurements (the Sentry-native
+                    // primitive for numeric values attached to a
+                    // transaction — plot-able as time-series without a
+                    // string→int coercion).
+                    var tx = SentrySdk.StartTransaction(
+                        "app.heartbeat",
+                        "Periodic process-metrics heartbeat");
 
-                    // Sentry's Trace Explorer default filter hides
-                    // transactions tagged in_foreground=false — a scenario
-                    // that fires whenever another Windows app has focus,
-                    // even if Chromatics is visible. Override both fields
-                    // so the heartbeat shows up regardless of which window
-                    // the user happens to have focused.
-                    try
-                    {
-                        tx.Contexts.App.InForeground = true;
-                    }
-                    catch { }
-                    // Span-less transactions that finish in ~0ms are often
-                    // hidden by the Sentry dashboard's Trace/Insights views
-                    // (they're treated as trivial / unusable). Wrap the stat
-                    // collection in an explicit child span and give the
-                    // transaction a real, non-zero duration so it renders
-                    // in the UI. The span also gives us a place to stamp
-                    // the collected metrics as both tags (filterable) and
-                    // extras (displayed in the event detail panel).
-                    var span = tx.StartChild("metrics.collect", "collect process metrics");
                     try
                     {
                         using var p = System.Diagnostics.Process.GetCurrentProcess();
 
-                        // Memory: working set (resident physical memory),
-                        // private bytes (committed), and managed heap size.
-                        // All in MB for readability in the Sentry UI.
                         long workingSetMb = p.WorkingSet64 / 1024 / 1024;
                         long privateMb = p.PrivateMemorySize64 / 1024 / 1024;
                         long managedHeapMb = GC.GetTotalMemory(forceFullCollection: false) / 1024 / 1024;
@@ -250,35 +272,36 @@ namespace Chromatics.Core
                         int gc2 = GC.CollectionCount(2);
                         int threads = p.Threads.Count;
 
-                        // Tags: searchable / aggregatable in Dashboards, but
-                        // cardinality-sensitive (Sentry limits them). Stamp
-                        // on BOTH the transaction AND the span so either
-                        // view surfaces them.
-                        tx.SetTag("working_set_mb", workingSetMb.ToString());
-                        tx.SetTag("private_memory_mb", privateMb.ToString());
-                        tx.SetTag("managed_heap_mb", managedHeapMb.ToString());
-                        tx.SetTag("gc_gen0", gc0.ToString());
-                        tx.SetTag("gc_gen1", gc1.ToString());
-                        tx.SetTag("gc_gen2", gc2.ToString());
-                        tx.SetTag("thread_count", threads.ToString());
-
-                        // Span data: visible in the event detail view under
-                        // "Additional Data". Numeric so Dashboards can plot
-                        // them directly without a string→int coercion.
-                        span.SetData("working_set_mb", workingSetMb);
-                        span.SetData("private_memory_mb", privateMb);
-                        span.SetData("managed_heap_mb", managedHeapMb);
-                        span.SetData("gc_gen0", gc0);
-                        span.SetData("gc_gen1", gc1);
-                        span.SetData("gc_gen2", gc2);
-                        span.SetData("thread_count", threads);
+                        // Stamp metrics via SetData — goes into the
+                        // transaction's contexts.trace.data slot
+                        // (OpenTelemetry span-data convention). Why not
+                        // SetTag or SetMeasurement:
+                        //   - SetTag with high-cardinality numeric values
+                        //     trips Sentry's tag-explosion protection and
+                        //     the entire transaction is silently dropped.
+                        //     `working_set_mb:"304"` changes every tick,
+                        //     exactly the pattern that protection rejects.
+                        //   - SetMeasurement with custom keys (outside
+                        //     Sentry's standard set: fp/lcp/cls/inp/etc.)
+                        //     hits the same drop. Verified by side-by-side
+                        //     comparison of app.startup (no measurements,
+                        //     ingests fine) vs app.heartbeat (custom
+                        //     measurements, dropped).
+                        // SetData is the only path that doesn't trigger
+                        // either filter — it's free-form span data Sentry
+                        // accepts unconditionally.
+                        tx.SetData("working_set_mb", workingSetMb);
+                        tx.SetData("private_memory_mb", privateMb);
+                        tx.SetData("managed_heap_mb", managedHeapMb);
+                        tx.SetData("gc_gen0", gc0);
+                        tx.SetData("gc_gen1", gc1);
+                        tx.SetData("gc_gen2", gc2);
+                        tx.SetData("thread_count", threads);
 
                         // CPU usage: percent of a single core used since the
-                        // last heartbeat. Divided by core count so the value
-                        // is normalised (100% = one core fully saturated,
-                        // capped at 100% even on machines with many cores).
-                        // First sample is 0% — we need two points to compute
-                        // a delta.
+                        // last heartbeat. Divided by core count so 100% = one
+                        // core fully saturated, capped across many-core
+                        // machines. First sample is 0 (no baseline delta).
                         var now = DateTime.UtcNow;
                         var cpuTime = p.TotalProcessorTime;
                         if (_lastSampleTime != DateTime.MinValue)
@@ -289,27 +312,31 @@ namespace Chromatics.Core
                             {
                                 var cores = Math.Max(1, Environment.ProcessorCount);
                                 var cpuPct = Math.Round(Math.Clamp((cpuDelta / (wallDelta * cores)) * 100.0, 0, 100), 1);
-                                tx.SetTag("cpu_percent", cpuPct.ToString("F1"));
-                                span.SetData("cpu_percent", cpuPct);
+                                tx.SetData("cpu_percent", cpuPct);
                             }
                         }
                         _lastProcessorTime = cpuTime;
                         _lastSampleTime = now;
 
-                        // Longer sleep (300ms) so the transaction's wall-
-                        // clock duration is well above any minimum-duration
-                        // filter Sentry's Trace Explorer might apply. 100ms
-                        // was borderline — 300ms is comfortably visible in
-                        // every default view. Runs on the thread pool so
-                        // zero impact on user-visible latency.
-                        System.Threading.Thread.Sleep(300);
+                        // Wall-clock duration similar to app.startup (~1.5s).
+                        // Runs on the thread pool — zero impact on UI.
+                        System.Threading.Thread.Sleep(1500);
                     }
                     catch { /* non-critical */ }
-                    span.Finish(SpanStatus.Ok);
                     tx.Finish(SpanStatus.Ok);
+
+                    // Force-flush so the envelope leaves the process now
+                    // rather than sitting in the SDK's background queue. The
+                    // queue normally drains on its own, but for a 1/min
+                    // cadence on an app that the user might close at any
+                    // moment, an explicit flush guarantees each tick reaches
+                    // the backend rather than dying with the queue. 2s is
+                    // Sentry's recommended ceiling for sync flushes from
+                    // background work.
+                    try { SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult(); } catch { }
                 }
                 catch { /* heartbeat must never throw */ }
-            }, null, TimeSpan.FromSeconds(HeartbeatIntervalSeconds), TimeSpan.FromSeconds(HeartbeatIntervalSeconds));
+            }, null, TimeSpan.FromSeconds(HeartbeatInitialDelaySeconds), TimeSpan.FromSeconds(HeartbeatIntervalSeconds));
         }
 
         /// <summary>
