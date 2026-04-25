@@ -5,6 +5,10 @@
 # DESIGN_REFACTOR.md — local-only refactor notes, not committed)
 .claude/
 
+# Project-scoped MCP server configuration. Local-only — contains personal
+# tool wiring (Sentry hosted MCP) that's specific to maintainer accounts.
+.mcp.json
+
 # Python bytecode cache (prebuild.py / prepareUpdate.py live at repo root)
 __pycache__/
 *.pyc

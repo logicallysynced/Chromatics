@@ -161,7 +161,7 @@ namespace Chromatics.Layers.DynamicLayers
                         else
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
                     }
-                    else if (weather == "Astromagnetic Storm")
+                    else if (weather == "Astromagnetic Storms")
                     {
                         if (reactiveWeatherEffects.effect_reactiveweather && reactiveWeatherEffects.weather_astromagneticstorm_animation)
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight.Color);

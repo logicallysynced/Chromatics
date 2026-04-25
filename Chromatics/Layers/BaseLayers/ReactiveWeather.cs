@@ -353,7 +353,7 @@ namespace Chromatics.Layers
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationBase.Color);
                         }
                     }
-                    else if (weather == "Astromagnetic Storm" && effectSettings.weather_astromagneticstorm_animation)
+                    else if (weather == "Astromagnetic Storms" && effectSettings.weather_astromagneticstorm_animation)
                     {
                         if (reactiveWeatherEffects)
                         {
@@ -586,7 +586,35 @@ namespace Chromatics.Layers
                         color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherEverlastingLightBase.Color);
                     }
                     break;
+                case "Astromagnetic Storms":
+                    if (reactiveWeatherEffects && effectSettings.weather_astromagneticstorm_animation)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormBase.Color);
 
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight3.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol),
+                            new GradientStop((float)0.20, animationCol1),
+                            new GradientStop((float)0.35, animationCol2),
+                            new GradientStop((float)0.50, animationCol3),
+                            new GradientStop((float)0.65, animationCol1),
+                            new GradientStop((float)0.80, animationCol2),
+                            new GradientStop((float)0.95, animationCol3));
+
+                        var gradientMove = new MoveGradientDecorator(surface, 120, true);
+
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
+                        return true;
+
+                    }
+                    else
+                    {
+                        color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormBase.Color);
+                    }
+                    break;
             }
 
             //Apply Standard Lookup Weather
