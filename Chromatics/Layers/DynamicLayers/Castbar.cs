@@ -35,8 +35,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(CastbarProcessor));
+            if (_disposed) return;
 
             CastbarDynamicModel model;
 

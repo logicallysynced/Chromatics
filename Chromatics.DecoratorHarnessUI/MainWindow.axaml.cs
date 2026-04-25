@@ -33,11 +33,18 @@ public partial class MainWindow : Window
         if (sender is not Border { Tag: string tag }) return;
         e.Handled = true;
 
-        if (tag != "Base") return;
-
-        var dialog = new ColorPickerDialog(_vm.ColorBase, tag);
-        var result = await dialog.ShowDialog<Color?>(this);
-        if (result is { } chosen) _vm.ColorBase = chosen;
+        if (tag == "Base")
+        {
+            var dialog = new ColorPickerDialog(_vm.ColorBase, tag);
+            var result = await dialog.ShowDialog<Color?>(this);
+            if (result is { } chosen) _vm.ColorBase = chosen;
+        }
+        else if (tag == "AsdwHighlight")
+        {
+            var dialog = new ColorPickerDialog(_vm.AsdwHighlightColor, "ASDW Highlight");
+            var result = await dialog.ShowDialog<Color?>(this);
+            if (result is { } chosen) _vm.AsdwHighlightColor = chosen;
+        }
     }
 
     private async void OnColorSlotTapped(object? sender, TappedEventArgs e)

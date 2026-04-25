@@ -57,6 +57,56 @@ namespace Chromatics.Core
         // (UI thread) can race on StopGameLoop and hit ObjectDisposedException.
         private static readonly System.Threading.Lock _shutdownLock = new();
         public static System.Action OnGameExited { get; set; }
+
+        // State predicate exposed so the Effects-tab Title Screen toggle
+        // can decide whether re-enabling should immediately re-fire the
+        // starfield (only meaningful when the user is currently on title).
+        // For the game-connected check, use the existing IsGameConnected()
+        // method below.
+        public static bool IsOnTitle => _onTitle && !_isInGame;
+
+        // (Re)build the title-screen starfield. Idempotent — first clears
+        // any prior "title" tagged groups so re-calling stacks no
+        // duplicates. Used by both the inline title-state transition (in
+        // GameLoop) and the Effects-tab Title Screen toggle when the user
+        // re-enables it while the game is still on title.
+        public static void BuildTitleScreenAnimation()
+        {
+            if (!RGBController.GetEffectsSettings().effect_titlescreen) return;
+
+            RGBController.StopTaggedEffects("title");
+
+            var surface = RGBController.GetLiveSurfaces();
+            if (surface == null) return;
+
+            var devices = surface.GetDevices(RGBDeviceType.All);
+            var palette = RGBController.GetActivePalette();
+            var baseColor = ColorHelper.ColorToRGBColor(palette.MenuBase.Color);
+            var highlightColors = new Color[] {
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight1.Color),
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight2.Color),
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight3.Color)
+            };
+
+            foreach (var device in devices)
+            {
+                var ledgroup = new ListLedGroup(surface, device);
+
+                var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
+                ledgroup.ZIndex = 1000;
+
+                foreach (var led in device)
+                {
+                    ledgroup.AddLed(led);
+                }
+
+                ledgroup.Brush = new SolidColorBrush(baseColor);
+                ledgroup.AddDecorator(starfield);
+
+                RGBController.RegisterTaggedEffect("title", ledgroup);
+            }
+        }
+
         public static void Setup()
         {
             if (gameSetup) return;
@@ -452,39 +502,7 @@ namespace Chromatics.Core
                             RGBController.StopEffects();
                             RGBController.ResetLayerGroups();
 
-                            if (RGBController.GetEffectsSettings().effect_titlescreen)
-                            {
-                                var surface = RGBController.GetLiveSurfaces();
-                                var devices = surface.GetDevices(RGBDeviceType.All);
-                                var _colorPalette = RGBController.GetActivePalette();
-                                var baseColor = ColorHelper.ColorToRGBColor(_colorPalette.MenuBase.Color);
-                                var highlightColors = new Color[] {
-                                    ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight1.Color),
-                                    ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight2.Color),
-                                    ColorHelper.ColorToRGBColor(_colorPalette.MenuHighlight3.Color)
-                                };
-
-                                foreach (var device in devices)
-                                {
-                                    var ledgroup = new ListLedGroup(surface, device);
-
-                                    var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
-                                    ledgroup.ZIndex = 1000;
-
-                                    foreach (var led in device)
-                                    {
-                                        ledgroup.AddLed(led);
-                                    }
-
-                                    ledgroup.Brush = new SolidColorBrush(baseColor);
-                                    ledgroup.AddDecorator(starfield);
-
-                                    runningEffects.Add(ledgroup);
-
-                                }
-
-
-                            }
+                            BuildTitleScreenAnimation();
 
                             Debug.WriteLine(@"User on title or character screen");
 

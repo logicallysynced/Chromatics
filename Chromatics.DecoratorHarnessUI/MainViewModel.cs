@@ -38,6 +38,20 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private ListLedGroup? _activeGroup;
     private Action? _detachAction;
 
+    // Optional always-on highlight that paints a static colour on the WASD
+    // keys, useful for spotting where the gameplay-movement keys land
+    // while iterating an effect's visual. Not part of the code-snippet
+    // output (harness-only diagnostic chrome).
+    //
+    // Implemented via a Surface.Updating subscription rather than a
+    // ListLedGroup at higher ZIndex because many decorators
+    // (StarfieldDecorator, BPMRipple, BPM* family) write LEDs directly via
+    // their own surface.Updating handlers and ignore brush/group renders.
+    // Subscribing late (after Start runs and decorators have subscribed)
+    // makes our handler the LAST event subscriber, so our writes overwrite
+    // the decorator's writes and the highlight always wins.
+    private bool _wasdHookSubscribed;
+
     public MainViewModel()
     {
         ColorSlots.CollectionChanged += OnColorSlotsChanged;
@@ -92,6 +106,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
             StartSurfaceTick();
             ProviderLoaded = true;
             ProviderStatus = $"{Devices.Count} device(s) loaded";
+            // Now that the surface has devices, evaluate the WASD highlight
+            // hook so the toggle works even before the user starts an effect.
+            RefreshWasdOverlay();
         }
         catch (Exception ex)
         {
@@ -259,6 +276,23 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     [ObservableProperty] private AvColor _colorBase = AvColors.Black;
 
+    // ── ASDW highlight overlay ───────────────────────────────────────────
+    // Always-available diagnostic toggle in the harness (not wired into
+    // the code-snippet generator). Paints a static colour on Keyboard A,
+    // S, D, W keys at a higher ZIndex than the running effect, so the
+    // user can see where the WASD movement keys land relative to the
+    // effect they're iterating.
+    [ObservableProperty] private bool _paramAsdwHighlight;
+    [ObservableProperty] private AvColor _asdwHighlightColor = AvColors.Yellow;
+    public Avalonia.Media.SolidColorBrush AsdwHighlightColorBrush => new(AsdwHighlightColor);
+
+    partial void OnParamAsdwHighlightChanged(bool value) => RefreshWasdOverlay();
+    partial void OnAsdwHighlightColorChanged(AvColor value)
+    {
+        OnPropertyChanged(nameof(AsdwHighlightColorBrush));
+        RefreshWasdOverlay();
+    }
+
     public ObservableCollection<ColorSlot> ColorSlots { get; } = [];
 
     public bool CanAddColor => ColorSlots.Count < MaxColorSlots;
@@ -379,7 +413,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     // ── Live update ──────────────────────────────────────────────────────
 
-    [ObservableProperty] private bool _liveUpdate;
+    [ObservableProperty] private bool _liveUpdate = true;
 
     private void LiveRestart()
     {
@@ -866,6 +900,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
             _detachAction = BuildEffect(SelectedEffect, _activeGroup);
             IsRunning = true;
             RunningStatus = $"Running: {SelectedEffect.Name}";
+            // Layer the WASD overlay on top of the just-built effect.
+            RefreshWasdOverlay();
         }
         catch (Exception ex)
         {
@@ -886,6 +922,78 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _activeGroup = null;
         IsRunning = false;
         RunningStatus = "Stopped";
+        // The WASD overlay survives Stop() — it's a diagnostic chrome,
+        // not part of the effect. Re-painted on Start() via Start →
+        // RefreshWasdOverlay below (after _activeGroup is set up so
+        // the higher-ZIndex overlay is layered above the new effect).
+        RefreshWasdOverlay();
+    }
+
+    // Re-evaluate the WASD highlight subscription. Called whenever the
+    // toggle changes, the colour changes, the provider state changes, or
+    // an effect Start/Restart happens (so we always re-subscribe LAST and
+    // beat any decorator that just subscribed inside BuildEffect).
+    private void RefreshWasdOverlay()
+    {
+        bool wasSubscribed = _wasdHookSubscribed;
+        if (_wasdHookSubscribed)
+        {
+            try { _surface.Updating -= OnSurfaceUpdating_WriteWasd; } catch { }
+            _wasdHookSubscribed = false;
+        }
+
+        if (!ParamAsdwHighlight || !ProviderLoaded)
+        {
+            // Toggle just went OFF (or provider unloaded). When no effect
+            // is running, nothing else writes to the W/A/S/D LEDs after
+            // we unsubscribe — they'd latch at the last highlight colour
+            // until some future effect overwrites them. Explicitly clear
+            // them to black and push one render so the toggle visibly
+            // turns the highlight off on hardware in the no-effect case.
+            // (When an effect IS running its decorators will overwrite
+            // the LEDs on the next tick, which is also fine.)
+            if (wasSubscribed && ProviderLoaded)
+            {
+                var black = new Color((byte)0, (byte)0, (byte)0);
+                foreach (var dev in _surface.Devices)
+                {
+                    if (dev.DeviceInfo.DeviceType != RGBDeviceType.Keyboard) continue;
+                    foreach (var led in dev)
+                    {
+                        if (Array.IndexOf(WasdLedIds, led.Id) >= 0)
+                            led.Color = black;
+                    }
+                }
+                try { _surface.Update(); } catch { }
+            }
+            return;
+        }
+
+        _surface.Updating += OnSurfaceUpdating_WriteWasd;
+        _wasdHookSubscribed = true;
+    }
+
+    // Read AsdwHighlightColor + selected keyboards EACH tick so a colour
+    // picker change updates immediately without re-subscribing.
+    private static readonly LedId[] WasdLedIds =
+    [
+        LedId.Keyboard_W, LedId.Keyboard_A, LedId.Keyboard_S, LedId.Keyboard_D,
+    ];
+
+    private void OnSurfaceUpdating_WriteWasd(UpdatingEventArgs args)
+    {
+        if (!ParamAsdwHighlight) return;
+
+        var col = ToRgb(AsdwHighlightColor);
+        foreach (var dev in _surface.Devices)
+        {
+            if (dev.DeviceInfo.DeviceType != RGBDeviceType.Keyboard) continue;
+            foreach (var led in dev)
+            {
+                if (Array.IndexOf(WasdLedIds, led.Id) >= 0)
+                    led.Color = col;
+            }
+        }
     }
 
     [RelayCommand]

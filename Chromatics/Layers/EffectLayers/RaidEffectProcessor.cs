@@ -9,6 +9,7 @@ using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -69,7 +70,22 @@ namespace Chromatics.Layers
             public const string ZoneName = "Arcadia";
             public const uint Phase1BgmId = 20241;
             public const uint Phase2BgmId = 20242;
+
+            // Time from phase1Start to the scripted full-device red flash.
+            // Three values because the music timeline differs depending
+            // on the gate's clear path:
+            //   - Phase1FlashAtSec: clean entry — no cutscene observed,
+            //     gate cleared via the standard GateDelaySec settle.
+            //   - Phase1FlashAtSecCutsceneEventScene: scene 0 (Event)
+            //     started playing the raid music inside the cutscene.
+            //   - Phase1FlashAtSecCutsceneEnd: CUTSCENE_END_BYPASS path,
+            //     where the cutscene ended and the duty track cross-fades
+            //     in afterwards.
+            // Tune each independently if the music timeline shifts
+            // between paths.
             public const double Phase1FlashAtSec = 10.8;
+            public const double Phase1FlashAtSecCutsceneEventScene = 10.8;
+            public const double Phase1FlashAtSecCutsceneEnd = 9.5;
             public const double FlashDurationSec = 0.4;
 
             // phase1Start is genuinely global — the in-game timer is one
@@ -85,12 +101,221 @@ namespace Chromatics.Layers
             public static readonly Dictionary<int, DateTime> flashEndByLayer = [];
             public static readonly HashSet<int> layersPostFlashApplied = [];
 
+            // The flash time selected at gate-clear based on the bypass
+            // path. Set once when phase1Start is captured and read by
+            // the per-tick choreography to fire the flash.
+            public static double activePhase1FlashAtSec = Phase1FlashAtSec;
+
             public static void Reset()
             {
                 phase1Start = DateTime.MinValue;
                 layersFlashed.Clear();
                 flashEndByLayer.Clear();
                 layersPostFlashApplied.Clear();
+                activePhase1FlashAtSec = Phase1FlashAtSec;
+            }
+        }
+
+        // BGM-trigger gate. FFXIV's BGM id transitions to the raid track
+        // id at the moment the player enters the instance. Capture the
+        // first tick we see the expected BGM and apply a generic settle
+        // delay (GateDelaySec) before allowing the downstream effect to
+        // build. Re-detection on the same (zone, bgm) is a no-op until
+        // reset via Reset() (called when the player leaves the instance).
+        private static class BgmTriggerGate
+        {
+            // Generic settle delay (seconds) applied between the FIRST
+            // tick we see the target BGM and the moment IsReady returns
+            // true. Used when no cutscene was ever observed for this
+            // (zone, bgm).
+            public const double GateDelaySec = 1.25;
+
+            // Settle delay applied specifically after CUTSCENE_END_BYPASS
+            // — the moment WatchingCutscene flips false on a key that was
+            // latched. Independent from GateDelaySec because the audio
+            // transition shape post-cutscene differs from a clean entry
+            // (the game cross-fades from cutscene audio into the duty
+            // track), so this can be tuned separately.
+            // CUTSCENE_EVENT_SCENE_BYPASS still fires immediately — the
+            // raid music is already audible inside the cutscene, no
+            // settle needed.
+            public const double CutsceneEndBypassDelaySec = 0.0;
+
+            // Keyed by "{zone}:{bgmId}" so each phase transition within
+            // a multi-phase fight (Arcadia P1 vs P2) gets its own capture.
+            private static readonly Dictionary<string, DateTime> _startBy = new();
+
+            // Tracks which keys have already been logged as "cleared" so
+            // multi-device runs (one ApplyRaidEffect call per BaseLayer
+            // overlay) don't spam N "cleared" lines per gate clearance.
+            private static readonly HashSet<string> _clearedLogged = new();
+
+            // WatchingCutscene goes true even on clean entry (loading-screen
+            // blip during zone-in), so we can't latch the moment we see it.
+            // Instead: when WC first goes true for a key, record the start
+            // time. Only treat it as a real cutscene once it's stayed true
+            // for >= CutsceneObservationThresholdSec. Below threshold a brief
+            // flip-true→false is treated as a clean entry.
+            public const double CutsceneObservationThresholdSec = 4.0;
+
+            // Per-key state. _cutsceneStart is the moment WC first went
+            // true (cleared when WC goes false WITHOUT having latched, so a
+            // future cutscene can re-arm the timer). _cutsceneObserved is
+            // the latched "this is a real cutscene" flag — set only after
+            // crossing the threshold, never cleared except by Reset().
+            // _cutsceneBypassLogged is a one-shot per-key guard for the
+            // CUTSCENE_*_BYPASS log lines.
+            private static readonly Dictionary<string, DateTime> _cutsceneStart = new();
+            private static readonly HashSet<string> _cutsceneObserved = new();
+            private static readonly HashSet<string> _cutsceneBypassLogged = new();
+
+            // Variant of IsReady that also gates on cutscene state. The
+            // latch behaviour is threshold-based to avoid misclassifying
+            // the brief WatchingCutscene blips that occur during loading
+            // screens on a clean entry:
+            //
+            //   - WC stays false: clean entry → IsReady (GateDelaySec).
+            //   - WC goes true & timer < CutsceneObservationThresholdSec:
+            //     hold black, decision deferred — could still be a brief
+            //     loading-screen blip.
+            //   - WC stays true past the threshold: latch as a real
+            //     cutscene. Now scene-0 bypass is checked (raid music
+            //     playing inside the cutscene → CUTSCENE_EVENT_SCENE_BYPASS,
+            //     fire immediately).
+            //   - WC went true → false BEFORE threshold: that was a blip.
+            //     Clear the timer, treat as clean entry → IsReady.
+            //   - WC went true → false AFTER latching: cutscene was
+            //     skipped or completed → CUTSCENE_END_BYPASS (uses
+            //     CutsceneEndBypassDelaySec).
+            //
+            // cutsceneViewerTestMode short-circuits the threshold (testers
+            // iterating inside the Cutscene Viewer want the cutscene
+            // confirmed immediately).
+            public static bool IsReadyWithCutsceneBypass(string zone, uint bgmId, bool watchingCutscene, ushort eventScenePlayingBgmId, bool cutsceneViewerTestMode)
+            {
+                var key = zone + ":" + bgmId;
+
+                if (watchingCutscene)
+                {
+                    // Suspend any in-flight GateDelaySec capture while WC
+                    // is true. Clean-entry timing must not run in parallel
+                    // with cutscene observation. If this turns out to be a
+                    // sub-threshold blip, GateDelaySec gets re-captured
+                    // fresh from the moment WC flips false (via IsReady's
+                    // lazy capture on the WC=false path below). If the
+                    // cutscene is confirmed, END_BYPASS captures
+                    // CutsceneEndBypassDelaySec instead.
+                    if (_startBy.Remove(key))
+                    {
+                        _clearedLogged.Remove(key);
+                        Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CAPTURE_SUSPENDED key={key} — WC went true, dropping in-flight GateDelaySec capture");
+                    }
+
+
+                    if (!_cutsceneStart.TryGetValue(key, out var cutsceneStart))
+                    {
+                        cutsceneStart = DateTime.UtcNow;
+                        _cutsceneStart[key] = cutsceneStart;
+                        Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CUTSCENE_OBSERVING key={key} — WC went true, holding under {CutsceneObservationThresholdSec:F1}s threshold");
+                    }
+
+                    var observedFor = (DateTime.UtcNow - cutsceneStart).TotalSeconds;
+                    bool aboveThreshold = cutsceneViewerTestMode || observedFor >= CutsceneObservationThresholdSec;
+
+                    if (aboveThreshold && _cutsceneObserved.Add(key))
+                    {
+                        Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CUTSCENE_CONFIRMED key={key} — WC stayed true for {observedFor:F2}s, treating as real cutscene");
+                    }
+
+                    if (_cutsceneObserved.Contains(key))
+                    {
+                        if (eventScenePlayingBgmId == bgmId)
+                        {
+                            if (_cutsceneBypassLogged.Add(key))
+                                Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CUTSCENE_EVENT_SCENE_BYPASS key={key} — Event scene now playing target BGM mid-cutscene, firing immediately");
+                            return true;
+                        }
+                        Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CUTSCENE_HOLD key={key} — confirmed cutscene, waiting for cutscene end or Event scene to play target BGM (scene0 bgm={eventScenePlayingBgmId})");
+                        return false;
+                    }
+
+                    Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CUTSCENE_OBSERVING key={key} — observedFor={observedFor:F2}s, holding under threshold");
+                    return false;
+                }
+
+                // WC is false now.
+                if (_cutsceneObserved.Contains(key))
+                {
+                    // Confirmed cutscene that ended → END_BYPASS path.
+                    // Overwrite the GateDelaySec capture with the
+                    // cutscene-specific delay.
+                    if (_cutsceneBypassLogged.Add(key))
+                    {
+                        var startTime = DateTime.UtcNow.AddSeconds(CutsceneEndBypassDelaySec);
+                        _startBy[key] = startTime;
+                        Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CUTSCENE_END_BYPASS key={key} — cutscene ended, applying {CutsceneEndBypassDelaySec:F3}s settle delay startsAt={startTime:HH:mm:ss.fff}");
+                    }
+                    return IsReady(zone, bgmId);
+                }
+
+                // WC was either never true, or was true but ended under
+                // threshold (a loading-screen blip). Either way → clean
+                // entry. GateDelaySec was NOT running during any WC=true
+                // window (suspended at the top of this method), so
+                // IsReady's lazy capture starts the timer fresh from the
+                // moment of this WC=false call. Clear the under-threshold
+                // start so a later real cutscene on the same key can re-
+                // arm the timer.
+                if (_cutsceneStart.Remove(key, out var blipStart))
+                {
+                    var blipDuration = (DateTime.UtcNow - blipStart).TotalSeconds;
+                    Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CUTSCENE_BLIP_DISMISSED key={key} — WC was true for {blipDuration:F2}s (< threshold), treating as clean entry");
+                }
+
+                return IsReady(zone, bgmId);
+            }
+
+            public static bool IsReady(string zone, uint bgmId)
+            {
+                var key = zone + ":" + bgmId;
+                if (!_startBy.TryGetValue(key, out var startTime))
+                {
+                    startTime = DateTime.UtcNow.AddSeconds(GateDelaySec);
+                    _startBy[key] = startTime;
+                    Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CAPTURE key={key} delay={GateDelaySec:F3}s startsAt={startTime:HH:mm:ss.fff}");
+                }
+                bool ready = DateTime.UtcNow >= startTime;
+                if (!ready)
+                {
+                    var remaining = (startTime - DateTime.UtcNow).TotalMilliseconds;
+                    Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] HOLD key={key} remaining={remaining:F0}ms");
+                }
+                else if (_clearedLogged.Add(key))
+                {
+                    Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] CLEARED key={key} — gate is open, downstream effect builds will proceed");
+                }
+                return ready;
+            }
+
+            // True if this (zone, bgm) was latched as having a cutscene
+            // observed during its wait — i.e. the gate cleared (or will
+            // clear) via a CUTSCENE_* path rather than a clean entry.
+            // Callers use this at the gate-clear site to pick between
+            // clean-entry and post-cutscene timeline values.
+            public static bool WasCutsceneObserved(string zone, uint bgmId)
+            {
+                return _cutsceneObserved.Contains(zone + ":" + bgmId);
+            }
+
+            public static void Reset()
+            {
+                if (_startBy.Count > 0)
+                    Debug.WriteLine($"[BgmTriggerGate] [{DateTime.UtcNow:HH:mm:ss.fff}] RESET — clearing {_startBy.Count} captured trigger(s)");
+                _startBy.Clear();
+                _clearedLogged.Clear();
+                _cutsceneStart.Clear();
+                _cutsceneObserved.Clear();
+                _cutsceneBypassLogged.Clear();
             }
         }
 
@@ -135,6 +360,17 @@ namespace Chromatics.Layers
             var gameState = handler.Reader.GetGameState();
             bool inInstance = gameState.InInstance;
             uint currentBgmId = gameState.CurrentBgmId;
+            // Raw cutscene flag (before the CutsceneViewerTestMode override
+            // to inInstance below). Threaded into ApplyRaidEffect so the
+            // Arcadia case can hold black while the player is mid-cutscene
+            // even after the BGM id has flipped to Phase1BgmId.
+            bool watchingCutscene = gameState.WatchingCutscene;
+            // Scene 0 (Event) PlayingBgmId — used by IsReadyWithCutsceneBypass
+            // to detect "cutscene is audibly playing the raid music" mid-
+            // cutscene (user didn't skip). 0 if BgmScenes hasn't resolved.
+            ushort eventScenePlayingBgmId = (gameState.BgmScenes != null && gameState.BgmScenes.Count > 0)
+                ? gameState.BgmScenes[0].PlayingBgmId
+                : (ushort)0;
 
             // Cutscene-viewer test mode (off by default for production).
             // When true, watching a cutscene in Private Mansion - Mist is
@@ -160,6 +396,9 @@ namespace Chromatics.Layers
             if (RaidEffectState.dutyComplete || string.IsNullOrEmpty(zone) || zone == "???")
             {
                 DetachOverlay(layer.layerID);
+                // Duty finished or zone unresolved — wipe per-encounter
+                // choreography state so the next instance starts clean.
+                ArcadiaState.Reset();
                 return;
             }
 
@@ -242,12 +481,19 @@ namespace Chromatics.Layers
             if (!inInstance)
             {
                 DetachOverlay(layer.layerID);
+                // Player left the instance — clear cached BGM-trigger
+                // captures so the next instance's first tick re-captures
+                // scene/resume cleanly. Also wipe per-encounter
+                // choreography state so the next encounter starts at t=0
+                // rather than resuming with a stale phase1Start.
+                BgmTriggerGate.Reset();
+                ArcadiaState.Reset();
                 return;
             }
 
             var runningEffects = RGBController.GetRunningEffects();
 
-            bool applied = ApplyRaidEffect(overlay, zone, palette, currentBgmId, runningEffects, layer);
+            bool applied = ApplyRaidEffect(overlay, zone, palette, currentBgmId, watchingCutscene, eventScenePlayingBgmId, runningEffects, layer);
             if (applied)
             {
                 SuppressBaseLayerGroups(layer.layerID);
@@ -410,7 +656,7 @@ namespace Chromatics.Layers
         // was applied (and the overlay should be attached), false otherwise.
         // Cases moved verbatim from ReactiveWeatherProcessor.SetReactiveWeather
         // so existing in-game behaviour is preserved.
-        private bool ApplyRaidEffect(ListLedGroup layer, string zone, PaletteColorModel _colorPalette, uint currentBgmId, List<ListLedGroup> runningEffects, IMappingLayer masterlayer)
+        private bool ApplyRaidEffect(ListLedGroup layer, string zone, PaletteColorModel _colorPalette, uint currentBgmId, bool watchingCutscene, ushort eventScenePlayingBgmId, List<ListLedGroup> runningEffects, IMappingLayer masterlayer)
         {
             // Each base layer has its own per-device overlay (`layer`), so
             // every case-body's "should I build?" check is per-overlay
@@ -608,6 +854,19 @@ namespace Chromatics.Layers
                 case "Hunting Ground":
                     if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
+                        // BGM-trigger scene gate — first tick of this
+                        // (zone, bgm) captures scene + fade-in, computes
+                        // start time. Hold black until ready. Don't set
+                        // raidEffectsRunning so freshStart re-checks
+                        // each tick.
+                        if (!BgmTriggerGate.IsReady(zone, currentBgmId))
+                        {
+                            layer.RemoveAllDecorators();
+                            layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)0, (byte)0, (byte)0));
+                            layer.ZIndex = masterlayer.zindex;
+                            return true;
+                        }
+
                         switch (currentBgmId)
                         {
                             case 20150:
@@ -640,12 +899,20 @@ namespace Chromatics.Layers
                 
                 //USED FOR TESTING
                 /*
-                case "Akh Afah Amphitheatre":
+                case "The Interdimensional Rift":
                     if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
                     {
+                        if (!BgmTriggerGate.IsReadyWithCutsceneBypass(zone, currentBgmId, watchingCutscene, eventScenePlayingBgmId, CutsceneViewerTestMode))
+                        {
+                            layer.RemoveAllDecorators();
+                            layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)0, (byte)0, (byte)0));
+                            layer.ZIndex = masterlayer.zindex;
+                            return true;
+                        }
+
                         switch (currentBgmId)
                         {
-                            default: //20149
+                            case 587: //20149 //587
                             {
                                 var baseCol = new Color(0, 0, 0);
                                 var animationCol = new Color[] { new Color(255, 255, 255) };
@@ -665,6 +932,7 @@ namespace Chromatics.Layers
                 */
                 //M12/M12S
                 case ArcadiaState.ZoneName:
+                //case "Private Mansion - Mist":
                 {
                     // Custom multi-stage choreography. Phase 1 (BGM 20241):
                     // Effect 1 plays for 11.5s, then a 0.5s full-device red
@@ -691,16 +959,134 @@ namespace Chromatics.Layers
 
                     if (freshStart)
                     {
-                        ArcadiaState.Reset();
                         // Reset overlay ZIndex in case the previous tick left
                         // it at FlashPriorityZIndex (e.g. zone-out mid-flash).
                         layer.ZIndex = RaidOverlayZIndex;
+
 
                         switch (currentBgmId)
                         {
                             case ArcadiaState.Phase1BgmId:
                             {
+                                // Cutscene-aware start gate. While
+                                // WatchingCutscene is true we hold black
+                                // and BgmTriggerGate latches the key. Once
+                                // WatchingCutscene flips false the latch
+                                // bypasses the timing delay entirely
+                                // (cutscene end IS the music-start moment).
+                                // If no cutscene was ever observed, falls
+                                // back to standard scene/fade-in gating.
+                                // CutsceneViewerTestMode skips the cutscene
+                                // path so the choreography fires from the
+                                // Cutscene Viewer for iteration. phase1Start
+                                // captures at the moment the gate opens, so
+                                // the 11.5s flash timer anchors correctly
+                                // under either path.
+                                if (!BgmTriggerGate.IsReadyWithCutsceneBypass(zone, currentBgmId, watchingCutscene, eventScenePlayingBgmId, CutsceneViewerTestMode))
+                                {
+                                    layer.RemoveAllDecorators();
+                                    layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)0, (byte)0, (byte)0));
+                                    layer.ZIndex = masterlayer.zindex;
+                                    return true;
+                                }
+
+                                if (ArcadiaState.phase1Start != DateTime.MinValue)
+                                {
+                                    // RESUME path: phase1Start was captured
+                                    // by a prior run that got disabled mid-
+                                    // encounter. Rebuild based on elapsed
+                                    // time so the choreography picks up
+                                    // where it left off instead of
+                                    // restarting the opening timer.
+                                    // ArcadiaState (phase1Start,
+                                    // activePhase1FlashAtSec, per-layer
+                                    // sets) was preserved through the
+                                    // disable, so don't Reset() here.
+                                    var elapsed = (DateTime.UtcNow - ArcadiaState.phase1Start).TotalSeconds;
+                                    var flashAt = ArcadiaState.activePhase1FlashAtSec;
+                                    int lid = masterlayer.layerID;
+
+                                    if (elapsed < flashAt)
+                                    {
+                                        Debug.WriteLine($"[Arcadia] [{DateTime.UtcNow:HH:mm:ss.fff}] RESUME_PRE_FLASH lid={lid} elapsed={elapsed:F2}s flashAt={flashAt:F2}s — rebuilding Effect 1");
+                                        // Pre-flash: rebuild Effect 1.
+                                        // Per-tick branch will fire the
+                                        // flash on schedule against the
+                                        // preserved phase1Start.
+                                        var rBaseCol = new Color(0, 0, 0);
+                                        var rAnimCol = new Color[] { new Color(255, 255, 255) };
+                                        var rStarfield = new BPMStarfieldDecorator(layer, 6, 360, 2000, rAnimCol, surface, 1, false, rBaseCol);
+                                        layer.Brush = new SolidColorBrush(rBaseCol);
+                                        SetEffect(rStarfield, layer, runningEffects);
+                                    }
+                                    else if (elapsed < flashAt + ArcadiaState.FlashDurationSec)
+                                    {
+                                        Debug.WriteLine($"[Arcadia] [{DateTime.UtcNow:HH:mm:ss.fff}] RESUME_IN_FLASH lid={lid} elapsed={elapsed:F2}s flashWindow=[{flashAt:F2}s, {flashAt + ArcadiaState.FlashDurationSec:F2}s] — re-painting red");
+                                        // Inside the flash window: re-
+                                        // paint red and mark per-layer
+                                        // state. flashEndByLayer is set
+                                        // relative to the original
+                                        // phase1Start so the natural
+                                        // window expiry still occurs at
+                                        // the right wall-clock moment;
+                                        // the per-tick flash-hold branch
+                                        // takes over from there.
+                                        layer.RemoveAllDecorators();
+                                        layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)255, (byte)0, (byte)0));
+                                        layer.ZIndex = FlashPriorityZIndex;
+                                        layer.Attach(surface);
+                                        ArcadiaState.flashEndByLayer[lid] = ArcadiaState.phase1Start.AddSeconds(flashAt + ArcadiaState.FlashDurationSec);
+                                        ArcadiaState.layersFlashed.Add(lid);
+                                    }
+                                    else
+                                    {
+                                        Debug.WriteLine($"[Arcadia] [{DateTime.UtcNow:HH:mm:ss.fff}] RESUME_POST_FLASH lid={lid} elapsed={elapsed:F2}s flashAt={flashAt:F2}s — skipping flash visual, building Effect 2");
+                                        // Past flash window: rebuild
+                                        // Effect 2 directly. Skip the
+                                        // flash visual — replaying it
+                                        // would be jarring on resume.
+                                        var rBaseCol = new Color(1, 40, 5);
+                                        var rColors = new Color[] { new Color(255, 220, 180), new Color(0, 255, 43) };
+                                        var rStrike = new BPMThunderstrikeEffect(layer, 360, 4, 0.6, rColors, surface, rBaseCol);
+                                        layer.Brush = new SolidColorBrush(rBaseCol);
+                                        SetEffect(rStrike, layer, runningEffects);
+                                        ArcadiaState.layersFlashed.Add(lid);
+                                        ArcadiaState.layersPostFlashApplied.Add(lid);
+                                    }
+                                    break;
+                                }
+
+                                // FRESH ENTRY: never seen this encounter
+                                // before in this app session, OR a prior
+                                // encounter was cleaned up by zone-out /
+                                // duty-complete. Initialise from t=0.
+                                ArcadiaState.Reset();
                                 ArcadiaState.phase1Start = DateTime.UtcNow;
+                                // Pick the flash anchor based on which
+                                // gate path cleared. The three paths
+                                // differ in how the music timeline lines
+                                // up with phase1Start, so each has its
+                                // own constant.
+                                bool wasCutsceneObserved = BgmTriggerGate.WasCutsceneObserved(zone, currentBgmId);
+                                string flashAnchorPath;
+                                if (!wasCutsceneObserved)
+                                {
+                                    ArcadiaState.activePhase1FlashAtSec = ArcadiaState.Phase1FlashAtSec;
+                                    flashAnchorPath = "CLEAN_ENTRY";
+                                }
+                                else if (watchingCutscene)
+                                {
+                                    // Latched AND still watching → cleared via CUTSCENE_EVENT_SCENE_BYPASS.
+                                    ArcadiaState.activePhase1FlashAtSec = ArcadiaState.Phase1FlashAtSecCutsceneEventScene;
+                                    flashAnchorPath = "CUTSCENE_EVENT_SCENE";
+                                }
+                                else
+                                {
+                                    // Latched AND cutscene flipped off → cleared via CUTSCENE_END_BYPASS.
+                                    ArcadiaState.activePhase1FlashAtSec = ArcadiaState.Phase1FlashAtSecCutsceneEnd;
+                                    flashAnchorPath = "CUTSCENE_END";
+                                }
+                                Debug.WriteLine($"[Arcadia] [{DateTime.UtcNow:HH:mm:ss.fff}] FRESH_ENTRY_PHASE1 path={flashAnchorPath} flashAt={ArcadiaState.activePhase1FlashAtSec:F2}s phase1Start={ArcadiaState.phase1Start:HH:mm:ss.fff} — building Effect 1");
 
                                 // Phase 1 Effect 1 - Intro
 
@@ -714,6 +1100,13 @@ namespace Chromatics.Layers
                             }
                             case ArcadiaState.Phase2BgmId:
                             {
+                                Debug.WriteLine($"[Arcadia] [{DateTime.UtcNow:HH:mm:ss.fff}] PHASE2_ENTRY lid={masterlayer.layerID} — clearing Phase 1 state, building Phase 2 effect");
+                                // Entering Phase 2 invalidates Phase 1
+                                // choreography state — clear it so a
+                                // future return to Phase 1 (shouldn't
+                                // happen but defensive) starts fresh.
+                                ArcadiaState.Reset();
+
                                 // Phase 2 effect.
                                 var baseCol = new Color(0, 0, 0);
                                 var colors = new Color[] { new Color(255, 0, 4), new Color(93, 0, 255), new Color(255, 117, 0), new Color(249, 255, 0) };
@@ -722,7 +1115,7 @@ namespace Chromatics.Layers
                                 layer.Brush = new SolidColorBrush(baseCol);
                                 SetEffect(pulse, layer, runningEffects);
 
-                                
+
                                 break;
                             }
                             default:
@@ -771,8 +1164,9 @@ namespace Chromatics.Layers
                         bool thisLayerFlashed = ArcadiaState.layersFlashed.Contains(lid);
                         bool thisLayerPostFlash = ArcadiaState.layersPostFlashApplied.Contains(lid);
 
-                        if (!thisLayerFlashed && elapsed >= ArcadiaState.Phase1FlashAtSec)
+                        if (!thisLayerFlashed && elapsed >= ArcadiaState.activePhase1FlashAtSec)
                         {
+                            Debug.WriteLine($"[Arcadia] [{DateTime.UtcNow:HH:mm:ss.fff}] FLASH_TRIGGER lid={lid} elapsed={elapsed:F2}s flashAt={ArcadiaState.activePhase1FlashAtSec:F2}s — Effect 1 → red flash");
                             // Stop Effect 1 on THIS overlay and start its
                             // red flash. Bumped above DamageFlash so the
                             // red visibly covers every dynamic / highlight
@@ -795,10 +1189,24 @@ namespace Chromatics.Layers
                             {
                                 // Hold the red brush on THIS overlay for
                                 // the rest of its flash window. Already
-                                // attached above on this layer's flash tick.
+                                // attached above on this layer's flash tick,
+                                // EXCEPT when we resumed mid-flash via
+                                // disable/enable: midChoreography blocks
+                                // freshStart so the resume branch above
+                                // never ran, and the overlay is detached.
+                                // Re-paint and re-attach in that case.
+                                if (layer.Surface == null)
+                                {
+                                    Debug.WriteLine($"[Arcadia] [{DateTime.UtcNow:HH:mm:ss.fff}] FLASH_REATTACH lid={lid} — overlay was detached mid-flash, re-painting red");
+                                    layer.RemoveAllDecorators();
+                                    layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)255, (byte)0, (byte)0));
+                                    layer.ZIndex = FlashPriorityZIndex;
+                                    layer.Attach(surface);
+                                }
                                 return true;
                             }
 
+                            Debug.WriteLine($"[Arcadia] [{DateTime.UtcNow:HH:mm:ss.fff}] FLASH_END lid={lid} elapsed={elapsed:F2}s — red flash → Effect 2");
                             // Flash done for this layer — drop ZIndex back
                             // and build Effect 2 on this overlay.
                             layer.ZIndex = RaidOverlayZIndex;

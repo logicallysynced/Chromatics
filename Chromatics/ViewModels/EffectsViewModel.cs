@@ -41,7 +41,24 @@ namespace Chromatics.ViewModels
                 "Displays rainbow animation on all devices when Chromatics starts but not connected to FFXIV.",
                 "avares://Chromatics/Resources/keyboard.png",
                 e.effect_startupanimation,
-                v => { e.effect_startupanimation = v; RGBController.SaveEffectsSettings(); }));
+                v => {
+                    e.effect_startupanimation = v;
+                    if (v)
+                    {
+                        // Re-fire if the gating condition still holds
+                        // (game not connected). RunStartupEffects is
+                        // idempotent — it clears prior "startup" groups
+                        // before rebuilding.
+                        if (!GameController.IsGameConnected()) RGBController.RunStartupEffects();
+                    }
+                    else
+                    {
+                        // Tear down + paint LEDs black so the rainbow
+                        // doesn't latch on hardware after detach.
+                        RGBController.StopTaggedEffects("startup");
+                    }
+                    RGBController.SaveEffectsSettings();
+                }));
 
             Toggles.Add(new EffectToggleItem(
                 "Reactive Weather",
@@ -55,7 +72,20 @@ namespace Chromatics.ViewModels
                 "Animation on devices when on title and character selection screen.",
                 "avares://Chromatics/Resources/crystal.png",
                 e.effect_titlescreen,
-                v => { e.effect_titlescreen = v; RGBController.SaveEffectsSettings(); }));
+                v => {
+                    e.effect_titlescreen = v;
+                    if (v)
+                    {
+                        // Re-fire if the user is currently sitting on title.
+                        // BuildTitleScreenAnimation is idempotent.
+                        if (GameController.IsOnTitle) GameController.BuildTitleScreenAnimation();
+                    }
+                    else
+                    {
+                        RGBController.StopTaggedEffects("title");
+                    }
+                    RGBController.SaveEffectsSettings();
+                }));
 
             Toggles.Add(new EffectToggleItem(
                 "Cutscenes",

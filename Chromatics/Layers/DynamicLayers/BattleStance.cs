@@ -32,8 +32,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(DynamicBattleStanceProcessor));
+            if (_disposed) return;
 
             // Battle Stance Dynamic Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
