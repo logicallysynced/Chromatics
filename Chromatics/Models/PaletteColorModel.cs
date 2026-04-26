@@ -468,11 +468,12 @@ namespace Chromatics.Models
         //7.1+
         public ColorMapping WeatherAtmosphericPhantasmsBase = new("Atmospheric Phantasms (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x4BF0FC));
         public ColorMapping WeatherAtmosphericPhantasmsHighlight = new("Atmospheric Phantasms (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
-        public ColorMapping WeatherAtmosphericPhantasmsHighlight1 = new("Atmospheric Phantasms (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x03FDFF));
-        public ColorMapping WeatherAtmosphericPhantasmsHighlight2 = new("Atmospheric Phantasms (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x002BFF));
-        public ColorMapping WeatherAtmosphericPhantasmsHighlight3 = new("Atmospheric Phantasms (Highlight 3)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00FFCA));
+        public ColorMapping WeatherAtmosphericPhantasmsAnimationBase = new("Atmospheric Phantasms (Animation Bse)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x006F70));
+        public ColorMapping WeatherAtmosphericPhantasmsHighlight1 = new("Atmospheric Phantasms (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x002BFF));
+        public ColorMapping WeatherAtmosphericPhantasmsHighlight2 = new("Atmospheric Phantasms (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00FFCA));
         public ColorMapping WeatherIllusoryDisturbancesBase = new("Illusory Disturbances (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xE3F9A6));
         public ColorMapping WeatherIllusoryDisturbancesHighlight = new("Illusory Disturbances (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherIllusoryDisturbancesAnimationBase = new("Illusory Disturbances (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x1A1A1A));
         public ColorMapping WeatherIllusoryDisturbancesHighligh1 = new("Illusory Disturbances (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x03FDFF));
         public ColorMapping WeatherIllusoryDisturbancesHighligh2 = new("Illusory Disturbances (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD16900));
         public ColorMapping WeatherIllusoryDisturbancesHighligh3 = new("Illusory Disturbances (Highlight 3)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFEA00));
@@ -488,7 +489,7 @@ namespace Chromatics.Models
         public ColorMapping WeatherSporingMistHighlight2 = new("Sporing Mist (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD462FF));
         public ColorMapping WeatherAnnealingWindsBase = new("Annealing Winds (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x16E2F5));
         public ColorMapping WeatherAnnealingWindsHighlight = new("Annealing Winds (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xF6358A));
-        public ColorMapping WeatherAnnealingWindsHighlight1 = new("Annealing Winds (Highlight1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00F5FF));
+        public ColorMapping WeatherAnnealingWindsHighlight1 = new("Annealing Winds (Highlight1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x035CFF));
         public ColorMapping WeatherGlassStormsBase = new("Glass Storms (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFC6C85));
         public ColorMapping WeatherGlassStormsAnimationBase = new("Glass Storms (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x480048));
         public ColorMapping WeatherGlassStormsHighlight = new("Glass Storms (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFF8040));
@@ -650,6 +651,9 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectM8SHighlight1 = new("Arcadion M8 Savage Phase (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
         public ColorMapping RaidEffectM8SHighlight2 = new("Arcadion M8 Savage Phase (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFF501));
         public ColorMapping RaidEffectM8SHighlight3 = new("Arcadion M8 Savage Phase (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF8C00));
+
+        
+
         public ColorMapping RaidEffectM12KeyHighlight = new("Arcadion M12 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x990000));
         public ColorMapping RaidEffectM12SKeyHighlight = new("Arcadion M12S Savage Phase (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x00FF80));
 

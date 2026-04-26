@@ -633,13 +633,12 @@ namespace Chromatics.Layers
                 case "Atmospheric Phantasms":
                     if (reactiveWeatherEffects && effectSettings.weather_atmosphericphantasms_animation)
                     {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsBase.Color);
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsAnimationBase.Color);
 
                         var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight1.Color);
                         var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight2.Color);
-                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight3.Color);
 
-                        var colors = new Color[] { animationCol1, animationCol2, animationCol3 };
+                        var colors = new Color[] { animationCol1, animationCol2 };
                         var pulse = new CircularPulseEffect(layer, 6, 12, 0.5, 2, colors, surface, baseCol);
 
                         //layer.Brush = new SolidColorBrush(baseCol);
@@ -656,16 +655,15 @@ namespace Chromatics.Layers
                 case "Illusory Disturbances":
                     if (reactiveWeatherEffects && effectSettings.weather_illusorydisturbances_animation)
                     {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsBase.Color);
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesAnimationBase.Color);
 
-                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight1.Color);
-                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight2.Color);
-                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight3.Color);
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesHighligh1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesHighligh2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesHighligh3.Color);
 
                         var colors = new Color[] { animationCol1, animationCol2, animationCol3 };
                         var pulse = new CircularPulseEffect(layer, 6, 12, 0.5, 2, colors, surface, baseCol);
 
-                        //layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(pulse, layer, runningEffects);
                         return true;
                     }
@@ -682,7 +680,6 @@ namespace Chromatics.Layers
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxHighlight2.Color) };
                         var heartbeat = new BPMHeartbeatEffect(layer, 36, 2, animationCol, surface, baseCol);
 
-                        //layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(heartbeat, layer, runningEffects);
 
                         return true;
