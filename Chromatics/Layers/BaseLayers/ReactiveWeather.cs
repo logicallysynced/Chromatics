@@ -634,10 +634,17 @@ namespace Chromatics.Layers
                     if (reactiveWeatherEffects && effectSettings.weather_atmosphericphantasms_animation)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsBase.Color);
-                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 25, 350, animationCol, surface, false, baseCol);
-                        layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight3.Color);
+
+                        var colors = new Color[] { animationCol1, animationCol2, animationCol3 };
+                        var pulse = new CircularPulseEffect(layer, 6, 12, 0.5, 2, colors, surface, baseCol);
+
+                        //layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(pulse, layer, runningEffects);
+
                         return true;
                     }
                     else
@@ -649,11 +656,17 @@ namespace Chromatics.Layers
                 case "Illusory Disturbances":
                     if (reactiveWeatherEffects && effectSettings.weather_illusorydisturbances_animation)
                     {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesBase.Color);
-                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherIllusoryDisturbancesHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 30, 280, animationCol, surface, false, baseCol);
-                        layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsBase.Color);
+
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAtmosphericPhantasmsHighlight3.Color);
+
+                        var colors = new Color[] { animationCol1, animationCol2, animationCol3 };
+                        var pulse = new CircularPulseEffect(layer, 6, 12, 0.5, 2, colors, surface, baseCol);
+
+                        //layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(pulse, layer, runningEffects);
                         return true;
                     }
                     else
@@ -665,11 +678,13 @@ namespace Chromatics.Layers
                 case "Gravitational Flux":
                     if (reactiveWeatherEffects && effectSettings.weather_gravitationalflux_animation)
                     {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxBase.Color);
-                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 40, 600, animationCol, surface, false, baseCol);
-                        layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxAnimationBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxHighlight2.Color) };
+                        var heartbeat = new BPMHeartbeatEffect(layer, 36, 2, animationCol, surface, baseCol);
+
+                        //layer.Brush = new SolidColorBrush(baseCol);
+                        SetEffect(heartbeat, layer, runningEffects);
+
                         return true;
                     }
                     else
@@ -682,10 +697,12 @@ namespace Chromatics.Layers
                     if (reactiveWeatherEffects && effectSettings.weather_meteorshowers_animation)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMeteorShowersBase.Color);
-                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMeteorShowersHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 15, 200, animationCol, surface, false, baseCol);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherMeteorShowersHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherMeteorShowersHighlight2.Color) };
+                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 900, animationCol, surface, false, baseCol);
+
                         layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(starfield, layer, runningEffects);
+
                         return true;
                     }
                     else
@@ -698,10 +715,12 @@ namespace Chromatics.Layers
                     if (reactiveWeatherEffects && effectSettings.weather_sporingmist_animation)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherSporingMistBase.Color);
-                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherSporingMistHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 35, 800, animationCol, surface, false, baseCol);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherSporingMistHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherSporingMistHighlight2.Color) };
+                        var starfield = new StarfieldDecorator(layer, 10, 20, 900, animationCol, surface, false, baseCol);
+
                         layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(starfield, layer, runningEffects);
+
                         return true;
                     }
                     else
@@ -714,10 +733,13 @@ namespace Chromatics.Layers
                     if (reactiveWeatherEffects && effectSettings.weather_annealingwinds_animation)
                     {
                         var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAnnealingWindsBase.Color);
-                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherAnnealingWindsHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 400, animationCol, surface, false, baseCol);
-                        layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        var animationCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAnnealingWindsHighlight1.Color);
+
+                        var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
+                        var gradientMove = new MoveGradientDecorator(surface, 200, true);
+
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+
                         return true;
                     }
                     else
@@ -729,11 +751,13 @@ namespace Chromatics.Layers
                 case "Glass Storms":
                     if (reactiveWeatherEffects && effectSettings.weather_glassstorms_animation)
                     {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGlassStormsBase.Color);
-                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherGlassStormsHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 15, 200, animationCol, surface, false, baseCol);
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherGlassStormsAnimationBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherGlassStormsHighlight1.Color) };
+                        var starfield = new StarfieldDecorator(layer, 10, 20, 900, animationCol, surface, false, baseCol);
+
                         layer.Brush = new SolidColorBrush(baseCol);
                         SetEffect(starfield, layer, runningEffects);
+
                         return true;
                     }
                     else
@@ -745,11 +769,13 @@ namespace Chromatics.Layers
                 case "Bubble Bloom":
                     if (reactiveWeatherEffects && effectSettings.weather_bubblebloom_animation)
                     {
-                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBubbleBloomBase.Color);
-                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherBubbleBloomHighlight.Color) };
-                        var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 30, 500, animationCol, surface, false, baseCol);
-                        layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.WeatherBubbleBloomAnimationBase.Color);
+                        var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherBubbleBloomHighlight1.Color) };
+                        
+                        var spinner = new BPMSpinnerEffect(layer, 32, 1, 180, animationCol, surface, baseCol);
+
+                        SetEffect(spinner, layer, runningEffects);
+
                         return true;
                     }
                     else
