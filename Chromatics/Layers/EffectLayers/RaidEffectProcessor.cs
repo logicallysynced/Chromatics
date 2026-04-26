@@ -630,6 +630,39 @@ namespace Chromatics.Layers
 
             switch (zone)
             {
+                //USED FOR TESTING
+                /*
+                case "The Interdimensional Rift":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
+                    {
+                        if (!BgmTriggerGate.IsReadyWithCutsceneBypass(zone, currentBgmId, watchingCutscene, eventScenePlayingBgmId, CutsceneViewerTestMode))
+                        {
+                            layer.RemoveAllDecorators();
+                            layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)0, (byte)0, (byte)0));
+                            layer.ZIndex = masterlayer.zindex;
+                            return true;
+                        }
+
+                        switch (currentBgmId)
+                        {
+                            case 587: //20149 //587
+                            {
+                                var baseCol = new Color(0, 0, 0);
+                                var animationCol = new Color[] { new Color(255, 255, 255) };
+                                var starfield = new BPMStarfieldDecorator(layer, 6, 360, 2000, animationCol, surface, 1, false, baseCol);
+
+                                layer.Brush = new SolidColorBrush(baseCol);
+                                SetEffect(starfield, layer, runningEffects);
+                                break;
+                            }
+                        }
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        RaidEffectState.currentRaidBgmId = currentBgmId;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
+                */
                 case "Summit of Everkeep":
                     if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
@@ -856,40 +889,90 @@ namespace Chromatics.Layers
                         return true;
                     }
                     return RaidEffectState.raidEffectsRunning;
-                
-                //USED FOR TESTING
-                /*
-                case "The Interdimensional Rift":
-                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
+                case "Ring Noir":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
                     {
-                        if (!BgmTriggerGate.IsReadyWithCutsceneBypass(zone, currentBgmId, watchingCutscene, eventScenePlayingBgmId, CutsceneViewerTestMode))
-                        {
-                            layer.RemoveAllDecorators();
-                            layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)0, (byte)0, (byte)0));
-                            layer.ZIndex = masterlayer.zindex;
-                            return true;
-                        }
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM9Base.Color);
+                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM9KeyHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM9KeyHighlight2.Color) };
+                        var heartbeat = new BPMHeartbeatEffect(layer, 47, 2, colors, surface, baseCol);
 
-                        switch (currentBgmId)
-                        {
-                            case 587: //20149 //587
-                            {
-                                var baseCol = new Color(0, 0, 0);
-                                var animationCol = new Color[] { new Color(255, 255, 255) };
-                                var starfield = new BPMStarfieldDecorator(layer, 6, 360, 2000, animationCol, surface, 1, false, baseCol);
-
-                                layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(starfield, layer, runningEffects);
-                                break;
-                            }
-                        }
+                        SetEffect(heartbeat, layer, runningEffects);
 
                         RaidEffectState.raidEffectsRunning = true;
-                        RaidEffectState.currentRaidBgmId = currentBgmId;
                         return true;
                     }
                     return RaidEffectState.raidEffectsRunning;
-                */
+                case "The X-Ring":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM10Base.Color);
+                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM10KeyHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM10KeyHighlight2.Color) };
+                        var pulse = new BPMCircularPulseEffect(layer, 180, 4, 6, 2, colors, surface, baseCol);
+
+                        SetEffect(pulse, layer, runningEffects);
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
+                case "The Crown":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11Base.Color);
+                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11KeyHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11KeyHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11KeyHighlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11KeyHighlight4.Color) };
+                        var spinner = new BPMSpinnerEffect(layer, 135, 4, 180, colors, surface, baseCol);
+
+                        SetEffect(spinner, layer, runningEffects);
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
+                case "Hell on Rails":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectHoRBase.Color);
+                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectHoRHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectHoRHighlight2.Color) };
+                        var matrix = new BPMMatrixEffect(layer, 110, 2, 0.5, 8, colors, surface, MatrixEffect.MatrixDirection.Left, baseCol);
+
+                        SetEffect(matrix, layer, runningEffects);
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
+                case "The Ageless Necropolis":
+                case "The Lightless Abyss":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronBase.Color);
+                        var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronHighlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronHighlight4.Color) };
+                        var laser = new BPMLaserEffect(layer, 160, 8, 3.5, colors, surface, LaserEffect.LaserDirection.RandomDiagonal, baseCol);
+
+                        SetEffect(laser, layer, runningEffects);
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
+                case "Recollection":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    {
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectRecollectionHighlight1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectRecollectionHighlight2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectRecollectionHighlight3.Color);
+
+                        var animationGradient = new LinearGradient(
+                        new GradientStop(0f, animationCol1), new GradientStop(0.33f, animationCol2), new GradientStop(0.66f, animationCol3));
+
+                        var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, 27, DiagonalDirection.Random);
+
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
                 //M12/M12S
                 case ArcadiaState.ZoneName:
                 //case "Private Mansion - Mist":
