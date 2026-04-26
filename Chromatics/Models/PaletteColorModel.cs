@@ -590,79 +590,93 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectEverkeepHighlight1 = new("Everkeep (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x34007E));
         public ColorMapping RaidEffectEverkeepHighlight2 = new("Everkeep (Highlight 2)", PaletteTypes.RaidEffects, Color.Blue);
         public ColorMapping RaidEffectEverkeepHighlight3 = new("Everkeep (Highlight 3)", PaletteTypes.RaidEffects, Color.Purple);
-
         public ColorMapping RaidEffectInterphosBase = new("Interphos (Base)", PaletteTypes.RaidEffects, Color.LimeGreen);
         public ColorMapping RaidEffectInterphosKeyHighlight = new("Interphos (Key Highlights)", PaletteTypes.RaidEffects, Color.DodgerBlue);
         public ColorMapping RaidEffectInterphosHighlight1 = new("Interphos (Highlight 1)", PaletteTypes.RaidEffects, Color.Green);
         public ColorMapping RaidEffectInterphosHighlight2 = new("Interphos (Highlight 2)", PaletteTypes.RaidEffects, Color.Lime);
         public ColorMapping RaidEffectInterphosHighlight3 = new("Interphos (Highlight 3)", PaletteTypes.RaidEffects, Color.Gold);
-
         public ColorMapping RaidEffectM1Base = new("Arcadion M1 (Base)", PaletteTypes.RaidEffects, Color.Magenta);
         public ColorMapping RaidEffectM1KeyHighlight = new("Arcadion M1 (Key Highlights)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM1Highlight1 = new("Arcadion M1 (Highlight 1)", PaletteTypes.RaidEffects, Color.DodgerBlue);
         public ColorMapping RaidEffectM1Highlight2 = new("Arcadion M1 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x0A1DC6));
         public ColorMapping RaidEffectM1Highlight3 = new("Arcadion M1 (Highlight 3)", PaletteTypes.RaidEffects, Color.HotPink);
-
         public ColorMapping RaidEffectM2Base = new("Arcadion M2 (Base)", PaletteTypes.RaidEffects, Color.Yellow);
         public ColorMapping RaidEffectM2KeyHighlight = new("Arcadion M2 (Key Highlights)", PaletteTypes.RaidEffects, Color.Yellow);
         public ColorMapping RaidEffectM2Highlight1 = new("Arcadion M2 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFFF00));
         public ColorMapping RaidEffectM2Highlight2 = new("Arcadion M2 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF1393));
-
         public ColorMapping RaidEffectM3Base = new("Arcadion M3 (Base)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM3KeyHighlight = new("Arcadion M3 (Key Highlights)", PaletteTypes.RaidEffects, Color.Lime);
         public ColorMapping RaidEffectM3Highlight1 = new("Arcadion M3 (Highlight 1)", PaletteTypes.RaidEffects, Color.DarkOrange);
         public ColorMapping RaidEffectM3Highlight2 = new("Arcadion M3 (Highlight 2)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM3Highlight3 = new("Arcadion M3 (Highlight 3)", PaletteTypes.RaidEffects, Color.DarkOrange);
-
         public ColorMapping RaidEffectM4Base = new("Arcadion M4 (Base)", PaletteTypes.RaidEffects, Color.Blue);
         public ColorMapping RaidEffectM4KeyHighlight = new("Arcadion M4 (Key Highlights)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM4Highlight1 = new("Arcadion M4 (Highlight 1)", PaletteTypes.RaidEffects, Color.Blue);
         public ColorMapping RaidEffectM4Highlight2 = new("Arcadion M4 (Highlight 2)", PaletteTypes.RaidEffects, Color.Magenta);
         public ColorMapping RaidEffectM4Highlight3 = new("Arcadion M4 (Highlight 3)", PaletteTypes.RaidEffects, Color.White);
         public ColorMapping RaidEffectM4Highlight4 = new("Arcadion M4 (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x00ACFF));
-
         public ColorMapping RaidEffectM5Base = new("Arcadion M5 (Base)", PaletteTypes.RaidEffects, Color.Black);
         public ColorMapping RaidEffectM5KeyHighlight = new("Arcadion M5 (Key Highlights)", PaletteTypes.RaidEffects, Color.LimeGreen);
         public ColorMapping RaidEffectM5Highlight1 = new("Arcadion M5 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x0096FF));
         public ColorMapping RaidEffectM5Highlight2 = new("Arcadion M5 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF32C8));
         public ColorMapping RaidEffectM5Highlight3 = new("Arcadion M5 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFED00));
-
         public ColorMapping RaidEffectM6Base = new("Arcadion M6 (Base)", PaletteTypes.RaidEffects, Color.Black);
         public ColorMapping RaidEffectM6KeyHighlight = new("Arcadion M6 (Key Highlights)", PaletteTypes.RaidEffects, Color.White);
         public ColorMapping RaidEffectM6Highlight1 = new("Arcadion M6 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0064));
         public ColorMapping RaidEffectM6Highlight2 = new("Arcadion M6 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x0064FF));
         public ColorMapping RaidEffectM6Highlight3 = new("Arcadion M6 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFC800));
         public ColorMapping RaidEffectM6Highlight4 = new("Arcadion M6 (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x2BFF00));
-
         public ColorMapping RaidEffectM7Base = new("Arcadion M7 (Base)", PaletteTypes.RaidEffects, Color.Black);
         public ColorMapping RaidEffectM7KeyHighlight = new("Arcadion M7 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x1300FF));
         public ColorMapping RaidEffectM7Highlight1 = new("Arcadion M7 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
         public ColorMapping RaidEffectM7Highlight2 = new("Arcadion M7 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFA308));
         public ColorMapping RaidEffectM7Highlight3 = new("Arcadion M7 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x6900FF));
-
         public ColorMapping RaidEffectM8Base = new("Arcadion M8 (Base)", PaletteTypes.RaidEffects, Color.Black);
         public ColorMapping RaidEffectM8KeyHighlight = new("Arcadion M8 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFF500));
         public ColorMapping RaidEffectM8Highlight1 = new("Arcadion M8 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x00F2FF));
         public ColorMapping RaidEffectM8Highlight2 = new("Arcadion M8 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x0004FF));
         public ColorMapping RaidEffectM8Highlight3 = new("Arcadion M8 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFFFFF));
-
         public ColorMapping RaidEffectM8SBase = new("Arcadion M8 Savage Phase (Base)", PaletteTypes.RaidEffects, Color.Black);
         public ColorMapping RaidEffectM8SKeyHighlight = new("Arcadion M8 Savage Phase (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x0027FF));
         public ColorMapping RaidEffectM8SHighlight1 = new("Arcadion M8 Savage Phase (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
         public ColorMapping RaidEffectM8SHighlight2 = new("Arcadion M8 Savage Phase (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFF501));
         public ColorMapping RaidEffectM8SHighlight3 = new("Arcadion M8 Savage Phase (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF8C00));
-
-        
-
+        public ColorMapping RaidEffectM9Base = new("Arcadion M9 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM9KeyHighlight = new("Arcadion M9 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xCB00A5));
+        public ColorMapping RaidEffectM9KeyHighlight1 = new("Arcadion M9 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
+        public ColorMapping RaidEffectM9KeyHighlight2 = new("Arcadion M9 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF00F9));
+        public ColorMapping RaidEffectM10Base = new("Arcadion M10 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM10KeyHighlight = new("Arcadion M10 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFF505));
+        public ColorMapping RaidEffectM10KeyHighlight1 = new("Arcadion M10 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
+        public ColorMapping RaidEffectM10KeyHighlight2 = new("Arcadion M10 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF00F9));
+        public ColorMapping RaidEffectM11Base = new("Arcadion M10 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM11KeyHighlight = new("Arcadion M10 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x4E00FF));
+        public ColorMapping RaidEffectM11KeyHighlight1 = new("Arcadion M10 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xA70000));
+        public ColorMapping RaidEffectM11KeyHighlight2 = new("Arcadion M10 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x60007E));
+        public ColorMapping RaidEffectM11KeyHighlight3 = new("Arcadion M10 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xBD9F00));
+        public ColorMapping RaidEffectM11KeyHighlight4 = new("Arcadion M10 (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x019DBB));
         public ColorMapping RaidEffectM12KeyHighlight = new("Arcadion M12 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x990000));
         public ColorMapping RaidEffectM12SKeyHighlight = new("Arcadion M12S Savage Phase (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x00FF80));
-
         public ColorMapping RaidEffectCoDBase = new("The Cloud of Darkness (Base)", PaletteTypes.RaidEffects, Color.MediumPurple);
         public ColorMapping RaidEffectCoDKeyHighlight = new("The Cloud of Darkness (Key Highlights)", PaletteTypes.RaidEffects, Color.Purple);
         public ColorMapping RaidEffectCoDHighlight1 = new("The Cloud of Darkness (Highlight 1)", PaletteTypes.RaidEffects, Color.Magenta);
         public ColorMapping RaidEffectCoDHighlight2 = new("The Cloud of Darkness (Highlight 2)", PaletteTypes.RaidEffects, Color.MediumPurple);
         public ColorMapping RaidEffectCoDHighlight3 = new("The Cloud of Darkness (Highlight 3)", PaletteTypes.RaidEffects, Color.Purple);
-
+        public ColorMapping RaidEffectHoRBase = new("Hell on Rails (Base)", PaletteTypes.RaidEffects, Color.FromArgb(0x0F002A));
+        public ColorMapping RaidEffectHoRKeyHighlight = new("Hell on Rails (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x0075FF));
+        public ColorMapping RaidEffectHoRHighlight1 = new("Hell on Rails (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x00FF64));
+        public ColorMapping RaidEffectHoRHighlight2 = new("Hell on Rails (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xC800C1));
+        public ColorMapping RaidEffectNecronBase = new("Necron's Embrace (Base)", PaletteTypes.RaidEffects, Color.FromArgb(0x0F002A));
+        public ColorMapping RaidEffectNecronKeyHighlight = new("Necron's Embrace (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFFFFF));
+        public ColorMapping RaidEffectNecronHighlight1 = new("Necron's Embrace (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x00C8FF));
+        public ColorMapping RaidEffectNecronHighlight2 = new("Necron's Embrace (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF4A00));
+        public ColorMapping RaidEffectNecronHighlight3 = new("Necron's Embrace (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x5D00FF));
+        public ColorMapping RaidEffectNecronHighlight4 = new("Necron's Embrace (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x0400FF));
+        public ColorMapping RaidEffectRecollectionBase = new("Recollection (Base)", PaletteTypes.RaidEffects, Color.FromArgb(0x3E00FF));
+        public ColorMapping RaidEffectRecollectionKeyHighlight = new("Recollection (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0094));
+        public ColorMapping RaidEffectRecollectionHighlight1 = new("Recollection (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFED00));
+        public ColorMapping RaidEffectRecollectionHighlight2 = new("Recollection (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFA000));
+        public ColorMapping RaidEffectRecollectionHighlight3 = new("Recollection (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x3E00FF));
         // Audio Visualizer
         public ColorMapping AudioVisualizerBase = new("Audio Visualizer (Base)", PaletteTypes.AudioVisualizer, Color.Black);
         public ColorMapping AudioVisualizerLow = new("Audio Visualizer (Low Freq)", PaletteTypes.AudioVisualizer, Color.FromArgb(unchecked((int)0xFF00CC00)));

@@ -170,7 +170,15 @@ namespace Chromatics.Layers
                         _    => ColorHelper.ColorToRGBColor(palette.RaidEffectM8KeyHighlight.Color), //Phase 1/Default
                     };
                     return true;
-                
+                case "Ring Noir":
+                    color = ColorHelper.ColorToRGBColor(palette.RaidEffectM9KeyHighlight.Color);
+                    return true;
+                case "The X-Ring":
+                    color = ColorHelper.ColorToRGBColor(palette.RaidEffectM10KeyHighlight.Color);
+                    return true;
+                case "The Crown":
+                    color = ColorHelper.ColorToRGBColor(palette.RaidEffectM11KeyHighlight.Color);
+                    return true;
                 case "Arcadia":
                     color = currentBgmId switch
                     {
@@ -178,7 +186,16 @@ namespace Chromatics.Layers
                         _            => ColorHelper.ColorToRGBColor(palette.RaidEffectM12KeyHighlight.Color),  // Phase 1
                     };
                     return true;
-
+                case "Hell on Rails":
+                    color = ColorHelper.ColorToRGBColor(palette.RaidEffectHoRKeyHighlight.Color);
+                    return true;
+                case "The Ageless Necropolis":
+                case "The Lightless Abyss":
+                    color = ColorHelper.ColorToRGBColor(palette.RaidEffectNecronKeyHighlight.Color);
+                    return true;
+                case "Recollection":
+                    color = ColorHelper.ColorToRGBColor(palette.RaidEffectRecollectionKeyHighlight.Color);
+                    return true;
                 default:
                     color = default;
                     return false;
