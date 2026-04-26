@@ -468,27 +468,44 @@ namespace Chromatics.Models
         //7.1+
         public ColorMapping WeatherAtmosphericPhantasmsBase = new("Atmospheric Phantasms (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x4BF0FC));
         public ColorMapping WeatherAtmosphericPhantasmsHighlight = new("Atmospheric Phantasms (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherAtmosphericPhantasmsHighlight1 = new("Atmospheric Phantasms (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x03FDFF));
+        public ColorMapping WeatherAtmosphericPhantasmsHighlight2 = new("Atmospheric Phantasms (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x002BFF));
+        public ColorMapping WeatherAtmosphericPhantasmsHighlight3 = new("Atmospheric Phantasms (Highlight 3)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00FFCA));
         public ColorMapping WeatherIllusoryDisturbancesBase = new("Illusory Disturbances (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xE3F9A6));
         public ColorMapping WeatherIllusoryDisturbancesHighlight = new("Illusory Disturbances (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherIllusoryDisturbancesHighligh1 = new("Illusory Disturbances (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x03FDFF));
+        public ColorMapping WeatherIllusoryDisturbancesHighligh2 = new("Illusory Disturbances (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD16900));
+        public ColorMapping WeatherIllusoryDisturbancesHighligh3 = new("Illusory Disturbances (Highlight 3)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFEA00));
         public ColorMapping WeatherAuroralMiragesBase = new("Auroral Mirages (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFF8674));
         public ColorMapping WeatherAuroralMiragesHighlight = new("Auroral Mirages (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFF007F));
         public ColorMapping WeatherMeteorShowersBase = new("Meteor Showers (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x000000));
-        public ColorMapping WeatherMeteorShowersHighlight = new("Meteor Showers (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
-        public ColorMapping WeatherSporingMistBase = new("Sporing Mist (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x22CE83));
+        public ColorMapping WeatherMeteorShowersHighlight = new("Meteor Showers (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x08FFF9));
+        public ColorMapping WeatherMeteorShowersHighlight1 = new("Meteor Showers (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherMeteorShowersHighlight2 = new("Meteor Showers (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFCB01));
+        public ColorMapping WeatherSporingMistBase = new("Sporing Mist (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x2DBF0D));
         public ColorMapping WeatherSporingMistHighlight = new("Sporing Mist (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD462FF));
+        public ColorMapping WeatherSporingMistHighlight1 = new("Sporing Mist (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD462FF));
+        public ColorMapping WeatherSporingMistHighlight2 = new("Sporing Mist (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD462FF));
         public ColorMapping WeatherAnnealingWindsBase = new("Annealing Winds (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x16E2F5));
         public ColorMapping WeatherAnnealingWindsHighlight = new("Annealing Winds (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xF6358A));
+        public ColorMapping WeatherAnnealingWindsHighlight1 = new("Annealing Winds (Highlight1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00F5FF));
         public ColorMapping WeatherGlassStormsBase = new("Glass Storms (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFC6C85));
+        public ColorMapping WeatherGlassStormsAnimationBase = new("Glass Storms (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x480048));
         public ColorMapping WeatherGlassStormsHighlight = new("Glass Storms (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFF8040));
+        public ColorMapping WeatherGlassStormsHighlight1 = new("Glass Storms (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
         public ColorMapping WeatherGravitationalFluxBase = new("Gravitational Flux (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x191970));
         public ColorMapping WeatherGravitationalFluxHighlight = new("Gravitational Flux (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xEB5406));
+        public ColorMapping WeatherGravitationalFluxAnimationBase = new("Gravitational Flux (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x010014));
+        public ColorMapping WeatherGravitationalFluxHighlight1 = new("Gravitational Flux (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x0800FF));
+        public ColorMapping WeatherGravitationalFluxHighlight2 = new("Gravitational Flux (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00FFF5));
         public ColorMapping WeatherBubbleBloomBase = new("Bubble Bloom (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x0059FF));
+        public ColorMapping WeatherBubbleBloomAnimationBase = new("Bubble Bloom (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00033E));
         public ColorMapping WeatherBubbleBloomHighlight = new("Bubble Bloom (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherBubbleBloomHighlight1 = new("Bubble Bloom (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00C8FF));
         public ColorMapping WeatherElectrostaticDustBase = new("Electrostatic Dust (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFAE42));
         public ColorMapping WeatherElectrostaticDustHighlight = new("Electrostatic Dust (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xC45AEC));
         public ColorMapping WeatherDyingBreathBase = new("Dying Breath (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x571B7E));
         public ColorMapping WeatherDyingBreathHighlight = new("Dying Breath (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x2916F5));
-        
         public ColorMapping WeatherUnknownBase = new("Unknown Weather (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherUnknownHighlight = new("Unknown Weather (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
         
