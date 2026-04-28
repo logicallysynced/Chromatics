@@ -48,16 +48,19 @@ Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting 
 <br>
 Chromatics is compatible with a wide range of RGB devices, supported by the library RGB.NET. Any devices supported by RGB.NET should be supported by Chromatics.
 <br>
+
 ### Developers ### 
 If you wish to build Chromatics yourself, you can download the active branch and open in Visual Studio 2022. Please pull all nuget packages and also link any additional libraries from Build Dependencies before building. If you need any further assistance, please contact us on Discord.
-<br><br><br>
+<br><br>
+
 ### Open Source Libraries ### 
 * [RGB.NET](https://github.com/DarthAffe/RGB.NET) - used for RGB device integration
 * [Sharlayan](https://github.com/FFXIVAPP/sharlayan) - used for FFXIV memory reading
 * [Artemis](https://github.com/Artemis-RGB/Artemis) - borrowed some code base and RGB.NET profiles, not actually a dependency
 * [FFXIVWeather](https://github.com/karashiiro/FFXIVWeather) - For calculating current weather.
 * [Sentry](https://sentry.io/) - error monitoring, logs, metrics, tracing, and profiling
-<br><br><br>
+<br><br>
+
 ### Privacy / Telemetry ###
 Chromatics uses [Sentry](https://sentry.io/) for two independent reporting paths: **background telemetry** (performance metrics, non-fatal errors) and **crash reports** (unhandled exceptions that terminate the app). They are controlled separately — opting out of telemetry does **not** disable the crash dialog, however crashes are never sent without you clicking on "Send", which is optional.
 
@@ -84,6 +87,7 @@ Chromatics uses [Sentry](https://sentry.io/) for two independent reporting paths
 **Opting out of background telemetry:** Toggle off at **Settings → Advanced → Send anonymous performance and error telemetry**. When disabled, Chromatics sends no performance data, session counts, or error messages — but the Sentry SDK remains loaded so the post-crash dialog can still give you the choice to send (or not send) a crash report on the rare occasion one occurs. If you also want to disable the crash dialog entirely, remove the `Sentry` package from a source build.
 
 <br><br>
+
 ### Disclaimer ###
 Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners.
 
