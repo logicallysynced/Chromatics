@@ -26,9 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Sharlayan">
-      <HintPath>..\Build Dependencies\Sharlayan\Sharlayan.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Sharlayan" Version="9.0.22-prerelease.33" />
   </ItemGroup>
 
 </Project>

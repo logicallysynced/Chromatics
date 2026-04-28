@@ -5,6 +5,10 @@
 # DESIGN_REFACTOR.md — local-only refactor notes, not committed)
 .claude/
 
+# Sharlayan is now consumed via NuGet (prerelease). The loose-DLL build
+# folder is local-only and must not be committed.
+Build Dependencies/Sharlayan/
+
 # Project-scoped MCP server configuration. Local-only — contains personal
 # tool wiring (Sentry hosted MCP) that's specific to maintainer accounts.
 .mcp.json

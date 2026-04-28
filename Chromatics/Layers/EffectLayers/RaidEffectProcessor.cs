@@ -973,6 +973,23 @@ namespace Chromatics.Layers
                         return true;
                     }
                     return RaidEffectState.raidEffectsRunning;
+                case "The Unmaking":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning)
+                    {
+                        var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectTheUnmakingBase.Color);
+                        var animationCol1 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectTheUnmakingHighlight1.Color);
+                        var animationCol2 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectTheUnmakingHighlight2.Color);
+                        var animationCol3 = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectTheUnmakingHighlight3.Color);
+
+                        var colors = new Color[] { animationCol1, animationCol2, animationCol3 };
+                        var strike = new BPMThunderstrikeEffect(layer, 175, 4, 0.5, colors, surface, baseCol);
+
+                        SetEffect(strike, layer, runningEffects);
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
                 //M12/M12S
                 case ArcadiaState.ZoneName:
                 //case "Private Mansion - Mist":

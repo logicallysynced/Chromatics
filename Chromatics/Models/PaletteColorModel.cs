@@ -677,6 +677,13 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectRecollectionHighlight1 = new("Recollection (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFED00));
         public ColorMapping RaidEffectRecollectionHighlight2 = new("Recollection (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFA000));
         public ColorMapping RaidEffectRecollectionHighlight3 = new("Recollection (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x3E00FF));
+        public ColorMapping RaidEffectTheUnmakingBase = new("The Unmaking (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectTheUnmakingKeyHighlight = new("The Unmaking (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xC70000));
+        public ColorMapping RaidEffectTheUnmakingHighlight1 = new("The Unmaking (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFFFFF));
+        public ColorMapping RaidEffectTheUnmakingHighlight2 = new("The Unmaking (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x009CFF));
+        public ColorMapping RaidEffectTheUnmakingHighlight3 = new("The Unmaking (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x8400FF));
+
+
         // Audio Visualizer
         public ColorMapping AudioVisualizerBase = new("Audio Visualizer (Base)", PaletteTypes.AudioVisualizer, Color.Black);
         public ColorMapping AudioVisualizerLow = new("Audio Visualizer (Low Freq)", PaletteTypes.AudioVisualizer, Color.FromArgb(unchecked((int)0xFF00CC00)));
