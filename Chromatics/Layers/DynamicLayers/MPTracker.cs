@@ -35,8 +35,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(MPTrackerProcessor));
+            if (_disposed) return;
 
             MPTrackerDynamicModel model;
 
@@ -157,9 +156,8 @@ namespace Chromatics.Layers
 
                         ledGroup.Detach();
 
-                        if (!model._localgroups.Contains(ledGroup))
-                            model._localgroups.Add(ledGroup);
-
+                        DetachAndClearGroups(model._localgroups);
+                        model._localgroups.Add(ledGroup);
                         model._faderValue = currentVal_Fader;
                     }
                 }

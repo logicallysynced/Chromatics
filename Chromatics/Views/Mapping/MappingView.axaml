@@ -1,0 +1,156 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Chromatics.ViewModels.Mapping"
+             xmlns:views="clr-namespace:Chromatics.Views.Mapping"
+             xmlns:loc="clr-namespace:Chromatics.Localization"
+             mc:Ignorable="d" d:DesignWidth="1360" d:DesignHeight="780"
+             x:Class="Chromatics.Views.Mapping.MappingView"
+             x:DataType="vm:MappingViewModel">
+
+    <UserControl.Styles>
+        <!-- Device enable/disable toggle: content reflects the action the
+             user will take, not the current state. When the device IS on
+             (IsChecked=true), clicking will disable it → show "Disable".
+             When the device is off (IsChecked=false), clicking will enable
+             it → show "Enable". -->
+        <Style Selector="ToggleButton.deviceToggle:checked">
+            <Setter Property="Content" Value="{loc:Tr Key=Disable}" />
+        </Style>
+        <Style Selector="ToggleButton.deviceToggle:not(:checked)">
+            <Setter Property="Content" Value="{loc:Tr Key=Enable}" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="12">
+
+        <!-- Top toolbar: device + preview + import/export + add layer.
+             Device combo grows to absorb slack so the action buttons stay
+             pinned to the right edge. -->
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,8,Auto,8,Auto,8,Auto,8,Auto,16,Auto"
+              Margin="0,0,0,10">
+
+            <ComboBox Grid.Column="0"
+                      ItemsSource="{Binding Devices}"
+                      SelectedItem="{Binding SelectedDevice, Mode=TwoWay}"
+                      DisplayMemberBinding="{Binding Name}"
+                      IsEnabled="{Binding !NoDevicesAvailable}"
+                      HorizontalAlignment="Stretch"
+                      MinWidth="280" />
+
+            <ToggleButton Grid.Column="2"
+                          Content="{loc:Tr Key=Preview}"
+                          IsChecked="{Binding IsPreviewing, Mode=TwoWay}"
+                          IsEnabled="{Binding !NoDevicesAvailable}"
+                          MinWidth="96"
+                          HorizontalContentAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          ToolTip.Tip="{loc:Tr Key='Toggle a live preview of the active layers'}" />
+
+            <ToggleButton Grid.Column="4"
+                          Classes="deviceToggle"
+                          IsChecked="{Binding IsSelectedDeviceEnabled, Mode=TwoWay}"
+                          IsEnabled="{Binding !NoDevicesAvailable}"
+                          MinWidth="96"
+                          HorizontalContentAlignment="Center"
+                          VerticalContentAlignment="Center"
+                          ToolTip.Tip="{loc:Tr Key='Enable or disable RGB output for the selected device'}" />
+
+            <Button Grid.Column="6"
+                    Content="{loc:Tr Key=Import}"
+                    Click="OnImportClick"
+                    IsEnabled="{Binding !NoDevicesAvailable}"
+                    MinWidth="96"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    ToolTip.Tip="{loc:Tr Key='Import layers from a .chromatics3 or .chromatics4 file'}" />
+
+            <Button Grid.Column="8"
+                    Content="{loc:Tr Key=Export}"
+                    Click="OnExportClick"
+                    IsEnabled="{Binding !NoDevicesAvailable}"
+                    MinWidth="96"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    ToolTip.Tip="{loc:Tr Key='Export current layers to a .chromatics4 file'}" />
+
+            <Button Grid.Column="10"
+                    Content="{loc:Tr Key='Add Dynamic Layer'}"
+                    Command="{Binding AddSelectedLayerCommand}"
+                    IsEnabled="{Binding !NoDevicesAvailable}"
+                    MinWidth="160"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Classes="accent" />
+        </Grid>
+
+        <!-- Center split: virtual devices (left) + layer list (right). 70/30
+             matches the old Uc_Mappings tlp_mid proportion. Hidden while no
+             RGB devices have been discovered; the empty-state panel below
+             takes its place. -->
+        <Grid Grid.Row="1" ColumnDefinitions="*,12,400"
+              IsVisible="{Binding !NoDevicesAvailable}">
+
+            <Border Grid.Column="0"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="6"
+                    Padding="4">
+                <!-- Only the currently-selected device's keyboard is rendered.
+                     Device identity is already visible in the dropdown above;
+                     no second label needed. -->
+                <ContentControl Content="{Binding SelectedVirtualDevice}">
+                    <ContentControl.ContentTemplate>
+                        <DataTemplate DataType="vm:VirtualDeviceViewModel">
+                            <views:VirtualDeviceView />
+                        </DataTemplate>
+                    </ContentControl.ContentTemplate>
+                </ContentControl>
+            </Border>
+
+            <views:LayerListView Grid.Column="2" DataContext="{Binding}" />
+        </Grid>
+
+        <!-- Empty-state placeholder: shown when RGBController has not yet
+             discovered any devices (either still enumerating at startup,
+             or all providers are disabled in Settings). -->
+        <Border Grid.Row="1"
+                IsVisible="{Binding NoDevicesAvailable}"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                BorderThickness="1"
+                CornerRadius="6"
+                Padding="24">
+            <StackPanel VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Spacing="12"
+                        MaxWidth="520">
+                <TextBlock Text="{loc:Tr Key='No devices found'}"
+                           FontSize="20"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="{loc:Tr Key='Chromatics could not discover any RGB devices. Check that the relevant device providers are enabled in Settings → Device Providers, and that your RGB device software (Razer Synapse, Corsair iCUE, etc.) is installed and running.'}"
+                           TextWrapping="Wrap"
+                           TextAlignment="Center"
+                           Opacity="0.85" />
+            </StackPanel>
+        </Border>
+
+        <!-- Bottom hint strip. Matches the old footer: a soft reminder without
+             taking vertical real estate from the editor. -->
+        <Border Grid.Row="2"
+                Margin="0,10,0,0"
+                Padding="10,6"
+                Background="{DynamicResource ChromaticsTileOff}"
+                CornerRadius="4">
+            <TextBlock TextWrapping="Wrap"
+                       Opacity="0.75"
+                       FontSize="12">
+                <Run FontWeight="Bold" Text="{loc:Tr Key='Tip:'}" />
+                <Run Text=" " />
+                <Run Text="{Binding RotatingTip}" />
+            </TextBlock>
+        </Border>
+    </Grid>
+</UserControl>

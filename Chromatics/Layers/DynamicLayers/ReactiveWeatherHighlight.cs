@@ -1,21 +1,12 @@
-﻿using Chromatics.Core;
-using Chromatics.Extensions;
-using Chromatics.Extensions.RGB.NET;
-using Chromatics.Extensions.RGB.NET.Decorators;
-using Chromatics.Extensions.Sharlayan;
+using Chromatics.Core;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
 using RGB.NET.Core;
-using RGB.NET.Presets.Decorators;
-using RGB.NET.Presets.Textures.Gradients;
-using Sharlayan.Models.ReadResults;
-using Sharlayan.Utilities;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 
 namespace Chromatics.Layers.DynamicLayers
 {
@@ -23,12 +14,6 @@ namespace Chromatics.Layers.DynamicLayers
     {
         private static ReactiveWeatherHighlightProcessor _instance;
         private static Dictionary<int, ReactiveWeatherHighlightDynamicLayer> layerProcessorModel = new Dictionary<int, ReactiveWeatherHighlightDynamicLayer>();
-
-        internal static int _previousArrayIndex = 0;
-        internal static int _previousOffset = 0;
-        internal static bool dutyComplete = false;
-        internal static bool raidEffectsRunning = false;
-        internal static string[] bossNames = null;
 
         private bool _disposed = false;
         private SolidColorBrush weather_brush;
@@ -73,10 +58,6 @@ namespace Chromatics.Layers.DynamicLayers
 
             var _layergroups = RGBController.GetLiveLayerGroups();
             var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
-            var raidEffects = RGBController.GetEffectsSettings().effect_raideffects;
-
-            var weatherService = FFXIVWeatherExtensions.GetWeatherService();
-            if (weatherService == null) return;
 
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);
@@ -85,6 +66,12 @@ namespace Chromatics.Layers.DynamicLayers
             {
                 layergroup = _layergroups[layer.layerID].FirstOrDefault();
                 layergroup.ZIndex = layer.zindex;
+
+                if (layer.requestUpdate)
+                {
+                    layergroup.RemoveLeds(layergroup);
+                    layergroup.AddLeds(ledArray);
+                }
             }
             else
             {
@@ -100,16 +87,6 @@ namespace Chromatics.Layers.DynamicLayers
                 layergroup.Detach();
             }
 
-            if (layer.requestUpdate)
-            {
-                foreach (var led in layergroup)
-                {
-                    layergroup.RemoveLed(led);
-                }
-
-                layergroup.AddLeds(ledArray);
-            }
-
             if (!layer.Enabled)
             {
                 layergroup.Detach();
@@ -123,73 +100,26 @@ namespace Chromatics.Layers.DynamicLayers
                 if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
                 {
                     var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
-                    if (getCurrentPlayer.Entity == null) return;
-
-                    var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
-
-                    DutyFinderBellExtension.CheckCache();
-                    WeatherExtension.CheckCache();
-
-                    ChatLogResult readResult = _memoryHandler.Reader.GetChatLog(_previousArrayIndex, _previousOffset);
-
-                    var chatLogEntries = readResult.ChatLogItems;
-
-                    if (readResult.PreviousArrayIndex != _previousArrayIndex)
+                    if (getCurrentPlayer.Entity != null)
                     {
-                        if (chatLogEntries.Count > 0)
+                        var currentZone = GameHelper.GetZoneNameById(getCurrentPlayer.Entity.MapTerritory);
+
+                        // Single-per-tick snapshot of game state.
+                        var gameState = _memoryHandler.Reader.GetGameState();
+                        bool inInstance = gameState.InInstance;
+
+                        if (currentZone != "???" && currentZone != "")
                         {
-                            if (chatLogEntries.First().Code == "0840" && Regex.IsMatch(chatLogEntries.First().Message, @"completion time: (\d+:\d+)", RegexOptions.IgnoreCase))
+                            var currentWeather = gameState.CurrentWeatherName;
+                            if (!string.IsNullOrEmpty(currentWeather) && currentWeather != "CutScene" &&
+                                (model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate || model._inInstance != inInstance))
                             {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                            }
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has begun\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = false;
-                            }
-                            else if (chatLogEntries.First().Code == "083E" && Regex.IsMatch(chatLogEntries.First().Message, @"You obtain \d+ Allagan tomestones of \w+\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                            }
-                            else if (chatLogEntries.First().Code == "0839" && Regex.IsMatch(chatLogEntries.First().Message, @"has ended\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                            }
-                            else if (bossNames != null && (chatLogEntries.First().Code == "133A" || chatLogEntries.First().Code == "0B3A") && Regex.IsMatch(chatLogEntries.First().Message, @"(.* defeats|You defeat|You defeat the) (" + string.Join("|", bossNames.Select(Regex.Escape)) + @")\.", RegexOptions.IgnoreCase))
-                            {
-                                dutyComplete = true;
-                                raidEffectsRunning = false;
-                                bossNames = null;
-                            }
-                        }
+                                SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette);
 
-                        _previousArrayIndex = readResult.PreviousArrayIndex;
-                        _previousOffset = readResult.PreviousOffset;
-                    }
-
-                    if (currentZone != "???" && currentZone != "")
-                    {
-                        var currentWeatherZone = WeatherExtension.WeatherId();
-                        var currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
-
-                        if (currentWeather == null)
-                        {
-                            currentWeather = weatherService.GetCurrentWeather(currentZone).Item1.ToString();
-                        }
-
-                        if ((model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || model._raidEffects != raidEffects || layer.requestUpdate || model._inInstance != DutyFinderBellExtension.InInstance() || model._dutyComplete != dutyComplete) && currentWeather != "CutScene")
-                        {
-                            SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, DutyFinderBellExtension.InInstance());
-
-                            model._currentWeather = currentWeather;
-                            model._currentZone = currentZone;
-                            model._inInstance = DutyFinderBellExtension.InInstance();
-                            model._dutyComplete = dutyComplete;
+                                model._currentWeather = currentWeather;
+                                model._currentZone = currentZone;
+                                model._inInstance = inInstance;
+                            }
                         }
                     }
                 }
@@ -201,85 +131,19 @@ namespace Chromatics.Layers.DynamicLayers
                 model._reactiveWeatherEffects = reactiveWeatherEffects;
             }
 
-            if (model._raidEffects != raidEffects)
-            {
-                model._raidEffects = raidEffects;
-            }
-
             layergroup.Attach(surface);
             _init = true;
             layer.requestUpdate = false;
         }
 
-        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, bool inInstance)
+        // Raid highlight handling lives in RaidEffectHighlightProcessor now;
+        // this method only resolves the weather highlight colour. The raid
+        // overlay (run separately by GameProcessLayers) sits at a higher
+        // ZIndex and visually overrides whatever colour we set here.
+        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette)
         {
             var color = GetWeatherColor(weather, _colorPalette);
             var reactiveWeatherEffects = RGBController.GetEffectsSettings();
-            var effectSettings = RGBController.GetEffectsSettings();
-
-            // Filter for zone specific special weather
-            if (inInstance && !dutyComplete)
-            {
-                switch (zone)
-                {
-                    case "Summit of Everkeep":
-                        if (effectSettings.effect_raideffects)
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectEverkeepKeyHighlight.Color);
-                            raidEffectsRunning = true;
-                            bossNames = ["Zoraal Ja"];
-                        }
-                        break;
-                    case "Interphos":
-                        if (effectSettings.effect_raideffects)
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectInterphosKeyHighlight.Color);
-                            raidEffectsRunning = true;
-                            bossNames = ["Queen Eternal"];
-                        }
-                        break;
-                    case "Scratching Ring":
-                        if (effectSettings.effect_raideffects)
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM1KeyHighlight.Color);
-                            raidEffectsRunning = true;
-                            bossNames = ["Black Cat"];
-                        }
-                        break;
-                    case "Lovely Lovering":
-                        if (effectSettings.effect_raideffects)
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM2KeyHighlight.Color);
-                            raidEffectsRunning = true;
-                            bossNames = ["Honey B. Lovely"];
-                        }
-                        break;
-                    case "Blasting Ring":
-                        if (effectSettings.effect_raideffects)
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM3KeyHighlight.Color);
-                            raidEffectsRunning = true;
-                            bossNames = ["Brute Bomber"];
-                        }
-                        break;
-                    case "The Thundering":
-                        if (effectSettings.effect_raideffects)
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4KeyHighlight.Color);
-                            raidEffectsRunning = true;
-                            bossNames = ["Wicked Thunder"];
-                        }
-                        break;
-                    case "Sphere of Naught":
-                        if (effectSettings.effect_raideffects)
-                        {
-                            color = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM4KeyHighlight.Color);
-                            raidEffectsRunning = true;
-                            bossNames = ["Cloud of Darkness"];
-                        }
-                        break;
-                }
-            }
 
             switch (zone)
             {
@@ -297,7 +161,7 @@ namespace Chromatics.Layers.DynamicLayers
                         else
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
                     }
-                    else if (weather == "Astromagnetic Storm")
+                    else if (weather == "Astromagnetic Storms")
                     {
                         if (reactiveWeatherEffects.effect_reactiveweather && reactiveWeatherEffects.weather_astromagneticstorm_animation)
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight.Color);
@@ -323,10 +187,8 @@ namespace Chromatics.Layers.DynamicLayers
         {
             public string _currentWeather { get; set; }
             public string _currentZone { get; set; }
-            public bool _raidEffects { get; set; }
             public bool _reactiveWeatherEffects { get; set; }
             public bool _inInstance { get; set; }
-            public bool _dutyComplete { get; set; }
         }
 
         public static RGB.NET.Core.Color GetWeatherColor(string weatherType, PaletteColorModel colorPalette)

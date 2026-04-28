@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using static MetroFramework.Drawing.MetroPaint;
 using Color = RGB.NET.Core.Color;
 
 namespace Chromatics.Extensions.RGB.NET.Decorators
@@ -95,7 +94,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     //var availableLeds = ledGroup.PublicGroupLeds.Except(fadingInLeds.Keys).Except(fadingOutLeds.Keys);
                     var availableLeds = ledGroup.Where(led => !fadingInLeds.ContainsKey(led) && !fadingOutLeds.ContainsKey(led));
 
-                    var selectedLeds = availableLeds.OrderBy(x => Guid.NewGuid()).Take(numberOfLeds);
+                    var availableList = availableLeds.ToList();
+                    ShuffleLeds(availableList);
+                    var selectedLeds = availableList.Take(numberOfLeds);
 
                     foreach (var led in selectedLeds)
                     {
@@ -210,9 +211,16 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             }
             catch (Exception ex)
             {
-                #if DEBUG
-                    Debug.WriteLine($"Exception: {ex.Message}");
-                #endif
+                Debug.WriteLine($"Exception: {ex.Message}");
+            }
+        }
+
+        private void ShuffleLeds(List<Led> list)
+        {
+            for (var i = list.Count - 1; i > 0; i--)
+            {
+                var j = random.Next(i + 1);
+                (list[i], list[j]) = (list[j], list[i]);
             }
         }
 

@@ -1,0 +1,16 @@
+# Normalize line endings: LF in the repo, CRLF in the working tree on Windows.
+# This suppresses the "LF will be replaced by CRLF" warnings and keeps diffs clean.
+* text=auto eol=crlf
+
+# Shell scripts and Python tools must stay LF so they run on Unix/CI.
+*.sh   text eol=lf
+*.py   text eol=lf
+
+# True binary files — never touch line endings.
+*.png  binary
+*.jpg  binary
+*.ico  binary
+*.dll  binary
+*.exe  binary
+*.zip  binary
+*.nupkg binary

@@ -4,19 +4,36 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RGB.NET.Core;
 
 namespace Chromatics.Helpers
 {
-    public class ColorHelper
+    public static class ColorHelper
     {
         public static System.Drawing.Color RGBColorToColor(RGB.NET.Core.Color col)
         {
-            return System.Drawing.Color.FromArgb((int)col.A, (int)col.R, (int)col.G, (int)col.B);
+            // RGB.NET stores channels as 0..1 floats. The old implementation cast
+            // those doubles to int, truncating every value to 0 (or 1 at full
+            // brightness), which silently destroyed interpolated colours. Use
+            // RGB.NET's byte extension methods to get proper 0..255 values.
+            return System.Drawing.Color.FromArgb(col.GetA(), col.GetR(), col.GetG(), col.GetB());
         }
 
         public static RGB.NET.Core.Color ColorToRGBColor(System.Drawing.Color col)
         {
-            return new RGB.NET.Core.Color(col.A, col.R, col.G, col.B);
+            // Palette entries authored as `Color.FromArgb(0xRRGGBB)` end up with
+            // A=0, because the single-int overload interprets the argument as
+            // AARRGGBB and leaves the top byte (alpha) zero. A transparent
+            // palette colour is never intentional — highlights, base colours,
+            // and animation colours all need to be opaque to be visible.
+            // Rather than chase every 0xRRGGBB literal across the palette
+            // model (30+ entries), treat A=0 as "alpha wasn't specified" and
+            // default it to 255. Any caller that genuinely wants a transparent
+            // result should pass Color.FromArgb(0, r, g, b) explicitly — it'll
+            // still arrive here with A=0 and get promoted to 255, which is the
+            // right behaviour for every current call site.
+            byte alpha = col.A == 0 ? (byte)255 : col.A;
+            return new RGB.NET.Core.Color(alpha, col.R, col.G, col.B);
         }
 
         public static System.Drawing.Color GetInterpolatedColor<T>(T current, T min, T max, System.Drawing.Color color1, System.Drawing.Color color2)
@@ -34,7 +51,7 @@ namespace Chromatics.Helpers
         }
     }
 
-    public class ColorInterpolator
+    public static class ColorInterpolator
     {
         public static System.Drawing.Color InterpolateBetween(System.Drawing.Color endPoint1, System.Drawing.Color endPoint2, double lambda)
         {
@@ -83,10 +100,10 @@ namespace Chromatics.Helpers
 
         public static HSLColor FromRGB(Byte R, Byte G, Byte B)
         {
-            R = (byte)(R * 255);
-            G = (byte)(G * 255);
-            B = (byte)(B * 255);
-
+            // Previous implementation multiplied each byte by 255 and re-cast to
+            // byte, which overflowed every non-zero channel into garbage before
+            // the HSL conversion even began. Inputs are already 0..255; normalise
+            // straight to 0..1.
             float _R = (R / 255.0f);
             float _G = (G / 255.0f);
             float _B = (B / 255.0f);

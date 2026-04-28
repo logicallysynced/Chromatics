@@ -1,0 +1,333 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Chromatics.DecoratorHarnessUI"
+        x:Class="Chromatics.DecoratorHarnessUI.MainWindow"
+        x:DataType="local:MainViewModel"
+        Title="Chromatics Decorator Harness"
+        Width="900" Height="750"
+        MinWidth="750" MinHeight="550">
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="10">
+
+        <!-- Row 0: Provider -->
+        <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,0,8">
+            <StackPanel Spacing="6">
+                <TextBlock Text="Provider" FontWeight="Bold" FontSize="14"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <ComboBox x:Name="ProviderCombo"
+                              ItemsSource="{Binding AvailableProviders}"
+                              SelectedItem="{Binding SelectedProvider}"
+                              DisplayMemberBinding="{ReflectionBinding Name}"
+                              Width="200"
+                              IsEnabled="{Binding !ProviderLoaded}"/>
+                    <Button Content="Load" Command="{Binding LoadProviderCommand}" IsEnabled="{Binding !ProviderLoaded}"/>
+                    <TextBlock Text="{Binding ProviderStatus}" VerticalAlignment="Center" Foreground="Gray"/>
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding Devices}" IsVisible="{Binding ProviderLoaded}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{ReflectionBinding Name}" IsChecked="{ReflectionBinding IsSelected}" Margin="0,2"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <!-- Row 1: Effect + Params side by side -->
+        <Grid Grid.Row="1" ColumnDefinitions="280,*" IsEnabled="{Binding ProviderLoaded}">
+
+            <!-- Left: Effect list -->
+            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,0,8,0">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Effects" FontWeight="Bold" FontSize="14" Margin="0,0,0,6"/>
+                    <ListBox x:Name="EffectList"
+                             ItemsSource="{Binding AllEffects}"
+                             SelectedItem="{Binding SelectedEffect}"
+                             SelectionMode="Single">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{ReflectionBinding DisplayName}" Padding="2"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </Border>
+
+            <!-- Right: Parameters + Colors -->
+            <Border Grid.Column="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="8">
+                <ScrollViewer>
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="{Binding SelectedEffectLabel}" FontWeight="Bold" FontSize="14"/>
+
+                        <WrapPanel Orientation="Horizontal" Margin="0,4">
+                            <StackPanel Spacing="2" Margin="0,0,8,6" IsVisible="{Binding ShowBpm}">
+                                <TextBlock Text="BPM" FontWeight="SemiBold"/>
+                                <StackPanel Orientation="Horizontal" Spacing="3">
+                                    <Button Content="/8" Command="{Binding BpmDiv8Command}" Width="32" Padding="4,2" FontSize="11"/>
+                                    <Button Content="/4" Command="{Binding BpmDiv4Command}" Width="32" Padding="4,2" FontSize="11"/>
+                                    <Button Content="/2" Command="{Binding BpmDiv2Command}" Width="32" Padding="4,2" FontSize="11"/>
+                                    <NumericUpDown Value="{Binding ParamBpm}" Minimum="1" Maximum="999" FormatString="0" Width="130" FontSize="14"/>
+                                    <Button Content="x2" Command="{Binding BpmMul2Command}" Width="32" Padding="4,2" FontSize="11"/>
+                                    <Button Content="x4" Command="{Binding BpmMul4Command}" Width="32" Padding="4,2" FontSize="11"/>
+                                    <Button Content="x8" Command="{Binding BpmMul8Command}" Width="32" Padding="4,2" FontSize="11"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowSpeed}">
+                                <TextBlock Text="Speed"/>
+                                <NumericUpDown Value="{Binding ParamSpeed}" Minimum="1" Maximum="999" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowInterval}">
+                                <TextBlock Text="Interval (ms)"/>
+                                <NumericUpDown Value="{Binding ParamInterval}" Minimum="1" Maximum="60000" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFadeSpeed}">
+                                <TextBlock Text="Fade Speed (ms)"/>
+                                <NumericUpDown Value="{Binding ParamFadeSpeed}" Minimum="0" Maximum="10000" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowDensity}">
+                                <TextBlock Text="Density"/>
+                                <NumericUpDown Value="{Binding ParamDensity}" Minimum="0.1" Maximum="10" Increment="0.1" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowWaveSpeed}">
+                                <TextBlock Text="Wave Speed"/>
+                                <NumericUpDown Value="{Binding ParamWaveSpeed}" Minimum="0.1" Maximum="20" Increment="0.5" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowWaveFreq}">
+                                <TextBlock Text="Wave Frequency"/>
+                                <NumericUpDown Value="{Binding ParamWaveFreq}" Minimum="0.1" Maximum="10" Increment="0.1" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFadeTime}">
+                                <TextBlock Text="Fade Time (0-1)"/>
+                                <NumericUpDown Value="{Binding ParamFadeTime}" Minimum="0" Maximum="1" Increment="0.01" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowGroupSize}">
+                                <TextBlock Text="Group Size"/>
+                                <NumericUpDown Value="{Binding ParamGroupSize}" Minimum="1" Maximum="20" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowSize}">
+                                <TextBlock Text="Size (px)"/>
+                                <NumericUpDown Value="{Binding ParamSize}" Minimum="10" Maximum="500" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowBlocks}">
+                                <TextBlock Text="Blocks"/>
+                                <NumericUpDown Value="{Binding ParamBlocks}" Minimum="1" Maximum="50" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowBlockSize}">
+                                <TextBlock Text="Block Size"/>
+                                <NumericUpDown Value="{Binding ParamBlockSize}" Minimum="1" Maximum="10" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowNumberOfLeds}">
+                                <TextBlock Text="Number of LEDs"/>
+                                <NumericUpDown Value="{Binding ParamNumberOfLeds}" Minimum="1" Maximum="200" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowStepSpeed}">
+                                <TextBlock Text="Step Speed (ms)"/>
+                                <NumericUpDown Value="{Binding ParamStepSpeed}" Minimum="1" Maximum="100" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowSustain}">
+                                <TextBlock Text="Sustain (0-1)"/>
+                                <NumericUpDown Value="{Binding ParamSustain}" Minimum="0" Maximum="1" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowRelease}">
+                                <TextBlock Text="Release (0-1)"/>
+                                <NumericUpDown Value="{Binding ParamRelease}" Minimum="0" Maximum="1" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowRepetitions}">
+                                <TextBlock Text="Repetitions (0=∞)"/>
+                                <NumericUpDown Value="{Binding ParamRepetitions}" Minimum="0" Maximum="100" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowDirection}">
+                                <TextBlock Text="Direction"/>
+                                <ToggleSwitch IsChecked="{Binding ParamDirection}" OnContent="Forward" OffContent="Reverse"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowRandomise}">
+                                <TextBlock Text="Randomise"/>
+                                <ToggleSwitch IsChecked="{Binding ParamRandomise}" OnContent="Yes" OffContent="No"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowTextureType}">
+                                <TextBlock Text="Texture Type"/>
+                                <ComboBox ItemsSource="{Binding TextureTypes}" SelectedItem="{Binding ParamTextureType}" Width="130"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="200" IsVisible="{Binding ShowDiagonalDir}">
+                                <TextBlock Text="Diagonal Direction"/>
+                                <ComboBox ItemsSource="{Binding DiagonalDirections}" SelectedItem="{Binding ParamDiagonalDir}" Width="190"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFallDir}">
+                                <TextBlock Text="Fall Direction"/>
+                                <ComboBox ItemsSource="{Binding FallDirections}" SelectedItem="{Binding ParamFallDir}" Width="130"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowIntensity}">
+                                <TextBlock Text="Intensity"/>
+                                <NumericUpDown Value="{Binding ParamIntensity}" Minimum="0.1" Maximum="3" Increment="0.1" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFlickerSpeed}">
+                                <TextBlock Text="Flicker Speed"/>
+                                <NumericUpDown Value="{Binding ParamFlickerSpeed}" Minimum="0.5" Maximum="10" Increment="0.5" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowBeamWidth}">
+                                <TextBlock Text="Beam Width"/>
+                                <NumericUpDown Value="{Binding ParamBeamWidth}" Minimum="0.3" Maximum="5" Increment="0.1" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowSpawnInterval}">
+                                <TextBlock Text="Spawn Interval (s)"/>
+                                <NumericUpDown Value="{Binding ParamSpawnInterval}" Minimum="0.05" Maximum="5" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowPulseRadius}">
+                                <TextBlock Text="Pulse Radius"/>
+                                <NumericUpDown Value="{Binding ParamPulseRadius}" Minimum="2" Maximum="30" Increment="1" FormatString="0.#"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFadeWidth}">
+                                <TextBlock Text="Fade Width"/>
+                                <NumericUpDown Value="{Binding ParamFadeWidth}" Minimum="0.3" Maximum="6" Increment="0.2" FormatString="0.#"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowRippleSpeed}">
+                                <TextBlock Text="Ripple Speed"/>
+                                <NumericUpDown Value="{Binding ParamRippleSpeed}" Minimum="1" Maximum="30" Increment="1" FormatString="0.#"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowTailLength}">
+                                <TextBlock Text="Tail Length"/>
+                                <NumericUpDown Value="{Binding ParamTailLength}" Minimum="1" Maximum="20" Increment="0.5" FormatString="0.#"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowLaserDir}">
+                                <TextBlock Text="Laser Direction"/>
+                                <ComboBox ItemsSource="{Binding LaserDirections}" SelectedItem="{Binding ParamLaserDir}" Width="130"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowBpmSpeed}">
+                                <TextBlock Text="Speed Modifier"/>
+                                <ComboBox ItemsSource="{Binding BpmSpeedModifiers}" SelectedItem="{Binding ParamBpmSpeed}" Width="130"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="160" IsVisible="{Binding ShowBeatsPerCycle}">
+                                <TextBlock Text="Beats per Cycle"/>
+                                <NumericUpDown Value="{Binding ParamBeatsPerCycle}" Minimum="0.05" Maximum="32" Increment="0.25" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowSimultaneousBeams}">
+                                <TextBlock Text="Simultaneous Beams"/>
+                                <NumericUpDown Value="{Binding ParamSimultaneousBeams}" Minimum="1" Maximum="20" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFlickerOpacity}">
+                                <TextBlock Text="Flicker Opacity (0-1)"/>
+                                <NumericUpDown Value="{Binding ParamFlickerOpacity}" Minimum="0" Maximum="1" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowMatrixDir}">
+                                <TextBlock Text="Matrix Direction"/>
+                                <ComboBox ItemsSource="{Binding MatrixDirections}" SelectedItem="{Binding ParamMatrixDir}" Width="130"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFadeBetween}">
+                                <TextBlock Text="Fade Between (s)"/>
+                                <NumericUpDown Value="{Binding ParamFadeBetween}" Minimum="0" Maximum="5" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowAccentEvery}">
+                                <TextBlock Text="Accent Every N"/>
+                                <NumericUpDown Value="{Binding ParamAccentEvery}" Minimum="1" Maximum="32" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowDecay}">
+                                <TextBlock Text="Decay (s)"/>
+                                <NumericUpDown Value="{Binding ParamDecay}" Minimum="0.05" Maximum="5" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowWedgeDegrees}">
+                                <TextBlock Text="Wedge (degrees)"/>
+                                <NumericUpDown Value="{Binding ParamWedgeDegrees}" Minimum="5" Maximum="180" Increment="5" FormatString="0"/>
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <Separator Margin="0,4"/>
+                        <TextBlock Text="Diagnostics" FontWeight="Bold" FontSize="14" Margin="0,4,0,0"/>
+                        <WrapPanel Orientation="Horizontal" Margin="0,4">
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140">
+                                <TextBlock Text="Key Highlights"/>
+                                <ToggleSwitch IsChecked="{Binding ParamAsdwHighlight}" OnContent="On" OffContent="Off"
+                                              ToolTip.Tip="Paint a static colour on Keyboard A, S, D, W keys, on top of any running effect. Useful for spotting where the gameplay-movement keys land."/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,6,4">
+                                <TextBlock Text="Highlight colour"/>
+                                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Height="36" Width="80"
+                                        Background="{Binding AsdwHighlightColorBrush}" Cursor="Hand"
+                                        Tapped="OnColorSwatchTapped" Tag="AsdwHighlight"/>
+                            </StackPanel>
+                        </WrapPanel>
+
+                        <Separator Margin="0,4"/>
+                        <TextBlock Text="Colors" FontWeight="Bold" FontSize="14" Margin="0,4,0,0"/>
+                        <WrapPanel Orientation="Horizontal" Margin="0,4">
+                            <StackPanel Spacing="2" Margin="0,0,6,4" IsVisible="{Binding ShowColorBase}">
+                                <TextBlock Text="Base"/>
+                                <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Height="36" Width="80"
+                                        Background="{Binding ColorBaseBrush}" Cursor="Hand"
+                                        Tapped="OnColorSwatchTapped" Tag="Base"/>
+                            </StackPanel>
+                            <ItemsControl ItemsSource="{Binding ColorSlots}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="local:ColorSlot">
+                                        <StackPanel Spacing="2" Margin="0,0,6,4">
+                                            <DockPanel>
+                                                <Button DockPanel.Dock="Right" Content="✕"
+                                                        Padding="4,0" FontSize="10" Width="20" Height="18"
+                                                        VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                                                        Margin="4,0,0,0"
+                                                        Click="OnRemoveColorClicked"
+                                                        Tag="{ReflectionBinding}"
+                                                        ToolTip.Tip="Remove this color"/>
+                                                <TextBlock Text="{ReflectionBinding Label}" VerticalAlignment="Center"/>
+                                            </DockPanel>
+                                            <Border BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Height="36" Width="80"
+                                                    Background="{ReflectionBinding Brush}" Cursor="Hand"
+                                                    Tapped="OnColorSlotTapped"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <StackPanel Spacing="2" Margin="0,0,6,4" VerticalAlignment="Bottom">
+                                <TextBlock Text=" " FontSize="10"/>
+                                <Button Content="+ Add Color" Click="OnAddColorClicked"
+                                        IsEnabled="{Binding CanAddColor}"
+                                        Height="36" Padding="10,0"
+                                        ToolTip.Tip="Add another color slot"/>
+                            </StackPanel>
+                        </WrapPanel>
+                        <Separator Margin="0,8"/>
+                        <DockPanel Margin="0,4,0,0">
+                            <TextBlock DockPanel.Dock="Left" Text="Code Snippet" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/>
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+                                <ComboBox ItemsSource="{Binding CodeModes}" SelectedItem="{Binding SelectedCodeMode}" Width="160"/>
+                                <Button Content="Copy" Command="{Binding CopyCodeCommand}" Width="60" ToolTip.Tip="Copy to clipboard"/>
+                            </StackPanel>
+                        </DockPanel>
+                        <TextBox Text="{Binding GeneratedCode, Mode=OneWay}"
+                                 IsReadOnly="True"
+                                 AcceptsReturn="True"
+                                 FontFamily="Consolas,Courier New,monospace"
+                                 FontSize="11"
+                                 MinHeight="120"
+                                 MaxHeight="300"
+                                 Margin="0,6,0,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- Row 2: Controls -->
+        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="4" Padding="8" Margin="0,8,0,0">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Right" Text="{Binding RunningStatus}" VerticalAlignment="Center" Foreground="Gray" Margin="12,0,0,0"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Start" Command="{Binding StartCommand}" IsEnabled="{Binding !IsRunning}" Width="80"/>
+                    <Button Content="Stop" Command="{Binding StopCommand}" IsEnabled="{Binding IsRunning}" Width="80"/>
+                    <Button Content="Restart" Command="{Binding RestartCommand}" IsEnabled="{Binding IsRunning}" Width="80"
+                            ToolTip.Tip="Stop and re-start with current params"/>
+                    <Border Width="1" Background="Gray" Margin="4,2"/>
+                    <Button Content="Save as Preset" Command="{Binding SavePresetCommand}" Width="110"
+                            ToolTip.Tip="Save current params as a named preset (this session only)"/>
+                    <Border Width="1" Background="Gray" Margin="4,2"/>
+                    <ToggleButton Content="Live Update" IsChecked="{Binding LiveUpdate}"
+                                  ToolTip.Tip="Auto-restart effect when parameters change"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+    </Grid>
+</Window>

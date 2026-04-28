@@ -31,9 +31,10 @@ namespace Chromatics.Enums
         BattleStance = 2,
         [LayerDisplay(Name = "Job Classes", Description = "Base layer changes colour depending on the character's current class.\nUses base layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         JobClasses = 3,
-        //[LayerDisplay(Name = "Screen Capture", Description = "Draws a gradient as your base layer by polling the four corners of your game screen.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        //ScreenCapture = 4,
-        
+        [LayerDisplay(Name = "Screen Capture (Beta)", Description = "Ambient base layer that samples the FFXIV game window and paints a matching colour gradient across your devices.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        ScreenCapture = 4,
+        [LayerDisplay(Name = "Audio Visualizer (Beta)", Description = "Spectrum analyser base layer that reacts to game audio output. Displays frequency bars across keyboard columns.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        AudioVisualizer = 5,
     };
     public enum DynamicLayerType
     {
@@ -49,24 +50,26 @@ namespace Chromatics.Enums
         TargetHP = 4,
         [LayerDisplay(Name = "Target Castbar", Description = "Shows current target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         TargetCastbar = 5,
-        [LayerDisplay(Name = "HP Tracker", Description = "Shows character's HP across selected keys. Will switch to critical colour upon falling below {criticalHpPercentage} HP.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
+        [LayerDisplay(Name = "HP Tracker", Description = "Shows character's HP across selected keys. Will switch to critical colour upon falling below 20% HP.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         HPTracker = 6,
         [LayerDisplay(Name = "MP Tracker", Description = "Shows character's MP/CP/GP across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         MPTracker = 7,
         [LayerDisplay(Name = "Job Gauge A", Description = "Shows character's Job Gauge (A) across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         JobGaugeA = 8,
         [LayerDisplay(Name = "Job Gauge B", Description = "Shows character's Job Gauge (B) across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
-        JobGaugeB = 9, 
+        JobGaugeB = 9,
         [LayerDisplay(Name = "Experience Tracker", Description = "Shows character's EXP level progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
-        ExperienceTracker = 10,
-        [LayerDisplay(Name = "Battle Stance", Description = "Displays different colours across selected kyes depending on whether the character is engaged in battle or not.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        BattleStance = 11,
+        ExperienceTracker = 11,
+        [LayerDisplay(Name = "Job Gauge C", Description = "Shows character's Job Gauge (C) across selected keys. Only populated for jobs with a third meaningful gauge element.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
+        JobGaugeC = 10,
+        [LayerDisplay(Name = "Battle Stance", Description = "Displays different colours across selected keys depending on whether the character is engaged in battle or not.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        BattleStance = 12,
         [LayerDisplay(Name = "Castbar", Description = "Shows character's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
-        Castbar = 12,
+        Castbar = 13,
         [LayerDisplay(Name = "Job Classes Highlight", Description = "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        JobClassesHighlight = 13,
+        JobClassesHighlight = 14,
         [LayerDisplay(Name = "Reactive Weather Highlight", Description = "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        ReactiveWeatherHighlight = 14
+        ReactiveWeatherHighlight = 15
     };
     public enum EffectLayerType
     {

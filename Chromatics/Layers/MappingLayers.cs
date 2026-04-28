@@ -12,9 +12,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Timers;
-using System.Windows.Forms;
-using System.Drawing;
-using Chromatics.Forms;
 using System.Runtime.Serialization;
 using Org.BouncyCastle.Utilities.Collections;
 
@@ -31,8 +28,22 @@ namespace Chromatics.Layers
         private static int _prev = 0;
 
         private static bool _preview;
-        
+
         private static ConcurrentDictionary<int, Layer> _layers = new ConcurrentDictionary<int, Layer>();
+
+        // Per-device override positions for non-keyboard virtual layouts. The
+        // VM seeds keycaps on a grid; this dict lets users drag keys into any
+        // shape and have the positions persist across restarts. Keyed first by
+        // device GUID, then by RGB.NET LedId. Persisted alongside _layers via
+        // MappingFileV3.
+        private static ConcurrentDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> _deviceLayouts
+            = new ConcurrentDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();
+
+        // Per-device brightness multiplier 0..100 (default 100 = unchanged).
+        // Composes multiplicatively with the global brightness slider; the
+        // global value remains the master cap. Keyed by device GUID.
+        private static ConcurrentDictionary<Guid, int> _deviceBrightness
+            = new ConcurrentDictionary<Guid, int>();
 
 
         public static int AddLayer(int index, LayerType rootLayerType, Guid deviceGuid, RGBDeviceType deviceType, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
@@ -75,6 +86,77 @@ namespace Chromatics.Layers
             return layer;
         }
 
+        // Swaps from QWERTY canonical positions to each target layout. Each dict
+        // maps LedId (on QWERTY) -> LedId at the same printed letter on the
+        // target layout. The dicts are involutions (swaps), so applying the same
+        // table twice is a no-op — which is what lets us compose arbitrary
+        // transitions via QWERTY as the pivot.
+        private static readonly Dictionary<KeyboardLocalization, Dictionary<LedId, LedId>> _layoutSwapsFromQwerty =
+            new Dictionary<KeyboardLocalization, Dictionary<LedId, LedId>>
+            {
+                { KeyboardLocalization.qwerty, new Dictionary<LedId, LedId>() },
+                { KeyboardLocalization.qwertz, new Dictionary<LedId, LedId>
+                    {
+                        { LedId.Keyboard_Y, LedId.Keyboard_Z },
+                        { LedId.Keyboard_Z, LedId.Keyboard_Y },
+                    }
+                },
+                { KeyboardLocalization.azerty, new Dictionary<LedId, LedId>
+                    {
+                        { LedId.Keyboard_Q, LedId.Keyboard_A },
+                        { LedId.Keyboard_A, LedId.Keyboard_Q },
+                        { LedId.Keyboard_W, LedId.Keyboard_Z },
+                        { LedId.Keyboard_Z, LedId.Keyboard_W },
+                    }
+                },
+            };
+
+        private static LedId TranslateLedId(LedId led, KeyboardLocalization from, KeyboardLocalization to)
+        {
+            if (from == to) return led;
+
+            // Back-map to QWERTY canonical LedId, then forward to the target.
+            // Swaps are involutions so the "from" table doubles as its own inverse.
+            var fromSwap = _layoutSwapsFromQwerty[from];
+            var toSwap = _layoutSwapsFromQwerty[to];
+
+            var canonical = fromSwap.TryGetValue(led, out var c) ? c : led;
+            return toSwap.TryGetValue(canonical, out var t) ? t : canonical;
+        }
+
+        // Called when the user switches keyboard layout. Rewrites every
+        // keyboard layer's deviceLeds so that a key the user picked by its
+        // printed label (e.g. "Y") continues to refer to the same label on the
+        // new layout (e.g. QWERTZ's Y, which is physical LedId.Keyboard_Z).
+        public static void RemapLedIdsForLayoutChange(KeyboardLocalization from, KeyboardLocalization to)
+        {
+            if (from == to) return;
+            if (!_layoutSwapsFromQwerty.ContainsKey(from) || !_layoutSwapsFromQwerty.ContainsKey(to)) return;
+
+            foreach (var kvp in _layers)
+            {
+                var layer = kvp.Value;
+                if (layer.deviceType != RGBDeviceType.Keyboard) continue;
+                if (layer.deviceLeds == null || layer.deviceLeds.Count == 0) continue;
+
+                var remapped = new Dictionary<int, LedId>(layer.deviceLeds.Count);
+                var changed = false;
+                foreach (var entry in layer.deviceLeds)
+                {
+                    var translated = TranslateLedId(entry.Value, from, to);
+                    if (translated != entry.Value) changed = true;
+                    remapped[entry.Key] = translated;
+                }
+
+                if (changed)
+                {
+                    layer.deviceLeds = remapped;
+                    layer.requestUpdate = true;
+                    _version++;
+                }
+            }
+        }
+
         public static int CountLayers()
         {
             return _layers.Count;
@@ -85,65 +167,158 @@ namespace Chromatics.Layers
             return _layerAutoID + 1;
         }
 
+        // Per-device key-position overrides (non-keyboard devices). Returns a
+        // snapshot so callers can iterate safely while the VM updates positions
+        // during a drag. Never returns null.
+        public static IReadOnlyDictionary<LedId, DeviceKeyPosition> GetDeviceLayoutOverrides(Guid deviceId)
+        {
+            if (_deviceLayouts.TryGetValue(deviceId, out var map))
+                return new Dictionary<LedId, DeviceKeyPosition>(map);
+            return new Dictionary<LedId, DeviceKeyPosition>();
+        }
+
+        public static void SetDeviceKeyPosition(Guid deviceId, LedId ledId, double x, double y)
+        {
+            // Copy-on-write: build a fresh dict for every update and swap it in
+            // via AddOrUpdate. The save path serialises _deviceLayouts on a
+            // background task and was hitting "Collection was modified" when a
+            // drag-release mutated the inner dict mid-enumeration. Replacing the
+            // reference atomically means serializers only ever see a frozen
+            // snapshot.
+            var pos = new DeviceKeyPosition { X = x, Y = y };
+            _deviceLayouts.AddOrUpdate(deviceId,
+                _ => new Dictionary<LedId, DeviceKeyPosition> { [ledId] = pos },
+                (_, existing) =>
+                {
+                    var next = new Dictionary<LedId, DeviceKeyPosition>(existing)
+                    {
+                        [ledId] = pos
+                    };
+                    return next;
+                });
+            _version++;
+        }
+
+        public static void ClearDeviceLayoutOverrides(Guid deviceId)
+        {
+            if (_deviceLayouts.TryRemove(deviceId, out _))
+                _version++;
+        }
+
+        internal static ConcurrentDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> GetAllDeviceLayouts()
+        {
+            return _deviceLayouts;
+        }
+
+        public static void ReplaceDeviceLayouts(IDictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> fresh)
+        {
+            _deviceLayouts.Clear();
+            if (fresh == null) return;
+            foreach (var kvp in fresh)
+                _deviceLayouts[kvp.Key] = kvp.Value;
+        }
+
+        public static int GetDeviceBrightness(Guid deviceId)
+        {
+            return _deviceBrightness.TryGetValue(deviceId, out var v) ? v : 100;
+        }
+
+        // Persists the per-device brightness and pushes the new value to the
+        // active correction so the next render frame reflects the change.
+        // Save is fire-and-forget so the slider stays responsive during drag.
+        public static void SetDeviceBrightness(Guid deviceId, int value)
+        {
+            if (value < 0) value = 0;
+            else if (value > 100) value = 100;
+
+            _deviceBrightness[deviceId] = value;
+            _version++;
+
+            RGBController.SetDeviceBrightness(deviceId, value);
+            System.Threading.Tasks.Task.Run(() => SaveMappings());
+        }
+
+        internal static ConcurrentDictionary<Guid, int> GetAllDeviceBrightness()
+        {
+            return _deviceBrightness;
+        }
+
+        public static void ReplaceDeviceBrightness(IDictionary<Guid, int> fresh)
+        {
+            _deviceBrightness.Clear();
+            if (fresh == null) return;
+            foreach (var kvp in fresh)
+                _deviceBrightness[kvp.Key] = kvp.Value;
+        }
+
         public static bool LoadMappings(bool over = false)
         {
-            if (FileOperationsHelper.CheckLayerMappingsExist())
+            if (!FileOperationsHelper.CheckLayerMappingsExist()) return false;
+
+            var (tempLayers, tempDeviceLayouts, tempDeviceBrightness) = FileOperationsHelper.LoadLayerMappings();
+            if (tempLayers == null) return false;
+
+            // Device layout overrides live in a separate top-level field in the
+            // V3 file, so they come through as-is without going near the layer
+            // migration path. Always replace wholesale — partial merges would
+            // leak stale overrides from a prior session.
+            ReplaceDeviceLayouts(tempDeviceLayouts);
+            ReplaceDeviceBrightness(tempDeviceBrightness);
+
+            var flag = false;
+            var empty = false;
+
+            foreach (var mapping in tempLayers)
             {
-                var _Templayers = FileOperationsHelper.LoadLayerMappings();
-
-                if (_Templayers == null)
+                if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null || mapping.Value.deviceGuid == Guid.Empty)
                 {
-                    return false;
+                    flag = true;
+                    if (mapping.Value.deviceGuid == Guid.Empty) empty = true;
                 }
-
-                var flag = false;
-                var empty = false;
-
-                foreach (var mapping in _Templayers)
-                {
-                    if (mapping.Value.layerVersion != AppSettings.currentMappingLayerVersion || mapping.Value.layerVersion == null || mapping.Value.deviceGuid == Guid.Empty)
-                    {
-                        flag = true;
-
-                        if (mapping.Value.deviceGuid == Guid.Empty)
-                        {
-                            empty = true;
-                        }
-                    }
-                }
-
-                if (flag || over)
-                {
-                    Debug.WriteLine("Flagged for upgrade");
-
-                    if (!empty)
-                    {
-                        FileOperationsHelper.CreateLayersBackup();
-                    }
-
-                    QueueImportMappings(_Templayers, empty);
-                }
-                else
-                {
-                    _layers.Clear();
-                    _layers = _Templayers;
-                }
-
-                _layerAutoID = _layers.LastOrDefault().Key;
-                _version++;
-
-                return true;
             }
 
-            return false;
+            if (flag || over)
+            {
+                if (!empty)
+                {
+                    FileOperationsHelper.CreateLayersBackup();
+                }
+
+                QueueImportMappings(tempLayers, empty);
+            }
+            else
+            {
+                _layers.Clear();
+                _layers = tempLayers;
+            }
+
+            // ConcurrentDictionary isn't ordered — LastOrDefault returns an
+            // arbitrary entry, which lets the next AddLayer collide with an
+            // existing id and silently drop the new layer via GetOrAdd.
+            // Use the actual max so new ids always slot in above the loaded set.
+            _layerAutoID = _layers.Keys.DefaultIfEmpty(0).Max();
+            _version++;
+
+            return true;
         }
 
         private static void QueueImportMappings(ConcurrentDictionary<int, Layer> importedLayer, bool empty = false)
         {
-            // Start a timer to check periodically if RGBController is loaded
-            _timer = new System.Timers.Timer(1000); // Check every second
+            // When RGBController is already loaded (the normal Avalonia path,
+            // where LoadMappings is called after Setup), migrate inline. The
+            // old 1-second timer raced with any VM-side default-seeding: the
+            // VM would wrap freshly-seeded Layer objects just before the timer
+            // fired ImportMappings, which clears _layers and breaks those
+            // wrappers mid-flight. Inline migration eliminates the race.
+            if (RGBController.IsLoaded())
+            {
+                ImportMappings(importedLayer, empty);
+                return;
+            }
+
+            _timer = new System.Timers.Timer(1000);
             _timer.Elapsed += (sender, e) => CheckRGBControllerLoaded(importedLayer, empty);
-            _timer.AutoReset = false; // Ensure the timer does not restart automatically
+            _timer.AutoReset = false;
             _timer.Start();
         }
 
@@ -154,15 +329,8 @@ namespace Chromatics.Layers
                 if (RGBController.IsLoaded())
                 {
                     ImportMappings(state as ConcurrentDictionary<int, Layer>, empty);
-
-                    if (Uc_Mappings.Instance.InvokeRequired)
-                    {
-                        Uc_Mappings.Instance.Invoke(new MethodInvoker(() => Uc_Mappings.Instance.ChangeDeviceType()));
-                    }
-                    else
-                    {
-                        Uc_Mappings.Instance.ChangeDeviceType();
-                    }
+                    // The Avalonia Mapping VM picks up device-type changes via
+                    // RGBController.DeviceConnectionChanged, so nothing to invoke here.
                 }
             }
             finally
@@ -174,35 +342,18 @@ namespace Chromatics.Layers
 
         public static bool SaveMappings()
         {
-            FileOperationsHelper.SaveLayerMappings(_layers);
-
-            /*
-            foreach (var layer in _layers)
-            {
-                Debug.WriteLine($"Saving layer: {layer.Key}, Version: {layer.Value.layerVersion}, Guid: {layer.Value.deviceGuid}");
-            }
-            */
-
+            FileOperationsHelper.SaveLayerMappings(_layers, _deviceLayouts, _deviceBrightness);
             return true;
         }
 
         public static bool ImportMappings(ConcurrentDictionary<int, Layer> importedLayer = null, bool empty = false)
         {
-            var layers = importedLayer ?? FileOperationsHelper.ImportLayerMappings();
+            var layers = importedLayer;
 
             if (layers != null)
             {
 
 
-                // Log layers and their versions
-#if DEBUG
-                Debug.WriteLine($"Total layers loaded: {layers.Count}");
-
-                foreach (var layer in layers)
-                {
-                    Debug.WriteLine($"Layer ID: {layer.Key}, Version: {layer.Value.layerVersion}");
-                }
-#endif
                 var migratedLayers = new Dictionary<int, Layer>();
                 var layersToMigrate = layers.Where(l => l.Value.layerVersion == "1").GroupBy(l => l.Value.deviceType);
 
@@ -217,8 +368,6 @@ namespace Chromatics.Layers
                 {
                     var deviceType = group.Key;
                     var deviceLayers = group.ToList();
-
-                    Debug.WriteLine($"Device Type: {deviceType}, Layers Count: {deviceLayers.Count}");
 
                     var availableDevices = currentDevices.Where(d => d.Value.DeviceInfo.DeviceType == deviceType).ToList();
                     if (availableDevices.Count == 0)
@@ -244,8 +393,6 @@ namespace Chromatics.Layers
                 {
                     var deviceType = group.Key;
                     var deviceLayers = group.ToList();
-
-                    Debug.WriteLine($"Device Type: {deviceType}, Layers Count: {deviceLayers.Count} with blank GUID");
 
                     var availableDevices = currentDevices.Where(d => d.Value.DeviceInfo.DeviceType == deviceType).ToList();
                     if (availableDevices.Count == 0)
@@ -290,7 +437,7 @@ namespace Chromatics.Layers
                     _layers[layer.Key] = layer.Value;
                 }
 
-                _layerAutoID = _layers.LastOrDefault().Key;
+                _layerAutoID = _layers.Keys.DefaultIfEmpty(0).Max();
                 _version++;
 
                 SaveMappings();
@@ -302,9 +449,21 @@ namespace Chromatics.Layers
         }
 
 
-        public static bool ExportMappings()
+        // Path-driven methods for Avalonia StorageProvider callers
+        // themselves (Avalonia StorageProvider). Import re-runs the full migration
+        // pipeline by funnelling through ImportMappings(imported, empty: false).
+        public static bool ImportMappingsFromPath(string path)
         {
-            FileOperationsHelper.ExportLayerMappings(_layers);
+            var (loaded, loadedLayouts, loadedBrightness) = FileOperationsHelper.ImportLayerMappingsFromPath(path);
+            if (loaded == null) return false;
+            ReplaceDeviceLayouts(loadedLayouts);
+            ReplaceDeviceBrightness(loadedBrightness);
+            return ImportMappings(loaded);
+        }
+
+        public static bool ExportMappingsToPath(string path)
+        {
+            FileOperationsHelper.ExportLayerMappingsToPath(_layers, path, _deviceLayouts, _deviceBrightness);
             return true;
         }
 
@@ -338,6 +497,34 @@ namespace Chromatics.Layers
         {
             return _version;
         }
+    }
+
+    // Per-key position override for non-keyboard virtual layouts. Stored per
+    // device GUID in MappingLayers._deviceLayouts and persisted alongside the
+    // layer dict in the MappingFileV3 wrapper.
+    public class DeviceKeyPosition
+    {
+        public double X { get; set; }
+        public double Y { get; set; }
+    }
+
+    // On-disk format for layers.chromatics4 starting at schemaVersion 3.
+    // Previous versions serialized a bare ConcurrentDictionary<int, Layer>;
+    // FileOperationsHelper.LoadLayerMappings sniffs the root shape and falls
+    // back to that form when it's absent. Incremented whenever we add a new
+    // top-level field that the legacy format can't represent. Class name
+    // retained for source-history continuity — the schemaVersion field is
+    // the source of truth for the on-disk shape.
+    //   v3: layers + deviceLayouts
+    //   v4: layers + deviceLayouts + deviceBrightness
+    public class MappingFileV3
+    {
+        public int schemaVersion { get; set; } = 4;
+        public ConcurrentDictionary<int, Layer> layers { get; set; } = new ConcurrentDictionary<int, Layer>();
+        public Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> deviceLayouts { get; set; }
+            = new Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();
+        public Dictionary<Guid, int> deviceBrightness { get; set; }
+            = new Dictionary<Guid, int>();
     }
 
     public class Layer : IMappingLayer

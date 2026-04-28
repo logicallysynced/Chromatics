@@ -5,7 +5,6 @@ using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using Chromatics.Models;
 using RGB.NET.Core;
-using Sanford.Multimedia;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,7 +13,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using static Chromatics.Helpers.MathHelper;
 using Color = RGB.NET.Core.Color;
 
@@ -253,7 +251,7 @@ namespace Chromatics.Layers
 
         private void UpdateLedGroupBrush(Sharlayan.Core.ActionItem action, ListLedGroup ledGroup, Dictionary<string, Color> specialActionColors)
         {
-            if (action.Category == 49 || action.Category == 51)
+            if (action.Category == 49 || action.Category == 51 || action.Category == 56)
             {
                 if (!action.IsAvailable || !action.InRange || !action.ChargeReady || action.CoolDownPercent > 0)
                 {

@@ -1,0 +1,128 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Chromatics.ViewModels"
+             xmlns:loc="clr-namespace:Chromatics.Localization"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="720"
+             x:Class="Chromatics.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <!-- Single scroll; Advanced sits inline with the other sections for a
+         consistent reading order. Bottom margin gives breathing room at the
+         end of the scroll. -->
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled" Padding="16">
+        <StackPanel Spacing="20" Margin="0,0,0,80">
+
+            <!-- General -->
+            <HeaderedContentControl Header="{loc:Tr Key=General}">
+                <StackPanel Spacing="8" Margin="4,8,4,0">
+                    <CheckBox Content="{loc:Tr Key='Start Chromatics when Windows starts.'}"
+                              IsChecked="{Binding WinStart, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Minimise to system tray on close.'}"
+                              IsChecked="{Binding MinimizeTray, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Start Chromatics minimised to the tray.'}"
+                              IsChecked="{Binding TrayOnStartup, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Check for updates on startup.'}"
+                              IsChecked="{Binding CheckUpdates, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Enabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Close Chromatics when FFXIV closes.'}"
+                              IsChecked="{Binding CloseWithGame, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                </StackPanel>
+            </HeaderedContentControl>
+
+            <!-- Appearance -->
+            <HeaderedContentControl Header="{loc:Tr Key='Appearance &amp; Language'}">
+                <StackPanel Spacing="10" Margin="4,8,4,0">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="{loc:Tr Key=Theme}" Width="160" VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding ThemeOptions}"
+                                  SelectedItem="{Binding SelectedTheme, Mode=TwoWay}"
+                                  MinWidth="240" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="{loc:Tr Key=Language}" Width="160" VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding LanguageOptions}"
+                                  SelectedItem="{Binding SelectedLanguage, Mode=TwoWay}"
+                                  MinWidth="240" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="{loc:Tr Key='Keyboard Layout'}" Width="160" VerticalAlignment="Center" />
+                        <ComboBox ItemsSource="{Binding KeyboardLayoutOptions}"
+                                  SelectedItem="{Binding SelectedKeyboardLayout, Mode=TwoWay}"
+                                  MinWidth="240" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <TextBlock Text="{loc:Tr Key='Global Brightness'}" Width="160" VerticalAlignment="Center" />
+                        <Slider Minimum="0" Maximum="100"
+                                Value="{Binding GlobalBrightness, Mode=TwoWay}"
+                                Width="240" />
+                        <TextBlock Text="{Binding GlobalBrightnessLabel}"
+                                   VerticalAlignment="Center" MinWidth="40" />
+                    </StackPanel>
+                </StackPanel>
+            </HeaderedContentControl>
+
+            <!-- Device Providers: WrapPanel capped at ~4 cols via MaxWidth.
+                 Tile width 160 + 2×6 margin = 172 per tile; 4 × 172 = 688.
+                 All tiles are always rendered; layout reflows if window narrows. -->
+            <HeaderedContentControl Header="{loc:Tr Key='Device Providers'}">
+                <ItemsControl ItemsSource="{Binding DeviceToggles}"
+                              MaxWidth="700"
+                              HorizontalAlignment="Left"
+                              Margin="4,8,4,0">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:DeviceToggleItem">
+                            <ToggleButton Classes="tile"
+                                          IsChecked="{Binding IsEnabled, Mode=TwoWay}"
+                                          Width="160" Height="90"
+                                          ToolTip.Tip="{Binding Tooltip}">
+                                <TextBlock Text="{Binding Label}"
+                                           TextWrapping="Wrap"
+                                           TextAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           MaxWidth="140" />
+                            </ToggleButton>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </HeaderedContentControl>
+
+            <!-- Advanced -->
+            <HeaderedContentControl Header="{loc:Tr Key=Advanced}">
+                <StackPanel Spacing="12" Margin="4,8,4,4">
+                    <CheckBox Content="{loc:Tr Key='Opt in to beta releases. When enabled, beta updates are offered if no stable update is available.'}"
+                              IsChecked="{Binding BetaChannel, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Always relaunch Chromatics as Administrator. Required for reading FFXIV process memory.'}"
+                              IsChecked="{Binding AlwaysRunAsAdmin, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='When enabled, Chromatics will automatically prompt for administrator privileges on each launch.'}" />
+                    <CheckBox Content="{loc:Tr Key='Send anonymous performance and error telemetry to help improve Chromatics.'}"
+                              IsChecked="{Binding EnableCrashReports, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.'}" />
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <Button Content="{loc:Tr Key='Check for Updates'}"
+                                Click="OnCheckUpdatesClick"
+                                ToolTip.Tip="{loc:Tr Key='Check for a new Chromatics update now.'}" />
+                        <Button Content="{loc:Tr Key='Reset Chromatics'}"
+                                Click="OnResetClick"
+                                ToolTip.Tip="{loc:Tr Key='Restore Chromatics to its default state. Requires application restart.'}" />
+                        <Button Content="{loc:Tr Key='Collect Logs'}"
+                                Click="OnCollectLogsClick"
+                                ToolTip.Tip="{loc:Tr Key='Gather the console output, config files, and system info into a zip file for support.'}" />
+                    </StackPanel>
+                </StackPanel>
+            </HeaderedContentControl>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

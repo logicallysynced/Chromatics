@@ -9,10 +9,25 @@
 
 [Join Support Discord](https://discord.gg/sK47yFE)
 <br>
-[Documentation](https://docs.chromaticsffxiv.com/chromatics-3)
+[Documentation](https://docs.chromaticsffxiv.com/chromatics-4)
 <br>
 <br>
-***Important:** This is a new branch for Chromatics 3.x series. It is a complete rebuild of Chromatics from the ground up in .NET 6. It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did.*
+***Important:** This is the Chromatics 4.x series. It is a complete rebuild of Chromatics from the ground up in .NET 10. It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did.*
+
+> ### ⚠️ Upgrading from Chromatics 3?
+> Chromatics 4 stores your settings in a new location on your computer, and **your previous settings will not be carried across automatically**. You can bring your layers and colour palette across manually using the steps below.
+>
+> **To bring your layer mappings across:**
+> 1. Find your old `layers.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
+> 2. Open Chromatics 4 and go to the **Mapping** tab.
+> 3. Click **Import** and select your `layers.chromatics3` file.
+>
+> **To bring your colour palette across:**
+> 1. Find your old `palette.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
+> 2. Open Chromatics 4 and go to the **Palette** tab.
+> 3. Click **Import** and select your `palette.chromatics3` file.
+>
+> Your effects settings will need to be configured again from scratch. We apologise for the inconvenience — the rebuild was significant enough that a fully automatic migration was not possible.
 <br><br>
 Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting effects on your RGB devices. There are many different scenes and effects available including:
 * HP/MP/GP/CP
@@ -28,42 +43,52 @@ Chromatics is a third-party add-on for Final Fantasy XIV which creates lighting 
 * Gold Saucer Vegas Mode
 * Title screen & cutscene animations
 <br>
-<img src="https://chromaticsffxiv.com/img/Chromatics3_PaletteScreen.png" alt="Chromatics Palettes">
+<img src="https://chromaticsffxiv.com/img/Chromatics4_MappingScreen.png" alt="Chromatics Palettes">
 <br>
 <br>
 Chromatics is compatible with a wide range of RGB devices, supported by the library RGB.NET. Any devices supported by RGB.NET should be supported by Chromatics.
+<br>
 
-<br><br>
-### Changes from Chromatics 2.x ###
-
-**Device Compatibility**
-<br>
-Chromatics 2.x (and 1.x) was originally designed to work only with Razer RGB devices using a dedicated library. Over time we added vendor devices, but each of these required their own seperate library to work with their vendor devices. After many years this has made the codebase very difficult to maintain and update due to managing upwards of 8 different libraries, to the point where it became impossible for me to keep them all up to date.
-<br><br>
-In Chromatics 3.x we are implementing a single library, [RGB.NET](https://github.com/DarthAffe/RGB.NET) that is designed to work with multiple vendors in a unified way. This will make continued development and management much easier, as well as far more memory/CPU efficient. The trade off to this is Chromatics' device compatibility will be limited to what vendors & devices RGB.NET supports. If your device is not currently supported, please get in touch with the developers of RGB.NET to have it implemented.
-<br><br>
-**Features**
-<br>
-As this is a rebuild of Chromatics from the ground up, there will be some features that may be in Chromatics 2.x which are not yet implemented in 3.x. In addition some features that are in 2.x won't be ported across at all. While some of the features added (such as Google Cast, Logitech ARX, API access, etc.) were cool, they were unrelated to the core functionality of Chromatics (RGB peripheral lighting) and started to bloat the app in terms of codebase and performance. If there is significant demand for a specific feature however, we will consider implementing it again in Chromatics 3. Please submit a feature request on Discord to let us know your favourite feature - but we won't promise anything.
-<br><br>
-**FFXIV Integration/New Updates**
-<br>
-Chromatics 3.x will still rely on Sharlayan for reading FFXIV memory. The main reason for this is we don't currently have the knowledge to implement our own memory scanner. This means, at least for the time being, compatibility with new major versions of FFXIV will be delayed as Sharlayan has become unmanaged by its original developers. We are considering other options at this time, such as FFXIVClientStructs and Dalamud, but for the time being these libraries don't meet our core requirements.
-<br><br><br>
 ### Developers ### 
 If you wish to build Chromatics yourself, you can download the active branch and open in Visual Studio 2022. Please pull all nuget packages and also link any additional libraries from Build Dependencies before building. If you need any further assistance, please contact us on Discord.
-<br><br><br>
+<br><br>
+
 ### Open Source Libraries ### 
 * [RGB.NET](https://github.com/DarthAffe/RGB.NET) - used for RGB device integration
 * [Sharlayan](https://github.com/FFXIVAPP/sharlayan) - used for FFXIV memory reading
-* [MetroModernUI](https://github.com/dennismagno/metroframework-modern-ui) - used as a user interface base in winforms
-* [Cyotek ColorPicker](https://github.com/cyotek/Cyotek.Windows.Forms.ColorPicker) - user interface components for choosing colors
-* [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) - used for everything JSON
-* [Aurora](https://github.com/antonpup/Aurora) - borrowed some code base, not actually a dependency
 * [Artemis](https://github.com/Artemis-RGB/Artemis) - borrowed some code base and RGB.NET profiles, not actually a dependency
 * [FFXIVWeather](https://github.com/karashiiro/FFXIVWeather) - For calculating current weather.
-<br><br><br>
+* [Sentry](https://sentry.io/) - error monitoring, logs, metrics, tracing, and profiling
+<br><br>
+
+### Privacy / Telemetry ###
+Chromatics uses [Sentry](https://sentry.io/) for two independent reporting paths: **background telemetry** (performance metrics, non-fatal errors) and **crash reports** (unhandled exceptions that terminate the app). They are controlled separately — opting out of telemetry does **not** disable the crash dialog, however crashes are never sent without you clicking on "Send", which is optional.
+
+**Background telemetry (toggleable):**
+* Error-tier log lines only — other log types are kept local
+* Performance transactions and profiling samples
+* Anonymous session counts used to compute crash-free release-health statistics
+* Process metrics: working-set / private memory, managed heap size, CPU percent, GC counts, thread count, stamped on a 60-second heartbeat
+
+**Crash reports (always opt-in per event):**
+* When Chromatics crashes, a dialog appears showing the error type, a Sentry reference id, and an optional free-text comment box
+* Nothing is sent until you click **Send**. Clicking **Don't Send** discards the report
+* The crash report contains the exception stack trace and the ~100 preceding log lines as breadcrumbs, plus the version/OS/runtime fields described above
+* Comments you type are sent as-is — do not include personal information
+
+**What we do NOT collect:**
+* Your name, email, or any other personally identifying information — the crash dialog asks only for free-text comments
+* Your character name, server, free company, or any FFXIV account information
+* Your IP address
+* The contents of your screen, keystrokes, or any input
+* File paths or settings outside of what is directly relevant to a crash
+* Your bridge keys, light IDs, or any device credentials
+
+**Opting out of background telemetry:** Toggle off at **Settings → Advanced → Send anonymous performance and error telemetry**. When disabled, Chromatics sends no performance data, session counts, or error messages — but the Sentry SDK remains loaded so the post-crash dialog can still give you the choice to send (or not send) a crash report on the rare occasion one occurs. If you also want to disable the crash dialog entirely, remove the `Sentry` package from a source build.
+
+<br><br>
+
 ### Disclaimer ###
 Chromatics is not in anyway affiliated with Square Enix or FINAL FANTASY. All rights to their respected owners.
 
-© 2010-2023 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.
+© 2010-2026 SQUARE ENIX CO., LTD. All Rights Reserved. A REALM REBORN is a registered trademark or trademark of Square Enix Co., Ltd. FINAL FANTASY, SQUARE ENIX and the SQUARE ENIX logo are registered trademarks or trademarks of Square Enix Holdings Co., Ltd.

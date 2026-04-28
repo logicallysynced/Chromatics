@@ -609,6 +609,50 @@ namespace Chromatics.Localization
             new KeyboardKey(".", LedId.Keyboard_NumPeriodAndDelete, true, true),
         };
 
+        // Resolves the effect grid matching the user's configured layout. The grid
+        // maps LedId (the physical key's RGB.NET identifier) to a [row, column]
+        // pair; because the character printed on the key and the LedId can differ
+        // across layouts (e.g. AZERTY's top row is A,Z — Keyboard_A sits where
+        // QWERTY has Keyboard_Q), we remap the affected cells per layout.
+        public static Dictionary<LedId, int[]> GetActiveGrid(KeyboardLocalization locale)
+        {
+            switch (locale)
+            {
+                case KeyboardLocalization.qwertz: return QWERTZ_Grid;
+                case KeyboardLocalization.azerty: return AZERTY_Grid;
+                default: return QWERTY_Grid;
+            }
+        }
+
+        private static Dictionary<LedId, int[]> BuildRemappedGrid(params (LedId From, LedId To)[] swaps)
+        {
+            var result = new Dictionary<LedId, int[]>(QWERTY_Grid);
+            foreach (var (from, to) in swaps)
+            {
+                if (!QWERTY_Grid.TryGetValue(from, out var position)) continue;
+                result[to] = position;
+            }
+            return result;
+        }
+
+        // QWERTZ swaps Y and Z (top row vs. bottom row); the other keys match QWERTY.
+        public static Dictionary<LedId, int[]> QWERTZ_Grid => _qwertzGrid.Value;
+        private static readonly Lazy<Dictionary<LedId, int[]>> _qwertzGrid = new Lazy<Dictionary<LedId, int[]>>(() =>
+            BuildRemappedGrid(
+                (LedId.Keyboard_Y, LedId.Keyboard_Z),
+                (LedId.Keyboard_Z, LedId.Keyboard_Y)));
+
+        // AZERTY rearranges A<->Q, Z<->W and moves M. We remap only the keys whose
+        // physical position differs from QWERTY; everything else (digits, symbols,
+        // modifiers) stays put.
+        public static Dictionary<LedId, int[]> AZERTY_Grid => _azertyGrid.Value;
+        private static readonly Lazy<Dictionary<LedId, int[]>> _azertyGrid = new Lazy<Dictionary<LedId, int[]>>(() =>
+            BuildRemappedGrid(
+                (LedId.Keyboard_Q, LedId.Keyboard_A),
+                (LedId.Keyboard_A, LedId.Keyboard_Q),
+                (LedId.Keyboard_W, LedId.Keyboard_Z),
+                (LedId.Keyboard_Z, LedId.Keyboard_W)));
+
         public static Dictionary<LedId, int[]> QWERTY_Grid = new Dictionary<LedId, int[]>() //row, column
         {
             { LedId.Keyboard_Escape, new int[] { 0, 0 } },

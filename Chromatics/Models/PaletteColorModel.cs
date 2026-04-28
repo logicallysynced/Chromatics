@@ -12,7 +12,13 @@ namespace Chromatics.Models
 {
     public class PaletteColorModel
     {
-        public string version { get; set; } = "1";
+        // v1 = pre-Dawntrail.
+        // v2 = Dawntrail (7.x) job-gauge additions (BRD Radiant Finale codas, BLM Paradox/Astral Soul,
+        //      DRK Living Shadow, DRG Firstminds, GNB Bloodfest, MNK Beast Chakra + Nadi,
+        //      NIN Kazematoi, PLD Confiteor, RDM Mana Stacks, SAM Kaeshi, SCH Dismissed Fairy,
+        //      AST Astral/Umbral Draw, VPR Reawakened + Serpent Combo). NIN Huton display renamed to Kazematoi.
+        public const string CurrentVersion = "2";
+        public string version { get; set; } = CurrentVersion;
 
         //Chromatics
         public ColorMapping BaseColor = new("Base Color", PaletteTypes.Chromatics, Color.DodgerBlue);
@@ -127,18 +133,30 @@ namespace Chromatics.Models
         public ColorMapping JobPLDNegative = new("PLD: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobPLDOathGauge = new("PLD: Oath Gauge", PaletteTypes.JobGauges, Color.Khaki);
         public ColorMapping JobPLDIronWill = new("PLD: Iron Will", PaletteTypes.JobGauges, Color.Orange);
+        public ColorMapping JobPLDConfiteorTimer = new("PLD: Confiteor Combo Timer", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobPLDConfiteorStep = new("PLD: Confiteor Combo Step", PaletteTypes.JobGauges, Color.Yellow);
         public ColorMapping JobMNKNegative = new("MNK: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobMNKChakra = new("MNK: Chakras", PaletteTypes.JobGauges, Color.Orange);
+        public ColorMapping JobMNKBeastChakra = new("MNK: Beast Chakra (Gauge)", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobMNKOpoOpo = new("MNK: Opo-opo Beast Chakra", PaletteTypes.JobGauges, Color.Yellow);
+        public ColorMapping JobMNKRaptor = new("MNK: Raptor Beast Chakra", PaletteTypes.JobGauges, Color.LimeGreen);
+        public ColorMapping JobMNKCoeurl = new("MNK: Coeurl Beast Chakra", PaletteTypes.JobGauges, Color.DodgerBlue);
+        public ColorMapping JobMNKNadiLunar = new("MNK: Lunar Nadi", PaletteTypes.JobGauges, Color.MediumPurple);
+        public ColorMapping JobMNKNadiSolar = new("MNK: Solar Nadi", PaletteTypes.JobGauges, Color.Gold);
         public ColorMapping JobDRGNegative = new("DRG: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobDRGBloodDragon = new("DRG: Dragon Gauge", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobDRGDragonGaze = new("DRG: Dragon Gaze", PaletteTypes.JobGauges, Color.BlueViolet);
+        public ColorMapping JobDRGFirstminds = new("DRG: Firstminds' Focus", PaletteTypes.JobGauges, Color.DeepSkyBlue);
         public ColorMapping JobBRDNegative = new("BRD: Blank Key", PaletteTypes.JobGauges, Color.Black);
-        public ColorMapping JobBRDSoulVoice = new("BRD: Soul Voice", PaletteTypes.JobGauges, Color.DodgerBlue);
+        public ColorMapping JobBRDSoulVoice = new("BRD: Soul Voice", PaletteTypes.JobGauges, Color.GreenYellow);
         public ColorMapping JobBRDSoulVoiceThreshold = new("BRD: Soul Voice Threshold", PaletteTypes.JobGauges, Color.GhostWhite);
         public ColorMapping JobBRDRepertoire = new("BRD: Repertoire Stack", PaletteTypes.JobGauges, Color.GhostWhite);
         public ColorMapping JobBRDBallad = new("BRD: Mage's Ballad", PaletteTypes.JobGauges, Color.Purple);
         public ColorMapping JobBRDArmys = new("BRD: Army's Paeon", PaletteTypes.JobGauges, Color.Orange);
         public ColorMapping JobBRDMinuet = new("BRD: The Wanderers' Minuet", PaletteTypes.JobGauges, Color.MediumSpringGreen);
+        public ColorMapping JobBRDRadiantFinaleBallad = new("BRD: Radiant Finale (Ballad Coda)", PaletteTypes.JobGauges, Color.Purple);
+        public ColorMapping JobBRDRadiantFinalePaeon = new("BRD: Radiant Finale (Paeon Coda)", PaletteTypes.JobGauges, Color.Orange);
+        public ColorMapping JobBRDRadiantFinaleMinuet = new("BRD: Radiant Finale (Minuet Coda)", PaletteTypes.JobGauges, Color.MediumSpringGreen);
         public ColorMapping JobWHMNegative = new("WHM: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobWHMFlowerPetal = new("WHM: Flower", PaletteTypes.JobGauges, Color.MediumVioletRed);
         public ColorMapping JobWHMFlowerCharge = new("WHM: Flower Charge", PaletteTypes.JobGauges, Color.Aqua);
@@ -147,9 +165,9 @@ namespace Chromatics.Models
         public ColorMapping JobBLMNegative = new("BLM: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobBLMAstralFire = new("BLM: Astral Fire", PaletteTypes.JobGauges, Color.OrangeRed);
         public ColorMapping JobBLMUmbralIce = new("BLM: Umbral Ice", PaletteTypes.JobGauges, Color.DeepSkyBlue);
-        public ColorMapping JobBLMEnochianCountdown = new("BLM: Enochian Countdown", PaletteTypes.JobGauges, Color.MediumPurple);
-        public ColorMapping JobBLMEnochianCharge = new("BLM: Enochian Charge", PaletteTypes.JobGauges, Color.MediumPurple);
         public ColorMapping JobBLMPolyglot = new("BLM: Polyglot", PaletteTypes.JobGauges, Color.Magenta);
+        public ColorMapping JobBLMParadox = new("BLM: Paradox Proc", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobBLMAstralSoul = new("BLM: Astral Soul (Flare Star)", PaletteTypes.JobGauges, Color.Crimson);
         public ColorMapping JobSMNNegative = new("SMN: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobSMNCarbuncleTimer = new("SMN: Carbuncle Timer", PaletteTypes.JobGauges, Color.DodgerBlue);
         public ColorMapping JobSMNDreadwyrmTimer = new("SMN: Dreadwyrm Timer", PaletteTypes.JobGauges, Color.Yellow);
@@ -162,13 +180,18 @@ namespace Chromatics.Models
         public ColorMapping JobSCHAetherflow = new("SCH: Aetherflow", PaletteTypes.JobGauges, Color.Orchid);
         public ColorMapping JobSCHFaerieGauge = new("SCH: Faerie Gauge", PaletteTypes.JobGauges, Color.MediumSpringGreen);
         public ColorMapping JobSCHSeraph = new("SCH: Summon Seraph", PaletteTypes.JobGauges, Color.DeepSkyBlue);
+        public ColorMapping JobSCHDismissedFairy = new("SCH: Fairy Dismissed", PaletteTypes.JobGauges, Color.DimGray);
         public ColorMapping JobNINNegative = new("NIN: Blank Key", PaletteTypes.JobGauges, Color.Black);
-        public ColorMapping JobNINHuton = new("NIN: Huton", PaletteTypes.JobGauges, Color.White);
+        // Legacy NIN Huton slot: Dawntrail replaced Huton with Kazematoi (same gauge-A role).
+        // Field name kept for JSON deserialisation compatibility with pre-v2 palettes; display
+        // name updated so the UI reflects the current ability.
+        public ColorMapping JobNINHuton = new("NIN: Kazematoi", PaletteTypes.JobGauges, Color.Cornsilk);
         public ColorMapping JobNINNinkiGauge = new("NIN: Ninki Gauge", PaletteTypes.JobGauges, Color.Coral);
         public ColorMapping JobDRKNegative = new("DRK: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobDRKBloodGauge = new("DRK: Blood Gauge", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobDRKGrit = new("DRK: Grit", PaletteTypes.JobGauges, Color.DeepSkyBlue);
         public ColorMapping JobDRKDarkside = new("DRK: Darkside Timer", PaletteTypes.JobGauges, Color.MediumPurple);
+        public ColorMapping JobDRKLivingShadow = new("DRK: Living Shadow Timer", PaletteTypes.JobGauges, Color.DarkMagenta);
         public ColorMapping JobASTNegative = new("AST: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobASTArrow = new("AST: Arrow Drawn", PaletteTypes.JobGauges, Color.Lime);
         public ColorMapping JobASTBalance = new("AST: Balance Drawn", PaletteTypes.JobGauges, Color.Crimson);
@@ -178,6 +201,8 @@ namespace Chromatics.Models
         public ColorMapping JobASTSpire = new("AST: Spire Drawn", PaletteTypes.JobGauges, Color.SlateBlue);
         public ColorMapping JobASTLady = new("AST: Lady of Crowns Drawn", PaletteTypes.JobGauges, Color.HotPink);
         public ColorMapping JobASTLord = new("AST: Lord of Crowns Drawn", PaletteTypes.JobGauges, Color.Magenta);
+        public ColorMapping JobASTAstralDraw = new("AST: Astral Draw", PaletteTypes.JobGauges, Color.HotPink);
+        public ColorMapping JobASTUmbralDraw = new("AST: Umbral Draw", PaletteTypes.JobGauges, Color.DarkSlateBlue);
         public ColorMapping JobMCHNegative = new("MCH: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobMCHBatteryGauge = new("MCH: Battery Gauge", PaletteTypes.JobGauges, Color.Cyan);
         public ColorMapping JobMCHHeatGauge = new("MCH: Heat Gauge", PaletteTypes.JobGauges, Color.DarkOrange);
@@ -185,15 +210,18 @@ namespace Chromatics.Models
         public ColorMapping JobSAMNegative = new("SAM: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobSAMKenki = new("SAM: Kenki Charge", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobSAMMeditation = new("SAM: Meditation Stacks", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobSAMKaeshiReady = new("SAM: Kaeshi Ready", PaletteTypes.JobGauges, Color.OrangeRed);
         public ColorMapping JobRDMNegative = new("RDM: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobRDMBlackMana = new("RDM: Black Mana", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobRDMWhiteMana = new("RDM: White Mana", PaletteTypes.JobGauges, Color.White);
+        public ColorMapping JobRDMManaStacks = new("RDM: Mana Stacks", PaletteTypes.JobGauges, Color.MediumVioletRed);
         public ColorMapping JobDNCNegative = new("DNC: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobDNCFeathers = new("DNC: Fourfold Feathers", PaletteTypes.JobGauges, Color.GreenYellow);
         public ColorMapping JobDNCEspirit = new("DNC: Espirit Gauge", PaletteTypes.JobGauges, Color.Gold);
         public ColorMapping JobGNBNegative = new("GNB: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobGNBRoyalGuard = new("GNB: Royal Guard", PaletteTypes.JobGauges, Color.OrangeRed);
         public ColorMapping JobGNBCartridge = new("GNB: Cartridge", PaletteTypes.JobGauges, Color.DeepSkyBlue);
+        public ColorMapping JobGNBBloodfestTimer = new("GNB: Bloodfest Timer", PaletteTypes.JobGauges, Color.DarkOrange);
         public ColorMapping JobSGENegative = new("SGE: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobSGEAddersgallStacks = new("SGE: Addersgall Stacks", PaletteTypes.JobGauges, Color.LightBlue);
         public ColorMapping JobSGEAdderstingStacks = new("SGE: Addersting Stacks", PaletteTypes.JobGauges, Color.MediumPurple);
@@ -207,6 +235,8 @@ namespace Chromatics.Models
         public ColorMapping JobCrafterCrafter = new("Crafter: Crafting", PaletteTypes.JobGauges, Color.DeepSkyBlue);
         public ColorMapping JobVPRVipersight = new("VPR: Vipersight Gauge", PaletteTypes.JobGauges, Color.Red);
         public ColorMapping JobVPRSerpentOffering = new("VPR: Serpent Offering Gauge", PaletteTypes.JobGauges, Color.DodgerBlue);
+        public ColorMapping JobVPRReawakened = new("VPR: Reawakened Timer", PaletteTypes.JobGauges, Color.Gold);
+        public ColorMapping JobVPRSerpentCombo = new("VPR: Serpent Combo Ready", PaletteTypes.JobGauges, Color.YellowGreen);
         public ColorMapping JobVPRNegative = new("VPR: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobPCTPalette = new("PCT: Palette Gauge", PaletteTypes.JobGauges, Color.DodgerBlue);
         public ColorMapping JobPCTLandscape = new("PCT: Canvas Landscape", PaletteTypes.JobGauges, Color.BlueViolet);
@@ -222,7 +252,7 @@ namespace Chromatics.Models
         public ColorMapping WeatherFairSkiesBase = new("Fair Skies (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherFairSkiesHighlight = new("Fair Skies (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
         public ColorMapping WeatherCloudsBase = new("Clouds (Base)", PaletteTypes.ReactiveWeather, Color.LightSlateGray);
-        public ColorMapping WeatherCloudsHighlight = new("Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x162CFB));
+        public ColorMapping WeatherCloudsHighlight = new("Clouds (Highlight)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherFogBase = new("Fog (Base)", PaletteTypes.ReactiveWeather, Color.LightSlateGray);
         public ColorMapping WeatherFogHighlight = new("Fog (Highlight)", PaletteTypes.ReactiveWeather, Color.DarkBlue);
         public ColorMapping WeatherWindBase = new("Wind (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
@@ -389,11 +419,11 @@ namespace Chromatics.Models
         public ColorMapping WeatherMoonDustAnimationBase = new("Mare Lamentorum (Animation Base)", PaletteTypes.ReactiveWeather, Color.Black);
         public ColorMapping WeatherMoonDustAnimationHighlight = new("Mare Lamentorum (Animation Highlight)", PaletteTypes.ReactiveWeather, Color.White);
 
-        public ColorMapping WeatherAstromagneticStormBase = new("Astromagnetic Storm (Base)", PaletteTypes.ReactiveWeather, Color.Magenta);
-        public ColorMapping WeatherAstromagneticStormHighlight = new("Astromagnetic Storm (Highlight)", PaletteTypes.ReactiveWeather, Color.Red);
-        public ColorMapping WeatherAstromagneticStormHighlight1 = new("Astromagnetic Storm Animation (Highlight 1)", PaletteTypes.ReactiveWeather, Color.Magenta);
-        public ColorMapping WeatherAstromagneticStormHighlight2 = new("Astromagnetic Storm (Highlight 2)", PaletteTypes.ReactiveWeather, Color.DeepPink);
-        public ColorMapping WeatherAstromagneticStormHighlight3 = new("Astromagnetic Storm (Highlight 3)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
+        public ColorMapping WeatherAstromagneticStormBase = new("Astromagnetic Storms (Base)", PaletteTypes.ReactiveWeather, Color.Magenta);
+        public ColorMapping WeatherAstromagneticStormHighlight = new("Astromagnetic Storms (Highlight)", PaletteTypes.ReactiveWeather, Color.Red);
+        public ColorMapping WeatherAstromagneticStormHighlight1 = new("Astromagnetic Storms Animation (Highlight 1)", PaletteTypes.ReactiveWeather, Color.Magenta);
+        public ColorMapping WeatherAstromagneticStormHighlight2 = new("Astromagnetic Storms (Highlight 2)", PaletteTypes.ReactiveWeather, Color.DeepPink);
+        public ColorMapping WeatherAstromagneticStormHighlight3 = new("Astromagnetic Storms (Highlight 3)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
 
         public ColorMapping WeatherUltimaThuleAnimationBase = new("Ultima Thule Animation (Base)", PaletteTypes.ReactiveWeather, Color.Magenta);
         public ColorMapping WeatherUltimaThuleAnimationHighlight = new("Ultima Thule Animation (Highlight)", PaletteTypes.ReactiveWeather, Color.Blue);
@@ -435,6 +465,48 @@ namespace Chromatics.Models
         public ColorMapping WeatherLiminalityBase = new("Liminality (Base)", PaletteTypes.ReactiveWeather, Color.RoyalBlue);
         public ColorMapping WeatherLiminalityHighlight = new("Liminality (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumSlateBlue);
 
+        //7.1+
+        public ColorMapping WeatherAtmosphericPhantasmsBase = new("Atmospheric Phantasms (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x4BF0FC));
+        public ColorMapping WeatherAtmosphericPhantasmsHighlight = new("Atmospheric Phantasms (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherAtmosphericPhantasmsAnimationBase = new("Atmospheric Phantasms (Animation Bse)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x006F70));
+        public ColorMapping WeatherAtmosphericPhantasmsHighlight1 = new("Atmospheric Phantasms (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x002BFF));
+        public ColorMapping WeatherAtmosphericPhantasmsHighlight2 = new("Atmospheric Phantasms (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00FFCA));
+        public ColorMapping WeatherIllusoryDisturbancesBase = new("Illusory Disturbances (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xE3F9A6));
+        public ColorMapping WeatherIllusoryDisturbancesHighlight = new("Illusory Disturbances (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherIllusoryDisturbancesAnimationBase = new("Illusory Disturbances (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x1A1A1A));
+        public ColorMapping WeatherIllusoryDisturbancesHighligh1 = new("Illusory Disturbances (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x03FDFF));
+        public ColorMapping WeatherIllusoryDisturbancesHighligh2 = new("Illusory Disturbances (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD16900));
+        public ColorMapping WeatherIllusoryDisturbancesHighligh3 = new("Illusory Disturbances (Highlight 3)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFEA00));
+        public ColorMapping WeatherAuroralMiragesBase = new("Auroral Mirages (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFF8674));
+        public ColorMapping WeatherAuroralMiragesHighlight = new("Auroral Mirages (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFF007F));
+        public ColorMapping WeatherMeteorShowersBase = new("Meteor Showers (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x000000));
+        public ColorMapping WeatherMeteorShowersHighlight = new("Meteor Showers (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x08FFF9));
+        public ColorMapping WeatherMeteorShowersHighlight1 = new("Meteor Showers (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherMeteorShowersHighlight2 = new("Meteor Showers (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFCB01));
+        public ColorMapping WeatherSporingMistBase = new("Sporing Mist (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x2DBF0D));
+        public ColorMapping WeatherSporingMistHighlight = new("Sporing Mist (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD462FF));
+        public ColorMapping WeatherSporingMistHighlight1 = new("Sporing Mist (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD462FF));
+        public ColorMapping WeatherSporingMistHighlight2 = new("Sporing Mist (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xD462FF));
+        public ColorMapping WeatherAnnealingWindsBase = new("Annealing Winds (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x16E2F5));
+        public ColorMapping WeatherAnnealingWindsHighlight = new("Annealing Winds (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xF6358A));
+        public ColorMapping WeatherAnnealingWindsHighlight1 = new("Annealing Winds (Highlight1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x035CFF));
+        public ColorMapping WeatherGlassStormsBase = new("Glass Storms (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFC6C85));
+        public ColorMapping WeatherGlassStormsAnimationBase = new("Glass Storms (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x480048));
+        public ColorMapping WeatherGlassStormsHighlight = new("Glass Storms (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFF8040));
+        public ColorMapping WeatherGlassStormsHighlight1 = new("Glass Storms (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherGravitationalFluxBase = new("Gravitational Flux (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x191970));
+        public ColorMapping WeatherGravitationalFluxHighlight = new("Gravitational Flux (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xEB5406));
+        public ColorMapping WeatherGravitationalFluxAnimationBase = new("Gravitational Flux (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x010014));
+        public ColorMapping WeatherGravitationalFluxHighlight1 = new("Gravitational Flux (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x0800FF));
+        public ColorMapping WeatherGravitationalFluxHighlight2 = new("Gravitational Flux (Highlight 2)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00FFF5));
+        public ColorMapping WeatherBubbleBloomBase = new("Bubble Bloom (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x0059FF));
+        public ColorMapping WeatherBubbleBloomAnimationBase = new("Bubble Bloom (Animation Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00033E));
+        public ColorMapping WeatherBubbleBloomHighlight = new("Bubble Bloom (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFFFFF));
+        public ColorMapping WeatherBubbleBloomHighlight1 = new("Bubble Bloom (Highlight 1)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x00C8FF));
+        public ColorMapping WeatherElectrostaticDustBase = new("Electrostatic Dust (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xFFAE42));
+        public ColorMapping WeatherElectrostaticDustHighlight = new("Electrostatic Dust (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0xC45AEC));
+        public ColorMapping WeatherDyingBreathBase = new("Dying Breath (Base)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x571B7E));
+        public ColorMapping WeatherDyingBreathHighlight = new("Dying Breath (Highlight)", PaletteTypes.ReactiveWeather, Color.FromArgb(0x2916F5));
         public ColorMapping WeatherUnknownBase = new("Unknown Weather (Base)", PaletteTypes.ReactiveWeather, Color.DeepSkyBlue);
         public ColorMapping WeatherUnknownHighlight = new("Unknown Weather (Highlight)", PaletteTypes.ReactiveWeather, Color.Yellow);
         
@@ -518,42 +590,105 @@ namespace Chromatics.Models
         public ColorMapping RaidEffectEverkeepHighlight1 = new("Everkeep (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x34007E));
         public ColorMapping RaidEffectEverkeepHighlight2 = new("Everkeep (Highlight 2)", PaletteTypes.RaidEffects, Color.Blue);
         public ColorMapping RaidEffectEverkeepHighlight3 = new("Everkeep (Highlight 3)", PaletteTypes.RaidEffects, Color.Purple);
-
         public ColorMapping RaidEffectInterphosBase = new("Interphos (Base)", PaletteTypes.RaidEffects, Color.LimeGreen);
         public ColorMapping RaidEffectInterphosKeyHighlight = new("Interphos (Key Highlights)", PaletteTypes.RaidEffects, Color.DodgerBlue);
         public ColorMapping RaidEffectInterphosHighlight1 = new("Interphos (Highlight 1)", PaletteTypes.RaidEffects, Color.Green);
         public ColorMapping RaidEffectInterphosHighlight2 = new("Interphos (Highlight 2)", PaletteTypes.RaidEffects, Color.Lime);
         public ColorMapping RaidEffectInterphosHighlight3 = new("Interphos (Highlight 3)", PaletteTypes.RaidEffects, Color.Gold);
-
         public ColorMapping RaidEffectM1Base = new("Arcadion M1 (Base)", PaletteTypes.RaidEffects, Color.Magenta);
         public ColorMapping RaidEffectM1KeyHighlight = new("Arcadion M1 (Key Highlights)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM1Highlight1 = new("Arcadion M1 (Highlight 1)", PaletteTypes.RaidEffects, Color.DodgerBlue);
         public ColorMapping RaidEffectM1Highlight2 = new("Arcadion M1 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x0A1DC6));
         public ColorMapping RaidEffectM1Highlight3 = new("Arcadion M1 (Highlight 3)", PaletteTypes.RaidEffects, Color.HotPink);
-
         public ColorMapping RaidEffectM2Base = new("Arcadion M2 (Base)", PaletteTypes.RaidEffects, Color.Yellow);
         public ColorMapping RaidEffectM2KeyHighlight = new("Arcadion M2 (Key Highlights)", PaletteTypes.RaidEffects, Color.Yellow);
         public ColorMapping RaidEffectM2Highlight1 = new("Arcadion M2 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFFF00));
         public ColorMapping RaidEffectM2Highlight2 = new("Arcadion M2 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF1393));
-
         public ColorMapping RaidEffectM3Base = new("Arcadion M3 (Base)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM3KeyHighlight = new("Arcadion M3 (Key Highlights)", PaletteTypes.RaidEffects, Color.Lime);
         public ColorMapping RaidEffectM3Highlight1 = new("Arcadion M3 (Highlight 1)", PaletteTypes.RaidEffects, Color.DarkOrange);
         public ColorMapping RaidEffectM3Highlight2 = new("Arcadion M3 (Highlight 2)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM3Highlight3 = new("Arcadion M3 (Highlight 3)", PaletteTypes.RaidEffects, Color.DarkOrange);
-
         public ColorMapping RaidEffectM4Base = new("Arcadion M4 (Base)", PaletteTypes.RaidEffects, Color.Blue);
         public ColorMapping RaidEffectM4KeyHighlight = new("Arcadion M4 (Key Highlights)", PaletteTypes.RaidEffects, Color.Red);
         public ColorMapping RaidEffectM4Highlight1 = new("Arcadion M4 (Highlight 1)", PaletteTypes.RaidEffects, Color.Blue);
         public ColorMapping RaidEffectM4Highlight2 = new("Arcadion M4 (Highlight 2)", PaletteTypes.RaidEffects, Color.Magenta);
         public ColorMapping RaidEffectM4Highlight3 = new("Arcadion M4 (Highlight 3)", PaletteTypes.RaidEffects, Color.White);
         public ColorMapping RaidEffectM4Highlight4 = new("Arcadion M4 (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x00ACFF));
-
+        public ColorMapping RaidEffectM5Base = new("Arcadion M5 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM5KeyHighlight = new("Arcadion M5 (Key Highlights)", PaletteTypes.RaidEffects, Color.LimeGreen);
+        public ColorMapping RaidEffectM5Highlight1 = new("Arcadion M5 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x0096FF));
+        public ColorMapping RaidEffectM5Highlight2 = new("Arcadion M5 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF32C8));
+        public ColorMapping RaidEffectM5Highlight3 = new("Arcadion M5 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFED00));
+        public ColorMapping RaidEffectM6Base = new("Arcadion M6 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM6KeyHighlight = new("Arcadion M6 (Key Highlights)", PaletteTypes.RaidEffects, Color.White);
+        public ColorMapping RaidEffectM6Highlight1 = new("Arcadion M6 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0064));
+        public ColorMapping RaidEffectM6Highlight2 = new("Arcadion M6 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x0064FF));
+        public ColorMapping RaidEffectM6Highlight3 = new("Arcadion M6 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFC800));
+        public ColorMapping RaidEffectM6Highlight4 = new("Arcadion M6 (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x2BFF00));
+        public ColorMapping RaidEffectM7Base = new("Arcadion M7 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM7KeyHighlight = new("Arcadion M7 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x1300FF));
+        public ColorMapping RaidEffectM7Highlight1 = new("Arcadion M7 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
+        public ColorMapping RaidEffectM7Highlight2 = new("Arcadion M7 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFA308));
+        public ColorMapping RaidEffectM7Highlight3 = new("Arcadion M7 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x6900FF));
+        public ColorMapping RaidEffectM8Base = new("Arcadion M8 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM8KeyHighlight = new("Arcadion M8 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFF500));
+        public ColorMapping RaidEffectM8Highlight1 = new("Arcadion M8 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x00F2FF));
+        public ColorMapping RaidEffectM8Highlight2 = new("Arcadion M8 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x0004FF));
+        public ColorMapping RaidEffectM8Highlight3 = new("Arcadion M8 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFFFFF));
+        public ColorMapping RaidEffectM8SBase = new("Arcadion M8 Savage Phase (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM8SKeyHighlight = new("Arcadion M8 Savage Phase (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x0027FF));
+        public ColorMapping RaidEffectM8SHighlight1 = new("Arcadion M8 Savage Phase (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
+        public ColorMapping RaidEffectM8SHighlight2 = new("Arcadion M8 Savage Phase (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFF501));
+        public ColorMapping RaidEffectM8SHighlight3 = new("Arcadion M8 Savage Phase (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF8C00));
+        public ColorMapping RaidEffectM9Base = new("Arcadion M9 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM9KeyHighlight = new("Arcadion M9 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xCB00A5));
+        public ColorMapping RaidEffectM9KeyHighlight1 = new("Arcadion M9 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
+        public ColorMapping RaidEffectM9KeyHighlight2 = new("Arcadion M9 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF00F9));
+        public ColorMapping RaidEffectM10Base = new("Arcadion M10 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM10KeyHighlight = new("Arcadion M10 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFF505));
+        public ColorMapping RaidEffectM10KeyHighlight1 = new("Arcadion M10 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0000));
+        public ColorMapping RaidEffectM10KeyHighlight2 = new("Arcadion M10 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF00F9));
+        public ColorMapping RaidEffectM11Base = new("Arcadion M10 (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectM11KeyHighlight = new("Arcadion M10 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x4E00FF));
+        public ColorMapping RaidEffectM11KeyHighlight1 = new("Arcadion M10 (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xA70000));
+        public ColorMapping RaidEffectM11KeyHighlight2 = new("Arcadion M10 (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x60007E));
+        public ColorMapping RaidEffectM11KeyHighlight3 = new("Arcadion M10 (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0xBD9F00));
+        public ColorMapping RaidEffectM11KeyHighlight4 = new("Arcadion M10 (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x019DBB));
+        public ColorMapping RaidEffectM12KeyHighlight = new("Arcadion M12 (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x990000));
+        public ColorMapping RaidEffectM12SKeyHighlight = new("Arcadion M12S Savage Phase (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x00FF80));
         public ColorMapping RaidEffectCoDBase = new("The Cloud of Darkness (Base)", PaletteTypes.RaidEffects, Color.MediumPurple);
         public ColorMapping RaidEffectCoDKeyHighlight = new("The Cloud of Darkness (Key Highlights)", PaletteTypes.RaidEffects, Color.Purple);
         public ColorMapping RaidEffectCoDHighlight1 = new("The Cloud of Darkness (Highlight 1)", PaletteTypes.RaidEffects, Color.Magenta);
         public ColorMapping RaidEffectCoDHighlight2 = new("The Cloud of Darkness (Highlight 2)", PaletteTypes.RaidEffects, Color.MediumPurple);
         public ColorMapping RaidEffectCoDHighlight3 = new("The Cloud of Darkness (Highlight 3)", PaletteTypes.RaidEffects, Color.Purple);
+        public ColorMapping RaidEffectHoRBase = new("Hell on Rails (Base)", PaletteTypes.RaidEffects, Color.FromArgb(0x0F002A));
+        public ColorMapping RaidEffectHoRKeyHighlight = new("Hell on Rails (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0x0075FF));
+        public ColorMapping RaidEffectHoRHighlight1 = new("Hell on Rails (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x00FF64));
+        public ColorMapping RaidEffectHoRHighlight2 = new("Hell on Rails (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xC800C1));
+        public ColorMapping RaidEffectNecronBase = new("Necron's Embrace (Base)", PaletteTypes.RaidEffects, Color.FromArgb(0x0F002A));
+        public ColorMapping RaidEffectNecronKeyHighlight = new("Necron's Embrace (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFFFFF));
+        public ColorMapping RaidEffectNecronHighlight1 = new("Necron's Embrace (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0x00C8FF));
+        public ColorMapping RaidEffectNecronHighlight2 = new("Necron's Embrace (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF4A00));
+        public ColorMapping RaidEffectNecronHighlight3 = new("Necron's Embrace (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x5D00FF));
+        public ColorMapping RaidEffectNecronHighlight4 = new("Necron's Embrace (Highlight 4)", PaletteTypes.RaidEffects, Color.FromArgb(0x0400FF));
+        public ColorMapping RaidEffectRecollectionBase = new("Recollection (Base)", PaletteTypes.RaidEffects, Color.FromArgb(0x3E00FF));
+        public ColorMapping RaidEffectRecollectionKeyHighlight = new("Recollection (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xFF0094));
+        public ColorMapping RaidEffectRecollectionHighlight1 = new("Recollection (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFED00));
+        public ColorMapping RaidEffectRecollectionHighlight2 = new("Recollection (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFA000));
+        public ColorMapping RaidEffectRecollectionHighlight3 = new("Recollection (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x3E00FF));
+        public ColorMapping RaidEffectTheUnmakingBase = new("The Unmaking (Base)", PaletteTypes.RaidEffects, Color.Black);
+        public ColorMapping RaidEffectTheUnmakingKeyHighlight = new("The Unmaking (Key Highlights)", PaletteTypes.RaidEffects, Color.FromArgb(0xC70000));
+        public ColorMapping RaidEffectTheUnmakingHighlight1 = new("The Unmaking (Highlight 1)", PaletteTypes.RaidEffects, Color.FromArgb(0xFFFFFF));
+        public ColorMapping RaidEffectTheUnmakingHighlight2 = new("The Unmaking (Highlight 2)", PaletteTypes.RaidEffects, Color.FromArgb(0x009CFF));
+        public ColorMapping RaidEffectTheUnmakingHighlight3 = new("The Unmaking (Highlight 3)", PaletteTypes.RaidEffects, Color.FromArgb(0x8400FF));
+
+
+        // Audio Visualizer
+        public ColorMapping AudioVisualizerBase = new("Audio Visualizer (Base)", PaletteTypes.AudioVisualizer, Color.Black);
+        public ColorMapping AudioVisualizerLow = new("Audio Visualizer (Low Freq)", PaletteTypes.AudioVisualizer, Color.FromArgb(unchecked((int)0xFF00CC00)));
+        public ColorMapping AudioVisualizerMid = new("Audio Visualizer (Mid Freq)", PaletteTypes.AudioVisualizer, Color.Yellow);
+        public ColorMapping AudioVisualizerHigh = new("Audio Visualizer (High Freq)", PaletteTypes.AudioVisualizer, Color.Red);
     }
 
     public class LegacyColorMappings

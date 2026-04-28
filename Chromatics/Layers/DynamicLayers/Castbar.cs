@@ -35,8 +35,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(CastbarProcessor));
+            if (_disposed) return;
 
             CastbarDynamicModel model;
 
@@ -166,9 +165,9 @@ namespace Chromatics.Layers
 
                         ledGroup.Detach();
 
-                        if (!model._localgroups.Contains(ledGroup))
-                            model._localgroups.Add(ledGroup);
-
+                        foreach (var grp in model._localgroups) grp?.Detach();
+                        model._localgroups.Clear();
+                        model._localgroups.Add(ledGroup);
                         model._faderValue = currentVal_Fader;
                     }
                 }

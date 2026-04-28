@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      # RGB.NET releases all packages together — group them into one PR.
+      rgb-net:
+        patterns:
+          - "RGB.NET*"
+      avalonia:
+        patterns:
+          - "Avalonia*"
+    # Sharlayan is currently a local DLL reference (not on NuGet). Once it is
+    # switched back to a NuGet package it will be covered automatically here.
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"

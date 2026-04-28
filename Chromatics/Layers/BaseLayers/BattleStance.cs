@@ -90,8 +90,6 @@ namespace Chromatics.Layers
 
                     var inCombat = getCurrentPlayer.Entity.InCombat;
 
-                    Debug.WriteLine($"In Combat: {inCombat}");
-
                     if (!inCombat)
                     {
                         engaged_color = empty_color;

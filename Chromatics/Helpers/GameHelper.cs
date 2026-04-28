@@ -1,18 +1,12 @@
 ﻿using Chromatics.Core;
 using Chromatics.Models;
-using FFXIVWeather.Models;
 using RGB.NET.Core;
 using Sharlayan.Core.Enums;
 using Sharlayan.Models.ReadResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chromatics.Helpers
 {
-    public class GameHelper
+    public static class GameHelper
     {
         public static bool IsCrafter(CurrentPlayerResult player)
         {
@@ -390,26 +384,12 @@ namespace Chromatics.Helpers
 
         public static string GetZoneNameById(uint id, string language = "en")
         {
-            var data = FileOperationsHelper.GetWeatherDataLoaded();
-
-            if (data == null) return null;
-
-            var terriTypes = data.TerriTypes;
-            var terriType = terriTypes.FirstOrDefault(tt => tt.Id == id);
-            if (terriType == null)
-            {
-                return null; // or throw an exception, or return a default value
-            }
-
-            return language.ToLower() switch
-            {
-                "en" => terriType.NameEn,
-                "de" => terriType.NameDe,
-                "fr" => terriType.NameFr,
-                "ja" => terriType.NameJa,
-                "zh" => terriType.NameZh,
-                _ => null // or throw an exception, or return a default value
-            };
+            // Source of truth is Lumina's TerritoryType → PlaceName join, surfaced by
+            // Sharlayan's Reader.GetZoneName so we don't import Lumina here. Returns null
+            // if the handler isn't attached yet, the id is unknown, or the Lumina sqpack
+            // path hasn't been configured on the SharlayanConfiguration.
+            var handler = GameController.GetGameData();
+            return handler?.Reader?.GetZoneName(id, language);
         }
     }
 }

@@ -85,7 +85,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 if (Timing >= startDelay)
                 {
                     var availableLeds = ledGroup.Where(led => !fadingInLeds.ContainsKey(led) && !fadingOutLeds.ContainsKey(led));
-                    var selectedLeds = availableLeds.OrderBy(x => Guid.NewGuid()).Take((int)(numberOfLeds * densityMultiplier));
+                    var availableList = availableLeds.ToList();
+                    ShuffleLeds(availableList);
+                    var selectedLeds = availableList.Take((int)(numberOfLeds * densityMultiplier));
 
                     foreach (var led in selectedLeds)
                     {
@@ -118,6 +120,16 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                         if (currentBrightness[led.Key] >= maxBrightness)
                         {
+                            // Clamp to max so a deltaTime spike (GC pause,
+                            // game-state read stall, thread contention)
+                            // can't carry the brightness past 1.0 — without
+                            // this, the fade-out path has to walk the
+                            // overshoot back down at normal speed, leaving
+                            // the LED occupied for many extra ticks. With
+                            // enough overshoots in flight, the available
+                            // pool depletes and the keyboard fills up
+                            // instead of cycling cleanly.
+                            currentBrightness[led.Key] = maxBrightness;
                             fadingOutLeds.TryAdd(led.Key, currentColors[led.Key]);
                             fadingInLeds.TryRemove(led);
                         }
@@ -141,6 +153,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
                     if (currentBrightness[led.Key] <= minBrightness)
                     {
+                        // Symmetric clamp on the bottom: a spike on the
+                        // fade-out side could otherwise drive brightness
+                        // negative and then waste the next several ticks
+                        // climbing back through 0 if the LED gets re-picked
+                        // before the cleanup below runs.
+                        currentBrightness[led.Key] = minBrightness;
                         fadingOutLeds.TryRemove(led);
                         currentBrightness.Remove(led.Key);
                         currentColors.Remove(led.Key);
@@ -172,9 +190,16 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             }
             catch (Exception ex)
             {
-#if DEBUG
                 Debug.WriteLine($"Exception: {ex.Message}");
-#endif
+            }
+        }
+
+        private void ShuffleLeds(List<Led> list)
+        {
+            for (var i = list.Count - 1; i > 0; i--)
+            {
+                var j = random.Next(i + 1);
+                (list[i], list[j]) = (list[j], list[i]);
             }
         }
 

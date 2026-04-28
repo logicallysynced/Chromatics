@@ -1,0 +1,202 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Chromatics.ViewModels.Mapping"
+             xmlns:loc="clr-namespace:Chromatics.Localization"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="320"
+             x:Class="Chromatics.Views.Mapping.VirtualDeviceView"
+             x:DataType="vm:VirtualDeviceViewModel">
+
+    <UserControl.Styles>
+        <!-- Base keycap face. Background comes from the VM's FillBrush so the
+             preview tick can recolor live. Content template uses a clipped
+             TextBlock so labels longer than the key (e.g. "Pause", "Mouse 1")
+             get ellipsised instead of overflowing. -->
+        <Style Selector="Button.keycap" x:DataType="vm:KeycapViewModel">
+            <Setter Property="Background"       Value="{Binding FillBrush}" />
+            <Setter Property="Foreground"       Value="#0A1E2D" />
+            <Setter Property="BorderBrush"      Value="#33000000" />
+            <Setter Property="BorderThickness"  Value="1" />
+            <Setter Property="CornerRadius"     Value="4" />
+            <Setter Property="Padding"          Value="1" />
+            <Setter Property="FontSize"         Value="9" />
+            <Setter Property="FontWeight"       Value="SemiBold" />
+            <Setter Property="Cursor"           Value="Hand" />
+            <Setter Property="ClipToBounds"     Value="True" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+        </Style>
+        <Style Selector="Button.keycap:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="BorderBrush" Value="{DynamicResource ChromaticsAccent}" />
+        </Style>
+        <Style Selector="Button.keycap.selected">
+            <Setter Property="BorderBrush"      Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="BorderThickness"  Value="2" />
+        </Style>
+
+        <!-- Floating round toolbar buttons pinned to the bottom-right of the
+             device area. :is(Button) so the rule matches both ToggleButton
+             (lock + brightness) and plain Button (reset position) — without
+             this, the reset button falls back to Avalonia's default
+             rectangular Button chrome and breaks the row's visual rhythm.
+             FontSize 14 (was 16) gives the 🔒/🔓 emoji glyphs enough
+             vertical headroom to render fully inside the circular clip
+             — at 16 the lock's shackle was clipped by the corner radius. -->
+        <Style Selector=":is(Button).lockToggle">
+            <Setter Property="Width"              Value="36" />
+            <Setter Property="Height"             Value="36" />
+            <Setter Property="Padding"            Value="0" />
+            <Setter Property="CornerRadius"       Value="18" />
+            <Setter Property="Background"         Value="{DynamicResource ChromaticsTileOff}" />
+            <Setter Property="BorderBrush"        Value="{DynamicResource ChromaticsTileBorderOff}" />
+            <Setter Property="BorderThickness"    Value="1" />
+            <Setter Property="FontSize"           Value="14" />
+            <Setter Property="FontFamily"         Value="Segoe UI Emoji, Segoe UI Symbol" />
+            <Setter Property="Cursor"             Value="Hand" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment"   Value="Center" />
+        </Style>
+        <Style Selector="ToggleButton.lockToggle:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background"  Value="{DynamicResource ChromaticsAccent}" />
+            <Setter Property="Foreground"  Value="White" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid>
+        <Border Background="#1A000000"
+                CornerRadius="6"
+                Padding="6"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Disabled">
+                <ItemsControl Name="KeycapItems"
+                              ItemsSource="{Binding Keycaps}"
+                              Width="{Binding Width}"
+                              Height="{Binding Height}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Styles>
+                        <Style Selector="ContentPresenter" x:DataType="vm:KeycapViewModel">
+                            <Setter Property="Canvas.Left" Value="{Binding X}" />
+                            <Setter Property="Canvas.Top"  Value="{Binding Y}" />
+                        </Style>
+                    </ItemsControl.Styles>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="vm:KeycapViewModel">
+                            <Grid Width="{Binding Width}" Height="{Binding Height}"
+                                  ClipToBounds="True">
+                                <Button Classes="keycap"
+                                        Classes.selected="{Binding IsSelected}"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch">
+                                    <TextBlock Text="{Binding Label}"
+                                               TextAlignment="Center"
+                                               TextTrimming="CharacterEllipsis"
+                                               TextWrapping="NoWrap"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Button>
+                                <Border IsVisible="{Binding IsEditing}"
+                                        Background="{DynamicResource ChromaticsAccent}"
+                                        CornerRadius="10"
+                                        Width="20" Height="20"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Margin="-4,-4,0,0"
+                                        IsHitTestVisible="False">
+                                    <TextBlock Text="{Binding EditIndex}"
+                                               Foreground="White"
+                                               FontSize="11"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"
+                                               VerticalAlignment="Center" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Reset position + lock + brightness toolbar. Lock and reset stay
+             gated on SupportsDragReposition; brightness shows for every
+             device type (keyboards too, where lock/reset don't apply) and
+             sits at the right end of the toolbar. -->
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,10,10"
+                    Spacing="6">
+            <Button Classes="lockToggle"
+                    IsVisible="{Binding SupportsDragReposition}"
+                    Click="OnResetLayoutClick"
+                    ToolTip.Tip="{loc:Tr Key='Reset all keys to default positions'}">
+                <TextBlock Text="&#x21BA;"
+                           FontFamily="Segoe UI Emoji, Segoe UI Symbol" />
+            </Button>
+            <ToggleButton Classes="lockToggle"
+                          IsVisible="{Binding SupportsDragReposition}"
+                          IsChecked="{Binding IsDraggable, Mode=TwoWay}"
+                          ToolTip.Tip="{loc:Tr Key='Lock / unlock keys for drag repositioning'}">
+                <Grid>
+                    <TextBlock Text="&#x1F512;" IsVisible="{Binding !IsDraggable}" />
+                    <TextBlock Text="&#x1F513;" IsVisible="{Binding IsDraggable}" />
+                </Grid>
+            </ToggleButton>
+            <ToggleButton Name="BrightnessToggle"
+                          Classes="lockToggle"
+                          ToolTip.Tip="{loc:Tr Key='Adjust per-device brightness'}">
+                <Grid Width="36" Height="36">
+                    <!-- Hollow sun: chunky ring + 8 short stubby rays with
+                         rounded caps. Ray inner ends sit just outside the
+                         ring so a clear gap reads at the toolbar size. -->
+                    <Path Data="M 7,12 A 5,5 0 1,0 17,12 A 5,5 0 1,0 7,12 Z M 12,2 L 12,4.5 M 12,19.5 L 12,22 M 2,12 L 4.5,12 M 19.5,12 L 22,12 M 4.93,4.93 L 7.05,7.05 M 19.07,4.93 L 16.95,7.05 M 4.93,19.07 L 7.05,16.95 M 19.07,19.07 L 16.95,16.95"
+                          Stretch="Uniform"
+                          Width="20" Height="20"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Stroke="{Binding $parent[ToggleButton].Foreground}"
+                          StrokeThickness="2.5"
+                          StrokeLineCap="Round"
+                          Fill="{x:Null}"
+                          Opacity="0.55" />
+                    <Border IsVisible="{Binding IsBrightnessReduced}"
+                            Background="{DynamicResource ChromaticsAccent}"
+                            CornerRadius="5"
+                            Width="10" Height="10"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top"
+                            Margin="0,2,2,0"
+                            IsHitTestVisible="False" />
+                </Grid>
+                <ToggleButton.Flyout>
+                    <Flyout Placement="Top">
+                        <StackPanel Width="220" Spacing="8">
+                            <TextBlock Text="{loc:Tr Key='Device brightness'}"
+                                       FontWeight="SemiBold" />
+                            <Slider Minimum="0" Maximum="100"
+                                    TickFrequency="10"
+                                    IsSnapToTickEnabled="False"
+                                    Value="{Binding Brightness, Mode=TwoWay}" />
+                            <Grid>
+                                <TextBlock Text="{Binding BrightnessLabel}"
+                                           HorizontalAlignment="Left"
+                                           FontSize="11"
+                                           Opacity="0.8" />
+                                <Button Content="{loc:Tr Key='Reset'}"
+                                        Click="OnResetBrightnessClick"
+                                        HorizontalAlignment="Right"
+                                        Padding="8,2" />
+                            </Grid>
+                        </StackPanel>
+                    </Flyout>
+                </ToggleButton.Flyout>
+            </ToggleButton>
+        </StackPanel>
+    </Grid>
+</UserControl>

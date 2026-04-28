@@ -42,8 +42,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             base.OnAttached(decoratable);
             ledGroup.Detach();
 
-            Debug.WriteLine("Arena Light Show Decorator Attached");
-
             foreach (var led in ledGroup)
             {
                 ledPositions.TryAdd(led, random.NextDouble() * Math.PI * 2);
@@ -59,7 +57,6 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             currentBrightness.Clear();
             Timing = 0;
 
-            Debug.WriteLine("Arena Light Show Decorator Detached");
         }
 
         protected override void Update(double deltaTime)
@@ -96,9 +93,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             }
             catch (Exception ex)
             {
-#if DEBUG
                 Debug.WriteLine($"Exception: {ex.Message}");
-#endif
             }
         }
 

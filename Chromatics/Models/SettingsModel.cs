@@ -13,11 +13,13 @@ namespace Chromatics.Models
         public string version { get; set; } = "2";
         public double? ffxivExpansion { get; set; } = 6.0;
         public bool firstrun { get; set; } = true;
-        public bool localcache { get; set; } = false;
         public bool winstart { get; set; } = false;
         public bool minimizetray { get; set; } = false;
         public bool trayonstartup { get; set; } = false;
         public bool checkupdates { get; set; } = true;
+        public bool betaChannel { get; set; } = false;
+        public bool alwaysRunAsAdmin { get; set; } = false;
+        public bool closeWithGame { get; set; } = false;
         public bool showDeviceErrors { get; set; } = true;
         public bool showEmulatorDevices { get; set; } = false;
         public KeyboardLocalization keyboardLayout { get; set; } = KeyboardLocalization.qwerty;
@@ -47,6 +49,7 @@ namespace Chromatics.Models
         public string deviceHueBridgeClientKey { get; set; } = "";
         public double deviceHueBridgeBrightness { get; set; } = -1;
         public bool deviceRazerCheckSDKOverride { get; set; } = false;
+        public bool enableCrashReports { get; set; } = true;
         public Theme systemTheme { get; set; } = Theme.System;
         public Language systemLanguage { get; set; } = Language.English;
 

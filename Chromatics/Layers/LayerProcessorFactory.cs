@@ -65,6 +65,8 @@ namespace Chromatics.Layers
                 BaseLayerType.ReactiveWeather => ReactiveWeatherProcessor.Instance,
                 BaseLayerType.BattleStance => BaseBattleStanceProcessor.Instance,
                 BaseLayerType.JobClasses => JobClassesProcessor.Instance,
+                BaseLayerType.ScreenCapture => ScreenCaptureProcessor.Instance,
+                BaseLayerType.AudioVisualizer => AudioVisualizerBaseProcessor.Instance,
                 _ => throw new ArgumentException("Unknown BaseLayerType")
             };
         }
@@ -96,6 +98,7 @@ namespace Chromatics.Layers
                 DynamicLayerType.MPTracker => MPTrackerProcessor.Instance,
                 DynamicLayerType.JobGaugeA => JobGaugeAProcessor.Instance,
                 DynamicLayerType.JobGaugeB => JobGaugeBProcessor.Instance,
+                DynamicLayerType.JobGaugeC => JobGaugeCProcessor.Instance,
                 DynamicLayerType.ExperienceTracker => ExperienceTrackerProcessor.Instance,
                 DynamicLayerType.BattleStance => DynamicBattleStanceProcessor.Instance,
                 DynamicLayerType.Castbar => CastbarProcessor.Instance,
@@ -104,6 +107,8 @@ namespace Chromatics.Layers
                 _ => throw new ArgumentException("Unknown DynamicLayerType")
             };
         }
+
+        public IEnumerable<LayerProcessor> GetActiveDynamicProcessors() => _dynamicProcessors.Values;
 
         public void DisposeProcessor(BaseLayerType type)
         {
@@ -135,20 +140,11 @@ namespace Chromatics.Layers
         public void DisposeAll()
         {
             foreach (var processor in _baseProcessors.Values)
-            {
-                Debug.WriteLine($"Disposing: {processor.GetType().Name}");
                 processor.Dispose();
-            }
             foreach (var processor in _effectProcessors.Values)
-            {
-                Debug.WriteLine($"Disposing: {processor.GetType().Name}");
                 processor.Dispose();
-            }
             foreach (var processor in _dynamicProcessors.Values)
-            {
-                Debug.WriteLine($"Disposing: {processor.GetType().Name}");
                 processor.Dispose();
-            }
 
             _baseProcessors.Clear();
             _effectProcessors.Clear();

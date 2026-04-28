@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.RGB.NET.Gradients
 {
-    class RectangularGradient : AbstractGradient
+    internal class RectangularGradient : AbstractGradient
     {
         public readonly System.Drawing.Color topLeft;
         public readonly System.Drawing.Color topRight;

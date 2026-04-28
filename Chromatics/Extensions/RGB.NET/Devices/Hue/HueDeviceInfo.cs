@@ -9,15 +9,20 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue;
 
 public class HueDeviceInfo : IRGBDeviceInfo
 {
-    public HueDeviceInfo(Light light)
+    public HueDeviceInfo(Light light, string modelId)
     {
-        LightId = light.IdV1;
+        // IdV1 is null on CLIP v2 resources without a v1 counterpart.
+        LightId = light.IdV1 ?? light.Id.ToString();
 
         DeviceType = RGBDeviceType.LedController;
-        DeviceName = light.Metadata.Name;
+        // Metadata is nullable in HueApi 3.x; fall back to the resource id.
+        DeviceName = light.Metadata?.Name ?? light.Id.ToString();
         Manufacturer = "Philips";
-        Model = light.Type;
-
+        // Hardware model id (e.g. "LCA001") joined from the Device endpoint by
+        // the provider. Falls back to light.Type ("light") if the device fetch
+        // failed — HueDevice's switch will then hit its default branch but the
+        // light still works.
+        Model = !string.IsNullOrEmpty(modelId) ? modelId : light.Type;
     }
 
     public string LightId { get; }

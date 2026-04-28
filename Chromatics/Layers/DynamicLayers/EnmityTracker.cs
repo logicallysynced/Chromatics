@@ -35,8 +35,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(EnmityTrackerProcessor));
+            if (_disposed) return;
 
             EnmityDynamicModel model;
 
@@ -134,9 +133,7 @@ namespace Chromatics.Layers
                         };
 
                         ledGroup.Detach();
-
-                        if (!model._localgroups.Contains(ledGroup))
-                            model._localgroups.Add(ledGroup);
+                        model._localgroups.Add(ledGroup);
                     }
                 }
                 else
@@ -166,7 +163,7 @@ namespace Chromatics.Layers
                                 //High Aggro
                                 model.enmity_brush.Color = enmity_high_col;
                             }
-                            else if (enmityPosition >= 50 && model._enmityPosition < 80)
+                            else if (enmityPosition >= 50 && enmityPosition < 80)
                             {
                                 //Moderate Aggro
                                 model.enmity_brush.Color = enmity_med_col;
@@ -246,9 +243,8 @@ namespace Chromatics.Layers
 
                                 ledGroup.Detach();
 
-                                if (!model._localgroups.Contains(ledGroup))
-                                    model._localgroups.Add(ledGroup);
-
+                                DetachAndClearGroups(model._localgroups);
+                                model._localgroups.Add(ledGroup);
                                 model._faderValue = currentVal_Fader;
                             }
                         }
@@ -279,6 +275,15 @@ namespace Chromatics.Layers
             model.init = true;
             model._targetReset = false;
             layer.requestUpdate = false;
+        }
+
+        private void DetachAndClearGroups(List<ListLedGroup> groups)
+        {
+            foreach (var group in groups)
+            {
+                group?.Detach();
+            }
+            groups.Clear();
         }
 
         protected override void Dispose(bool disposing)

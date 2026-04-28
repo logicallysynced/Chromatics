@@ -1,284 +1,310 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+using System;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Chromatics.Extensions
 {
-
-    public class ScreenCaptureExtension
+    /// <summary>
+    /// Samples the FFXIV game window on a background thread and produces a
+    /// horizontal colour breakdown for ambient base-layer lighting.
+    /// Falls back to the primary monitor when FFXIV is not running.
+    /// </summary>
+    public sealed class ScreenCaptureExtension : IDisposable
     {
-        public event EventHandler colorGeneratedEvent;
+        public event EventHandler ColorGenerated;
 
-        private const int DARK_PIXEL_LIMIT = 100;
-        private const int SKIP_PIXEL = 10;
-        private const int DEFAULT_SEGMENT_NUMBER = 2;
-        private const int refreshFrequency = 500;
+        // Pixels whose R, G AND B are all below this threshold are treated as
+        // near-black (UI overlays, letterboxes) and excluded from the average.
+        private const int DarkPixelLimit = 30;
 
-        private bool isStarted;
-        private bool _stopRequested;
-        private Thread background;
-        private ScreenColor _screenTracker;
+        // Sample every Nth pixel in each direction — balances accuracy vs speed.
+        private const int PixelSampleStride = 8;
+
+        // Number of horizontal colour bands sampled left→right across the frame.
+        // 16 gives roughly one sample per keyboard column on a full-size layout.
+        public const int HorizontalSampleCount = 16;
+
+        private const int RefreshIntervalMs = 200;
+        private const string FfxivWindowClass = "FFXIVGAME";
+
+        private Thread _workerThread;
+        private volatile bool _isStarted;
+        private volatile bool _stopRequested;
+        private volatile ScreenColor _latestScreenColor;
+        private bool _disposed;
+
+        // ── Win32 ──────────────────────────────────────────────────────────
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetClientRect(IntPtr hWnd, out RECT lpRect);
+
+        [DllImport("user32.dll")]
+        private static extern bool ClientToScreen(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        private static extern int GetSystemMetrics(int nIndex);
+        private const int SM_CXSCREEN = 0;
+        private const int SM_CYSCREEN = 1;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RECT { public int Left, Top, Right, Bottom; }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct POINT { public int X, Y; }
+
+        // ── Lifecycle ──────────────────────────────────────────────────────
 
         public void Start()
         {
-            if (isStarted) return;
+            if (_disposed) throw new ObjectDisposedException(nameof(ScreenCaptureExtension));
+            if (_isStarted) return;
 
             _stopRequested = false;
+            _isStarted = true;
 
-            background = new Thread(startAnalyzeInBackground);
-            background.IsBackground = true;
-            background.Start();
-
-
-            colorGeneratedEvent += ColorGeneratedEventHandler;
-            isStarted = true;
-
+            _workerThread = new Thread(CaptureLoop)
+            {
+                IsBackground = true,
+                Name = "ScreenCaptureExtension",
+            };
+            _workerThread.Start();
         }
 
         public void Stop()
         {
-            if (!isStarted) return;
-
+            if (!_isStarted) return;
             _stopRequested = true;
-            background = null;
-            isStarted = false;
+            _isStarted = false;
         }
 
-        public ScreenColor GetScreenColours()
+        public ScreenColor GetScreenColours() =>
+            _isStarted ? _latestScreenColor : null;
+
+        public void Dispose()
         {
-            if (!isStarted || _screenTracker == null) return null;
-
-            return _screenTracker;
+            if (_disposed) return;
+            _disposed = true;
+            Stop();
+            ColorGenerated = null;
         }
 
-        private void startAnalyzeInBackground()
+        // ── Capture loop ───────────────────────────────────────────────────
+
+        private void CaptureLoop()
         {
             while (!_stopRequested)
             {
-                if (isStarted)
+                try
                 {
-                    startAnalyze();
+                    AnalyzeOnce();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"ScreenCaptureExtension analyze failed: {ex.Message}");
                 }
 
-                Thread.Sleep(refreshFrequency);
-
+                Thread.Sleep(RefreshIntervalMs);
             }
         }
 
-        private void startAnalyze()
+        private void AnalyzeOnce()
         {
-            Bitmap screenshot = GetScreenshot();
-            ScreenColor screenColor = new ScreenColor();
+            var (bmp, isGameWindow) = CaptureTarget();
+            if (bmp == null) return;
 
-            // First of all calculate the color for the whole screen
-            System.Drawing.Rectangle screen = new System.Drawing.Rectangle(0, 0, screenshot.Width, screenshot.Height);
-            Bitmap wholeScreen = screenshot.Clone(screen, screenshot.PixelFormat);
-            System.Drawing.Color mainColor = getPictureAverageColor(wholeScreen);
-            screenColor.mainColor = mainColor;
-
-
-            // Then divide the screen and calculate the segments            
-            int segmentX = 0;
-            int segmentY = 0;
-            int segmentWidth = (int)screenshot.Width / DEFAULT_SEGMENT_NUMBER;
-            int segmentHeight = (int)screenshot.Height / DEFAULT_SEGMENT_NUMBER;
-
-            // Segment cannot be bigger then the screen size
-            if (segmentWidth > screenshot.Width) { segmentHeight = screenshot.Width; }
-            if (segmentHeight > screenshot.Height) { segmentHeight = screenshot.Height; }
-
-
-            // Go troug the segments from the upper left to right and down
-            // *-----> |
-            // *<------¡
-            int segmentCounter = 0;
-            for (var j = 0; j < screenshot.Height; j = j + segmentHeight)
+            using (bmp)
             {
-                for (var i = 0; i < screenshot.Width; i = i + segmentWidth)
+                var (main, columns) = SampleBitmap(bmp, HorizontalSampleCount);
+                _latestScreenColor = new ScreenColor
                 {
-                    System.Drawing.Rectangle segmentArea = new System.Drawing.Rectangle(i, j, segmentWidth, segmentHeight);
-                    Bitmap segmentPicture = screenshot.Clone(segmentArea, screenshot.PixelFormat);
-                    System.Drawing.Color segmenColor = getPictureAverageColor(segmentPicture);
+                    MainColor       = main,
+                    HorizontalSamples = columns,
+                    GameWindowActive  = isGameWindow,
+                };
+            }
+
+            ColorGenerated?.Invoke(this, EventArgs.Empty);
+        }
+
+        // ── Window / screen capture ────────────────────────────────────────
+
+        private (Bitmap bmp, bool isGame) CaptureTarget()
+        {
+            var hwnd = FindWindow(FfxivWindowClass, null);
+            if (hwnd != IntPtr.Zero && GetClientRect(hwnd, out var cr))
+            {
+                int w = cr.Right  - cr.Left;
+                int h = cr.Bottom - cr.Top;
+                if (w > 0 && h > 0)
+                {
+                    var origin = new POINT { X = 0, Y = 0 };
+                    ClientToScreen(hwnd, ref origin);
+                    var bmp = new Bitmap(w, h);
                     try
                     {
-                        screenColor.screenColors.TryAdd(segmentCounter++, segmenColor);
+                        using var g = Graphics.FromImage(bmp);
+                        g.CopyFromScreen(origin.X, origin.Y, 0, 0, new Size(w, h));
+                        return (bmp, true);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        Debug.WriteLine("Cannot add color to the list. This should not happen.");
+                        Debug.WriteLine($"ScreenCaptureExtension screenshot failed: {ex.Message}");
+                        bmp.Dispose();
                     }
                 }
             }
 
-            System.Drawing.Rectangle screenPart = new System.Drawing.Rectangle(segmentX, segmentY, segmentWidth, segmentHeight);
-            Bitmap segmentPic = screenshot.Clone(screenPart, screenshot.PixelFormat);
+            // Fall back to primary monitor
+            int sw = GetSystemMetrics(SM_CXSCREEN);
+            int sh = GetSystemMetrics(SM_CYSCREEN);
+            if (sw <= 0 || sh <= 0) return (null, false);
 
-            System.Drawing.Color c = getPictureAverageColor(screenshot);
-
-            //Debug.WriteLine("Timeout:" + refreshFrequency);
-
-            colorGeneratedEvent.Invoke(this, new ColorEvent(screenColor));
-
-            // Otherwise the memory consumption is high till the normal GC running
-            System.GC.Collect();
-        }
-
-        private Bitmap GetScreenshot()
-        {
-            Bitmap bmp = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+            var fallback = new Bitmap(sw, sh);
             try
             {
-                Graphics g = Graphics.FromImage(bmp);
-                g.CopyFromScreen(0, 0, 0, 0, bmp.Size);
-
-                // bmp.Save("screenshot.bmp");
+                using var g = Graphics.FromImage(fallback);
+                g.CopyFromScreen(0, 0, 0, 0, new Size(sw, sh));
+                return (fallback, false);
             }
-            catch
+            catch (Exception ex)
             {
-                Debug.WriteLine("Cannot take a screenshot. Log off screen?");
+                Debug.WriteLine($"ScreenCaptureExtension screenshot failed: {ex.Message}");
+                fallback.Dispose();
+                return (null, false);
             }
-
-            return bmp;
         }
 
-        private void ColorGeneratedEventHandler(object sender, EventArgs e)
+        // ── Pixel sampling ─────────────────────────────────────────────────
+
+        // One LockBits pass over the full bitmap; computes the overall average
+        // colour AND per-column averages for the horizontal gradient in a single
+        // sweep so we only pay the lock/unlock cost once per frame.
+        private static unsafe (Color main, Color[] columns) SampleBitmap(Bitmap bmp, int columnCount)
         {
-            // We expecting a ScreenColorEvent here
-            ColorEvent colorEvent = (ColorEvent)e;
-            _screenTracker = colorEvent.screenColor;
+            var data = bmp.LockBits(
+                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
 
-        }
-
-
-        private System.Drawing.Color getPictureAverageColor(Bitmap picture)
-        {
-
-            for (int h = 0; h < picture.Height; h += SKIP_PIXEL)
+            try
             {
-                for (int w = 0; w < picture.Width; w += SKIP_PIXEL)
+                int w           = data.Width;
+                int h           = data.Height;
+                int stride      = data.Stride;
+                int colWidth    = Math.Max(1, w / columnCount);
+
+                var colR   = new long[columnCount];
+                var colG   = new long[columnCount];
+                var colB   = new long[columnCount];
+                var colCnt = new int[columnCount];
+                long totR = 0, totG = 0, totB = 0;
+                int  totCnt = 0;
+
+                byte* scan0 = (byte*)data.Scan0;
+
+                for (int row = 0; row < h; row += PixelSampleStride)
                 {
-                    System.Drawing.Color pixelColor = picture.GetPixel(w, h);
-                    addPixel(pixelColor);
+                    byte* rowPtr = scan0 + row * stride;
+                    for (int col = 0; col < w; col += PixelSampleStride)
+                    {
+                        // Format32bppArgb layout per pixel: B G R A
+                        byte* px = rowPtr + col * 4;
+                        byte b = px[0], g = px[1], r = px[2];
+
+                        if (r < DarkPixelLimit && g < DarkPixelLimit && b < DarkPixelLimit)
+                            continue;
+
+                        int seg = Math.Min(col / colWidth, columnCount - 1);
+                        colR[seg] += r; colG[seg] += g; colB[seg] += b;
+                        colCnt[seg]++;
+                        totR += r; totG += g; totB += b;
+                        totCnt++;
+                    }
                 }
+
+                var columns = new Color[columnCount];
+                for (int i = 0; i < columnCount; i++)
+                {
+                    int c = colCnt[i];
+                    columns[i] = c > 0
+                        ? BoostSaturation(Color.FromArgb((int)(colR[i] / c), (int)(colG[i] / c), (int)(colB[i] / c)), 2.0f)
+                        : Color.Black;
+                }
+
+                var main = totCnt > 0
+                    ? BoostSaturation(Color.FromArgb((int)(totR / totCnt), (int)(totG / totCnt), (int)(totB / totCnt)), 2.0f)
+                    : Color.Black;
+
+                return (main, columns);
             }
-
-            System.Drawing.Color c = getAverageColor();
-            string hex = ColorTranslator.ToHtml(c);
-
-            //Debug.WriteLine("Hex color " + hex);
-            //Debug.WriteLine("RGB color " + c.R + ", " + c.G + ", " + c.B);
-            return c;
-        }
-
-        private int allPixels { get; set; }
-        private int darkPixels { get; set; }
-        private int brightPixels { get; set; }
-
-        private RGB colorCollercor { get; } = new RGB();
-
-        private void addPixel(System.Drawing.Color pixelColor)
-        {
-            int r = pixelColor.R;
-            int g = pixelColor.G;
-            int b = pixelColor.B;
-
-            bool addPixel = false;
-            if (r < DARK_PIXEL_LIMIT && g < DARK_PIXEL_LIMIT && b < DARK_PIXEL_LIMIT)
+            finally
             {
-                darkPixels++;
-            }
-            else
-            {
-                brightPixels++;
-                addPixel = true;
-            }
-
-            if (addPixel)
-            {
-                colorCollercor.red += r;
-                colorCollercor.green += g;
-                colorCollercor.blue += b;
-                allPixels++;
+                bmp.UnlockBits(data);
             }
         }
-        private System.Drawing.Color getAverageColor()
-        {
-            RGB avgRGB = getAverageRGB();
-            if (avgRGB.red < 0) { avgRGB.red = 0; }
-            if (avgRGB.green < 0) { avgRGB.green = 0; }
-            if (avgRGB.blue < 0) { avgRGB.blue = 0; }
-            if (avgRGB.red > 255) { avgRGB.red = 255; }
-            if (avgRGB.green > 255) { avgRGB.green = 255; }
-            if (avgRGB.blue > 255) { avgRGB.blue = 255; }
 
-            return System.Drawing.Color.FromArgb(avgRGB.red, avgRGB.green, avgRGB.blue);
+        // ── Colour helpers ─────────────────────────────────────────────────
+
+        // Converts RGB to HSL, multiplies S by boost (clamped to 1), returns RGB.
+        // Achromatic colours (S == 0) pass through unchanged.
+        private static Color BoostSaturation(Color color, float boost)
+        {
+            float r = color.R / 255f, g = color.G / 255f, b = color.B / 255f;
+            float max = MathF.Max(r, MathF.Max(g, b));
+            float min = MathF.Min(r, MathF.Min(g, b));
+            float delta = max - min;
+            float l = (max + min) / 2f;
+
+            if (delta < 0.001f) return color;
+
+            float s = Math.Min(1f, (l < 0.5f ? delta / (max + min) : delta / (2f - max - min)) * boost);
+
+            float h;
+            if (max == r)      h = (g - b) / delta + (g < b ? 6f : 0f);
+            else if (max == g) h = (b - r) / delta + 2f;
+            else               h = (r - g) / delta + 4f;
+            h /= 6f;
+
+            float q = l < 0.5f ? l * (1f + s) : l + s - l * s;
+            float p = 2f * l - q;
+
+            int nr = (int)(HueToRgb(p, q, h + 1f / 3f) * 255f + 0.5f);
+            int ng = (int)(HueToRgb(p, q, h)           * 255f + 0.5f);
+            int nb = (int)(HueToRgb(p, q, h - 1f / 3f) * 255f + 0.5f);
+            return Color.FromArgb(Math.Clamp(nr, 0, 255), Math.Clamp(ng, 0, 255), Math.Clamp(nb, 0, 255));
         }
 
-        private RGB getAverageRGB()
+        private static float HueToRgb(float p, float q, float t)
         {
-
-            double calculatedRed;
-            double calculatedGreen;
-            double calculatedBlue;
-
-            if (allPixels == 0) { allPixels = 1; }
-
-            calculatedRed = (double)colorCollercor.red / allPixels;
-            calculatedGreen = (double)colorCollercor.green / allPixels;
-            calculatedBlue = (double)colorCollercor.blue / allPixels;
-
-            // Make darker color if most of the screen surface is black
-            if (brightPixels * 2 < darkPixels)
-            {
-                double ratio = (double)brightPixels / darkPixels;
-
-                calculatedRed = Convert.ToInt32(calculatedRed * ratio);
-                calculatedGreen = Convert.ToInt32(calculatedGreen * ratio);
-                calculatedBlue = Convert.ToInt32(calculatedBlue * ratio);
-            }
-
-            //Debug.WriteLine("RGB color " + calculatedRed + ", " + calculatedGreen + ", " + calculatedBlue);
-
-            return new RGB()
-            {
-                red = (int)calculatedRed,
-                green = (int)calculatedGreen,
-                blue = (int)calculatedBlue
-            };
+            if (t < 0f) t += 1f;
+            if (t > 1f) t -= 1f;
+            if (t < 1f / 6f) return p + (q - p) * 6f * t;
+            if (t < 1f / 2f) return q;
+            if (t < 2f / 3f) return p + (q - p) * (2f / 3f - t) * 6f;
+            return p;
         }
 
-        private class RGB
+        // ── Result type ────────────────────────────────────────────────────
+
+        public sealed class ScreenColor
         {
-            public int red { get; set; }
-            public int green { get; set; }
-            public int blue { get; set; }
+            /// <summary>Average of all non-dark pixels across the whole frame.</summary>
+            public Color MainColor { get; set; }
 
+            /// <summary>
+            /// Left-to-right horizontal colour samples (length == HorizontalSampleCount).
+            /// Index 0 = left edge, last index = right edge.
+            /// </summary>
+            public Color[] HorizontalSamples { get; set; }
+
+            /// <summary>True when the source was the FFXIV window; false for the fallback monitor capture.</summary>
+            public bool GameWindowActive { get; set; }
         }
-
-        public class ScreenColor
-        {
-            public System.Drawing.Color mainColor { get; set; }
-            public ConcurrentDictionary<int, System.Drawing.Color> screenColors = new ConcurrentDictionary<int, System.Drawing.Color>();
-        }
-
-        private class ColorEvent : EventArgs
-        {
-            public ScreenColor screenColor { get; set; }
-            public ColorEvent(ScreenColor c)
-            {
-                this.screenColor = c;
-            }
-
-        }
-
-
     }
 }

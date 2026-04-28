@@ -17,6 +17,7 @@ namespace Chromatics.Models
         public bool effect_titlescreen { get; set; } = true;
         public bool effect_startupanimation { get; set; } = true;
         public bool effect_raideffects { get; set; } = true;
+        public bool effect_audiovisualizer { get; set; } = false;
 
         //Specific Effect Settings
         public bool effect_damageflash_scaledamage { get; set; } = true;
@@ -40,6 +41,18 @@ namespace Chromatics.Models
         public bool weather_blizzard_animation { get; set; } = true;
         public bool weather_sandstorms_animation { get; set; } = true;
         public bool weather_everlastinglight_animation { get; set; } = true;
+
+        // Dawntrail-era weather. Toggles persist in effects.chromatics4 but
+        // are not yet exposed in the Effects tab UI — placeholder effects
+        // only at present, awaiting bespoke design per zone.
+        public bool weather_atmosphericphantasms_animation { get; set; } = true;
+        public bool weather_illusorydisturbances_animation { get; set; } = true;
+        public bool weather_gravitationalflux_animation { get; set; } = true;
+        public bool weather_meteorshowers_animation { get; set; } = true;
+        public bool weather_sporingmist_animation { get; set; } = true;
+        public bool weather_annealingwinds_animation { get; set; } = true;
+        public bool weather_glassstorms_animation { get; set; } = true;
+        public bool weather_bubblebloom_animation { get; set; } = true;
 
 
     }

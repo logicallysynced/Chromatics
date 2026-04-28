@@ -1,7 +1,6 @@
 ﻿using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Extensions.RGB.NET;
-using Chromatics.Extensions.Sharlayan;
 using Chromatics.Helpers;
 using Chromatics.Interfaces;
 using RGB.NET.Core;
@@ -36,8 +35,7 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (_disposed)
-                throw new ObjectDisposedException(nameof(HPTrackerProcessor));
+            if (_disposed) return;
 
             HPTrackerDynamicModel model;
 
@@ -160,6 +158,7 @@ namespace Chromatics.Layers
                         };
 
                         ledGroup.Detach();
+                        DetachAndClearGroups(model._localgroups);
                         model._localgroups.Add(ledGroup);
                         model._faderValue = currentVal_Fader;
                     }
