@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
-      "version": "4.0.148",
+      "version": "4.0.153",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -31,6 +31,7 @@
         },
         "frameworks": {
           "net10.0-windows7.0": {
+            "framework": "net10.0-windows7.0",
             "targetAlias": "net10.0-windows7.0",
             "projectReferences": {}
           }
@@ -49,6 +50,7 @@
       },
       "frameworks": {
         "net10.0-windows7.0": {
+          "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows7.0",
           "dependencies": {
             "Avalonia": {
@@ -170,6 +172,10 @@
             "Sentry.Profiling": {
               "target": "Package",
               "version": "[6.4.1, )"
+            },
+            "Sharlayan": {
+              "target": "Package",
+              "version": "[9.0.22-prerelease.33, )"
             },
             "System.Drawing.Common": {
               "target": "Package",

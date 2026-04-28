@@ -344,6 +344,35 @@
           }
         }
       },
+      "BCnEncoder.Net/2.2.1": {
+        "type": "package",
+        "dependencies": {
+          "CommunityToolkit.HighPerformance": "8.4.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/BCnEncoder.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/BCnEncoder.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "CommunityToolkit.HighPerformance/8.4.0": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/CommunityToolkit.HighPerformance.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/CommunityToolkit.HighPerformance.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
       "CommunityToolkit.Mvvm/8.4.2": {
         "type": "package",
         "compile": {
@@ -614,6 +643,39 @@
           "lib/net10.0/HueApi.Entertainment.dll": {}
         }
       },
+      "Lumina/7.3.0": {
+        "type": "package",
+        "dependencies": {
+          "BCnEncoder.Net": "2.2.1",
+          "Microsoft.Extensions.ObjectPool": "10.0.0"
+        },
+        "compile": {
+          "lib/net10.0/Lumina.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Lumina.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Lumina.Excel/7.4.3": {
+        "type": "package",
+        "dependencies": {
+          "Lumina": "7.1.0"
+        },
+        "compile": {
+          "lib/net10.0/Lumina.Excel.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Lumina.Excel.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "MicroCom.Runtime/0.11.4": {
         "type": "package",
         "compile": {
@@ -707,6 +769,19 @@
         },
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
+        }
+      },
+      "Microsoft.Extensions.ObjectPool/10.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net10.0/Microsoft.Extensions.ObjectPool.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Microsoft.Extensions.ObjectPool.dll": {
+            "related": ".xml"
+          }
         }
       },
       "Microsoft.Extensions.Options/6.0.0": {
@@ -905,6 +980,19 @@
           "lib/netstandard2.1/NLog.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "NLog.Schema/6.1.2": {
+        "type": "package",
+        "contentFiles": {
+          "contentFiles/any/any/_._": {
+            "buildAction": "None",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
+        },
+        "build": {
+          "build/_._": {}
         }
       },
       "NuGet.Versioning/6.14.0": {
@@ -1236,6 +1324,26 @@
         },
         "build": {
           "buildTransitive/Sentry.Profiling.targets": {}
+        }
+      },
+      "Sharlayan/9.0.22-prerelease.33": {
+        "type": "package",
+        "dependencies": {
+          "Lumina": "7.3.0",
+          "Lumina.Excel": "7.4.3",
+          "NLog": "6.1.2",
+          "NLog.Schema": "6.1.2",
+          "Newtonsoft.Json": "13.0.4"
+        },
+        "compile": {
+          "lib/net10.0/Sharlayan.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net10.0/Sharlayan.dll": {
+            "related": ".xml"
+          }
         }
       },
       "SkiaSharp/3.119.3-preview.1.1": {
@@ -1812,6 +1920,45 @@
         "lib/net8.0/Avalonia.X11.xml"
       ]
     },
+    "BCnEncoder.Net/2.2.1": {
+      "sha512": "tI5+/OQo0kciLqWrViRjpOH+IL3FjexYnoWZajiGV41g/EM9CGbWsxsPzBDmpoxNkrV9uox/EtIhCIi9chBSFw==",
+      "type": "package",
+      "path": "bcnencoder.net/2.2.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "bcnencoder.net.2.2.1.nupkg.sha512",
+        "bcnencoder.net.nuspec",
+        "lib/netstandard2.1/BCnEncoder.dll",
+        "lib/netstandard2.1/BCnEncoder.xml"
+      ]
+    },
+    "CommunityToolkit.HighPerformance/8.4.0": {
+      "sha512": "flxspiBs0G/0GMp7IK2J2ijV9bTG6hEwFc/z6ekHqB6nwRJ4Ry2yLdx+TkbCUYFCl4XhABkAwomeKbT6zM2Zlg==",
+      "type": "package",
+      "path": "communitytoolkit.highperformance/8.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "License.md",
+        "ThirdPartyNotices.txt",
+        "communitytoolkit.highperformance.8.4.0.nupkg.sha512",
+        "communitytoolkit.highperformance.nuspec",
+        "lib/net7.0/CommunityToolkit.HighPerformance.dll",
+        "lib/net7.0/CommunityToolkit.HighPerformance.pdb",
+        "lib/net7.0/CommunityToolkit.HighPerformance.xml",
+        "lib/net8.0/CommunityToolkit.HighPerformance.dll",
+        "lib/net8.0/CommunityToolkit.HighPerformance.pdb",
+        "lib/net8.0/CommunityToolkit.HighPerformance.xml",
+        "lib/netstandard2.0/CommunityToolkit.HighPerformance.dll",
+        "lib/netstandard2.0/CommunityToolkit.HighPerformance.pdb",
+        "lib/netstandard2.0/CommunityToolkit.HighPerformance.xml",
+        "lib/netstandard2.1/CommunityToolkit.HighPerformance.dll",
+        "lib/netstandard2.1/CommunityToolkit.HighPerformance.pdb",
+        "lib/netstandard2.1/CommunityToolkit.HighPerformance.xml"
+      ]
+    },
     "CommunityToolkit.Mvvm/8.4.2": {
       "sha512": "WadCzGEc2U+3e20avRLng4qNtt4zoOGWrdUISqJWrHe3/FSnrYjuM5Sb4yQb09LhkBXrrI4Zt3dLKgRMbItsrg==",
       "type": "package",
@@ -2199,6 +2346,35 @@
         "lib/net9.0/HueApi.Entertainment.dll"
       ]
     },
+    "Lumina/7.3.0": {
+      "sha512": "VGBF/2TjXR4uKYqbTFa3oqHNG7gHvXfhKTSj6PQk2pmL/RZcsmNrFpBO/bhARg0mN3J3slLD95UFPruMkScutw==",
+      "type": "package",
+      "path": "lumina/7.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "lib/net10.0/Lumina.dll",
+        "lib/net10.0/Lumina.xml",
+        "lumina.7.3.0.nupkg.sha512",
+        "lumina.nuspec"
+      ]
+    },
+    "Lumina.Excel/7.4.3": {
+      "sha512": "3FXHgq3ihk3yLSriYjM5j+w/114i/rawAbt7+O9LMFHyY0fGVIP+MOpQaLa1CruEOXjwmT9CvLKkDy4h1ESDlA==",
+      "type": "package",
+      "path": "lumina.excel/7.4.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "README.md",
+        "lib/net10.0/Lumina.Excel.dll",
+        "lib/net10.0/Lumina.Excel.xml",
+        "lumina.excel.7.4.3.nupkg.sha512",
+        "lumina.excel.nuspec"
+      ]
+    },
     "MicroCom.Runtime/0.11.4": {
       "sha512": "yZ8+Lgwo+KtRI29TB2mIOEMzV+csMJ+pKZg4YHReAP3vRewWLKKeYfrBDo5FS69rWnEbCfU3sbM+ZEQr+GDLtg==",
       "type": "package",
@@ -2349,6 +2525,25 @@
         "microsoft.extensions.logging.abstractions.6.0.0.nupkg.sha512",
         "microsoft.extensions.logging.abstractions.nuspec",
         "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.ObjectPool/10.0.0": {
+      "sha512": "bpeCq0IYmVLACyEUMzFIOQX+zZUElG1t+nu1lSxthe7B+1oNYking7b91305+jNB6iwojp9fqTY9O+Nh7ULQxg==",
+      "type": "package",
+      "path": "microsoft.extensions.objectpool/10.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net10.0/Microsoft.Extensions.ObjectPool.dll",
+        "lib/net10.0/Microsoft.Extensions.ObjectPool.xml",
+        "lib/net462/Microsoft.Extensions.ObjectPool.dll",
+        "lib/net462/Microsoft.Extensions.ObjectPool.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.ObjectPool.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.ObjectPool.xml",
+        "microsoft.extensions.objectpool.10.0.0.nupkg.sha512",
+        "microsoft.extensions.objectpool.nuspec"
       ]
     },
     "Microsoft.Extensions.Options/6.0.0": {
@@ -2594,6 +2789,20 @@
         "lib/netstandard2.1/NLog.xml",
         "nlog.6.1.2.nupkg.sha512",
         "nlog.nuspec"
+      ]
+    },
+    "NLog.Schema/6.1.2": {
+      "sha512": "uKAIj+/ir3n9O7cUr95crbJb6U1M3OYI5FqfD2KZsyzlByoYyWT2EcHP3fXvwwNHsBr0GBpHccWFTVzjj51w1g==",
+      "type": "package",
+      "path": "nlog.schema/6.1.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "build/NLog.Schema.targets",
+        "content/NLog.xsd",
+        "contentFiles/any/any/NLog.xsd",
+        "nlog.schema.6.1.2.nupkg.sha512",
+        "nlog.schema.nuspec"
       ]
     },
     "NuGet.Versioning/6.14.0": {
@@ -3018,6 +3227,20 @@
         "sentry.profiling.nuspec"
       ]
     },
+    "Sharlayan/9.0.22-prerelease.33": {
+      "sha512": "LTFy6Fy0YFAvrqodj2IF6cVSoPO9DL2Bz+gmnrRVm/PiSNvljbcIZ4BgGiqS4uT4xZk8uoQrcFv8VI92Joc7Yg==",
+      "type": "package",
+      "path": "sharlayan/9.0.22-prerelease.33",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Logo.png",
+        "lib/net10.0/Sharlayan.dll",
+        "lib/net10.0/Sharlayan.xml",
+        "sharlayan.9.0.22-prerelease.33.nupkg.sha512",
+        "sharlayan.nuspec"
+      ]
+    },
     "SkiaSharp/3.119.3-preview.1.1": {
       "sha512": "+3ndwD845G4jfuyhtg5rrjryh2mEOr2QfAPFtncvAsRLzGX0ferSJ0223av6Sbw9zsEL6Wk0sk/DrXtEpJoo5A==",
       "type": "package",
@@ -3327,6 +3550,7 @@
       "RGB.NET.Presets >= 3.2.0",
       "Sentry >= 6.4.1",
       "Sentry.Profiling >= 6.4.1",
+      "Sharlayan >= 9.0.22-prerelease.33",
       "System.Drawing.Common >= 10.0.7",
       "Velopack >= 0.0.1298"
     ]
@@ -3336,7 +3560,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "4.0.148",
+    "version": "4.0.153",
     "restore": {
       "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
       "projectName": "Chromatics",
@@ -3503,6 +3727,10 @@
           "Sentry.Profiling": {
             "target": "Package",
             "version": "[6.4.1, )"
+          },
+          "Sharlayan": {
+            "target": "Package",
+            "version": "[9.0.22-prerelease.33, )"
           },
           "System.Drawing.Common": {
             "target": "Package",

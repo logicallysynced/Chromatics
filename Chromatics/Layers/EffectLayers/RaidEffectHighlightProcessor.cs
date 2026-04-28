@@ -196,6 +196,9 @@ namespace Chromatics.Layers
                 case "Recollection":
                     color = ColorHelper.ColorToRGBColor(palette.RaidEffectRecollectionKeyHighlight.Color);
                     return true;
+                case "The Unmaking":
+                    color = ColorHelper.ColorToRGBColor(palette.RaidEffectTheUnmakingKeyHighlight.Color);
+                    return true;
                 default:
                     color = default;
                     return false;
