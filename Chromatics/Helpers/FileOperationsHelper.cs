@@ -17,6 +17,7 @@ using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using static System.Net.WebRequestMethods;
@@ -313,10 +314,37 @@ namespace Chromatics.Helpers
                     sw.Flush();
                 }
 
-                if (File.Exists(path))
-                    File.Replace(tmp, path, null);
-                else
-                    File.Move(tmp, path);
+                // File.Replace can throw "Unable to remove the file to be
+                // replaced" when AV / OneDrive / Dropbox is briefly holding
+                // the destination open. Retry with backoff before giving up.
+                ReplaceWithRetry(tmp, path);
+            }
+        }
+
+        private static void ReplaceWithRetry(string tmp, string path)
+        {
+            const int maxAttempts = 5;
+            int delayMs = 50;
+            for (int attempt = 1; ; attempt++)
+            {
+                try
+                {
+                    if (File.Exists(path))
+                        File.Replace(tmp, path, null);
+                    else
+                        File.Move(tmp, path);
+                    return;
+                }
+                catch (IOException) when (attempt < maxAttempts)
+                {
+                    Thread.Sleep(delayMs);
+                    delayMs *= 2;
+                }
+                catch (UnauthorizedAccessException) when (attempt < maxAttempts)
+                {
+                    Thread.Sleep(delayMs);
+                    delayMs *= 2;
+                }
             }
         }
 
