@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.0.155
+
+- Updated underlying UI framework (Avalonia) and test tooling to the latest patch versions for improved stability.
+
 ## 4.0.154
 
 - Fixed an issue where Chromatics could close itself with a crash dialog if a connected device (Hue, OpenRGB, etc.) had a brief network hiccup. These transient errors are now ignored.
