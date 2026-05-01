@@ -56,8 +56,6 @@ If you wish to build Chromatics yourself, you can download the active branch and
 ### Open Source Libraries ### 
 * [RGB.NET](https://github.com/DarthAffe/RGB.NET) - used for RGB device integration
 * [Sharlayan](https://github.com/FFXIVAPP/sharlayan) - used for FFXIV memory reading
-* [Artemis](https://github.com/Artemis-RGB/Artemis) - borrowed some code base and RGB.NET profiles, not actually a dependency
-* [FFXIVWeather](https://github.com/karashiiro/FFXIVWeather) - For calculating current weather.
 * [Sentry](https://sentry.io/) - error monitoring, logs, metrics, tracing, and profiling
 <br><br>
 

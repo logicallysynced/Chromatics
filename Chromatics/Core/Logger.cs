@@ -34,7 +34,7 @@ namespace Chromatics.Core
             _logDirectory = directory;
         }
 
-        public static void WriteConsole(LoggerTypes type, string message)
+        public static void WriteConsole(LoggerTypes type, string message, bool forwardToSentry = true)
         {
             var color = (Color)EnumExtensions.GetAttribute<DefaultValueAttribute>(type).Value;
             var timestamp = DateTime.Now.ToString("MM-dd HH:mm:ss");
@@ -42,7 +42,8 @@ namespace Chromatics.Core
 
             AppendToVerboseLog($"[{timestamp}] [{type}] {message}");
 
-            ForwardToSentry(type, message);
+            if (forwardToSentry)
+                ForwardToSentry(type, message);
 
             lock (_gate)
             {

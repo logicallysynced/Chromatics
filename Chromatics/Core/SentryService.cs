@@ -4,6 +4,7 @@ using Sentry.Extensibility;
 using Sentry.Profiling;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 
 namespace Chromatics.Core
@@ -188,6 +189,18 @@ namespace Chromatics.Core
                 // drops everything else when consent is off.
                 o.SetBeforeSend((evt, _) =>
                 {
+                    // Drop unobserved-task SocketException noise (Hue/OpenRGB
+                    // shutdown, transient network resets) before consent gating.
+                    // These are auto-captured by Sentry's UnobservedTaskException
+                    // integration and would otherwise spam the Issues tab; our
+                    // own UnobservedTaskExceptionHandler already filters them
+                    // from the crash flow on the same criteria.
+                    if (evt.Exception != null && IsBenignBackgroundException(evt.Exception))
+                    {
+                        Logger.WriteVerbose($"[Sentry] BeforeSend dropped event {evt.EventId} — benign background exception ({evt.Exception.GetType().Name})");
+                        return null;
+                    }
+
                     var s = _settings;
                     bool consent = s == null || s.enableCrashReports;
                     bool isCrash = evt.Exception?.Data.Contains("Chromatics.HandledByCrashDialog") == true
@@ -571,6 +584,39 @@ namespace Chromatics.Core
             _sdkHandle?.Dispose();
             _initialized = false;
         }
+
+        // Mirror of Program.IsBenignBackgroundException — kept private to
+        // SentryService so the BeforeSend filter doesn't take a hard dep on
+        // Program. Both must agree on what's "benign" or events get dropped
+        // here while the crash flow still kills the app, or vice versa.
+        private static bool IsBenignBackgroundException(Exception ex)
+        {
+            if (ex is null) return false;
+            if (ex is AggregateException agg)
+            {
+                var flat = agg.Flatten();
+                return flat.InnerExceptions.Count > 0 && flat.InnerExceptions.All(IsBenignBackgroundException);
+            }
+            return ex switch
+            {
+                System.Net.Sockets.SocketException se => IsBenignSocketError(se.SocketErrorCode),
+                System.IO.IOException io => io.InnerException is System.Net.Sockets.SocketException ise && IsBenignSocketError(ise.SocketErrorCode),
+                ObjectDisposedException => true,
+                OperationCanceledException => true,
+                _ => false,
+            };
+        }
+
+        private static bool IsBenignSocketError(System.Net.Sockets.SocketError code) => code switch
+        {
+            System.Net.Sockets.SocketError.OperationAborted => true,
+            System.Net.Sockets.SocketError.ConnectionReset => true,
+            System.Net.Sockets.SocketError.ConnectionAborted => true,
+            System.Net.Sockets.SocketError.Interrupted => true,
+            System.Net.Sockets.SocketError.Shutdown => true,
+            System.Net.Sockets.SocketError.NetworkReset => true,
+            _ => false,
+        };
     }
 
     /// <summary>

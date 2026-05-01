@@ -207,8 +207,47 @@ namespace Chromatics
             // UnobservedTaskExceptionIntegration captured the event but our
             // code did nothing to surface or terminate.
             e.SetObserved();
+
+            // Exception to that rule: socket aborts during shutdown (Hue
+            // entertainment client, OpenRGB TCP client, AutoUpdater HTTPS)
+            // surface as unobserved SocketException with WSAEINTR /
+            // WSAECONNABORTED / OperationAborted. They're cosmetic — the
+            // dependent task is already on its way out. Crashing the whole
+            // app for them spams users with the crash dialog.
+            if (IsBenignBackgroundException(e.Exception))
+                return;
+
             CrashHandler.HandleCrash(e.Exception);
         }
+
+        private static bool IsBenignBackgroundException(Exception ex)
+        {
+            if (ex is null) return false;
+            if (ex is AggregateException agg)
+            {
+                var flat = agg.Flatten();
+                return flat.InnerExceptions.Count > 0 && flat.InnerExceptions.All(IsBenignBackgroundException);
+            }
+            return ex switch
+            {
+                System.Net.Sockets.SocketException se => IsBenignSocketError(se.SocketErrorCode),
+                System.IO.IOException io => io.InnerException is System.Net.Sockets.SocketException ise && IsBenignSocketError(ise.SocketErrorCode),
+                ObjectDisposedException => true,
+                OperationCanceledException => true,
+                _ => false,
+            };
+        }
+
+        private static bool IsBenignSocketError(System.Net.Sockets.SocketError code) => code switch
+        {
+            System.Net.Sockets.SocketError.OperationAborted => true,
+            System.Net.Sockets.SocketError.ConnectionReset => true,
+            System.Net.Sockets.SocketError.ConnectionAborted => true,
+            System.Net.Sockets.SocketError.Interrupted => true,
+            System.Net.Sockets.SocketError.Shutdown => true,
+            System.Net.Sockets.SocketError.NetworkReset => true,
+            _ => false,
+        };
 
         private static bool ThereCanOnlyBeOne()
         {
