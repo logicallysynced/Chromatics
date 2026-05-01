@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.0.156
+
+- Updated the FFXIV memory reader (Sharlayan) to the latest prerelease for improved compatibility with current game patches.
+
 ## 4.0.155
 
 - Updated underlying UI framework (Avalonia) and test tooling to the latest patch versions for improved stability.

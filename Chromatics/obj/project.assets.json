@@ -643,7 +643,7 @@
           "lib/net10.0/HueApi.Entertainment.dll": {}
         }
       },
-      "Lumina/7.3.0": {
+      "Lumina/7.4.0": {
         "type": "package",
         "dependencies": {
           "BCnEncoder.Net": "2.2.1",
@@ -1326,10 +1326,10 @@
           "buildTransitive/Sentry.Profiling.targets": {}
         }
       },
-      "Sharlayan/9.0.22-prerelease.33": {
+      "Sharlayan/9.0.24-prerelease.35": {
         "type": "package",
         "dependencies": {
-          "Lumina": "7.3.0",
+          "Lumina": "7.4.0",
           "Lumina.Excel": "7.4.3",
           "NLog": "6.1.2",
           "NLog.Schema": "6.1.2",
@@ -2354,17 +2354,17 @@
         "lib/net9.0/HueApi.Entertainment.dll"
       ]
     },
-    "Lumina/7.3.0": {
-      "sha512": "VGBF/2TjXR4uKYqbTFa3oqHNG7gHvXfhKTSj6PQk2pmL/RZcsmNrFpBO/bhARg0mN3J3slLD95UFPruMkScutw==",
+    "Lumina/7.4.0": {
+      "sha512": "D+q+o5DbSu9EJToqhumk+YKN0PZA0Tj7LqnVGcEdM0Viy7q8cev+IDmpeEv/hXIxML67NoZw9tYaaShIGA9dNA==",
       "type": "package",
-      "path": "lumina/7.3.0",
+      "path": "lumina/7.4.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE",
         "lib/net10.0/Lumina.dll",
         "lib/net10.0/Lumina.xml",
-        "lumina.7.3.0.nupkg.sha512",
+        "lumina.7.4.0.nupkg.sha512",
         "lumina.nuspec"
       ]
     },
@@ -3235,17 +3235,17 @@
         "sentry.profiling.nuspec"
       ]
     },
-    "Sharlayan/9.0.22-prerelease.33": {
-      "sha512": "LTFy6Fy0YFAvrqodj2IF6cVSoPO9DL2Bz+gmnrRVm/PiSNvljbcIZ4BgGiqS4uT4xZk8uoQrcFv8VI92Joc7Yg==",
+    "Sharlayan/9.0.24-prerelease.35": {
+      "sha512": "3Y7iHOJicYtmYn1jRcx9XxcGG4YHSsY23uzxffSkXRsJ3GHFOkQYHjs4K0Rcq6dg68hn+bDjI7ppWi2eyjfNBA==",
       "type": "package",
-      "path": "sharlayan/9.0.22-prerelease.33",
+      "path": "sharlayan/9.0.24-prerelease.35",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Logo.png",
         "lib/net10.0/Sharlayan.dll",
         "lib/net10.0/Sharlayan.xml",
-        "sharlayan.9.0.22-prerelease.33.nupkg.sha512",
+        "sharlayan.9.0.24-prerelease.35.nupkg.sha512",
         "sharlayan.nuspec"
       ]
     },
@@ -3607,7 +3607,7 @@
       "RGB.NET.Presets >= 3.2.0",
       "Sentry >= 6.4.1",
       "Sentry.Profiling >= 6.4.1",
-      "Sharlayan >= 9.0.22-prerelease.33",
+      "Sharlayan >= 9.0.24-prerelease.35",
       "System.Drawing.Common >= 10.0.7",
       "Velopack >= 0.0.1298"
     ]
@@ -3617,13 +3617,13 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "4.0.154",
+    "version": "4.0.156",
     "restore": {
-      "projectUniqueName": "d:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
+      "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
       "projectName": "Chromatics",
-      "projectPath": "d:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
+      "projectPath": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
       "packagesPath": "C:\\Users\\Hanielle\\.nuget\\packages\\",
-      "outputPath": "d:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\obj\\",
+      "outputPath": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -3643,6 +3643,7 @@
       },
       "frameworks": {
         "net10.0-windows7.0": {
+          "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows7.0",
           "projectReferences": {}
         }
@@ -3661,6 +3662,7 @@
     },
     "frameworks": {
       "net10.0-windows7.0": {
+        "framework": "net10.0-windows7.0",
         "targetAlias": "net10.0-windows7.0",
         "dependencies": {
           "Avalonia": {
@@ -3785,7 +3787,7 @@
           },
           "Sharlayan": {
             "target": "Package",
-            "version": "[9.0.22-prerelease.33, )"
+            "version": "[9.0.24-prerelease.35, )"
           },
           "System.Drawing.Common": {
             "target": "Package",
