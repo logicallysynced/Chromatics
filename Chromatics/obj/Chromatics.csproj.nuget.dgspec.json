@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "d:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {}
+    "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {}
   },
   "projects": {
-    "d:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
-      "version": "4.0.154",
+    "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
+      "version": "4.0.156",
       "restore": {
-        "projectUniqueName": "d:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
+        "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
-        "projectPath": "d:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
+        "projectPath": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "packagesPath": "C:\\Users\\Hanielle\\.nuget\\packages\\",
-        "outputPath": "d:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\obj\\",
+        "outputPath": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -31,6 +31,7 @@
         },
         "frameworks": {
           "net10.0-windows7.0": {
+            "framework": "net10.0-windows7.0",
             "targetAlias": "net10.0-windows7.0",
             "projectReferences": {}
           }
@@ -49,6 +50,7 @@
       },
       "frameworks": {
         "net10.0-windows7.0": {
+          "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows7.0",
           "dependencies": {
             "Avalonia": {
@@ -173,7 +175,7 @@
             },
             "Sharlayan": {
               "target": "Package",
-              "version": "[9.0.22-prerelease.33, )"
+              "version": "[9.0.24-prerelease.35, )"
             },
             "System.Drawing.Common": {
               "target": "Package",
