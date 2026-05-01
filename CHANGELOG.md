@@ -4,17 +4,10 @@ All notable changes to Chromatics are documented here.
 
 ## 4.0.156
 
-- Updated the FFXIV memory reader (Sharlayan) to the latest prerelease for improved compatibility with current game patches.
-
-## 4.0.155
-
-- Updated underlying UI framework (Avalonia) and test tooling to the latest patch versions for improved stability.
-
-## 4.0.154
-
 - Fixed an issue where Chromatics could close itself with a crash dialog if a connected device (Hue, OpenRGB, etc.) had a brief network hiccup. These transient errors are now ignored.
 - Saving your layer setup is more reliable: if antivirus, OneDrive, or Dropbox briefly locks the file, Chromatics will retry rather than failing the save.
 - Quietened expected startup messages — if iCUE or OpenRGB isn't running, the app no longer treats it as a crash report.
+- Updated dependency libraries to latest version
 
 ## 4.0.153
 
