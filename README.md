@@ -12,7 +12,9 @@
 [Documentation](https://docs.chromaticsffxiv.com/chromatics-4)
 <br>
 <br>
-***Important:** This is the Chromatics 4.x series. It is a complete rebuild of Chromatics from the ground up in .NET 10. It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did.*
+***Important:** This is the Chromatics 4.x series. It is a complete rebuild of Chromatics from the ground up in .NET 10. It will utilise the new version of Sharlayan for async FFXIV calls and RGB.NET to standardise RGB device SDK's (as opposed to manually managing them as Chromatics 2.x did).*
+
+**Language Support:** Chromatics only supports the global version of FFXIV (all languages included). Korean & Chinese versions of the game are not supported.
 
 > ### ⚠️ Upgrading from Chromatics 3?
 > Chromatics 4 stores your settings in a new location on your computer, and **your previous settings will not be carried across automatically**. You can bring your layers and colour palette across manually using the steps below.
