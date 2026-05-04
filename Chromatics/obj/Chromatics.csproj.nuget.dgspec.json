@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
-      "version": "4.0.156",
+      "version": "4.0.157",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -175,7 +175,7 @@
             },
             "Sharlayan": {
               "target": "Package",
-              "version": "[9.0.24-prerelease.35, )"
+              "version": "[9.0.29-prerelease.38, )"
             },
             "System.Drawing.Common": {
               "target": "Package",

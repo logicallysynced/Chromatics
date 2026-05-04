@@ -8,14 +8,23 @@
         CanResize="False"
         ShowInTaskbar="True"
         Icon="avares://Chromatics/Resources/Chromatics_icon_128x128.png">
-    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto" Margin="28">
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto" Margin="28">
 
-        <!-- Title -->
-        <TextBlock Grid.Row="0"
-                   Text="{loc:Tr Key='Welcome to Chromatics'}"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   Margin="0,0,0,8" />
+        <!-- Header row: title on the left, language picker on the right.
+             The picker writes to settings + LocalizationService on selection
+             so the rest of the dialog re-renders in the chosen language live. -->
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0,0,0,8">
+            <TextBlock Grid.Column="0"
+                       Text="{loc:Tr Key='Welcome to Chromatics'}"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1"
+                      Name="LanguageBox"
+                      MinWidth="180"
+                      VerticalAlignment="Center"
+                      SelectionChanged="OnLanguageChanged" />
+        </Grid>
 
         <!-- Subtitle / instructions -->
         <TextBlock Grid.Row="1"
@@ -26,7 +35,7 @@
                    Margin="0,0,0,20" />
 
         <!-- Provider tile grid. Layout mirrors Settings → Device Providers. -->
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
+        <ScrollViewer Grid.Row="3" HorizontalScrollBarVisibility="Disabled">
             <WrapPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <ToggleButton Classes="tile" Name="TileRazer"
                               Width="150" Height="80"
@@ -62,7 +71,7 @@
         </ScrollViewer>
 
         <!-- Validation hint -->
-        <TextBlock Grid.Row="3"
+        <TextBlock Grid.Row="4"
                    Name="HintText"
                    Text="{loc:Tr Key='Please select at least one device provider to continue.'}"
                    Opacity="0.6"
@@ -71,7 +80,7 @@
                    Margin="0,12,0,0" />
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="4"
+        <StackPanel Grid.Row="5"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Margin="0,10,0,0"
