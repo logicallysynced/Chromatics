@@ -56,7 +56,7 @@
     <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Velopack" Version="0.0.1298" />
-    <PackageReference Include="Sentry" Version="6.4.1" />
+    <PackageReference Include="Sentry" Version="6.5.0" />
     <PackageReference Include="Sentry.Profiling" Version="6.4.1" />
   </ItemGroup>
 
