@@ -213,6 +213,9 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
                 PlayStationCrc32.AppendOutputCrc(_buffer);
         }
 
+        // See DualShock4UpdateQueue.SuspendWrites for the contract.
+        public void SuspendWrites() => _disposed = true;
+
         // See DualShock4UpdateQueue.Shutdown for the sendOffFrame contract.
         public void Shutdown(bool sendOffFrame = true)
         {
