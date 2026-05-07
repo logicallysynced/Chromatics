@@ -69,7 +69,7 @@
                               Content="{loc:Tr Key=OpenRGB}" />
                 <ToggleButton Classes="tile" Name="TilePlayStation"
                               Width="150" Height="80"
-                              Content="{loc:Tr Key='PlayStation'}" />
+                              Content="{loc:Tr Key='PlayStation (Beta)'}" />
             </WrapPanel>
         </ScrollViewer>
 

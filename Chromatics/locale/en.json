@@ -618,6 +618,7 @@
     "Novation":  "Novation",
     "OpenRGB":  "OpenRGB",
     "PlayStation":  "PlayStation",
+    "PlayStation (Beta)":  "PlayStation (Beta)",
     "Enable/disable Razer device library. Default: Enabled":  "Enable/disable Razer device library. Default: Enabled",
     "Enable/disable Logitech device library. Default: Enabled":  "Enable/disable Logitech device library. Default: Enabled",
     "Enable/disable Corsair device library. Default: Enabled":  "Enable/disable Corsair device library. Default: Enabled",
