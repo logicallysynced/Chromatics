@@ -52,16 +52,18 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
         private readonly HidStream _stream;
         private readonly PlayStationTransport _transport;
         private readonly byte[] _buffer;
+        private readonly string _devicePath;
         private readonly System.Threading.Lock _writeLock = new();
         private byte _btSeq; // 0..15 rolling
         private bool _firstReport = true;
         private volatile bool _disposed;
 
-        public DualSenseUpdateQueue(IDeviceUpdateTrigger trigger, HidStream stream, PlayStationTransport transport)
+        public DualSenseUpdateQueue(IDeviceUpdateTrigger trigger, HidStream stream, PlayStationTransport transport, string devicePath)
             : base(trigger)
         {
             _stream = stream;
             _transport = transport;
+            _devicePath = devicePath ?? "";
             _buffer = new byte[transport == PlayStationTransport.Bluetooth ? 78 : 63];
         }
 
@@ -69,6 +71,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
         {
             if (_disposed) return true;
             if (dataSet.IsEmpty) return true;
+
+            // Per-frame liveness pre-check; see DualShock4UpdateQueue.Update.
+            if (!PlayStationControllerRGBDeviceProvider.IsDevicePathAlive(_devicePath))
+            {
+                _disposed = true;
+                return false;
+            }
 
             // Walk the painted LEDs and split them into the four payload slots
             // the report cares about. dataSet entries arrive keyed by LedId, so
