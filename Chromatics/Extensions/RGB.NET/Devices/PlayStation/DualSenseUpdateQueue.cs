@@ -13,17 +13,24 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
     // The DualSense exposes:
     //   - one RGB lightbar (sides of the touchpad)
     //   - five monochrome player indicator LEDs in a row below the touchpad
-    //   - one mic-mute LED (orange, in the centre of the mic-mute button)
+    //   - one mic-mute LED (orange, in the centre of the mic-mute button) —
+    //     NOT exposed to Chromatics. We deliberately leave the firmware in
+    //     control so the LED keeps its default behaviour of tracking the
+    //     hardware mic-mute toggle (tap the button → firmware mutes the mic
+    //     AND lights the LED). The mute BUTTON itself remains firmware-driven
+    //     regardless of host activity, so taking control of the LED would
+    //     only suppress the visual feedback for an action that still happens.
     //
-    // We model these as Custom1 (lightbar) + Custom2..Custom6 (P1..P5 left→right
-    // in bit-position order, see player_leds bit layout below) + Custom7 (mic).
-    // Player + mic are monochrome so any non-black colour turns them on at full
-    // brightness, and pure black turns them off.
+    // We model the controllable LEDs as Custom1 (lightbar) + Custom2..Custom6
+    // (P1..P5 left→right in bit-position order, see player_leds bit layout
+    // below). Player indicators are monochrome so any non-black colour turns
+    // them on at full brightness, and pure black turns them off.
     //
     // valid_flag1 gates which sub-systems the controller should accept updates
     // for. Without those bits set, the controller ignores the corresponding
     // bytes — so we must set them every report or e.g. the lightbar will stay
-    // on the firmware's default.
+    // on the firmware's default. We deliberately do NOT set the mic-mute-LED
+    // bit (BIT(0)), which keeps the firmware-driven default LED behaviour.
     //
     // The first report after open also sets LIGHTBAR_SETUP_CONTROL_ENABLE +
     // lightbar_setup = 0x02 ("release leds"). On a fresh connect, the
@@ -32,12 +39,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
     // few seconds of host control look like nothing is happening.
     public sealed class DualSenseUpdateQueue : UpdateQueue
     {
-        // valid_flag1 bits we want the controller to honour.
-        private const byte ValidFlag1_MicMuteLedControl = 0x01;     // BIT(0)
-        private const byte ValidFlag1_LightbarControl = 0x04;       // BIT(2)
+        // valid_flag1 bits we want the controller to honour. Mic-mute LED is
+        // intentionally NOT here — see file header for rationale (we let the
+        // firmware drive that LED so it tracks hardware mic-mute toggle state).
+        // BIT(0) = MIC_MUTE_LED_CONTROL_ENABLE remains clear, the firmware
+        // ignores any value we'd put in mute_button_led and uses its own logic.
+        private const byte ValidFlag1_LightbarControl = 0x04;        // BIT(2)
         private const byte ValidFlag1_PlayerIndicatorControl = 0x10; // BIT(4)
         private const byte ValidFlag1_All =
-            ValidFlag1_MicMuteLedControl | ValidFlag1_LightbarControl | ValidFlag1_PlayerIndicatorControl;
+            ValidFlag1_LightbarControl | ValidFlag1_PlayerIndicatorControl;
 
         // valid_flag2 bit for the one-shot "release lightbar from boot animation"
         // setup. Cleared after the first report.
@@ -81,13 +91,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
                 return false;
             }
 
-            // Walk the painted LEDs and split them into the four payload slots
-            // the report cares about. dataSet entries arrive keyed by LedId, so
-            // we can address them individually instead of trusting iteration
-            // order.
+            // Walk the painted LEDs and split them into the payload slots the
+            // report cares about. dataSet entries arrive keyed by LedId, so we
+            // can address them individually instead of trusting iteration order.
             Color lightbar = default;
             byte playerLedBits = 0;
-            byte micMute = 0;
             bool gotLightbar = false;
 
             foreach (var (key, color) in dataSet)
@@ -105,11 +113,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
                     case LedId.Custom4: if (IsLit(color)) playerLedBits |= 1 << 2; break;
                     case LedId.Custom5: if (IsLit(color)) playerLedBits |= 1 << 3; break;
                     case LedId.Custom6: if (IsLit(color)) playerLedBits |= 1 << 4; break;
-                    case LedId.Custom7:
-                        // Mic-mute LED is monochrome orange. 0x00 = off, anything
-                        // non-zero looks the same — drive on/off only.
-                        if (IsLit(color)) micMute = 1;
-                        break;
                 }
             }
 
@@ -122,7 +125,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             lock (_writeLock)
             {
                 Array.Clear(_buffer, 0, _buffer.Length);
-                BuildReport(lightbar, playerLedBits, micMute);
+                BuildReport(lightbar, playerLedBits);
                 ok = _writer.TryWrite(_buffer);
             }
 
@@ -138,7 +141,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
 
         private static bool IsLit(Color c) => c.R > 0 || c.G > 0 || c.B > 0;
 
-        private void BuildReport(Color lightbar, byte playerLedBits, byte micMute)
+        private void BuildReport(Color lightbar, byte playerLedBits)
         {
             byte r = (byte)Math.Clamp((int)Math.Round(lightbar.R * 255.0), 0, 255);
             byte g = (byte)Math.Clamp((int)Math.Round(lightbar.G * 255.0), 0, 255);
@@ -200,8 +203,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             int c = commonOffset;
             _buffer[c + 0] = 0;                               // valid_flag0
             _buffer[c + 1] = ValidFlag1_All;                   // valid_flag1
-            // motor_*, audio, power_save left zero.
-            _buffer[c + 8] = micMute;                          // mute_button_led
+            // motor_*, audio, power_save, mute_button_led left zero. The
+            // mute_button_led byte (offset 8) is ignored by firmware because
+            // we don't set MIC_MUTE_LED_CONTROL_ENABLE in valid_flag1, so
+            // the firmware retains its default LED-tracks-mute-state behaviour.
 
             if (_firstReport)
             {
@@ -231,7 +236,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             lock (_writeLock)
             {
                 Array.Clear(_buffer, 0, _buffer.Length);
-                BuildReport(new Color(0, 0, 0), 0, 0);
+                BuildReport(new Color(0, 0, 0), 0);
                 _writer.TryWrite(_buffer);
             }
         }
