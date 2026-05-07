@@ -164,49 +164,44 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
         // Centralised "open + construct + register" path used by both initial
         // enumeration and hot-plug. Handles the predictable failure modes
-        // (TryOpen returns false, UnauthorizedAccessException) with friendly
-        // logging and returns false silently in those cases — caller doesn't
-        // need to distinguish "not openable" from "openable but build failed".
+        // (TryOpen returns false, UnauthorizedAccessException, the broader
+        // DeviceIOException family that HidSharp throws when the kernel
+        // rejects the descriptor-query handle) with friendly logging and
+        // returns false silently — caller doesn't need to distinguish
+        // "not openable" from "openable but build failed".
+        //
+        // Only call HidDevice methods that are absolutely necessary, and only
+        // call them in this order:
+        //   1. DevicePath (cheap property, no descriptor query)
+        //   2. TryOpen   (this also primes the ReportInfo cache as a side
+        //                 effect, see WinHidDevice.OpenDeviceDirectly)
+        //   3. GetMaxOutputReportLength on the open stream (free — ReportInfo
+        //      is now cached, no second descriptor query needed)
+        //
+        // We deliberately do NOT call GetSerialNumber. HidSharp's
+        // RequiresGetInfo opens a *separate* read-info handle via
+        // TryOpenToGetInfo(_path, ...) to satisfy any flag not already
+        // cached — and on some hardware (DS4 v1 in particular, also any
+        // controller whose descriptor query can't get a handle because
+        // Steam / driver / power state is holding the device) this throws
+        // DeviceIOException("Failed to get info."). Even a try/catch around
+        // the call surfaces the throw as a first-chance exception in the
+        // debugger, which is alarming for users.
+        //
+        // Identity always comes from a stable hash of DevicePath (Windows
+        // instance ID — stable across restarts for the same physical
+        // controller in the same USB port / BT pairing), so we don't need
+        // the real serial for mapping persistence anyway.
         private bool TryOpenAndCreateDevice(HidDevice hid, int pid, out IRGBDevice device)
         {
             device = null;
 
-            // Query metadata BEFORE we open the read/write stream. HidSharp's
-            // GetSerialNumber / GetMaxOutputReportLength internally open a
-            // temporary handle to query the HID descriptor, and some HID
-            // gamepads — DualShock 4 v1 in particular — don't allow a second
-            // concurrent handle even though the kernel says they support
-            // shared access. Querying first while we don't yet hold a stream
-            // avoids HidSharp.Exceptions.DeviceIOException ("Failed to get info.").
-            //
-            // Both queries are individually fault-tolerant: serial falls back
-            // to a stable hash of DevicePath so identity persistence still
-            // works on hardware that rejects the descriptor read; the report
-            // length defaults to USB (32) on failure since BT controllers
-            // generally answer the descriptor query reliably.
             string devicePath;
             try { devicePath = hid.DevicePath ?? ""; }
             catch { devicePath = ""; }
 
-            int maxOut;
-            try { maxOut = hid.GetMaxOutputReportLength(); }
-            catch { maxOut = 0; }
+            string serial = string.IsNullOrEmpty(devicePath) ? "" : ShortHashOf(devicePath);
 
-            string serial;
-            try { serial = hid.GetSerialNumber() ?? ""; }
-            catch { serial = ""; }
-
-            // Fallback identity when the serial descriptor isn't readable (some
-            // DS4 v1, BT-paired devices mid-enumeration). DevicePath on Windows
-            // includes the controller's instance ID, which is stable across
-            // app restarts for the same physical controller in the same USB
-            // port / BT pairing — close enough to a real serial for our
-            // GUID-from-name persistence purposes.
-            if (string.IsNullOrEmpty(serial) && !string.IsNullOrEmpty(devicePath))
-                serial = ShortHashOf(devicePath);
-
-            // Now open the actual stream. If this fails, the metadata above is
-            // unused but cheap.
             HidStream opened;
             try
             {
@@ -229,8 +224,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             }
             catch (Exception ex)
             {
+                // HidSharp.Exceptions.DeviceIOException ("Failed to get info.")
+                // lands here when the kernel refuses the descriptor-query
+                // handle. Surface it as a connection failure rather than a
+                // crash; user can retry by replugging or closing the
+                // conflicting tool.
                 Logger.WriteConsole(Enums.LoggerTypes.Error,
-                    $"[PlayStation] Failed to open controller (VID 0x{hid.VendorID:X4} PID 0x{pid:X4}): {ex.Message}",
+                    $"[PlayStation] Failed to open controller (VID 0x{hid.VendorID:X4} PID 0x{pid:X4}): {ex.Message} " +
+                    "If this persists, another tool (Steam Input, DS4Windows, reWASD, HidHide) may be blocking access. " +
+                    "Try closing it and replugging the controller.",
                     forwardToSentry: false);
                 return false;
             }
@@ -239,15 +241,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             {
                 // Transport detection: DS4 USB max output report is 32 bytes (incl. report
                 // ID), DS4 BT is 78. DS5 USB is 64, DS5 BT is 78. Any controller that
-                // reports an output buffer of 78+ is on Bluetooth. If the descriptor
-                // query failed earlier, retry once via the now-open stream — its
-                // cached descriptor handle reuses our existing kernel handle so
-                // there's no second-handle conflict.
-                if (maxOut == 0)
-                {
-                    try { maxOut = opened.Device.GetMaxOutputReportLength(); }
-                    catch { /* fall through with maxOut = 0 → assume USB */ }
-                }
+                // reports an output buffer of 78+ is on Bluetooth. ReportInfo was
+                // cached by TryOpen above, so this call is free and won't throw.
+                int maxOut;
+                try { maxOut = opened.Device.GetMaxOutputReportLength(); }
+                catch { maxOut = 0; /* default to USB byte count */ }
                 var transport = maxOut >= 78 ? PlayStationTransport.Bluetooth : PlayStationTransport.Usb;
 
                 var controllerType = pid switch
