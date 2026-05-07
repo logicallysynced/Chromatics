@@ -2,6 +2,12 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.0.159
+
+- PlayStation controllers now respect the global brightness slider and the per-device brightness slider in the Mappings tab, just like every other device.
+- Plug or pair a controller after Chromatics is already running and it's picked up automatically — no app restart needed. Same goes for unplug / unpair: the controller is removed cleanly from the device list when it disappears.
+- The PlayStation provider is now marked as Beta in Settings and on the first-run wizard while we gather feedback from real hardware.
+
 ## 4.0.158
 
 - Added PlayStation controller lighting support. The DualShock 4 lightbar, the DualSense lightbar, the five player-indicator LEDs, and the mic-mute LED can now all be mapped from the Mappings tab. Both USB and Bluetooth controllers are supported, and your controller's input still works normally in games while Chromatics drives the lights.

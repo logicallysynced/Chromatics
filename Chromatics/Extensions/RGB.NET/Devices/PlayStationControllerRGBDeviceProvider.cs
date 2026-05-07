@@ -5,6 +5,7 @@ using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.RGB.NET.Devices
 {
@@ -19,6 +20,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices
     // a game's native lighting integration is the expected case. Last-writer-wins
     // per output report period; at our 30Hz cadence we comfortably override most
     // intermittent setters (Steam profile changes, game state events).
+    //
+    // Hot-plug: HidSharp.DeviceList.Local.Changed fires on Windows PnP events
+    // (USB connect/disconnect, BT pair/unpair). We debounce briefly and then
+    // reconcile our open set against the current HID enumeration — new
+    // controllers get opened + AddDevice'd (which raises DevicesChanged so
+    // RGBController attaches brightness corrections), removed ones are
+    // disposed and RemoveDevice'd.
     //
     // Known collisions, surfaced in the log:
     //   - DS4Windows / reWASD with "Exclusive Mode" enabled — they hold the HID
@@ -53,16 +61,27 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         // DualSense plugin uses.
         private const double UpdateFrequencySeconds = 1.0 / 30.0;
 
+        // PnP can fire several Changed events for one logical connect (driver
+        // initialisation, child interface enumeration, etc.). Coalesce them.
+        private const int HotplugDebounceMs = 500;
+
         private static PlayStationControllerRGBDeviceProvider _instance;
         public static PlayStationControllerRGBDeviceProvider Instance =>
             _instance ?? new PlayStationControllerRGBDeviceProvider();
 
-        // Track open streams so Dispose can flush a final off-frame and release
-        // handles cleanly. Keyed by IRGBDevice so we can match a teardown back to
-        // the right stream/queue.
+        // Per-device state needed for lifecycle: the open HidStream (for dispose
+        // on remove) and the HidDevice's DevicePath (for identity comparison
+        // during reconcile, since serial isn't always available, especially on
+        // BT-paired controllers). Both keyed by IRGBDevice so RemoveDevice can
+        // find them when given the device instance.
         private readonly Dictionary<IRGBDevice, HidStream> _openStreams = new();
-        private readonly List<DualShock4Device> _ds4Devices = new();
-        private readonly List<DualSenseDevice> _dsDevices = new();
+        private readonly Dictionary<IRGBDevice, string> _devicePaths = new();
+        private readonly System.Threading.Lock _stateLock = new();
+
+        // Hot-plug bookkeeping: subscription flag (so re-init doesn't double-subscribe),
+        // and a serial counter so debounced reconciles on stale enqueues short-circuit.
+        private bool _hotplugSubscribed;
+        private int _hotplugScheduleSeq;
 
         public PlayStationControllerRGBDeviceProvider()
         {
@@ -73,8 +92,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
         protected override void InitializeSDK()
         {
-            // Nothing to initialise — HidSharp's DeviceList.Local is process-wide
-            // and lazily populated. LoadDevices does the actual enumeration.
+            // Subscribe once for the lifetime of this provider instance. The
+            // subscription is unhooked in Dispose. Guard against double-subscribe
+            // in case Initialize is invoked twice (which AbstractRGBDeviceProvider
+            // tolerates).
+            if (!_hotplugSubscribed)
+            {
+                DeviceList.Local.Changed += OnHidDeviceListChanged;
+                _hotplugSubscribed = true;
+            }
         }
 
         protected override IDeviceUpdateTrigger CreateUpdateTrigger(int id, double updateRateHardLimit)
@@ -105,36 +131,19 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                 if (!IsSupportedPid(pid)) continue;
 
                 candidateCount++;
-                try
-                {
-                    if (TryOpenDevice(hid, pid, out var device, out var stream))
-                    {
-                        devices.Add(device);
-                        _openStreams[device] = stream;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteConsole(Enums.LoggerTypes.Error,
-                        $"[PlayStation] Failed to open controller (VID 0x{hid.VendorID:X4} PID 0x{pid:X4}): {ex.Message}",
-                        forwardToSentry: false);
-                }
+                if (TryOpenAndCreateDevice(hid, pid, out var device))
+                    devices.Add(device);
             }
 
             if (candidateCount == 0)
             {
-                // No matching devices. Most common reasons: nothing connected,
-                // or HidHide hiding the controllers from non-allow-listed apps.
                 Logger.WriteConsole(Enums.LoggerTypes.Devices,
                     "[PlayStation] No PlayStation controllers detected. " +
-                    "If one is connected, ensure it isn't hidden by HidHide and isn't bound to DS4Windows / reWASD in exclusive mode.");
+                    "Connect a DualShock 4 or DualSense over USB or Bluetooth — Chromatics will pick it up automatically. " +
+                    "If one is already connected, ensure it isn't hidden by HidHide and isn't bound to DS4Windows / reWASD in exclusive mode.");
             }
             else if (devices.Count == 0)
             {
-                // At least one matching HID device existed but every open
-                // attempt failed. Per-device exception was already logged
-                // above; this summary makes the "exclusive-mode" cause
-                // discoverable in the console without scanning earlier lines.
                 Logger.WriteConsole(Enums.LoggerTypes.Error,
                     $"[PlayStation] Found {candidateCount} controller(s) but could not open any for lighting. " +
                     "Likely cause: another application has exclusive HID access (DS4Windows / reWASD).",
@@ -151,10 +160,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             || pid == Pid_DualSense
             || pid == Pid_DualSenseEdge;
 
-        private bool TryOpenDevice(HidDevice hid, int pid, out IRGBDevice device, out HidStream stream)
+        // Centralised "open + construct + register" path used by both initial
+        // enumeration and hot-plug. Handles the predictable failure modes
+        // (TryOpen returns false, UnauthorizedAccessException) with friendly
+        // logging and returns false silently in those cases — caller doesn't
+        // need to distinguish "not openable" from "openable but build failed".
+        private bool TryOpenAndCreateDevice(HidDevice hid, int pid, out IRGBDevice device)
         {
             device = null;
-            stream = null;
 
             HidStream opened;
             try
@@ -176,83 +189,225 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                     forwardToSentry: false);
                 return false;
             }
-
-            // Transport detection: DS4 USB max output report is 32 bytes (incl. report
-            // ID), DS4 BT is 78. DS5 USB is 64, DS5 BT is 78. Any controller that
-            // reports an output buffer of 78+ is on Bluetooth.
-            int maxOut;
-            try { maxOut = opened.Device.GetMaxOutputReportLength(); }
-            catch { maxOut = 0; }
-
-            var transport = maxOut >= 78 ? PlayStationTransport.Bluetooth : PlayStationTransport.Usb;
-
-            string serial;
-            try { serial = hid.GetSerialNumber() ?? ""; }
-            catch { serial = ""; }
-
-            var controllerType = pid switch
+            catch (Exception ex)
             {
-                Pid_DualSense => PlayStationControllerType.DualSense,
-                Pid_DualSenseEdge => PlayStationControllerType.DualSenseEdge,
-                _ => PlayStationControllerType.DualShock4,
-            };
-
-            var info = new PlayStationDeviceInfo(controllerType, transport, serial);
+                Logger.WriteConsole(Enums.LoggerTypes.Error,
+                    $"[PlayStation] Failed to open controller (VID 0x{hid.VendorID:X4} PID 0x{pid:X4}): {ex.Message}",
+                    forwardToSentry: false);
+                return false;
+            }
 
             try
             {
+                // Transport detection: DS4 USB max output report is 32 bytes (incl. report
+                // ID), DS4 BT is 78. DS5 USB is 64, DS5 BT is 78. Any controller that
+                // reports an output buffer of 78+ is on Bluetooth.
+                int maxOut;
+                try { maxOut = opened.Device.GetMaxOutputReportLength(); }
+                catch { maxOut = 0; }
+                var transport = maxOut >= 78 ? PlayStationTransport.Bluetooth : PlayStationTransport.Usb;
+
+                string serial;
+                try { serial = hid.GetSerialNumber() ?? ""; }
+                catch { serial = ""; }
+
+                string devicePath;
+                try { devicePath = hid.DevicePath ?? ""; }
+                catch { devicePath = ""; }
+
+                var controllerType = pid switch
+                {
+                    Pid_DualSense => PlayStationControllerType.DualSense,
+                    Pid_DualSenseEdge => PlayStationControllerType.DualSenseEdge,
+                    _ => PlayStationControllerType.DualShock4,
+                };
+
+                var info = new PlayStationDeviceInfo(controllerType, transport, serial);
+
+                IRGBDevice newDevice;
                 if (controllerType == PlayStationControllerType.DualShock4)
                 {
                     var queue = new DualShock4UpdateQueue(GetUpdateTrigger(), opened, transport);
-                    var ds4 = new DualShock4Device(info, queue);
-                    _ds4Devices.Add(ds4);
-                    device = ds4;
+                    newDevice = new DualShock4Device(info, queue);
                 }
                 else
                 {
                     var queue = new DualSenseUpdateQueue(GetUpdateTrigger(), opened, transport);
-                    var ds = new DualSenseDevice(info, queue);
-                    _dsDevices.Add(ds);
-                    device = ds;
+                    newDevice = new DualSenseDevice(info, queue);
                 }
 
-                stream = opened;
+                lock (_stateLock)
+                {
+                    _openStreams[newDevice] = opened;
+                    _devicePaths[newDevice] = devicePath;
+                }
+
                 Logger.WriteConsole(Enums.LoggerTypes.Devices,
                     $"[PlayStation] Connected {info.DeviceName}{(string.IsNullOrEmpty(serial) ? "" : $" S/N {serial}")}.");
+
+                device = newDevice;
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
                 try { opened.Dispose(); } catch { }
-                throw;
+                Logger.WriteConsole(Enums.LoggerTypes.Error,
+                    $"[PlayStation] Failed to construct device for VID 0x{hid.VendorID:X4} PID 0x{pid:X4}: {ex.Message}",
+                    forwardToSentry: false);
+                return false;
             }
+        }
+
+        // ────────────────────────────────────────────────────────────────────
+        // Hot-plug
+        // ────────────────────────────────────────────────────────────────────
+
+        private void OnHidDeviceListChanged(object sender, DeviceListChangedEventArgs e)
+        {
+            // PnP can fire multiple Changed events for one logical connect/disconnect
+            // (parent device + child interfaces, BT pairing dance). Schedule a
+            // reconcile after a short debounce; cancel earlier scheduled ones via
+            // the seq counter so only the latest tick wins.
+            int mySeq = System.Threading.Interlocked.Increment(ref _hotplugScheduleSeq);
+            Task.Run(async () =>
+            {
+                await Task.Delay(HotplugDebounceMs).ConfigureAwait(false);
+                if (System.Threading.Volatile.Read(ref _hotplugScheduleSeq) != mySeq) return;
+                try { Reconcile(); }
+                catch (Exception ex)
+                {
+                    Logger.WriteVerbose($"[PlayStation] Hot-plug reconcile threw: {ex.Message}");
+                }
+            });
+        }
+
+        // Compare current HID enumeration to our open set; add new ones, remove
+        // gone ones. Called from the debounced PnP callback. Holds _stateLock for
+        // the snapshot read so we don't race with a concurrent Dispose; opens and
+        // AddDevice/RemoveDevice are done outside the lock so we don't deadlock
+        // against any handler that might call back into the provider.
+        private void Reconcile()
+        {
+            HashSet<string> currentPaths;
+            try
+            {
+                currentPaths = DeviceList.Local.GetHidDevices(vendorID: SonyVendorId)
+                    .Where(h => IsSupportedPid(h.ProductID))
+                    .Select(h => h.DevicePath ?? "")
+                    .Where(p => p.Length > 0)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[PlayStation] Reconcile enumeration failed: {ex.Message}");
+                return;
+            }
+
+            // Snapshot — list of (device, path) pairs we currently hold open.
+            List<KeyValuePair<IRGBDevice, string>> snapshot;
+            lock (_stateLock)
+            {
+                snapshot = _devicePaths.ToList();
+            }
+
+            // Removals first (devices we hold but no longer enumerate) — done
+            // before adds so a controller that quickly reconnects on a different
+            // path can be re-added cleanly.
+            foreach (var kvp in snapshot)
+            {
+                if (string.IsNullOrEmpty(kvp.Value)) continue;
+                if (!currentPaths.Contains(kvp.Value))
+                    RemoveDevice(kvp.Key);
+            }
+
+            // Additions: any enumerated path not currently open.
+            HashSet<string> openedPaths;
+            lock (_stateLock)
+            {
+                openedPaths = _devicePaths.Values
+                    .Where(p => !string.IsNullOrEmpty(p))
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            }
+
+            foreach (var hid in DeviceList.Local.GetHidDevices(vendorID: SonyVendorId))
+            {
+                if (!IsSupportedPid(hid.ProductID)) continue;
+                string path;
+                try { path = hid.DevicePath ?? ""; } catch { continue; }
+                if (string.IsNullOrEmpty(path)) continue;
+                if (openedPaths.Contains(path)) continue;
+
+                if (TryOpenAndCreateDevice(hid, hid.ProductID, out var newDevice))
+                {
+                    // AddDevice (inherited from AbstractRGBDeviceProvider) tracks
+                    // it in InternalDevices and fires DevicesChanged.Added, which
+                    // RGBController catches to attach the global + per-device
+                    // brightness corrections.
+                    AddDevice(newDevice);
+                }
+            }
+        }
+
+        // ────────────────────────────────────────────────────────────────────
+        // RemoveDevice override — clean up our HidStream + cached state when
+        // either we (hot-plug) or external code (provider unload) removes a
+        // device. Falls through to base.RemoveDevice which fires
+        // DevicesChanged.Removed.
+        // ────────────────────────────────────────────────────────────────────
+        protected override bool RemoveDevice(IRGBDevice device)
+        {
+            HidStream stream = null;
+            string path = null;
+            lock (_stateLock)
+            {
+                if (_openStreams.TryGetValue(device, out stream))
+                    _openStreams.Remove(device);
+                if (_devicePaths.TryGetValue(device, out path))
+                    _devicePaths.Remove(device);
+            }
+
+            // Send a final off-frame so the controller doesn't sit on our last
+            // colour after disconnect. Best-effort — the device may already be
+            // gone (BT unpair, USB unplug) in which case the write throws.
+            try { (device as DualShock4Device)?.Shutdown(); } catch { }
+            try { (device as DualSenseDevice)?.Shutdown(); } catch { }
+
+            if (stream != null)
+            {
+                try { stream.Dispose(); } catch { }
+            }
+
+            try
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Devices,
+                    $"[PlayStation] Disconnected {device.DeviceInfo.DeviceName}.");
+            }
+            catch { }
+
+            return base.RemoveDevice(device);
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                // Send a final off-frame and close streams so the controller doesn't
-                // sit on our last-painted colour after the provider is unloaded.
-                // The firmware restores its own indicator (battery/charge state on
-                // DS5; player number on DS4) shortly after we stop writing, but
-                // black-out makes the transition crisp instead of a stale flash.
-                foreach (var d in _ds4Devices)
+                if (_hotplugSubscribed)
                 {
-                    try { d.Shutdown(); } catch { }
-                }
-                foreach (var d in _dsDevices)
-                {
-                    try { d.Shutdown(); } catch { }
+                    try { DeviceList.Local.Changed -= OnHidDeviceListChanged; } catch { }
+                    _hotplugSubscribed = false;
                 }
 
-                foreach (var stream in _openStreams.Values)
+                // Snapshot devices to remove. RemoveDevice mutates the
+                // dictionaries, so iterate a copy.
+                List<IRGBDevice> snapshot;
+                lock (_stateLock)
                 {
-                    try { stream.Dispose(); } catch { }
+                    snapshot = _openStreams.Keys.ToList();
                 }
-                _openStreams.Clear();
-                _ds4Devices.Clear();
-                _dsDevices.Clear();
+                foreach (var d in snapshot)
+                {
+                    try { RemoveDevice(d); } catch { }
+                }
             }
 
             base.Dispose(disposing);

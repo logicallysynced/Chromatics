@@ -128,7 +128,7 @@ namespace Chromatics.ViewModels
                 () => RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.deviceOpenRGBEnabled = v; AppSettings.SaveSettings(cur); }));
 
-            DeviceToggles.Add(MakeDeviceToggle("PlayStation", "Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
+            DeviceToggles.Add(MakeDeviceToggle("PlayStation", "[BETA] Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
                 s.devicePlayStationEnabled,
                 () => RGBController.LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
                 () => RGBController.UnloadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
