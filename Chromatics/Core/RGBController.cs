@@ -373,16 +373,19 @@ namespace Chromatics.Core
                     _devices.Add(guid, device);
                 }
 
-                // Attach to the RGBSurface here too. The startup path attaches
-                // each device in LoadDeviceProvider before DevicesChanged fires,
-                // so this is a no-op for the initial-enumeration case (Contains
-                // check guards re-attach). For providers that hot-plug devices
-                // after Setup — e.g. PlayStation USB/BT connect — the inherited
-                // AbstractRGBDeviceProvider.AddDevice fires DevicesChanged but
-                // does NOT call surface.Attach, so without this hop the new
-                // device would never get its UpdateQueue ticked and no effects
-                // would render on it.
-                if (surface != null && !surface.Devices.Contains(device))
+                // Attach to the RGBSurface here for hot-plug ONLY. Startup
+                // attachment is owned by SurfaceExtensions.Load, which calls
+                // provider.Initialize() (during which DevicesChanged fires
+                // for every initial device) and THEN surface.Attach(provider.Devices).
+                // Attaching during Initialize would cause Load's later
+                // surface.Attach pass to throw "already attached", so we
+                // gate on IRGBDeviceProvider.IsInitialized — false during
+                // Initialize, true once Load has completed and any
+                // subsequent AddDevice is from a provider's runtime
+                // hot-plug logic (e.g. PlayStation USB/BT connect).
+                var senderProvider = sender as IRGBDeviceProvider;
+                bool isHotPlug = senderProvider?.IsInitialized == true;
+                if (isHotPlug && surface != null && !surface.Devices.Contains(device))
                     surface.Attach(device);
 
                 AttachGlobalBrightness(device);
@@ -416,12 +419,14 @@ namespace Chromatics.Core
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Lost {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
                 #endif
 
-                // Detach from the surface so RGB.NET stops trying to update it.
-                // Mirrors the surface.Attach call on the Added branch — needed
-                // for hot-plug-disconnect from providers like PlayStation, where
-                // the provider's RemoveDevice fires DevicesChanged but the base
-                // class doesn't touch the surface.
-                if (surface != null && surface.Devices.Contains(device))
+                // Detach from the surface for hot-plug only — same reasoning
+                // as the Added branch above. During provider unload
+                // (UnloadDeviceProvider) the surface.Detach is already done
+                // before Reset() fires DevicesChanged.Removed for each device.
+                // Detaching here too would throw "not attached".
+                var senderProviderRemoved = sender as IRGBDeviceProvider;
+                bool isHotUnplug = senderProviderRemoved?.IsInitialized == true;
+                if (isHotUnplug && surface != null && surface.Devices.Contains(device))
                 {
                     try { surface.Detach(device); } catch { }
                 }
