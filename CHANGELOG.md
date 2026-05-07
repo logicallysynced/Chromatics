@@ -2,6 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.0.158
+
+- Added PlayStation controller lighting support. The DualShock 4 lightbar, the DualSense lightbar, the five player-indicator LEDs, and the mic-mute LED can now all be mapped from the Mappings tab. Both USB and Bluetooth controllers are supported, and your controller's input still works normally in games while Chromatics drives the lights.
+- Tip: if your controller is connected but Chromatics says it can't open it, another tool (like DS4Windows or reWASD) is probably holding it in exclusive mode. Disable exclusive mode in that tool, or close it before launching Chromatics.
+
 ## 4.0.157
 
 - The first-run welcome screen now lets you pick your Chromatics language right away — and the screen re-translates itself instantly so you can see the change before continuing.

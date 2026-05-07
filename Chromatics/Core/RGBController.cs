@@ -214,7 +214,12 @@ namespace Chromatics.Core
                     {
                         Logger.WriteConsole(Enums.LoggerTypes.Error, $"[HueDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
                     }
-                    
+
+                }
+
+                if (appSettings.devicePlayStationEnabled)
+                {
+                    LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance);
                 }
                             
             

@@ -3,6 +3,7 @@ using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Extensions;
 using Chromatics.Localization;
+using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Helpers;
 using Chromatics.Views;
@@ -126,6 +127,12 @@ namespace Chromatics.ViewModels
                 () => RGBController.LoadDeviceProvider(OpenRGBDeviceProvider.Instance),
                 () => RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.deviceOpenRGBEnabled = v; AppSettings.SaveSettings(cur); }));
+
+            DeviceToggles.Add(MakeDeviceToggle("PlayStation", "Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
+                s.devicePlayStationEnabled,
+                () => RGBController.LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
+                () => RGBController.UnloadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
+                v => { var cur = AppSettings.GetSettings(); cur.devicePlayStationEnabled = v; AppSettings.SaveSettings(cur); }));
 
             // Hue is special — enabling opens the bridge-pairing dialog first.
             DeviceToggles.Add(new DeviceToggleItem(
