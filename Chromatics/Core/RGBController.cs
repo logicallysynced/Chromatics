@@ -406,6 +406,23 @@ namespace Chromatics.Core
                     _activeDevices.Add(device, true);
                 }
 
+                // Hot-plug into a running startup animation: rebuild the
+                // "startup" tagged ledgroups so the new device participates.
+                // RunStartupEffects builds a fresh ListLedGroup per device at
+                // the moment it's called — devices added later are otherwise
+                // never included, which is what manifested as "DS5 hot-plug
+                // controller stays on firmware-default blue while the rest
+                // of the rig is in the startup rainbow".
+                //
+                // Gated on isHotPlug + an existing "startup" tag so we don't
+                // restart the animation during the initial DevicesChanged
+                // burst (Load owns that path), and so we don't accidentally
+                // re-fire startup over the user's running game effects.
+                if (isHotPlug && HasActiveTaggedEffect("startup"))
+                {
+                    RunStartupEffects();
+                }
+
                 DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
 
             }
@@ -774,6 +791,18 @@ namespace Chromatics.Core
         // the last-rendered animation frame. Without this, disabling the
         // startup rainbow leaves whatever colours were last on the LEDs
         // (typically a frozen rainbow) until something else paints them.
+        // Returns true if at least one ledgroup is currently registered under
+        // the given tag. Cheap to call from the DevicesChanged hot path —
+        // single dict lookup under the same lock the writers use.
+        public static bool HasActiveTaggedEffect(string tag)
+        {
+            if (string.IsNullOrEmpty(tag)) return false;
+            lock (_taggedEffectsLock)
+            {
+                return _taggedEffects.TryGetValue(tag, out var groups) && groups.Count > 0;
+            }
+        }
+
         public static void StopTaggedEffects(string tag)
         {
             List<ListLedGroup> snapshot;

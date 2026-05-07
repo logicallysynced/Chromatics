@@ -90,6 +90,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         // "The device is not connected", which is harmless but produces a
         // noisy first-chance break under the debugger.
         private readonly HashSet<IRGBDevice> _confirmedDisconnected = new();
+        // Set true inside Dispose so RemoveDevice can also skip the off-frame
+        // at app shutdown — the OS may already have invalidated the HID
+        // handle even though the controller is physically connected, and
+        // the firmware resets to its default indicator on process exit
+        // regardless of whether we send black first.
+        private volatile bool _disposing;
         private readonly System.Threading.Lock _stateLock = new();
 
         // Hot-plug bookkeeping: subscription flag (so re-init doesn't double-subscribe),
@@ -430,12 +436,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                 wasConfirmedGone = _confirmedDisconnected.Remove(device);
             }
 
-            // Send a final off-frame ONLY when removal is voluntary (provider
-            // unload, app exit). Skip it when Reconcile has already confirmed
-            // the device is gone — the write would throw IOException
-            // ("device is not connected") which is harmless but visible as a
-            // first-chance break under the debugger.
-            bool sendOffFrame = !wasConfirmedGone;
+            // Send a final off-frame ONLY when removal is voluntary (user
+            // toggled the provider off in Settings). Skip it when:
+            //   - Reconcile confirmed the device is physically gone, or
+            //   - We're inside Dispose (app close / provider teardown).
+            // In both skip cases the write would throw IOException — the
+            // catch handles it but the debugger breaks on first chance,
+            // which is what the user actually sees.
+            bool sendOffFrame = !wasConfirmedGone && !_disposing;
             try { (device as DualShock4Device)?.Shutdown(sendOffFrame); } catch { }
             try { (device as DualSenseDevice)?.Shutdown(sendOffFrame); } catch { }
 
@@ -458,6 +466,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         {
             if (disposing)
             {
+                _disposing = true;
+
                 if (_hotplugSubscribed)
                 {
                     try { DeviceList.Local.Changed -= OnHidDeviceListChanged; } catch { }

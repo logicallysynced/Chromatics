@@ -4,11 +4,6 @@ All notable changes to Chromatics are documented here.
 
 ## 4.1.2
 
-- Fixed PlayStation controllers connected after Chromatics is already running not actually receiving any lighting commands (lightbar stayed on the firmware's default solid blue). The hot-plug path now starts the device update timer when the first controller appears.
-- Slightly longer hot-plug settle window so the first write after USB connect lands cleanly instead of racing Windows' device enumeration.
-
-## 4.1.1
-
 - **New:** PlayStation DS4 & DS5 controller lighting support (Beta). The DualShock 4 lightbar, the DualSense lightbar, the five player-indicator LEDs, and the mic-mute LED can all be mapped from the Mappings tab. Both USB and Bluetooth controllers are supported, and your controller's input still works normally in games while Chromatics drives the lights.
 - Tip: if your controller is connected but Chromatics says it can't open it, another tool (like Steam Input, DS4Windows, or reWASD) is probably holding it in exclusive mode. Close it or disable its exclusive mode before launching Chromatics.
 
