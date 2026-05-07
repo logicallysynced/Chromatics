@@ -29,16 +29,18 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
         private const byte BtHwControl_Crc32 = 0x40;
 
         private readonly HidStream _stream;
+        private readonly HidRawWriter _writer;
         private readonly PlayStationTransport _transport;
         private readonly byte[] _buffer;
         private readonly string _devicePath;
         private readonly System.Threading.Lock _writeLock = new();
         private volatile bool _disposed;
 
-        public DualShock4UpdateQueue(IDeviceUpdateTrigger trigger, HidStream stream, PlayStationTransport transport, string devicePath)
+        public DualShock4UpdateQueue(IDeviceUpdateTrigger trigger, HidStream stream, HidRawWriter writer, PlayStationTransport transport, string devicePath)
             : base(trigger)
         {
             _stream = stream;
+            _writer = writer;
             _transport = transport;
             _devicePath = devicePath ?? "";
             _buffer = new byte[transport == PlayStationTransport.Bluetooth ? 78 : 32];
@@ -66,29 +68,25 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             // led each tick.
             Color color = dataSet[0].color;
 
-            try
+            bool ok;
+            lock (_writeLock)
             {
-                lock (_writeLock)
-                {
-                    Array.Clear(_buffer, 0, _buffer.Length);
-                    BuildReport(color);
-                    _stream.Write(_buffer);
-                }
-                return true;
+                Array.Clear(_buffer, 0, _buffer.Length);
+                BuildReport(color);
+                ok = _writer.TryWrite(_buffer);
             }
-            catch (Exception ex)
+
+            if (!ok)
             {
-                // First failed write means the device is gone (USB unplug,
-                // BT unpair, Windows invalidated the handle). Mark the queue
-                // disposed immediately so the next 30Hz tick short-circuits
-                // at the `if (_disposed) return true` gate above instead of
-                // bombarding HidStream.Write with doomed calls. Without this,
-                // the user sees a first-chance IOException ~45 times in the
-                // 1.5s before Reconcile catches up and tears down the queue.
-                Logger.WriteVerbose($"[PlayStation] DualShock4 write failed, suspending until provider re-enumerates: {ex.Message}");
+                // WriteFile returned BOOL=false — device is gone, handle
+                // closed, or partial write. Suspend the queue so the next
+                // 30Hz tick short-circuits at the `if (_disposed)` gate.
+                // No exception was ever thrown.
+                Logger.WriteVerbose("[PlayStation] DualShock4 write returned false, suspending until provider re-enumerates.");
                 _disposed = true;
                 return false;
             }
+            return true;
         }
 
         private void BuildReport(Color color)
@@ -148,32 +146,28 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
 
         // sendOffFrame defaults to true for "voluntary" teardowns (provider
         // unloaded by the user, app exit) where the controller is still
-        // connected and benefits from a clean off-state. Pass false from the
-        // hot-plug-disconnect path: the device is already gone and the write
-        // will throw IOException("The device is not connected"). We still
-        // catch it but skipping avoids the noisy first-chance break in the
-        // debugger.
+        // connected and benefits from a clean off-state. Pass false from
+        // the hot-plug-disconnect path. Both paths use HidRawWriter.TryWrite
+        // which returns BOOL — no exception even if the device went away
+        // between the sendOffFrame decision and the write attempt.
         public void Shutdown(bool sendOffFrame = true)
         {
             if (_disposed) return;
             _disposed = true;
             if (!sendOffFrame) return;
-            try
+            // Send one final all-zero lightbar so the controller doesn't sit on
+            // our last colour after we tear down. The controller's firmware
+            // restores the OS-driven indicator (e.g. player number) shortly
+            // after we stop sending reports anyway, but explicit black avoids
+            // the visible "stuck on last colour" beat between shutdown and
+            // firmware reset. Best-effort — TryWrite returns false silently
+            // if the handle has already been invalidated.
+            lock (_writeLock)
             {
-                // Send one final all-zero lightbar so the controller doesn't sit on
-                // our last colour after we tear down. The controller's firmware
-                // restores the OS-driven indicator (e.g. player number) shortly
-                // after we stop sending reports anyway, but explicit black avoids
-                // the visible "stuck on last colour" beat between shutdown and
-                // firmware reset.
-                lock (_writeLock)
-                {
-                    Array.Clear(_buffer, 0, _buffer.Length);
-                    BuildReport(new Color(0, 0, 0));
-                    _stream.Write(_buffer);
-                }
+                Array.Clear(_buffer, 0, _buffer.Length);
+                BuildReport(new Color(0, 0, 0));
+                _writer.TryWrite(_buffer);
             }
-            catch { /* best-effort */ }
         }
     }
 }
