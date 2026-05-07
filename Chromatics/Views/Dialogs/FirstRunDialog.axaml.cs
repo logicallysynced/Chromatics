@@ -60,7 +60,7 @@ namespace Chromatics.Views.Dialogs
         private ToggleButton[] Tiles() =>
         [
             TileRazer, TileLogitech, TileCorsair, TileCoolermaster,
-            TileSteelSeries, TileAsus, TileMsi, TileWooting, TileNovation, TileOpenRgb,
+            TileSteelSeries, TileAsus, TileMsi, TileWooting, TileNovation, TileOpenRgb, TilePlayStation,
         ];
 
         private void OnTileChanged(object? sender, RoutedEventArgs e) => UpdateContinueState();
@@ -86,6 +86,7 @@ namespace Chromatics.Views.Dialogs
             s.deviceWootingEnabled      = TileWooting.IsChecked      ?? false;
             s.deviceNovationEnabled     = TileNovation.IsChecked     ?? false;
             s.deviceOpenRGBEnabled      = TileOpenRgb.IsChecked      ?? false;
+            s.devicePlayStationEnabled  = TilePlayStation.IsChecked  ?? false;
 
             // Hue is deliberately omitted from the wizard — it needs the
             // bridge-pairing dialog which is inappropriate for first-run flow.
