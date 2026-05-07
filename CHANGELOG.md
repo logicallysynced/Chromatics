@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.0.162
+
+- Tightened up PlayStation controller detection so plugging in a DualShock 4 no longer pops a "Failed to get info." error in some cases. Controllers that can't expose their serial number (older DS4s, or anything where Steam / DS4Windows is partially blocking access) are now identified by a stable hash of their device path instead, with a clear log message if the controller still can't be opened for lighting.
+
 ## 4.0.161
 
 - Fixed an issue where connecting a DualShock 4 over USB could throw "Failed to get info." when Chromatics tried to read the controller's serial number. Older controllers without a readable serial descriptor now fall back to a stable identity derived from their device path, so mappings still persist correctly between restarts.
