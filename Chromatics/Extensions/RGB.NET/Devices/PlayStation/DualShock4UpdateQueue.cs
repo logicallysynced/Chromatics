@@ -119,10 +119,18 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             }
         }
 
-        public void Shutdown()
+        // sendOffFrame defaults to true for "voluntary" teardowns (provider
+        // unloaded by the user, app exit) where the controller is still
+        // connected and benefits from a clean off-state. Pass false from the
+        // hot-plug-disconnect path: the device is already gone and the write
+        // will throw IOException("The device is not connected"). We still
+        // catch it but skipping avoids the noisy first-chance break in the
+        // debugger.
+        public void Shutdown(bool sendOffFrame = true)
         {
             if (_disposed) return;
             _disposed = true;
+            if (!sendOffFrame) return;
             try
             {
                 // Send one final all-zero lightbar so the controller doesn't sit on

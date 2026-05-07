@@ -13,7 +13,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             InitializeLayout();
         }
 
-        public void Shutdown() => _updateQueue.Shutdown();
+        public void Shutdown(bool sendOffFrame = true) => _updateQueue.Shutdown(sendOffFrame);
 
         // DS4 has a single RGB lightbar above the touchpad.
         // Custom1 keeps the LED enum stable across DS4 / DS5 — DualSenseDevice's

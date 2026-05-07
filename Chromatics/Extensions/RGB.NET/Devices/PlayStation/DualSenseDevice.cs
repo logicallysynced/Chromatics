@@ -13,7 +13,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             InitializeLayout();
         }
 
-        public void Shutdown() => _updateQueue.Shutdown();
+        public void Shutdown(bool sendOffFrame = true) => _updateQueue.Shutdown(sendOffFrame);
 
         // DualSense LED layout (left→right when looking at the controller):
         //   - The lightbar runs along the bottom edge of the touchpad in two
