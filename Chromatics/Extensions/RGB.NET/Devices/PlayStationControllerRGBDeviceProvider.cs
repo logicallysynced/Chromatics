@@ -368,14 +368,41 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             });
         }
 
-        // Public per-frame pre-check used by UpdateQueues. Returns false if
-        // the given DevicePath is no longer enumerated, telling the queue to
-        // skip its write. The snapshot is replaced atomically by
-        // SuspendDeadDevices (volatile field write); reads are wait-free.
+        // Public per-frame pre-check used by UpdateQueues. Queries HidSharp's
+        // device list LIVE (rather than a snapshot replaced asynchronously by
+        // SuspendDeadDevices) — HidSharp invalidates its internal device-keys
+        // cache synchronously on WM_DEVICECHANGE inside DeviceMonitorWindowProc
+        // on the message-pump thread, BEFORE pulsing its notify thread that
+        // eventually fires DeviceList.Changed. So a live GetHidDevices() call
+        // sees the unplug ahead of any DeviceList.Changed subscriber, which
+        // is exactly the race that was leaving our snapshot stale through
+        // the first post-unplug 30Hz tick.
+        //
+        // Cost: a single SetupDi enumeration filtered to the Sony VID,
+        // gated on HidSharp's per-PnP-event cache. Most ticks hit the cache
+        // (sub-microsecond hashtable lookup); only the tick immediately
+        // after a PnP event re-enumerates (~1ms). Total CPU at 30Hz under
+        // normal conditions is negligible.
         public static bool IsDevicePathAlive(string devicePath)
         {
             if (string.IsNullOrEmpty(devicePath)) return false;
-            return _alivePathsSnapshot.Contains(devicePath);
+            try
+            {
+                foreach (var hid in DeviceList.Local.GetHidDevices(vendorID: SonyVendorId))
+                {
+                    if (string.Equals(hid.DevicePath, devicePath, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+                return false;
+            }
+            catch
+            {
+                // Fail closed — if enumeration itself throws, skip the write
+                // rather than fall through to HidStream.Write where the
+                // failure mode is exactly the IOException we're trying to
+                // avoid.
+                return false;
+            }
         }
 
         // Immediate-pass companion to Reconcile. Compares our currently-tracked
