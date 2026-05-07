@@ -90,6 +90,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         // "The device is not connected", which is harmless but produces a
         // noisy first-chance break under the debugger.
         private readonly HashSet<IRGBDevice> _confirmedDisconnected = new();
+        // Snapshot of currently-alive Sony controller DevicePaths, refreshed
+        // synchronously by SuspendDeadDevices on every DeviceList.Changed
+        // and at the end of LoadDevices / Reconcile. UpdateQueues consult
+        // it via IsDevicePathAlive before each HidStream.Write — this
+        // closes the race between PnP unplug and the next 30Hz trigger
+        // tick. Without a pre-check, even when our PnP handler runs
+        // promptly, a tick already in flight can still call Write against
+        // a now-invalid handle and throw IOException.
+        private static volatile HashSet<string> _alivePathsSnapshot = new(StringComparer.OrdinalIgnoreCase);
         // Set true inside Dispose so RemoveDevice can also skip the off-frame
         // at app shutdown — the OS may already have invalidated the HID
         // handle even though the controller is physically connected, and
@@ -169,6 +178,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                     "Likely cause: another application has exclusive HID access (DS4Windows / reWASD).",
                     forwardToSentry: false);
             }
+
+            // Seed the alive-path snapshot so UpdateQueues' per-frame
+            // pre-check answers correctly from the very first trigger tick.
+            // Without this seed the snapshot starts empty and every queue
+            // would short-circuit until the first PnP event repopulates it.
+            try { SuspendDeadDevices(); } catch { }
 
             return devices;
         }
@@ -278,12 +293,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                 IRGBDevice newDevice;
                 if (controllerType == PlayStationControllerType.DualShock4)
                 {
-                    var queue = new DualShock4UpdateQueue(GetUpdateTrigger(), opened, transport);
+                    var queue = new DualShock4UpdateQueue(GetUpdateTrigger(), opened, transport, devicePath);
                     newDevice = new DualShock4Device(info, queue);
                 }
                 else
                 {
-                    var queue = new DualSenseUpdateQueue(GetUpdateTrigger(), opened, transport);
+                    var queue = new DualSenseUpdateQueue(GetUpdateTrigger(), opened, transport, devicePath);
                     newDevice = new DualSenseDevice(info, queue);
                 }
 
@@ -353,12 +368,23 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             });
         }
 
+        // Public per-frame pre-check used by UpdateQueues. Returns false if
+        // the given DevicePath is no longer enumerated, telling the queue to
+        // skip its write. The snapshot is replaced atomically by
+        // SuspendDeadDevices (volatile field write); reads are wait-free.
+        public static bool IsDevicePathAlive(string devicePath)
+        {
+            if (string.IsNullOrEmpty(devicePath)) return false;
+            return _alivePathsSnapshot.Contains(devicePath);
+        }
+
         // Immediate-pass companion to Reconcile. Compares our currently-tracked
         // device paths to the live HID enumeration; for anything we still hold
-        // open that no longer enumerates, suspend writes on its queue. Cheap
-        // (one HID enumeration + one set diff, no opens, no allocations beyond
-        // the path set itself) and runs on whatever thread DeviceList.Changed
-        // is raised from — keep it short.
+        // open that no longer enumerates, suspend writes on its queue AND
+        // refresh the alive-path snapshot UpdateQueues consult per frame.
+        // Cheap (one HID enumeration + one set diff, no opens, no allocations
+        // beyond the path set itself) and runs on whatever thread
+        // DeviceList.Changed is raised from — keep it short.
         private void SuspendDeadDevices()
         {
             HashSet<string> currentPaths;
@@ -374,6 +400,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             {
                 return;
             }
+
+            // Publish the new snapshot atomically. UpdateQueues see the change
+            // on the next trigger tick (volatile reference write).
+            _alivePathsSnapshot = currentPaths;
 
             List<KeyValuePair<IRGBDevice, string>> snapshot;
             lock (_stateLock)
@@ -463,6 +493,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
                 if (TryOpenAndCreateDevice(hid, hid.ProductID, out var newDevice))
                 {
+                    // Refresh the alive-path snapshot BEFORE AddDevice so the
+                    // first trigger tick after AddDevice already sees the new
+                    // device's path. SuspendDeadDevices does the refresh as
+                    // part of its work; the "suspend" half is a no-op here
+                    // since the device we just opened is enumerated.
+                    try { SuspendDeadDevices(); } catch { }
+
                     // AddDevice (inherited from AbstractRGBDeviceProvider) tracks
                     // it in InternalDevices and fires DevicesChanged.Added, which
                     // RGBController catches to attach the global + per-device
