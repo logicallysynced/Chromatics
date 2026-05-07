@@ -208,10 +208,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
                 PlayStationCrc32.AppendOutputCrc(_buffer);
         }
 
-        public void Shutdown()
+        // See DualShock4UpdateQueue.Shutdown for the sendOffFrame contract.
+        public void Shutdown(bool sendOffFrame = true)
         {
             if (_disposed) return;
             _disposed = true;
+            if (!sendOffFrame) return;
             try
             {
                 lock (_writeLock)

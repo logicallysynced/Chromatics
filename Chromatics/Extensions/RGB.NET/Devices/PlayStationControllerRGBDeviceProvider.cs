@@ -78,6 +78,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         // find them when given the device instance.
         private readonly Dictionary<IRGBDevice, HidStream> _openStreams = new();
         private readonly Dictionary<IRGBDevice, string> _devicePaths = new();
+        // Tracks devices that Reconcile has already confirmed as physically
+        // disconnected. RemoveDevice consults this to decide whether the
+        // graceful "send a final all-black frame" attempt is worth making —
+        // for a device that's already gone the write throws IOException
+        // "The device is not connected", which is harmless but produces a
+        // noisy first-chance break under the debugger.
+        private readonly HashSet<IRGBDevice> _confirmedDisconnected = new();
         private readonly System.Threading.Lock _stateLock = new();
 
         // Hot-plug bookkeeping: subscription flag (so re-init doesn't double-subscribe),
@@ -345,12 +352,17 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
             // Removals first (devices we hold but no longer enumerate) — done
             // before adds so a controller that quickly reconnects on a different
-            // path can be re-added cleanly.
+            // path can be re-added cleanly. Mark each device confirmed-gone
+            // before calling RemoveDevice so the override skips the doomed
+            // off-frame write to the stream.
             foreach (var kvp in snapshot)
             {
                 if (string.IsNullOrEmpty(kvp.Value)) continue;
                 if (!currentPaths.Contains(kvp.Value))
+                {
+                    lock (_stateLock) { _confirmedDisconnected.Add(kvp.Key); }
                     RemoveDevice(kvp.Key);
+                }
             }
 
             // Additions: any enumerated path not currently open.
@@ -391,19 +403,24 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         {
             HidStream stream = null;
             string path = null;
+            bool wasConfirmedGone;
             lock (_stateLock)
             {
                 if (_openStreams.TryGetValue(device, out stream))
                     _openStreams.Remove(device);
                 if (_devicePaths.TryGetValue(device, out path))
                     _devicePaths.Remove(device);
+                wasConfirmedGone = _confirmedDisconnected.Remove(device);
             }
 
-            // Send a final off-frame so the controller doesn't sit on our last
-            // colour after disconnect. Best-effort — the device may already be
-            // gone (BT unpair, USB unplug) in which case the write throws.
-            try { (device as DualShock4Device)?.Shutdown(); } catch { }
-            try { (device as DualSenseDevice)?.Shutdown(); } catch { }
+            // Send a final off-frame ONLY when removal is voluntary (provider
+            // unload, app exit). Skip it when Reconcile has already confirmed
+            // the device is gone — the write would throw IOException
+            // ("device is not connected") which is harmless but visible as a
+            // first-chance break under the debugger.
+            bool sendOffFrame = !wasConfirmedGone;
+            try { (device as DualShock4Device)?.Shutdown(sendOffFrame); } catch { }
+            try { (device as DualSenseDevice)?.Shutdown(sendOffFrame); } catch { }
 
             if (stream != null)
             {
