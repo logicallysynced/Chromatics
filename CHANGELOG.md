@@ -2,11 +2,13 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.1.1
+
+- Fixed an "already attached to a surface" startup error that could appear with some providers after the 4.1.0 hot-plug groundwork. Initial device load and runtime hot-plug are now handled on separate paths.
+
 ## 4.1.0
 
 - **New:** PlayStation DS4 & DS5 controller lighting support (Beta). The DualShock 4 lightbar, the DualSense lightbar, the five player-indicator LEDs, and the mic-mute LED can all be mapped from the Mappings tab. Both USB and Bluetooth controllers are supported, and your controller's input still works normally in games while Chromatics drives the lights.
-- Plug or pair a controller after Chromatics is already running and it's picked up automatically — no app restart needed. The same effects you've already configured will start applying to the new controller right away. Unplug or unpair and the controller is removed cleanly with no error.
-- The global brightness slider and the per-device brightness slider in the Mappings tab both apply to PlayStation controllers, just like every other device.
 - Tip: if your controller is connected but Chromatics says it can't open it, another tool (like Steam Input, DS4Windows, or reWASD) is probably holding it in exclusive mode. Close it or disable its exclusive mode before launching Chromatics.
 
 ## 4.0.157
