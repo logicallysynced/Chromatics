@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.0.160
+
+- PlayStation controllers now get a stable identity based on their serial number, so your saved mappings stay attached to the correct controller across app restarts — and if you have two of the same model, they no longer share settings.
+
 ## 4.0.159
 
 - PlayStation controllers now respect the global brightness slider and the per-device brightness slider in the Mappings tab, just like every other device.
