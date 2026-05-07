@@ -5,6 +5,8 @@ using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.RGB.NET.Devices
@@ -169,6 +171,42 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         {
             device = null;
 
+            // Query metadata BEFORE we open the read/write stream. HidSharp's
+            // GetSerialNumber / GetMaxOutputReportLength internally open a
+            // temporary handle to query the HID descriptor, and some HID
+            // gamepads — DualShock 4 v1 in particular — don't allow a second
+            // concurrent handle even though the kernel says they support
+            // shared access. Querying first while we don't yet hold a stream
+            // avoids HidSharp.Exceptions.DeviceIOException ("Failed to get info.").
+            //
+            // Both queries are individually fault-tolerant: serial falls back
+            // to a stable hash of DevicePath so identity persistence still
+            // works on hardware that rejects the descriptor read; the report
+            // length defaults to USB (32) on failure since BT controllers
+            // generally answer the descriptor query reliably.
+            string devicePath;
+            try { devicePath = hid.DevicePath ?? ""; }
+            catch { devicePath = ""; }
+
+            int maxOut;
+            try { maxOut = hid.GetMaxOutputReportLength(); }
+            catch { maxOut = 0; }
+
+            string serial;
+            try { serial = hid.GetSerialNumber() ?? ""; }
+            catch { serial = ""; }
+
+            // Fallback identity when the serial descriptor isn't readable (some
+            // DS4 v1, BT-paired devices mid-enumeration). DevicePath on Windows
+            // includes the controller's instance ID, which is stable across
+            // app restarts for the same physical controller in the same USB
+            // port / BT pairing — close enough to a real serial for our
+            // GUID-from-name persistence purposes.
+            if (string.IsNullOrEmpty(serial) && !string.IsNullOrEmpty(devicePath))
+                serial = ShortHashOf(devicePath);
+
+            // Now open the actual stream. If this fails, the metadata above is
+            // unused but cheap.
             HidStream opened;
             try
             {
@@ -201,19 +239,16 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             {
                 // Transport detection: DS4 USB max output report is 32 bytes (incl. report
                 // ID), DS4 BT is 78. DS5 USB is 64, DS5 BT is 78. Any controller that
-                // reports an output buffer of 78+ is on Bluetooth.
-                int maxOut;
-                try { maxOut = opened.Device.GetMaxOutputReportLength(); }
-                catch { maxOut = 0; }
+                // reports an output buffer of 78+ is on Bluetooth. If the descriptor
+                // query failed earlier, retry once via the now-open stream — its
+                // cached descriptor handle reuses our existing kernel handle so
+                // there's no second-handle conflict.
+                if (maxOut == 0)
+                {
+                    try { maxOut = opened.Device.GetMaxOutputReportLength(); }
+                    catch { /* fall through with maxOut = 0 → assume USB */ }
+                }
                 var transport = maxOut >= 78 ? PlayStationTransport.Bluetooth : PlayStationTransport.Usb;
-
-                string serial;
-                try { serial = hid.GetSerialNumber() ?? ""; }
-                catch { serial = ""; }
-
-                string devicePath;
-                try { devicePath = hid.DevicePath ?? ""; }
-                catch { devicePath = ""; }
 
                 var controllerType = pid switch
                 {
@@ -414,6 +449,20 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
             if (ReferenceEquals(_instance, this))
                 _instance = null;
+        }
+
+        // 12-char hex hash of an arbitrary string. Used to derive a stable
+        // pseudo-serial from DevicePath when the controller's HID descriptor
+        // doesn't expose a real serial — short enough to look reasonable in
+        // the device name, long enough that two distinct USB instances of the
+        // same product won't collide. Identity is the only requirement; we're
+        // not relying on cryptographic strength.
+        private static string ShortHashOf(string input)
+        {
+            byte[] hash = SHA1.HashData(Encoding.UTF8.GetBytes(input));
+            var sb = new StringBuilder(12);
+            for (int i = 0; i < 6; i++) sb.Append(hash[i].ToString("X2"));
+            return sb.ToString();
         }
     }
 }

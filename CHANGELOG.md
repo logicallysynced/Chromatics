@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.0.161
+
+- Fixed an issue where connecting a DualShock 4 over USB could throw "Failed to get info." when Chromatics tried to read the controller's serial number. Older controllers without a readable serial descriptor now fall back to a stable identity derived from their device path, so mappings still persist correctly between restarts.
+
 ## 4.0.160
 
 - PlayStation controllers now get a stable identity based on their serial number, so your saved mappings stay attached to the correct controller across app restarts — and if you have two of the same model, they no longer share settings.
