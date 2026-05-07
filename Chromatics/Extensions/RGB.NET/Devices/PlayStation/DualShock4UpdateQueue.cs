@@ -124,6 +124,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             }
         }
 
+        // Sets _disposed=true so subsequent Update ticks short-circuit
+        // before attempting any HidStream.Write. Called by the provider's
+        // immediate hot-unplug handler the moment Windows reports the
+        // device is no longer enumerated, so the next 30Hz trigger tick
+        // has nothing to throw at. Lighter than Shutdown — no off-frame
+        // attempt, no other state mutation. Idempotent.
+        public void SuspendWrites() => _disposed = true;
+
         // sendOffFrame defaults to true for "voluntary" teardowns (provider
         // unloaded by the user, app exit) where the controller is still
         // connected and benefits from a clean off-state. Pass false from the

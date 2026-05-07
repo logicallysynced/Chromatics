@@ -315,10 +315,31 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
         private void OnHidDeviceListChanged(object sender, DeviceListChangedEventArgs e)
         {
-            // PnP can fire multiple Changed events for one logical connect/disconnect
-            // (parent device + child interfaces, BT pairing dance). Schedule a
-            // reconcile after a short debounce; cancel earlier scheduled ones via
-            // the seq counter so only the latest tick wins.
+            // Two-pass design.
+            //
+            // Pass 1 (immediate, no debounce): walk our open set against the
+            // current HID enumeration and call SuspendWrites() on any device
+            // that has disappeared. This sets the queue's _disposed flag
+            // BEFORE the next 30Hz trigger tick fires, so the trigger's
+            // OnUpdate->Update never reaches HidStream.Write — no IOException
+            // is thrown at all (not even one caught first-chance break in
+            // the debugger). The device stays attached to the surface until
+            // pass 2 cleans it up; suspended writes just no-op until then.
+            //
+            // Pass 2 (debounced 1500ms): full Reconcile that handles
+            //   - the slow-side cleanup (RemoveDevice + stream dispose +
+            //     surface.Detach via the bookkeeping handler)
+            //   - new-device opens (which need the debounce to let Windows
+            //     finish enumerating — TryOpen on a partially-enumerated
+            //     device succeeds but the first Write fails)
+            // The seq counter cancels stale debounces so only the latest
+            // PnP burst's Reconcile actually runs.
+            try { SuspendDeadDevices(); }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[PlayStation] Suspend-dead-devices pass threw: {ex.Message}");
+            }
+
             int mySeq = System.Threading.Interlocked.Increment(ref _hotplugScheduleSeq);
             Task.Run(async () =>
             {
@@ -330,6 +351,53 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                     Logger.WriteVerbose($"[PlayStation] Hot-plug reconcile threw: {ex.Message}");
                 }
             });
+        }
+
+        // Immediate-pass companion to Reconcile. Compares our currently-tracked
+        // device paths to the live HID enumeration; for anything we still hold
+        // open that no longer enumerates, suspend writes on its queue. Cheap
+        // (one HID enumeration + one set diff, no opens, no allocations beyond
+        // the path set itself) and runs on whatever thread DeviceList.Changed
+        // is raised from — keep it short.
+        private void SuspendDeadDevices()
+        {
+            HashSet<string> currentPaths;
+            try
+            {
+                currentPaths = DeviceList.Local.GetHidDevices(vendorID: SonyVendorId)
+                    .Where(h => IsSupportedPid(h.ProductID))
+                    .Select(h => h.DevicePath ?? "")
+                    .Where(p => p.Length > 0)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return;
+            }
+
+            List<KeyValuePair<IRGBDevice, string>> snapshot;
+            lock (_stateLock)
+            {
+                snapshot = _devicePaths.ToList();
+            }
+
+            foreach (var kvp in snapshot)
+            {
+                if (string.IsNullOrEmpty(kvp.Value)) continue;
+                if (currentPaths.Contains(kvp.Value)) continue;
+
+                // Mark as confirmed gone so when the debounced Reconcile
+                // gets here it skips the off-frame write in RemoveDevice
+                // (the device's queue is already suspended; the write
+                // would have nowhere to land).
+                lock (_stateLock) { _confirmedDisconnected.Add(kvp.Key); }
+
+                switch (kvp.Key)
+                {
+                    case DualShock4Device ds4: ds4.SuspendWrites(); break;
+                    case DualSenseDevice ds: ds.SuspendWrites(); break;
+                }
+            }
         }
 
         // Compare current HID enumeration to our open set; add new ones, remove

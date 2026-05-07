@@ -13,6 +13,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             InitializeLayout();
         }
 
+        public void SuspendWrites() => _updateQueue.SuspendWrites();
         public void Shutdown(bool sendOffFrame = true) => _updateQueue.Shutdown(sendOffFrame);
 
         // DS4 has a single RGB lightbar above the touchpad.
