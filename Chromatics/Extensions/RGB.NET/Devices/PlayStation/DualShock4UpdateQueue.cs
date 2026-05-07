@@ -64,10 +64,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             }
             catch (Exception ex)
             {
-                // One-shot log: subsequent writes will keep failing if the
-                // controller went away. The provider will detect the missing
-                // device on next enumeration and rebuild.
-                Logger.WriteVerbose($"[PlayStation] DualShock4 write failed: {ex.Message}");
+                // First failed write means the device is gone (USB unplug,
+                // BT unpair, Windows invalidated the handle). Mark the queue
+                // disposed immediately so the next 30Hz tick short-circuits
+                // at the `if (_disposed) return true` gate above instead of
+                // bombarding HidStream.Write with doomed calls. Without this,
+                // the user sees a first-chance IOException ~45 times in the
+                // 1.5s before Reconcile catches up and tears down the queue.
+                Logger.WriteVerbose($"[PlayStation] DualShock4 write failed, suspending until provider re-enumerates: {ex.Message}");
+                _disposed = true;
                 return false;
             }
         }

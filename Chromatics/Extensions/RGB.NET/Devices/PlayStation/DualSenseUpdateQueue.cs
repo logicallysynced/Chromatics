@@ -120,7 +120,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             }
             catch (Exception ex)
             {
-                Logger.WriteVerbose($"[PlayStation] DualSense write failed: {ex.Message}");
+                // See DualShock4UpdateQueue.Update for rationale on the
+                // self-disposal-after-first-failure pattern. Stops the
+                // 30Hz bombardment of doomed writes between unplug and
+                // Reconcile cleanup.
+                Logger.WriteVerbose($"[PlayStation] DualSense write failed, suspending until provider re-enumerates: {ex.Message}");
+                _disposed = true;
                 return false;
             }
         }
