@@ -969,7 +969,7 @@
           }
         }
       },
-      "NLog/6.1.2": {
+      "NLog/6.1.3": {
         "type": "package",
         "compile": {
           "lib/netstandard2.1/NLog.dll": {
@@ -1277,7 +1277,7 @@
           }
         }
       },
-      "Sentry/6.4.1": {
+      "Sentry/6.5.0": {
         "type": "package",
         "compile": {
           "lib/net10.0/Sentry.dll": {
@@ -1294,11 +1294,11 @@
           "buildTransitive/Sentry.targets": {}
         }
       },
-      "Sentry.Profiling/6.4.1": {
+      "Sentry.Profiling/6.5.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.Diagnostics.NETCore.Client": "0.2.510501",
-          "Sentry": "6.4.1"
+          "Sentry": "6.5.0"
         },
         "compile": {
           "lib/net10.0/Microsoft.Diagnostics.FastSerialization.dll": {
@@ -2777,10 +2777,10 @@
         "packageIcon.png"
       ]
     },
-    "NLog/6.1.2": {
-      "sha512": "y/3o6RVhHHeAMDaUdETeEtisYyypZApxeKd3k8HIH4IdqFzJNF5sXuJ07hNtAq6hLMup+yh3zuTckpFJqucOrw==",
+    "NLog/6.1.3": {
+      "sha512": "w4JFIUN3cjQobFOc6wuXtHTyMNaWfdAxOhMvCR0vHBNpl2kKSjNYYxzx1KsTtePufQeokFMEx9UbWTAqlICKjA==",
       "type": "package",
-      "path": "nlog/6.1.2",
+      "path": "nlog/6.1.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2795,7 +2795,7 @@
         "lib/netstandard2.0/NLog.xml",
         "lib/netstandard2.1/NLog.dll",
         "lib/netstandard2.1/NLog.xml",
-        "nlog.6.1.2.nupkg.sha512",
+        "nlog.6.1.3.nupkg.sha512",
         "nlog.nuspec"
       ]
     },
@@ -3139,10 +3139,10 @@
         "sanford.multimedia.midi.standard.nuspec"
       ]
     },
-    "Sentry/6.4.1": {
-      "sha512": "2Q2ySa5PfCB11S91qQFPJNRqPlRB5rUDtpc1B4DnecvwW5cWO7W9C3+J7K0xGfHKfUZP5pglkYmxrn+alJ7zXA==",
+    "Sentry/6.5.0": {
+      "sha512": "EuC4Da4WcC8eE8d+AHoDGLK0wfyrQ/OYeNghDnR9dc3q/jDUadqXsJtEsq8U9Dt+VG6lCg0K8AoksheCVe3q8w==",
       "type": "package",
-      "path": "sentry/6.4.1",
+      "path": "sentry/6.5.0",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -3191,7 +3191,7 @@
         "sentry-native/win-arm64/sentry-native.lib",
         "sentry-native/win-x64/sentry-native.lib",
         "sentry-nuget.png",
-        "sentry.6.4.1.nupkg.sha512",
+        "sentry.6.5.0.nupkg.sha512",
         "sentry.nuspec",
         "tools/sentry-cli-Darwin-arm64",
         "tools/sentry-cli-Darwin-x86_64",
@@ -3202,10 +3202,10 @@
         "tools/sentry-cli-Windows-x86_64.exe"
       ]
     },
-    "Sentry.Profiling/6.4.1": {
-      "sha512": "oqQkmKPgEMz5ArMF5GpuZvIm2RgML5aE6apUmb6Yk5LieOi0HWRvxIYqw//WhYKcI+5WX/noUw+9qXgtwI6Pnw==",
+    "Sentry.Profiling/6.5.0": {
+      "sha512": "vXaVK5M6QQjlv9/acb3zM8tfbrBggS5Es9F3rSZm3AJZIQGqGQEi/izzcwdUC0syTG0ydvPS7smhTC6mOo8mJg==",
       "type": "package",
-      "path": "sentry.profiling/6.4.1",
+      "path": "sentry.profiling/6.5.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3231,7 +3231,7 @@
         "lib/net9.0/Sentry.Profiling.dll",
         "lib/net9.0/Sentry.Profiling.xml",
         "sentry-nuget.png",
-        "sentry.profiling.6.4.1.nupkg.sha512",
+        "sentry.profiling.6.5.0.nupkg.sha512",
         "sentry.profiling.nuspec"
       ]
     },
@@ -3589,7 +3589,7 @@
       "HueApi.ColorConverters >= 3.1.0",
       "HueApi.Entertainment >= 3.1.0",
       "NAudio >= 2.3.0",
-      "NLog >= 6.1.2",
+      "NLog >= 6.1.3",
       "Newtonsoft.Json >= 13.0.4",
       "RGB.NET.Core >= 3.2.0",
       "RGB.NET.Devices.Asus >= 3.2.0",
@@ -3605,8 +3605,8 @@
       "RGB.NET.HID >= 3.2.0",
       "RGB.NET.Layout >= 3.2.0",
       "RGB.NET.Presets >= 3.2.0",
-      "Sentry >= 6.4.1",
-      "Sentry.Profiling >= 6.4.1",
+      "Sentry >= 6.5.0",
+      "Sentry.Profiling >= 6.5.0",
       "Sharlayan >= 9.0.29-prerelease.38",
       "System.Drawing.Common >= 10.0.7",
       "Velopack >= 0.0.1298"
@@ -3617,7 +3617,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "4.1.9",
+    "version": "4.1.10",
     "restore": {
       "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
       "projectName": "Chromatics",
@@ -3715,7 +3715,7 @@
           },
           "NLog": {
             "target": "Package",
-            "version": "[6.1.2, )"
+            "version": "[6.1.3, )"
           },
           "Newtonsoft.Json": {
             "target": "Package",
@@ -3779,11 +3779,11 @@
           },
           "Sentry": {
             "target": "Package",
-            "version": "[6.4.1, )"
+            "version": "[6.5.0, )"
           },
           "Sentry.Profiling": {
             "target": "Package",
-            "version": "[6.4.1, )"
+            "version": "[6.5.0, )"
           },
           "Sharlayan": {
             "target": "Package",
