@@ -64,8 +64,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         private const double UpdateFrequencySeconds = 1.0 / 30.0;
 
         // PnP can fire several Changed events for one logical connect (driver
-        // initialisation, child interface enumeration, etc.). Coalesce them.
-        private const int HotplugDebounceMs = 500;
+        // initialisation, child interface enumeration, etc.). Coalesce them
+        // AND wait long enough that Windows has finished setting up the HID
+        // device — TryOpen can succeed against a partially-enumerated device
+        // and the first write will then fail with "A device which does not
+        // exist was specified". 1500ms is generous but the user only sees a
+        // 1.5s lag once on connect, which is fine for a controller.
+        private const int HotplugDebounceMs = 1500;
 
         private static PlayStationControllerRGBDeviceProvider _instance;
         public static PlayStationControllerRGBDeviceProvider Instance =>
@@ -387,8 +392,20 @@ namespace Chromatics.Extensions.RGB.NET.Devices
                     // AddDevice (inherited from AbstractRGBDeviceProvider) tracks
                     // it in InternalDevices and fires DevicesChanged.Added, which
                     // RGBController catches to attach the global + per-device
-                    // brightness corrections.
+                    // brightness corrections + surface.Attach (hot-plug branch).
                     AddDevice(newDevice);
+
+                    // Make sure our DeviceUpdateTrigger is actually running.
+                    // AbstractRGBDeviceProvider.Initialize() calls Start() on
+                    // every trigger in UpdateTriggerMapping at the end of
+                    // initial load — but if no controllers were connected at
+                    // launch, our trigger wasn't created until just now (via
+                    // GetUpdateTrigger inside TryOpenAndCreateDevice). The
+                    // initial Start() pass already ran, so without this
+                    // explicit call the trigger sits idle and the queue's
+                    // Update() is never invoked. Start() is idempotent
+                    // (if (IsRunning) return;), safe to call repeatedly.
+                    try { GetUpdateTrigger().Start(); } catch { }
                 }
             }
         }
