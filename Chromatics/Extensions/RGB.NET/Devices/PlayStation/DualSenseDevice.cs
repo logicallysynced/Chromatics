@@ -22,8 +22,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
         //   - The 5 player indicator LEDs sit in a row directly below the
         //     touchpad. Bit 0 = leftmost, bit 4 = rightmost from the player's
         //     POV (matches Linux's player_leds bit ordering).
-        //   - The mic-mute LED is a small orange dot in the mic-mute button,
-        //     centred between the analogue sticks below the touchpad.
+        //
+        // Note: the mic-mute LED is intentionally NOT exposed. The controller
+        // firmware drives that LED to track mic-mute toggle state — pressing
+        // the mute button mutes the microphone AND lights the LED, regardless
+        // of any host involvement. Taking host control of the LED would only
+        // suppress that visual feedback for an action that still happens, so
+        // we leave the firmware default in place. See DualSenseUpdateQueue
+        // header for the protocol detail (we deliberately don't set the
+        // MIC_MUTE_LED_CONTROL_ENABLE bit in valid_flag1).
         //
         // Coordinates are arbitrary visual approximations for the Mappings tab —
         // they don't drive any hardware addressing.
@@ -38,10 +45,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
                 var led = AddLed((LedId)(LedId.Custom2 + i), new Point(20 + i * 12, 16), new Size(6));
                 if (led != null) led.Shape = Shape.Circle;
             }
-
-            // Mic-mute LED — slightly below and centred.
-            var mic = AddLed(LedId.Custom7, new Point(40, 28), new Size(6));
-            if (mic != null) mic.Shape = Shape.Circle;
         }
     }
 }
