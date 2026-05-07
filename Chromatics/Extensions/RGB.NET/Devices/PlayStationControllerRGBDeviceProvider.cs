@@ -82,6 +82,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         // BT-paired controllers). Both keyed by IRGBDevice so RemoveDevice can
         // find them when given the device instance.
         private readonly Dictionary<IRGBDevice, HidStream> _openStreams = new();
+        // Win32-direct WriteFile wrappers used for the actual lighting writes.
+        // Kept separate from HidStream so we own a non-throwing write path,
+        // see HidRawWriter for rationale.
+        private readonly Dictionary<IRGBDevice, HidRawWriter> _rawWriters = new();
         private readonly Dictionary<IRGBDevice, string> _devicePaths = new();
         // Tracks devices that Reconcile has already confirmed as physically
         // disconnected. RemoveDevice consults this to decide whether the
@@ -290,21 +294,41 @@ namespace Chromatics.Extensions.RGB.NET.Devices
 
                 var info = new PlayStationDeviceInfo(controllerType, transport, serial);
 
+                // Open the second handle for direct WriteFile use. If this
+                // fails (rare — same flags as HidSharp's open which already
+                // succeeded), we fall back to declaring the open a failure
+                // and disposing both. We never want a queue running with
+                // a half-broken write path.
+                HidRawWriter rawWriter;
+                try
+                {
+                    rawWriter = new HidRawWriter(devicePath);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error,
+                        $"[PlayStation] Could not open raw write handle for {info.DeviceName}: {ex.Message}",
+                        forwardToSentry: false);
+                    try { opened.Dispose(); } catch { }
+                    return false;
+                }
+
                 IRGBDevice newDevice;
                 if (controllerType == PlayStationControllerType.DualShock4)
                 {
-                    var queue = new DualShock4UpdateQueue(GetUpdateTrigger(), opened, transport, devicePath);
+                    var queue = new DualShock4UpdateQueue(GetUpdateTrigger(), opened, rawWriter, transport, devicePath);
                     newDevice = new DualShock4Device(info, queue);
                 }
                 else
                 {
-                    var queue = new DualSenseUpdateQueue(GetUpdateTrigger(), opened, transport, devicePath);
+                    var queue = new DualSenseUpdateQueue(GetUpdateTrigger(), opened, rawWriter, transport, devicePath);
                     newDevice = new DualSenseDevice(info, queue);
                 }
 
                 lock (_stateLock)
                 {
                     _openStreams[newDevice] = opened;
+                    _rawWriters[newDevice] = rawWriter;
                     _devicePaths[newDevice] = devicePath;
                 }
 
@@ -557,12 +581,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices
         protected override bool RemoveDevice(IRGBDevice device)
         {
             HidStream stream = null;
+            HidRawWriter rawWriter = null;
             string path = null;
             bool wasConfirmedGone;
             lock (_stateLock)
             {
                 if (_openStreams.TryGetValue(device, out stream))
                     _openStreams.Remove(device);
+                if (_rawWriters.TryGetValue(device, out rawWriter))
+                    _rawWriters.Remove(device);
                 if (_devicePaths.TryGetValue(device, out path))
                     _devicePaths.Remove(device);
                 wasConfirmedGone = _confirmedDisconnected.Remove(device);
@@ -578,6 +605,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices
             bool sendOffFrame = !wasConfirmedGone && !_disposing;
             try { (device as DualShock4Device)?.Shutdown(sendOffFrame); } catch { }
             try { (device as DualSenseDevice)?.Shutdown(sendOffFrame); } catch { }
+
+            if (rawWriter != null)
+            {
+                try { rawWriter.Dispose(); } catch { }
+            }
 
             if (stream != null)
             {

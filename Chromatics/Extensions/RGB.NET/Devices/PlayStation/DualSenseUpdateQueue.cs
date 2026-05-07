@@ -50,6 +50,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
         private const byte BtTag = 0x10;
 
         private readonly HidStream _stream;
+        private readonly HidRawWriter _writer;
         private readonly PlayStationTransport _transport;
         private readonly byte[] _buffer;
         private readonly string _devicePath;
@@ -58,10 +59,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
         private bool _firstReport = true;
         private volatile bool _disposed;
 
-        public DualSenseUpdateQueue(IDeviceUpdateTrigger trigger, HidStream stream, PlayStationTransport transport, string devicePath)
+        public DualSenseUpdateQueue(IDeviceUpdateTrigger trigger, HidStream stream, HidRawWriter writer, PlayStationTransport transport, string devicePath)
             : base(trigger)
         {
             _stream = stream;
+            _writer = writer;
             _transport = transport;
             _devicePath = devicePath ?? "";
             _buffer = new byte[transport == PlayStationTransport.Bluetooth ? 78 : 63];
@@ -116,27 +118,22 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             // the lightbar at black instead of leaving uninitialised state.
             if (!gotLightbar) lightbar = new Color(0, 0, 0);
 
-            try
+            bool ok;
+            lock (_writeLock)
             {
-                lock (_writeLock)
-                {
-                    Array.Clear(_buffer, 0, _buffer.Length);
-                    BuildReport(lightbar, playerLedBits, micMute);
-                    _stream.Write(_buffer);
-                }
-                _firstReport = false;
-                return true;
+                Array.Clear(_buffer, 0, _buffer.Length);
+                BuildReport(lightbar, playerLedBits, micMute);
+                ok = _writer.TryWrite(_buffer);
             }
-            catch (Exception ex)
+
+            if (!ok)
             {
-                // See DualShock4UpdateQueue.Update for rationale on the
-                // self-disposal-after-first-failure pattern. Stops the
-                // 30Hz bombardment of doomed writes between unplug and
-                // Reconcile cleanup.
-                Logger.WriteVerbose($"[PlayStation] DualSense write failed, suspending until provider re-enumerates: {ex.Message}");
+                Logger.WriteVerbose("[PlayStation] DualSense write returned false, suspending until provider re-enumerates.");
                 _disposed = true;
                 return false;
             }
+            _firstReport = false;
+            return true;
         }
 
         private static bool IsLit(Color c) => c.R > 0 || c.G > 0 || c.B > 0;
@@ -231,16 +228,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
             if (_disposed) return;
             _disposed = true;
             if (!sendOffFrame) return;
-            try
+            lock (_writeLock)
             {
-                lock (_writeLock)
-                {
-                    Array.Clear(_buffer, 0, _buffer.Length);
-                    BuildReport(new Color(0, 0, 0), 0, 0);
-                    _stream.Write(_buffer);
-                }
+                Array.Clear(_buffer, 0, _buffer.Length);
+                BuildReport(new Color(0, 0, 0), 0, 0);
+                _writer.TryWrite(_buffer);
             }
-            catch { /* best-effort */ }
         }
     }
 }
