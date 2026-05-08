@@ -29,7 +29,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         public FastStarfieldDecorator(ListLedGroup _ledGroup, int numberOfLeds, double interval, double fadeSpeed, Color[] colors, RGBSurface surface, double densityMultiplier = 1.0, bool updateIfDisabled = false, Color baseColor = default(Color)) : base(surface, updateIfDisabled)
         {
             this.ledGroup = _ledGroup;
-            this.numberOfLeds = numberOfLeds;
+            // See StarfieldDecorator for floor-of-1 rationale.
+            this.numberOfLeds = (numberOfLeds < 1 && _ledGroup != null && _ledGroup.Count() > 0) ? 1 : numberOfLeds;
             this.interval = interval;
             this.fadeSpeed = fadeSpeed;
             this.colors = colors;
