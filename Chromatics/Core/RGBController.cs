@@ -59,6 +59,12 @@ namespace Chromatics.Core
         // Keys are short, hardcoded category names ("startup", "title");
         // values are the ListLedGroups that belong to that animation.
         private static readonly Dictionary<string, List<ListLedGroup>> _taggedEffects = new();
+        // Parallel index keyed by source device — lets the EffectLayer per-device
+        // toggle attach/detach a single device's tagged group without disturbing
+        // the rest of the rig. Populated by the deviceGuid-aware overload of
+        // RegisterTaggedEffect; kept in sync by StopTaggedEffects /
+        // DetachTaggedEffectForDevice.
+        private static readonly Dictionary<string, Dictionary<Guid, ListLedGroup>> _taggedEffectsByDevice = new();
         private static readonly System.Threading.Lock _taggedEffectsLock = new();
 
         private static Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
@@ -707,25 +713,104 @@ namespace Chromatics.Core
             return true;
         }
 
-        // Re-fires the currently-active tagged effects (startup animation,
-        // title screen) so a per-device EffectLayer toggle change takes effect
-        // immediately. Each builder rebuilds its ledgroup list filtered by the
-        // current per-device toggle state — so flipping a device off mid-
-        // animation removes its group, flipping back on adds it again.
-        // No-op if neither tagged effect is currently active.
-        public static void RebuildActiveTaggedEffects()
+        // Reconciles a single device's contribution to any currently-active
+        // tagged effect (startup animation, title screen) with the device's
+        // EffectLayer toggle state. Per-device — does NOT touch other devices'
+        // groups, so toggling one device does not disturb the rest of the
+        // rig's animation phase.
+        //
+        //   - Effects toggled OFF for the device: detach + remove its group
+        //     from the tagged-effect tracking. Other devices' groups keep
+        //     painting at their current phase.
+        //   - Effects toggled ON for the device: build a new group for just
+        //     this device using the current animation's gradient/decorator
+        //     setup, attach it, and register under the existing tag. Joins
+        //     mid-animation; the new group inherits the global gradient
+        //     phase (MoveGradientDecorator advances over time, doesn't
+        //     restart on re-attach).
+        public static void SyncTaggedEffectsForDevice(Guid deviceGuid)
         {
-            if (HasActiveTaggedEffect("startup"))
+            if (deviceGuid == Guid.Empty) return;
+            bool effectsEnabled = MappingLayers.IsDeviceEffectsEnabled(deviceGuid);
+
+            // Resolve the IRGBDevice for this guid — needed when (re)building.
+            IRGBDevice device;
+            lock (_devicesLock) { _devices.TryGetValue(deviceGuid, out device); }
+            if (device == null) return;
+
+            SyncTaggedEffectForDevice("startup", deviceGuid, device, effectsEnabled,
+                                      buildIfEnabled: () => BuildStartupEffectForDevice(device, deviceGuid));
+            SyncTaggedEffectForDevice("title", deviceGuid, device, effectsEnabled,
+                                      buildIfEnabled: () => BuildTitleEffectForDevice(device, deviceGuid));
+        }
+
+        private static void SyncTaggedEffectForDevice(string tag, Guid deviceGuid, IRGBDevice device,
+                                                      bool effectsEnabled, Action buildIfEnabled)
+        {
+            if (!HasActiveTaggedEffect(tag)) return;
+
+            ListLedGroup existing = null;
+            lock (_taggedEffectsLock)
             {
-                if (!GameController.IsGameConnected())
-                    RunStartupEffects();
+                if (_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
+                    byDevice.TryGetValue(deviceGuid, out existing);
             }
-            if (HasActiveTaggedEffect("title"))
+
+            if (!effectsEnabled && existing != null)
             {
-                if (GameController.IsOnTitle)
-                    GameController.BuildTitleScreenAnimation();
+                // Effects just turned OFF for this device — detach its group
+                // without disturbing groups on other devices.
+                lock (_taggedEffectsLock)
+                {
+                    if (_taggedEffects.TryGetValue(tag, out var groups))
+                        groups.Remove(existing);
+                    if (_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
+                        byDevice.Remove(deviceGuid);
+                }
+                _runningEffects.Remove(existing);
+                try { existing.RemoveAllDecorators(); } catch { }
+                try { existing.Detach(); } catch { }
+            }
+            else if (effectsEnabled && existing == null)
+            {
+                // Effects just turned ON for this device — build + register a
+                // fresh group. Inherits the global animation phase from the
+                // shared MoveGradientDecorator (if any).
+                buildIfEnabled?.Invoke();
             }
         }
+
+        // Builds the startup-rainbow ledgroup for a single device. Mirrors
+        // the per-device branch of RunStartupEffects so a hot-toggle of
+        // EffectLayer can attach just this device without rebuilding others.
+        private static void BuildStartupEffectForDevice(IRGBDevice device, Guid deviceGuid)
+        {
+            if (!_effects.effect_startupanimation) return;
+
+            var move = new MoveGradientDecorator(surface)
+            {
+                IsEnabled = true,
+                Speed = 100,
+            };
+            var gradient = new RainbowGradient();
+            var ledgroup = new ListLedGroup(surface);
+            ledgroup.ZIndex = 1000;
+            foreach (var led in device) ledgroup.AddLed(led);
+            gradient.AddDecorator(move);
+
+            if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                ledgroup.Brush = new TextureBrush(new ConicalGradientTexture(new Size(100, 100), gradient));
+            else
+                ledgroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), gradient));
+
+            RegisterTaggedEffect("startup", deviceGuid, ledgroup);
+        }
+
+        // Builds the title-screen starfield ledgroup for a single device.
+        // Defers to GameController for the construction details since the
+        // colour palette + decorator config live there.
+        private static void BuildTitleEffectForDevice(IRGBDevice device, Guid deviceGuid)
+            => GameController.BuildTitleEffectForDeviceInternal(device, deviceGuid);
 
         public static void RunStartupEffects()
         {
@@ -780,7 +865,7 @@ namespace Chromatics.Core
                 }
 
 
-                RegisterTaggedEffect("startup", ledgroup);
+                RegisterTaggedEffect("startup", deviceGuid, ledgroup);
             }
         }
 
@@ -811,6 +896,7 @@ namespace Chromatics.Core
             lock (_taggedEffectsLock)
             {
                 foreach (var groups in _taggedEffects.Values) groups.Clear();
+                _taggedEffectsByDevice.Clear();
             }
         }
 
@@ -820,6 +906,13 @@ namespace Chromatics.Core
         // weather, etc.). The group is also added to the global
         // _runningEffects list so existing teardown paths still see it.
         public static void RegisterTaggedEffect(string tag, ListLedGroup group)
+            => RegisterTaggedEffect(tag, Guid.Empty, group);
+
+        // Variant that records the source device GUID alongside the group so
+        // the per-device EffectLayer toggle can attach/detach a single
+        // device's contribution to a tagged animation (startup rainbow, title
+        // starfield) without restarting the whole animation across the rig.
+        public static void RegisterTaggedEffect(string tag, Guid deviceGuid, ListLedGroup group)
         {
             if (group == null || string.IsNullOrEmpty(tag)) return;
             lock (_taggedEffectsLock)
@@ -827,6 +920,13 @@ namespace Chromatics.Core
                 if (!_taggedEffects.TryGetValue(tag, out var groups))
                     _taggedEffects[tag] = groups = new List<ListLedGroup>();
                 groups.Add(group);
+
+                if (deviceGuid != Guid.Empty)
+                {
+                    if (!_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
+                        _taggedEffectsByDevice[tag] = byDevice = new Dictionary<Guid, ListLedGroup>();
+                    byDevice[deviceGuid] = group;
+                }
             }
             _runningEffects.Add(group);
         }
@@ -861,6 +961,8 @@ namespace Chromatics.Core
                 if (!_taggedEffects.TryGetValue(tag, out var groups) || groups.Count == 0) return;
                 snapshot = new List<ListLedGroup>(groups);
                 groups.Clear();
+                if (_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
+                    byDevice.Clear();
             }
 
             // Disable decorators + write black DIRECTLY to each LED's Color
