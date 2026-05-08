@@ -63,7 +63,7 @@ namespace Chromatics.Layers
                 model = layerProcessorModel[layer.layerID];
             }
 
-            if (!layer.Enabled || !effectSettings.effect_damageflash)
+            if (!layer.Enabled || !effectSettings.effect_damageflash || !MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
             {
                 model.wasDisabled = true;
                 return;

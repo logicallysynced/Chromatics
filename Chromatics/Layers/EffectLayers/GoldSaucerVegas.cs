@@ -42,6 +42,20 @@ namespace Chromatics.Layers
             var effectSettings = RGBController.GetEffectsSettings();
             var _layergroups = RGBController.GetLiveLayerGroups();
 
+            // Per-device "all effects off" gate from the EffectLayer enable
+            // checkbox on the Mappings tab. Mirrors the same check in every
+            // other effect-class processor (DutyFinderBell, DamageFlash, …).
+            if (!MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
+            {
+                if (layerProcessorModel.TryGetValue(layer.layerID, out var disposeModel))
+                {
+                    DisposeModel(disposeModel);
+                    RGBController.SetBaseLayerEffect(false);
+                    RGBController.ResetLayerGroups();
+                }
+                return;
+            }
+
             GoldSaucerVegasEffectModel model;
             ListLedGroup layergroup;
 

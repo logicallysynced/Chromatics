@@ -289,7 +289,7 @@ namespace Chromatics.Layers
 
             var effectSettings = RGBController.GetEffectsSettings();
 
-            if (!layer.Enabled || !effectSettings.effect_raideffects)
+            if (!layer.Enabled || !effectSettings.effect_raideffects || !MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
             {
                 DetachOverlay(layer.layerID);
                 // Reset run state so re-enabling the toggle mid-fight triggers
