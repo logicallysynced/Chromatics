@@ -83,13 +83,15 @@ namespace Chromatics.Core
 
             foreach (var device in devices)
             {
-                // Per-device EffectLayer toggle from the Mappings tab silences
-                // the title-screen animation on devices the user has unticked.
+                // No per-device filter at the initial-build sweep. Tagged
+                // effects are one-shot animations driven by surface render,
+                // not per-frame processors — applying the EffectLayer toggle
+                // here was over-eager and could silence the animation on
+                // every device if any persisted EffectLayer state had
+                // Enabled=false. Mid-animation per-device toggles are still
+                // honoured by RGBController.SyncTaggedEffectsForDevice from
+                // LayerItemViewModel.OnIsEnabledChanged.
                 var deviceGuid = RGBController.GetDeviceGuid(device);
-                if (deviceGuid != Guid.Empty
-                    && !MappingLayers.IsDeviceEffectsEnabled(deviceGuid))
-                    continue;
-
                 BuildTitleEffectForDeviceInternal(device, deviceGuid);
             }
         }
