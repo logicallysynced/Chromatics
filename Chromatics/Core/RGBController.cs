@@ -835,11 +835,14 @@ namespace Chromatics.Core
 
             foreach (var device in devices)
             {
-                // No per-device filter at the initial-build sweep — see
-                // GameController.BuildTitleScreenAnimation for rationale.
-                // Mid-animation per-device toggles are still respected by
-                // SyncTaggedEffectsForDevice from LayerItemViewModel.
+                // Per-device "all effects off" gate from the EffectLayer
+                // checkbox on the Mappings tab. If the user has unticked
+                // effects for this device, skip its startup-animation
+                // ledgroup so the rainbow doesn't paint there.
                 var deviceGuid = GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty
+                    && !MappingLayers.IsDeviceEffectsEnabled(deviceGuid))
+                    continue;
 
                 var gradient = new RainbowGradient();
                 var ledgroup = new ListLedGroup(surface);

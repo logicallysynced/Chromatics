@@ -97,6 +97,17 @@ namespace Chromatics.Core
 
             foreach (var device in devices)
             {
+                // Per-device EffectLayer toggle from the Mappings tab silences
+                // the title-screen animation on devices the user has unticked.
+                // The earlier title-detection bug (chat-log race) is gone, so
+                // it's safe to re-apply this filter at the initial build —
+                // the title animation actually runs long enough now for the
+                // filter to matter.
+                var deviceGuid = RGBController.GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty
+                    && !MappingLayers.IsDeviceEffectsEnabled(deviceGuid))
+                    continue;
+
                 var ledgroup = new ListLedGroup(surface, device);
 
                 var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
@@ -110,10 +121,6 @@ namespace Chromatics.Core
                 ledgroup.Brush = new SolidColorBrush(baseColor);
                 ledgroup.AddDecorator(starfield);
 
-                // Track the source device so SyncTaggedEffectsForDevice can
-                // detach just this device's group on a per-device toggle
-                // without restarting the whole animation.
-                var deviceGuid = RGBController.GetDeviceGuid(device);
                 RGBController.RegisterTaggedEffect("title", deviceGuid, ledgroup);
             }
         }
@@ -542,7 +549,15 @@ namespace Chromatics.Core
 
                     var runningEffects = RGBController.GetRunningEffects();
 
-                    bool branchIsTitle = entityIsNull && chatLogCount <= 0 && !isLoggedIn;
+                    // Title-screen detection: player entity not loaded AND
+                    // not logged in. We deliberately do NOT also require
+                    // chatLogCount == 0 — Sharlayan's chat reader picks up
+                    // system messages ("Welcome to FFXIV", etc.) on the
+                    // title screen, which flipped the count to 1 within a
+                    // frame of the title animation building and incorrectly
+                    // re-classified the user as in-game. Entity + login
+                    // state alone are unambiguous for title vs in-game.
+                    bool branchIsTitle = entityIsNull && !isLoggedIn;
 
                     // Diagnostics: log on first observation AND any time one of
                     // the three signals or the branch decision changes. Lets the
