@@ -49,6 +49,13 @@ namespace Chromatics.Core
         private static bool _isInGame;
         private static bool _onTitle;
         private static bool wasPreviewed;
+        // Diagnostics state for the title-screen detection probe — used to log
+        // ONLY when the relevant Sharlayan signals change, so we can see the
+        // transitions in the Console tab without flooding it every frame.
+        private static bool? _diagPrevEntityNull;
+        private static int _diagPrevChatCount = -1;
+        private static bool? _diagPrevIsLoggedIn;
+        private static bool? _diagPrevBranchWasTitle;
         // Set to true by Exit() before any teardown, so that concurrent loops on
         // the thread pool bail out before touching disposed CancellationTokenSources.
         private static volatile bool _isShuttingDown;
@@ -530,14 +537,38 @@ namespace Chromatics.Core
                 {
                     var getCurrentPlayer = handler.Reader.GetCurrentPlayer();
                     var chatLogCount = handler.Reader.GetChatLog().ChatLogItems.Count;
+                    var isLoggedIn = handler.Reader.GetGameState().IsLoggedIn;
+                    bool entityIsNull = getCurrentPlayer.Entity == null;
 
                     var runningEffects = RGBController.GetRunningEffects();
 
-                    if (getCurrentPlayer.Entity == null && chatLogCount <= 0 && !handler.Reader.GetGameState().IsLoggedIn)
+                    bool branchIsTitle = entityIsNull && chatLogCount <= 0 && !isLoggedIn;
+
+                    // Diagnostics: log on first observation AND any time one of
+                    // the three signals or the branch decision changes. Lets the
+                    // user see exactly which Sharlayan reading is flipping the
+                    // detection from "on title" to "in game" between frames.
+                    if (_diagPrevEntityNull != entityIsNull
+                        || _diagPrevChatCount != chatLogCount
+                        || _diagPrevIsLoggedIn != isLoggedIn
+                        || _diagPrevBranchWasTitle != branchIsTitle)
+                    {
+                        Logger.WriteConsole(LoggerTypes.FFXIV,
+                            $"[Title detect] entityNull={entityIsNull} chatCount={chatLogCount} isLoggedIn={isLoggedIn} → branch={(branchIsTitle ? "title" : "in-game")} (_onTitle={_onTitle}, wasPreviewed={wasPreviewed})");
+                        _diagPrevEntityNull = entityIsNull;
+                        _diagPrevChatCount = chatLogCount;
+                        _diagPrevIsLoggedIn = isLoggedIn;
+                        _diagPrevBranchWasTitle = branchIsTitle;
+                    }
+
+                    if (branchIsTitle)
                     {
                         //Game is still on Main Menu or Character Screen
                         if (!_onTitle || wasPreviewed)
                         {
+                            Logger.WriteConsole(LoggerTypes.FFXIV,
+                                $"[Title detect] Building title-screen animation (_onTitle={_onTitle}, wasPreviewed={wasPreviewed}).");
+
                             RGBController.StopEffects();
                             RGBController.ResetLayerGroups();
 
@@ -562,6 +593,8 @@ namespace Chromatics.Core
 
                         if (_onTitle)
                         {
+                            Logger.WriteConsole(LoggerTypes.FFXIV,
+                                $"[Title detect] Tearing down title animation, transitioning to in-game (entityNull={entityIsNull} chatCount={chatLogCount} isLoggedIn={isLoggedIn}).");
                             Debug.WriteLine(@"User logging in to FFXIV..");
 
                             RGBController.StopEffects();
