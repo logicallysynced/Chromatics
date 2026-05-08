@@ -118,7 +118,7 @@ namespace Chromatics.Layers.DynamicLayers
                             if (!string.IsNullOrEmpty(currentWeather) && currentWeather != "CutScene" &&
                                 (model._currentWeather != currentWeather || model._currentZone != currentZone || model._reactiveWeatherEffects != reactiveWeatherEffects || layer.requestUpdate || model._inInstance != inInstance))
                             {
-                                SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette);
+                                SetReactiveWeather(layergroup, currentZone, currentWeather, weather_brush, _colorPalette, reactiveWeatherEffects);
 
                                 model._currentWeather = currentWeather;
                                 model._currentZone = currentZone;
@@ -144,7 +144,14 @@ namespace Chromatics.Layers.DynamicLayers
         // this method only resolves the weather highlight colour. The raid
         // overlay (run separately by GameProcessLayers) sits at a higher
         // ZIndex and visually overrides whatever colour we set here.
-        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette)
+        //
+        // `effectsActive` is the per-call combined flag (global Effects-tab
+        // toggle AND per-device EffectLayer toggle) so the special-zone
+        // colour branches stay in sync with the redraw-transition detection
+        // upstream. Reading the global setting alone here would pick the
+        // "animation on" colour even after the user disables effects on
+        // this specific device.
+        private static void SetReactiveWeather(ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, bool effectsActive)
         {
             var color = GetWeatherColor(weather, _colorPalette);
             var reactiveWeatherEffects = RGBController.GetEffectsSettings();
@@ -152,7 +159,7 @@ namespace Chromatics.Layers.DynamicLayers
             switch (zone)
             {
                 case "Mare Lamentorum":
-                    if (reactiveWeatherEffects.effect_reactiveweather && (reactiveWeatherEffects.weather_marelametorum_animation || reactiveWeatherEffects.weather_marelametorum_umbralwind_animation))
+                    if (effectsActive && (reactiveWeatherEffects.weather_marelametorum_animation || reactiveWeatherEffects.weather_marelametorum_umbralwind_animation))
                         color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustBase.Color);
                     else
                         color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherMoonDustHighlight.Color);
@@ -160,21 +167,21 @@ namespace Chromatics.Layers.DynamicLayers
                 case "Ultima Thule":
                     if (weather == "Fair Skies")
                     {
-                        if (reactiveWeatherEffects.effect_reactiveweather && reactiveWeatherEffects.weather_ultimathule_animation)
+                        if (effectsActive && reactiveWeatherEffects.weather_ultimathule_animation)
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
                         else
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
                     }
                     else if (weather == "Astromagnetic Storms")
                     {
-                        if (reactiveWeatherEffects.effect_reactiveweather && reactiveWeatherEffects.weather_astromagneticstorm_animation)
+                        if (effectsActive && reactiveWeatherEffects.weather_astromagneticstorm_animation)
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight.Color);
                         else
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherAstromagneticStormHighlight.Color);
                     }
                     else if (weather == "Umbral Wind")
                     {
-                        if (reactiveWeatherEffects.effect_reactiveweather && reactiveWeatherEffects.weather_ultimathule_umbralwind_animation)
+                        if (effectsActive && reactiveWeatherEffects.weather_ultimathule_umbralwind_animation)
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
                         else
                             color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUltimaThuleAnimationHighlight.Color);
