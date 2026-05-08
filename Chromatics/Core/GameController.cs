@@ -80,26 +80,41 @@ namespace Chromatics.Core
             if (surface == null) return;
 
             var devices = surface.GetDevices(RGBDeviceType.All);
+            var palette = RGBController.GetActivePalette();
+            var baseColor = ColorHelper.ColorToRGBColor(palette.MenuBase.Color);
+            var highlightColors = new Color[] {
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight1.Color),
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight2.Color),
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight3.Color)
+            };
 
             foreach (var device in devices)
             {
-                // No per-device filter at the initial-build sweep. Tagged
-                // effects are one-shot animations driven by surface render,
-                // not per-frame processors — applying the EffectLayer toggle
-                // here was over-eager and could silence the animation on
-                // every device if any persisted EffectLayer state had
-                // Enabled=false. Mid-animation per-device toggles are still
-                // honoured by RGBController.SyncTaggedEffectsForDevice from
-                // LayerItemViewModel.OnIsEnabledChanged.
+                var ledgroup = new ListLedGroup(surface, device);
+
+                var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
+                ledgroup.ZIndex = 1000;
+
+                foreach (var led in device)
+                {
+                    ledgroup.AddLed(led);
+                }
+
+                ledgroup.Brush = new SolidColorBrush(baseColor);
+                ledgroup.AddDecorator(starfield);
+
+                // Track the source device so SyncTaggedEffectsForDevice can
+                // detach just this device's group on a per-device toggle
+                // without restarting the whole animation.
                 var deviceGuid = RGBController.GetDeviceGuid(device);
-                BuildTitleEffectForDeviceInternal(device, deviceGuid);
+                RGBController.RegisterTaggedEffect("title", deviceGuid, ledgroup);
             }
         }
 
-        // Per-device builder shared between the initial BuildTitleScreenAnimation
-        // sweep and RGBController.SyncTaggedEffectsForDevice. Lifted out so a
-        // hot-toggle of EffectLayer can rebuild just this one device's group
-        // without restarting the whole animation across the rig.
+        // Per-device builder used by RGBController.SyncTaggedEffectsForDevice
+        // when the user re-enables effects on a specific device while the
+        // title-screen animation is currently running. Mirrors the foreach
+        // body of BuildTitleScreenAnimation but for one device only.
         internal static void BuildTitleEffectForDeviceInternal(RGB.NET.Core.IRGBDevice device, Guid deviceGuid)
         {
             if (!RGBController.GetEffectsSettings().effect_titlescreen) return;
