@@ -554,8 +554,56 @@ namespace Chromatics.Core
                 //Process All Layers
                 var _layers = MappingLayers.GetLayers();
 
+                // Per-frame snapshot of which devices have the EffectLayer row's
+                // checkbox unticked on the Mappings tab. The EffectLayer toggle
+                // is the user's master "effects" switch — when off it suppresses
+                // not just effect-layer-rooted processors (raid, duty bell,
+                // damage flash, cutscene) but ALL game-state-driven painting on
+                // the device: base layers (Reactive Weather, Job Classes, …),
+                // dynamic layers (HP tracker, key bindings, …), and overlays
+                // (raid effect, raid highlight). Computed once outside the loop
+                // because each EffectLayer lookup walks _layers; doing it
+                // per-iteration is O(N²).
+                HashSet<Guid> devicesWithEffectsDisabled = null;
+                foreach (var l in _layers.Values)
+                {
+                    if (l.rootLayerType == LayerType.EffectLayer && !l.Enabled)
+                    {
+                        devicesWithEffectsDisabled ??= new HashSet<Guid>();
+                        devicesWithEffectsDisabled.Add(l.deviceGuid);
+                    }
+                }
+
                 foreach (IMappingLayer layer in _layers.Values.OrderBy(x => x.zindex, comparer))
                 {
+                    // EffectLayer toggle off → skip this layer entirely and tear
+                    // down whatever it had attached so the device shows no live
+                    // painting from Chromatics. Processors will rebuild from
+                    // scratch via their existing requestUpdate / live-group
+                    // detection paths when the user re-enables.
+                    if (devicesWithEffectsDisabled != null
+                        && devicesWithEffectsDisabled.Contains(layer.deviceGuid))
+                    {
+                        var liveGroups = RGBController.GetLiveLayerGroups();
+                        if (liveGroups.TryGetValue(layer.layerID, out var prevGroups))
+                        {
+                            foreach (var g in prevGroups)
+                            {
+                                g?.RemoveAllDecorators();
+                                g?.Detach();
+                            }
+                            liveGroups.Remove(layer.layerID);
+                        }
+                        // Detach overlays keyed off the layer ID — raid overlay
+                        // sits over base layers, raid-highlight sits over the
+                        // highlight-class dynamic layers. Cleanup is idempotent.
+                        if (layer.rootLayerType == LayerType.BaseLayer)
+                            Chromatics.Layers.RaidEffectProcessor.Instance.CleanupLayer(layer.layerID);
+                        else if (layer.rootLayerType == LayerType.DynamicLayer)
+                            Chromatics.Layers.RaidEffectHighlightProcessor.Instance.CleanupLayer(layer.layerID);
+                        continue;
+                    }
+
                     switch (layer.rootLayerType)
                     {
                         case LayerType.BaseLayer:
