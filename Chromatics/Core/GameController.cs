@@ -49,13 +49,6 @@ namespace Chromatics.Core
         private static bool _isInGame;
         private static bool _onTitle;
         private static bool wasPreviewed;
-        // Diagnostics state for the title-screen detection probe — used to log
-        // ONLY when the relevant Sharlayan signals change, so we can see the
-        // transitions in the Console tab without flooding it every frame.
-        private static bool? _diagPrevEntityNull;
-        private static int _diagPrevChatCount = -1;
-        private static bool? _diagPrevIsLoggedIn;
-        private static bool? _diagPrevBranchWasTitle;
         // Set to true by Exit() before any teardown, so that concurrent loops on
         // the thread pool bail out before touching disposed CancellationTokenSources.
         private static volatile bool _isShuttingDown;
@@ -110,7 +103,14 @@ namespace Chromatics.Core
 
                 var ledgroup = new ListLedGroup(surface, device);
 
-                var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
+                // numberOfLeds = ceil(count/4) with a floor of 1 — makes the
+                // animation actually pick a "star" on 1–3 LED devices (Hue,
+                // DualShock 4 lightbar, single-LED accessories) where the
+                // old `count/4` rounded down to 0 and no LED ever entered
+                // the fade cycle. With 1 star on a 1-LED device, that LED
+                // becomes the star and cycles through highlight colours.
+                int starCount = Math.Max(1, ledgroup.Count() / 4);
+                var starfield = new StarfieldDecorator(ledgroup, starCount, 10, 500, highlightColors, surface, false, baseColor);
                 ledgroup.ZIndex = 1000;
 
                 foreach (var led in device)
@@ -146,7 +146,9 @@ namespace Chromatics.Core
 
             var ledgroup = new ListLedGroup(surface, device);
 
-            var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
+            // See BuildTitleScreenAnimation for the floor-of-1 rationale.
+            int starCount = Math.Max(1, ledgroup.Count() / 4);
+            var starfield = new StarfieldDecorator(ledgroup, starCount, 10, 500, highlightColors, surface, false, baseColor);
             ledgroup.ZIndex = 1000;
 
             foreach (var led in device)
@@ -543,9 +545,7 @@ namespace Chromatics.Core
                 if (handler.Reader != null && handler.Reader.CanGetActors() && handler.Reader.CanGetChatLog())
                 {
                     var getCurrentPlayer = handler.Reader.GetCurrentPlayer();
-                    var chatLogCount = handler.Reader.GetChatLog().ChatLogItems.Count;
                     var isLoggedIn = handler.Reader.GetGameState().IsLoggedIn;
-                    bool entityIsNull = getCurrentPlayer.Entity == null;
 
                     var runningEffects = RGBController.GetRunningEffects();
 
@@ -553,37 +553,16 @@ namespace Chromatics.Core
                     // not logged in. We deliberately do NOT also require
                     // chatLogCount == 0 — Sharlayan's chat reader picks up
                     // system messages ("Welcome to FFXIV", etc.) on the
-                    // title screen, which flipped the count to 1 within a
-                    // frame of the title animation building and incorrectly
-                    // re-classified the user as in-game. Entity + login
-                    // state alone are unambiguous for title vs in-game.
-                    bool branchIsTitle = entityIsNull && !isLoggedIn;
-
-                    // Diagnostics: log on first observation AND any time one of
-                    // the three signals or the branch decision changes. Lets the
-                    // user see exactly which Sharlayan reading is flipping the
-                    // detection from "on title" to "in game" between frames.
-                    if (_diagPrevEntityNull != entityIsNull
-                        || _diagPrevChatCount != chatLogCount
-                        || _diagPrevIsLoggedIn != isLoggedIn
-                        || _diagPrevBranchWasTitle != branchIsTitle)
-                    {
-                        Logger.WriteConsole(LoggerTypes.FFXIV,
-                            $"[Title detect] entityNull={entityIsNull} chatCount={chatLogCount} isLoggedIn={isLoggedIn} → branch={(branchIsTitle ? "title" : "in-game")} (_onTitle={_onTitle}, wasPreviewed={wasPreviewed})");
-                        _diagPrevEntityNull = entityIsNull;
-                        _diagPrevChatCount = chatLogCount;
-                        _diagPrevIsLoggedIn = isLoggedIn;
-                        _diagPrevBranchWasTitle = branchIsTitle;
-                    }
-
-                    if (branchIsTitle)
+                    // title screen, which would flip the count to 1 within
+                    // a frame of the title animation building and
+                    // incorrectly re-classify the user as in-game. Entity
+                    // + login state alone are unambiguous for title vs
+                    // in-game.
+                    if (getCurrentPlayer.Entity == null && !isLoggedIn)
                     {
                         //Game is still on Main Menu or Character Screen
                         if (!_onTitle || wasPreviewed)
                         {
-                            Logger.WriteConsole(LoggerTypes.FFXIV,
-                                $"[Title detect] Building title-screen animation (_onTitle={_onTitle}, wasPreviewed={wasPreviewed}).");
-
                             RGBController.StopEffects();
                             RGBController.ResetLayerGroups();
 
@@ -608,8 +587,6 @@ namespace Chromatics.Core
 
                         if (_onTitle)
                         {
-                            Logger.WriteConsole(LoggerTypes.FFXIV,
-                                $"[Title detect] Tearing down title animation, transitioning to in-game (entityNull={entityIsNull} chatCount={chatLogCount} isLoggedIn={isLoggedIn}).");
                             Debug.WriteLine(@"User logging in to FFXIV..");
 
                             RGBController.StopEffects();
