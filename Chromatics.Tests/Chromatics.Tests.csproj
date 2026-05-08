@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Sharlayan" Version="9.0.29-prerelease.38" />
+    <PackageReference Include="Sharlayan" Version="9.0.30" />
   </ItemGroup>
 
 </Project>
