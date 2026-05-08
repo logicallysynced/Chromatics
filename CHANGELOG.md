@@ -2,11 +2,15 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.1.11
+
+- The Effect Layer enable checkbox on the Mappings tab is now a true master switch for that device — turning it off disables every game-driven effect on the device including reactive weather, raid effects, job-class colours, dynamic trackers, and overlays. Turning it back on resumes everything cleanly.
+
 ## 4.1.10
 
 - **New:** PlayStation DS4 & DS5 controller lighting support (Beta). The DualShock 4 lightbar, the DualSense lightbar and the five player-indicator LEDs can all be mapped from the Mappings tab. Both USB and Bluetooth controllers are supported, and your controller's input still works normally in games while Chromatics drives the lights.
 - Tip: if your controller is connected but Chromatics says it can't open it, another tool (like Steam Input, DS4Windows, or reWASD) is probably holding it in exclusive mode. Close it or disable its exclusive mode before launching Chromatics.
-- Updated underlying dependencies (Sentry 6.5.0, NLog 6.1.3) for stability and bug fixes.
+- Updated underlying dependencies for stability and bug fixes.
 
 ## 4.0.157
 
