@@ -53,6 +53,16 @@ namespace Chromatics.Core
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, PerDeviceBrightnessCorrection> _perDeviceBrightness
             = new System.Collections.Concurrent.ConcurrentDictionary<Guid, PerDeviceBrightnessCorrection>();
 
+        // Per-device "all effects off" mute — mirrors the EffectLayer enable
+        // checkbox state from the Mappings tab. The colour-correction sits at
+        // the very end of the paint pipeline so it catches ALL paint sources,
+        // not just the per-layer dispatch in GameController (tagged effects
+        // like the startup animation attach groups straight to the surface
+        // and bypass the layer system entirely; this is the chokepoint that
+        // covers them too). Refreshed once per frame in Surface_Updating.
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, DeviceEffectsMuteCorrection> _perDeviceMute
+            = new System.Collections.Concurrent.ConcurrentDictionary<Guid, DeviceEffectsMuteCorrection>();
+
         // Tagged-effect tracking for animations that need targeted teardown
         // (e.g. when the user toggles "Startup Animation" off mid-cycle, we
         // need to stop ONLY the rainbow groups, not every running effect).
@@ -310,6 +320,21 @@ namespace Chromatics.Core
                 hueDevice.SetPerDeviceBrightness(correction);
         }
 
+        // Companion to AttachPerDeviceBrightness — installs the per-device mute
+        // correction so the EffectLayer toggle on the Mappings tab can blackout
+        // the whole device regardless of which paint source is active.
+        private static void AttachPerDeviceMute(IRGBDevice device, Guid deviceGuid)
+        {
+            if (device == null || deviceGuid == Guid.Empty) return;
+
+            var mute = _perDeviceMute.GetOrAdd(deviceGuid, _ => new DeviceEffectsMuteCorrection());
+            mute.IsMuted = !Layers.MappingLayers.IsDeviceEffectsEnabled(deviceGuid);
+
+            var corrections = device.ColorCorrections;
+            if (corrections != null && !corrections.Contains(mute))
+                corrections.Add(mute);
+        }
+
         // Pushes a new per-device brightness value to the active correction.
         // Called by MappingLayers.SetDeviceBrightness after persisting; the
         // next render frame picks up the new value via _brightnessPercent.
@@ -390,6 +415,7 @@ namespace Chromatics.Core
 
                 AttachGlobalBrightness(device);
                 AttachPerDeviceBrightness(device, guid);
+                AttachPerDeviceMute(device, guid);
 
                 #if DEBUG
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {guid}).");
@@ -943,6 +969,19 @@ namespace Chromatics.Core
         private static void Surface_Updating(UpdatingEventArgs args)
         {
             if (!_loaded) return;
+
+            // Refresh per-device mute state from the EffectLayer toggle once
+            // per frame. This is the chokepoint that catches paint coming from
+            // outside the layer-dispatch loop in GameController — tagged
+            // effects (startup animation, title screen), the raid-effect
+            // overlay, anything attached directly to the surface. The
+            // correction is the final transformation before colours hit each
+            // device's UpdateQueue, so muting here zeroes ALL paint sources.
+            if (_perDeviceMute.Count > 0)
+            {
+                foreach (var kvp in _perDeviceMute)
+                    kvp.Value.IsMuted = !MappingLayers.IsDeviceEffectsEnabled(kvp.Key);
+            }
 
             if (MappingLayers.IsPreview())
             {

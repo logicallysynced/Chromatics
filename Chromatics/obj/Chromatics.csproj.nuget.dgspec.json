@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
-      "version": "4.1.10",
+      "version": "4.1.12",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -31,6 +31,7 @@
         },
         "frameworks": {
           "net10.0-windows7.0": {
+            "framework": "net10.0-windows7.0",
             "targetAlias": "net10.0-windows7.0",
             "projectReferences": {}
           }
@@ -49,6 +50,7 @@
       },
       "frameworks": {
         "net10.0-windows7.0": {
+          "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows7.0",
           "dependencies": {
             "Avalonia": {
