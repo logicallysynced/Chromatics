@@ -627,6 +627,29 @@ namespace Chromatics.Core
                             break;
 
                         case LayerType.EffectLayer:
+                            // requestUpdate-driven detach for effect-class
+                            // ledgroups. Mirrors the equivalent block on
+                            // BaseLayer / DynamicLayer above. Without this,
+                            // toggling the per-device EffectLayer enable
+                            // checkbox left effect groups (DutyFinderBell,
+                            // DamageFlash, Cutscene, Vegas, …) sitting on the
+                            // surface with their last brush state — visible
+                            // as a "frozen effect" obscuring the underlying
+                            // base / dynamic painting until something else
+                            // detached them.
+                            if (layer.requestUpdate)
+                            {
+                                var effectLiveGroups = RGBController.GetLiveLayerGroups();
+                                if (effectLiveGroups.TryGetValue(layer.layerID, out var prevEffectGroups))
+                                {
+                                    foreach (var g in prevEffectGroups)
+                                    {
+                                        g?.RemoveAllDecorators();
+                                        g?.Detach();
+                                    }
+                                    effectLiveGroups.Remove(layer.layerID);
+                                }
+                            }
                             var effectProcessors = EffectLayerProcessorFactory.GetProcessors();
                             foreach (var effectProcessor in effectProcessors)
                             {

@@ -139,13 +139,24 @@ namespace Chromatics.ViewModels.Mapping
             Commit(l => l.Enabled = value);
             _onLayerStateChanged?.Invoke();
 
-            // EffectLayer is the per-device "all effects" toggle. Tagged
-            // effects (startup animation, title screen) decide which devices
-            // they paint at attach time; without a rebuild they'd keep
-            // painting on a freshly-disabled device until the next natural
-            // restart. Tear down and re-fire so the change is immediate.
+            // EffectLayer is the per-device "all effects" toggle. Two side-
+            // effects to fire here so the visual change is immediate:
+            //   1. Mark every layer on this device with requestUpdate=true so
+            //      the existing cleanup blocks in GameController.Update detach
+            //      stale ledgroups on the next frame. Without this, effect-
+            //      class groups sit frozen on their last brush evaluation and
+            //      obscure the underlying base / dynamic painting.
+            //   2. Tagged effects (startup animation, title screen) decide
+            //      which devices they paint at attach time; without a rebuild
+            //      they'd keep painting on a freshly-disabled device until
+            //      the next natural restart. RebuildActiveTaggedEffects
+            //      re-fires whichever animation is currently running with
+            //      the new per-device filter applied.
             if (_layer.rootLayerType == LayerType.EffectLayer)
+            {
+                MappingLayers.MarkDeviceLayersForUpdate(_layer.deviceGuid);
                 Core.RGBController.RebuildActiveTaggedEffects();
+            }
         }
         partial void OnZIndexChanged(int value)
         {
