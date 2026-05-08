@@ -80,13 +80,6 @@ namespace Chromatics.Core
             if (surface == null) return;
 
             var devices = surface.GetDevices(RGBDeviceType.All);
-            var palette = RGBController.GetActivePalette();
-            var baseColor = ColorHelper.ColorToRGBColor(palette.MenuBase.Color);
-            var highlightColors = new Color[] {
-                ColorHelper.ColorToRGBColor(palette.MenuHighlight1.Color),
-                ColorHelper.ColorToRGBColor(palette.MenuHighlight2.Color),
-                ColorHelper.ColorToRGBColor(palette.MenuHighlight3.Color)
-            };
 
             foreach (var device in devices)
             {
@@ -97,21 +90,43 @@ namespace Chromatics.Core
                     && !MappingLayers.IsDeviceEffectsEnabled(deviceGuid))
                     continue;
 
-                var ledgroup = new ListLedGroup(surface, device);
-
-                var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
-                ledgroup.ZIndex = 1000;
-
-                foreach (var led in device)
-                {
-                    ledgroup.AddLed(led);
-                }
-
-                ledgroup.Brush = new SolidColorBrush(baseColor);
-                ledgroup.AddDecorator(starfield);
-
-                RGBController.RegisterTaggedEffect("title", ledgroup);
+                BuildTitleEffectForDeviceInternal(device, deviceGuid);
             }
+        }
+
+        // Per-device builder shared between the initial BuildTitleScreenAnimation
+        // sweep and RGBController.SyncTaggedEffectsForDevice. Lifted out so a
+        // hot-toggle of EffectLayer can rebuild just this one device's group
+        // without restarting the whole animation across the rig.
+        internal static void BuildTitleEffectForDeviceInternal(RGB.NET.Core.IRGBDevice device, Guid deviceGuid)
+        {
+            if (!RGBController.GetEffectsSettings().effect_titlescreen) return;
+
+            var surface = RGBController.GetLiveSurfaces();
+            if (surface == null || device == null) return;
+
+            var palette = RGBController.GetActivePalette();
+            var baseColor = ColorHelper.ColorToRGBColor(palette.MenuBase.Color);
+            var highlightColors = new Color[] {
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight1.Color),
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight2.Color),
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight3.Color)
+            };
+
+            var ledgroup = new ListLedGroup(surface, device);
+
+            var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
+            ledgroup.ZIndex = 1000;
+
+            foreach (var led in device)
+            {
+                ledgroup.AddLed(led);
+            }
+
+            ledgroup.Brush = new SolidColorBrush(baseColor);
+            ledgroup.AddDecorator(starfield);
+
+            RGBController.RegisterTaggedEffect("title", deviceGuid, ledgroup);
         }
 
         public static void Setup()
