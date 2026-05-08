@@ -53,16 +53,6 @@ namespace Chromatics.Core
         private static readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, PerDeviceBrightnessCorrection> _perDeviceBrightness
             = new System.Collections.Concurrent.ConcurrentDictionary<Guid, PerDeviceBrightnessCorrection>();
 
-        // Per-device "all effects off" mute — mirrors the EffectLayer enable
-        // checkbox state from the Mappings tab. The colour-correction sits at
-        // the very end of the paint pipeline so it catches ALL paint sources,
-        // not just the per-layer dispatch in GameController (tagged effects
-        // like the startup animation attach groups straight to the surface
-        // and bypass the layer system entirely; this is the chokepoint that
-        // covers them too). Refreshed once per frame in Surface_Updating.
-        private static readonly System.Collections.Concurrent.ConcurrentDictionary<Guid, DeviceEffectsMuteCorrection> _perDeviceMute
-            = new System.Collections.Concurrent.ConcurrentDictionary<Guid, DeviceEffectsMuteCorrection>();
-
         // Tagged-effect tracking for animations that need targeted teardown
         // (e.g. when the user toggles "Startup Animation" off mid-cycle, we
         // need to stop ONLY the rainbow groups, not every running effect).
@@ -300,6 +290,26 @@ namespace Chromatics.Core
                 corrections.Add(GlobalBrightnessCorrection.Instance);
         }
 
+        // Reverse lookup from IRGBDevice to the Chromatics-managed GUID. Used by
+        // tagged-effect builders (RunStartupEffects, BuildTitleScreenAnimation)
+        // that iterate surface.Devices and need to consult the per-device
+        // EffectLayer toggle. Returns Guid.Empty when the device hasn't yet been
+        // registered through DevicesChanged.Added — caller treats Empty as "no
+        // toggle known, paint as normal".
+        public static Guid GetDeviceGuid(IRGBDevice device)
+        {
+            if (device == null) return Guid.Empty;
+            lock (_devicesLock)
+            {
+                foreach (var kvp in _devices)
+                {
+                    if (ReferenceEquals(kvp.Value, device))
+                        return kvp.Key;
+                }
+            }
+            return Guid.Empty;
+        }
+
         // Per-device brightness needs the device GUID, which is only known
         // once DevicesChanged.Added fires. Called from there after the GUID
         // has been computed; idempotent on re-attach.
@@ -320,20 +330,6 @@ namespace Chromatics.Core
                 hueDevice.SetPerDeviceBrightness(correction);
         }
 
-        // Companion to AttachPerDeviceBrightness — installs the per-device mute
-        // correction so the EffectLayer toggle on the Mappings tab can blackout
-        // the whole device regardless of which paint source is active.
-        private static void AttachPerDeviceMute(IRGBDevice device, Guid deviceGuid)
-        {
-            if (device == null || deviceGuid == Guid.Empty) return;
-
-            var mute = _perDeviceMute.GetOrAdd(deviceGuid, _ => new DeviceEffectsMuteCorrection());
-            mute.IsMuted = !Layers.MappingLayers.IsDeviceEffectsEnabled(deviceGuid);
-
-            var corrections = device.ColorCorrections;
-            if (corrections != null && !corrections.Contains(mute))
-                corrections.Add(mute);
-        }
 
         // Pushes a new per-device brightness value to the active correction.
         // Called by MappingLayers.SetDeviceBrightness after persisting; the
@@ -415,7 +411,6 @@ namespace Chromatics.Core
 
                 AttachGlobalBrightness(device);
                 AttachPerDeviceBrightness(device, guid);
-                AttachPerDeviceMute(device, guid);
 
                 #if DEBUG
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName} (ID: {guid}).");
@@ -712,6 +707,26 @@ namespace Chromatics.Core
             return true;
         }
 
+        // Re-fires the currently-active tagged effects (startup animation,
+        // title screen) so a per-device EffectLayer toggle change takes effect
+        // immediately. Each builder rebuilds its ledgroup list filtered by the
+        // current per-device toggle state — so flipping a device off mid-
+        // animation removes its group, flipping back on adds it again.
+        // No-op if neither tagged effect is currently active.
+        public static void RebuildActiveTaggedEffects()
+        {
+            if (HasActiveTaggedEffect("startup"))
+            {
+                if (!GameController.IsGameConnected())
+                    RunStartupEffects();
+            }
+            if (HasActiveTaggedEffect("title"))
+            {
+                if (GameController.IsOnTitle)
+                    GameController.BuildTitleScreenAnimation();
+            }
+        }
+
         public static void RunStartupEffects()
         {
             // Drop the surface to the idle tick rate whether or not the startup
@@ -735,6 +750,15 @@ namespace Chromatics.Core
 
             foreach (var device in devices)
             {
+                // Per-device "all effects off" gate from the EffectLayer
+                // checkbox on the Mappings tab. If the user has unticked
+                // effects for this device, skip its startup-animation
+                // ledgroup so the rainbow doesn't paint there.
+                var deviceGuid = GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty
+                    && !MappingLayers.IsDeviceEffectsEnabled(deviceGuid))
+                    continue;
+
                 var gradient = new RainbowGradient();
                 var ledgroup = new ListLedGroup(surface);
 
@@ -969,19 +993,6 @@ namespace Chromatics.Core
         private static void Surface_Updating(UpdatingEventArgs args)
         {
             if (!_loaded) return;
-
-            // Refresh per-device mute state from the EffectLayer toggle once
-            // per frame. This is the chokepoint that catches paint coming from
-            // outside the layer-dispatch loop in GameController — tagged
-            // effects (startup animation, title screen), the raid-effect
-            // overlay, anything attached directly to the surface. The
-            // correction is the final transformation before colours hit each
-            // device's UpdateQueue, so muting here zeroes ALL paint sources.
-            if (_perDeviceMute.Count > 0)
-            {
-                foreach (var kvp in _perDeviceMute)
-                    kvp.Value.IsMuted = !MappingLayers.IsDeviceEffectsEnabled(kvp.Key);
-            }
 
             if (MappingLayers.IsPreview())
             {

@@ -107,7 +107,12 @@ namespace Chromatics.Layers
 
             //Reactive Weather Base Layer Implementation
             var _colorPalette = RGBController.GetActivePalette();
-            var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
+            // Animated reactive-weather decorators (storms, rain, etc.) are
+            // gated on BOTH the global Effects-tab toggle AND the per-device
+            // EffectLayer enable. Base weather colour painting below is
+            // unaffected — that's the user's chosen base layer, not an "effect".
+            var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather
+                                         && MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid);
             var raidEffects = RGBController.GetEffectsSettings().effect_raideffects;
 
             var weather_color = ColorHelper.ColorToRGBColor(_colorPalette.WeatherUnknownBase.Color);
@@ -293,7 +298,8 @@ namespace Chromatics.Layers
         {
             var effectSettings = RGBController.GetEffectsSettings();
             var runningEffects = RGBController.GetRunningEffects();
-            var reactiveWeatherEffects = effectSettings.effect_reactiveweather;
+            var reactiveWeatherEffects = effectSettings.effect_reactiveweather
+                                         && MappingLayers.IsDeviceEffectsEnabled(deviceGuid);
             var color = GetWeatherColor(weather, _colorPalette);
 
             // Raid-effect handling lives in RaidEffectProcessor now;

@@ -73,7 +73,7 @@ namespace Chromatics.Layers
                 layergroup.Detach();
             }
 
-            if (!layer.Enabled || !effectSettings.effect_dfbell)
+            if (!layer.Enabled || !effectSettings.effect_dfbell || !MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
             {
                 if (model.activeBrush != null && model.activeBrush.Decorators.Count > 0)
                 {

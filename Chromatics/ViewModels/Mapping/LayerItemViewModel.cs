@@ -138,6 +138,14 @@ namespace Chromatics.ViewModels.Mapping
         {
             Commit(l => l.Enabled = value);
             _onLayerStateChanged?.Invoke();
+
+            // EffectLayer is the per-device "all effects" toggle. Tagged
+            // effects (startup animation, title screen) decide which devices
+            // they paint at attach time; without a rebuild they'd keep
+            // painting on a freshly-disabled device until the next natural
+            // restart. Tear down and re-fire so the change is immediate.
+            if (_layer.rootLayerType == LayerType.EffectLayer)
+                Core.RGBController.RebuildActiveTaggedEffects();
         }
         partial void OnZIndexChanged(int value)
         {

@@ -57,7 +57,11 @@ namespace Chromatics.Layers.DynamicLayers
             weather_brush = new SolidColorBrush(weather_color);
 
             var _layergroups = RGBController.GetLiveLayerGroups();
-            var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather;
+            // Reactive-weather highlight is the animated overlay variant —
+            // gated on both the global flag and the per-device EffectLayer
+            // toggle so unticking effects on the Mappings tab silences it.
+            var reactiveWeatherEffects = RGBController.GetEffectsSettings().effect_reactiveweather
+                                         && MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid);
 
             ListLedGroup layergroup;
             var ledArray = GetLedArray(layer);

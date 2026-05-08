@@ -40,7 +40,7 @@ namespace Chromatics.Layers
 
             var effectSettings = RGBController.GetEffectsSettings();
 
-            if (!layer.Enabled || !effectSettings.effect_raideffects)
+            if (!layer.Enabled || !effectSettings.effect_raideffects || !MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
             {
                 DetachOverlay(layer.layerID);
                 return;

@@ -101,7 +101,7 @@ namespace Chromatics.Layers
             catch { /* memory read can transiently fail; treat as no BGM */ }
             bool isVictoryFanfare = currentBgmId == RaidEffectState.VictoryBgmId;
 
-            if (!layer.Enabled || !effectSettings.effect_cutscenes || raidEffectActive || isVictoryFanfare)
+            if (!layer.Enabled || !effectSettings.effect_cutscenes || raidEffectActive || isVictoryFanfare || !MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
             {
                 // GameController dispatches every effect processor on every
                 // EffectLayer (DF Bell, Damage Flash, Vegas, Cutscene all
