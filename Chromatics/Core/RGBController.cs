@@ -1,6 +1,7 @@
 ﻿using Chromatics.Extensions.RGB.NET.ColorCorrections;
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
+using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -227,6 +228,36 @@ namespace Chromatics.Core
                 {
                     LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance);
                 }
+
+                if (appSettings.deviceLifxEnabled)
+                {
+                    try
+                    {
+                        // Hydrate the provider's adopted-device list from settings
+                        // before LoadDeviceProvider triggers discovery / endpoint
+                        // resolution. An empty list short-circuits LoadDevices —
+                        // the user can re-open the adoption dialog from Settings
+                        // to add devices without a re-toggle.
+                        LifxRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        foreach (var d in appSettings.deviceLifxAdoptedDevices ?? new List<LifxAdoptedDevice>())
+                        {
+                            System.Net.IPEndPoint ep = null;
+                            if (!string.IsNullOrEmpty(d.LastIp) &&
+                                System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                            {
+                                ep = new System.Net.IPEndPoint(ip, Chromatics.Extensions.RGB.NET.Devices.LIFX.Protocol.LifxDiscovery.LifxPort);
+                            }
+                            LifxRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new LifxClientDefinition(d.Mac, d.Label, ep, d.ProductId, d.ZoneCount));
+                        }
+
+                        LoadDeviceProvider(LifxRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[LifxDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
                             
             
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
@@ -254,9 +285,25 @@ namespace Chromatics.Core
         {
             if (surface != null && device != null && surface.Devices.Contains(device))
             {
+                // For LIFX, send the captured pre-Chromatics state (colour
+                // + power) before detaching so the bulb returns to whatever
+                // the user had before adoption. surface.Detach alone just
+                // stops further updates, leaving the bulb on the last
+                // colour we sent — which is undesirable when the user
+                // explicitly disables a single device. Run on a worker so
+                // the UI thread doesn't block on the UDP send sequence.
+                if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
+                {
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await lifxDev.RestoreOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
+
                 surface.Detach(device);
-                
-                
+
+
                 if (_activeDevices.ContainsKey(device))
                 {
                     _activeDevices[device] = false;
@@ -275,6 +322,20 @@ namespace Chromatics.Core
             {
                 surface.Attach(device);
                 AttachGlobalBrightness(device);
+
+                // Re-capture the bulb's current state on per-device re-enable.
+                // The user may have changed the colour / power between the
+                // disable and re-enable (LIFX app, automation, etc.), and
+                // they expect the next disable to restore whatever was on
+                // the bulb just before Chromatics retook control.
+                if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
+                {
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await lifxDev.CaptureOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
 
                 if (_activeDevices.ContainsKey(device))
                 {
@@ -601,6 +662,7 @@ namespace Chromatics.Core
 
         public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true)
         {
+            bool anyRemoved = false;
             try
             {
                 if (loadedDeviceProviders.Contains(provider))
@@ -622,6 +684,7 @@ namespace Chromatics.Core
                         }
 
                         _activeDevices.Remove(device);
+                        anyRemoved = true;
                     }
 
                     provider.Exception -= deviceExceptionEventHandler;
@@ -638,6 +701,14 @@ namespace Chromatics.Core
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault()?.DeviceInfo.DeviceName}] UnloadDeviceProvider Error: {ex.Message}");
             }
 
+            // Notify listeners that the device set changed. The DevicesChanged
+            // handler already fires DeviceConnectionChanged on hot-unplug, but
+            // a provider-level disable from Settings unsubscribes that handler
+            // before the manual surface.Detach loop runs above, so the event
+            // never reaches the Mapping view. Firing once here covers the
+            // settings-disable path for every provider in one place.
+            if (anyRemoved)
+                DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static bool IsLoaded()

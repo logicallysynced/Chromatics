@@ -809,5 +809,15 @@
   "Unsupported device? If you have OpenRGB installed and running, enable it in Settings → Device Providers — it covers many third-party devices.": "¿Dispositivo no compatible? Si tienes OpenRGB instalado y en ejecución, actívalo en Ajustes → Proveedores de dispositivos: es compatible con muchos dispositivos de terceros.",
   "The Battle Stance dynamic layer reacts to whether you're in combat — great for ambient lighting cues.": "La capa dinámica Postura de combate reacciona a si estás en combate o no: ideal para señales de iluminación ambiental.",
   "Send anonymous performance and error telemetry to help improve Chromatics.": "Envía telemetría anónima de rendimiento y errores para ayudar a mejorar Chromatics.",
-  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "Predeterminado: Activado. Controla la telemetría en segundo plano (métricas de rendimiento, errores no fatales). Los informes de fallos son independientes: si Chromatics falla, siempre se te preguntará antes de que se envíe nada. No se recopila ninguna información de identificación personal. Consulta la sección de Privacidad del README para obtener más detalles."
+  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "Predeterminado: Activado. Controla la telemetría en segundo plano (métricas de rendimiento, errores no fatales). Los informes de fallos son independientes: si Chromatics falla, siempre se te preguntará antes de que se envíe nada. No se recopila ninguna información de identificación personal. Consulta la sección de Privacidad del README para obtener más detalles.",
+  "[BETA] Enable/disable LIFX device library (LAN protocol). Default: Disabled": "[BETA] Activar/desactivar la biblioteca de dispositivos LIFX (protocolo LAN). Predeterminado: Desactivado",
+  "Choose LIFX devices": "Elegir dispositivos LIFX",
+  "Select which LIFX devices Chromatics should control. You can change this later from Settings.": "Selecciona qué dispositivos LIFX debe controlar Chromatics. Puedes cambiar esto más tarde desde Configuración.",
+  "Searching for LIFX devices on your network...": "Buscando dispositivos LIFX en tu red...",
+  "No LIFX devices found. Check that they are powered on and connected to the same network.": "No se encontraron dispositivos LIFX. Comprueba que estén encendidos y conectados a la misma red.",
+  "{0} LIFX device(s) found.": "Se encontraron {0} dispositivo(s) LIFX.",
+  "Discovery failed: {0}": "La detección falló: {0}",
+  "(offline)": "(sin conexión)",
+  "offline": "sin conexión",
+  "Search again": "Buscar de nuevo"
 }

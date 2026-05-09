@@ -80,16 +80,28 @@ namespace Chromatics
                     var wizard = new FirstRunDialog();
                     wizard.Closed += (_, _) =>
                     {
-                        try
+                        // Construct MainWindow on the next dispatcher tick
+                        // rather than synchronously inside Closed. Avalonia's
+                        // avares:// resource pipeline can race against the
+                        // wizard teardown — if MainWindow.axaml is parsed
+                        // mid-shutdown the icon resource sometimes resolves
+                        // empty, leaving a blank taskbar entry. Posting at
+                        // Background priority lets the wizard finish its
+                        // close cycle and lets the resource manager settle
+                        // before the new window registers its icon.
+                        Avalonia.Threading.Dispatcher.UIThread.Post(() =>
                         {
-                            var mainWindow = new MainWindow();
-                            desktop.MainWindow = mainWindow;
-                            mainWindow.Show();
-                        }
-                        catch (Exception ex)
-                        {
-                            CrashHandler.HandleCrash(ex);
-                        }
+                            try
+                            {
+                                var mainWindow = new MainWindow();
+                                desktop.MainWindow = mainWindow;
+                                mainWindow.Show();
+                            }
+                            catch (Exception ex)
+                            {
+                                CrashHandler.HandleCrash(ex);
+                            }
+                        }, Avalonia.Threading.DispatcherPriority.Background);
                     };
                     wizard.Show();
                 }
