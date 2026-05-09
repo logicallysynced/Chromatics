@@ -2,13 +2,12 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.1.29
+## 4.1.30
+
+- Disabling a device on the Mappings tab now sticks across restarts. Previously, Chromatics forgot which devices you'd disabled the next time it launched and would happily resume painting them. Disabled devices still show in the Mappings list — re-enable from the same toggle and Chromatics will (re)take control.
 
 - Fixed a benign error that could appear in the log when disabling Hue (or any device provider) — "The device 'X' is not attached to this surface." The provider unload path no longer tries to detach a device that's already been removed.
 
-## 4.1.28
-
-- 
 
 ## 4.1.26
 

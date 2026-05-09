@@ -234,7 +234,8 @@ namespace Chromatics.Helpers
 
         public static void SaveLayerMappings(ConcurrentDictionary<int, Layer> mappings,
             IDictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts = null,
-            IDictionary<Guid, int> deviceBrightness = null)
+            IDictionary<Guid, int> deviceBrightness = null,
+            IEnumerable<Guid> disabledDevices = null)
         {
             var enviroment = GetConfigDirectory();
             var path = Path.Combine(enviroment, LayersFile);
@@ -278,12 +279,17 @@ namespace Chromatics.Helpers
                         brightnessSnapshot[kvp.Key] = kvp.Value;
                 }
 
+                var disabledSnapshot = new List<Guid>();
+                if (disabledDevices != null)
+                    disabledSnapshot.AddRange(disabledDevices);
+
                 var wrapper = new MappingFileV3
                 {
-                    schemaVersion = 4,
+                    schemaVersion = 5,
                     layers = layersSnapshot,
                     deviceLayouts = layoutsSnapshot,
-                    deviceBrightness = brightnessSnapshot
+                    deviceBrightness = brightnessSnapshot,
+                    disabledDevices = disabledSnapshot
                 };
 
                 WriteJsonAtomic(path, wrapper);
@@ -350,12 +356,14 @@ namespace Chromatics.Helpers
 
         // V2 of the file was a bare ConcurrentDictionary<int, Layer>; V3 wraps
         // that dict in an object with deviceLayouts. V4 adds deviceBrightness.
-        // Detect via JObject having a "schemaVersion" key. Legacy files
-        // (chromatics3 / V2) load with empty layouts + brightness maps and
-        // upgrade to the latest schema on the next save.
+        // V5 adds disabledDevices. Detect via JObject having a "schemaVersion"
+        // key. Legacy files (chromatics3 / V2) load with empty layouts /
+        // brightness / disabled maps and upgrade to the latest schema on the
+        // next save.
         public static (ConcurrentDictionary<int, Layer> layers,
                        Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts,
-                       Dictionary<Guid, int> deviceBrightness)
+                       Dictionary<Guid, int> deviceBrightness,
+                       List<Guid> disabledDevices)
             LoadLayerMappings()
         {
             var enviroment = GetConfigDirectory();
@@ -375,6 +383,18 @@ namespace Chromatics.Helpers
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"Error Loading Layers: {ex.Message}");
                 throw;
             }
+        }
+
+        // Older callers (Tests, ImportLayerMappingsFromPath) want the
+        // backwards-compatible 3-tuple shape. Drop the disabledDevices payload
+        // and forward.
+        internal static (ConcurrentDictionary<int, Layer> layers,
+                        Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts,
+                        Dictionary<Guid, int> deviceBrightness)
+            LoadLayerMappings_LegacyTriple()
+        {
+            var (l, ly, b, _) = LoadLayerMappings();
+            return (l, ly, b);
         }
 
         // Validates a raw JSON string as a Chromatics layer file.
@@ -488,16 +508,17 @@ namespace Chromatics.Helpers
 
         private static (ConcurrentDictionary<int, Layer> layers,
                         Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts,
-                        Dictionary<Guid, int> deviceBrightness)
+                        Dictionary<Guid, int> deviceBrightness,
+                        List<Guid> disabledDevices)
             ParseMappingFile(string json)
         {
-            if (string.IsNullOrWhiteSpace(json)) return (null, null, null);
+            if (string.IsNullOrWhiteSpace(json)) return (null, null, null, null);
 
             JToken token;
             try { token = JToken.Parse(json); }
-            catch (JsonException) { return (null, null, null); }
+            catch (JsonException) { return (null, null, null, null); }
 
-            if (token is not JObject obj) return (null, null, null);
+            if (token is not JObject obj) return (null, null, null, null);
 
             // Current schema-versioned format.
             if (obj["schemaVersion"] != null && obj["layers"] != null)
@@ -520,20 +541,27 @@ namespace Chromatics.Helpers
                         .ToObject<Dictionary<Guid, int>>()
                         ?? new Dictionary<Guid, int>();
 
-                    return (layers, deviceLayouts, deviceBrightness);
+                    // Optional: present from schemaVersion 5 onward. v3/v4
+                    // files come back with an empty list (no per-device
+                    // disable history persisted).
+                    var disabledDevices = obj["disabledDevices"]?
+                        .ToObject<List<Guid>>()
+                        ?? new List<Guid>();
+
+                    return (layers, deviceLayouts, deviceBrightness, disabledDevices);
                 }
                 catch (Exception ex)
                 {
                     Logger.WriteConsole(Enums.LoggerTypes.Error,
                         $"Failed to parse layer file (schema format): {ex.Message}");
-                    return (null, null, null);
+                    return (null, null, null, null);
                 }
             }
 
             // Legacy format: all top-level keys are integer layer IDs.
             // Guard against non-layer files (e.g. palette/settings files with string keys).
             if (!obj.Properties().All(p => int.TryParse(p.Name, out _)))
-                return (null, null, null);
+                return (null, null, null, null);
 
             try
             {
@@ -544,13 +572,14 @@ namespace Chromatics.Helpers
                     }));
                 return (legacy,
                     new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(),
-                    new Dictionary<Guid, int>());
+                    new Dictionary<Guid, int>(),
+                    new List<Guid>());
             }
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error,
                     $"Failed to parse layer file (legacy format): {ex.Message}");
-                return (null, null, null);
+                return (null, null, null, null);
             }
         }
 
@@ -569,6 +598,10 @@ namespace Chromatics.Helpers
         }
 
         // Import — callers supply the path (picked via Avalonia StorageProvider).
+        // Imported files don't propagate the disabledDevices list (the user is
+        // bringing in mapping data, not a disable history) — that part of the
+        // tuple is dropped here. Any caller wanting the full v5 payload should
+        // call LoadLayerMappings against the live config dir instead.
         public static (ConcurrentDictionary<int, Layer> layers,
                        Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>> deviceLayouts,
                        Dictionary<Guid, int> deviceBrightness)
@@ -584,9 +617,9 @@ namespace Chromatics.Helpers
                 using (var sr = new StreamReader(path))
                     json = sr.ReadToEnd();
 
-                var parsed = ParseMappingFile(json);
+                var (layers, layouts, brightness, _) = ParseMappingFile(json);
                 Logger.WriteConsole(Enums.LoggerTypes.System, $"Successfully imported layers from {path}.");
-                return parsed;
+                return (layers, layouts, brightness);
             }
             catch (Exception ex)
             {
@@ -611,14 +644,18 @@ namespace Chromatics.Helpers
 
                 var wrapper = new MappingFileV3
                 {
-                    schemaVersion = 4,
+                    schemaVersion = 5,
                     layers = layersCopy,
                     deviceLayouts = deviceLayouts != null
                         ? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(deviceLayouts)
                         : new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(),
                     deviceBrightness = deviceBrightness != null
                         ? new Dictionary<Guid, int>(deviceBrightness)
-                        : new Dictionary<Guid, int>()
+                        : new Dictionary<Guid, int>(),
+                    // Exported files don't carry a disabledDevices list — the
+                    // user is sharing mappings, not their personal disable
+                    // history. Empty list keeps the schema valid.
+                    disabledDevices = new List<Guid>()
                 };
 
                 WriteJsonAtomic(path, wrapper);
