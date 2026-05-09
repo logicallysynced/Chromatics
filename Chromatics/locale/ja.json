@@ -810,5 +810,15 @@
   "The Battle Stance dynamic layer reacts to whether you're in combat — great for ambient lighting cues.": "バトルスタンス動的レイヤーは戦闘中かどうかに反応するため、環境ライティングの合図として最適です。",
   "Send anonymous performance and error telemetry to help improve Chromatics.": "Chromatics の改善に役立てるため、匿名のパフォーマンスおよびエラーテレメトリを送信します。",
   "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "既定: 有効。バックグラウンド テレメトリ（パフォーマンス指標、致命的でないエラー）を制御します。クラッシュ レポートは独立しており、Chromatics がクラッシュした場合は、何かが送信される前に必ず確認を求められます。個人を特定できる情報は収集されません。詳細については、README の Privacy セクションを参照してください。",
-  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "デフォルト: 有効。バックグラウンド テレメトリ（パフォーマンス指標、致命的でないエラー）を制御します。クラッシュ レポートは独立しており、Chromatics がクラッシュした場合は、何かが送信される前に必ず確認を求められます。個人を特定できる情報は収集されません。詳細については、README の Privacy セクションを参照してください。"
+  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "デフォルト: 有効。バックグラウンド テレメトリ（パフォーマンス指標、致命的でないエラー）を制御します。クラッシュ レポートは独立しており、Chromatics がクラッシュした場合は、何かが送信される前に必ず確認を求められます。個人を特定できる情報は収集されません。詳細については、README の Privacy セクションを参照してください。",
+  "[BETA] Enable/disable LIFX device library (LAN protocol). Default: Disabled": "[ベータ] LIFX デバイスライブラリ（LAN プロトコル）を有効/無効にします。既定: 無効",
+  "Choose LIFX devices": "LIFX デバイスを選択",
+  "Select which LIFX devices Chromatics should control. You can change this later from Settings.": "Chromatics が制御する LIFX デバイスを選択します。これは後で設定から変更できます。",
+  "Searching for LIFX devices on your network...": "ネットワーク上の LIFX デバイスを検索しています...",
+  "No LIFX devices found. Check that they are powered on and connected to the same network.": "LIFX デバイスが見つかりませんでした。電源が入っていて、同じネットワークに接続されていることを確認してください。",
+  "{0} LIFX device(s) found.": "{0} 台の LIFX デバイスが見つかりました。",
+  "Discovery failed: {0}": "検出に失敗しました: {0}",
+  "(offline)": "（オフライン）",
+  "offline": "オフライン",
+  "Search again": "再検索"
 }

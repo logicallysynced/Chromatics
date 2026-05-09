@@ -46,6 +46,8 @@ namespace Chromatics.Models
         public bool deviceOpenRGBEnabled { get; set; } = false;
         public bool deviceHueEnabled { get; set; } = false;
         public bool devicePlayStationEnabled { get; set; } = false;
+        public bool deviceLifxEnabled { get; set; } = false;
+        public List<LifxAdoptedDevice> deviceLifxAdoptedDevices { get; set; } = new();
         public string deviceHueBridgeIP { get; set; } = "127.0.0.1";
         public string deviceHueBridgeClientKey { get; set; } = "";
         public double deviceHueBridgeBrightness { get; set; } = -1;

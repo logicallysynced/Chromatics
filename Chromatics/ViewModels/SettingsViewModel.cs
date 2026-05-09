@@ -5,6 +5,8 @@ using Chromatics.Extensions;
 using Chromatics.Localization;
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
+using Chromatics.Extensions.RGB.NET.Devices.LIFX;
+using Chromatics.Models;
 using Chromatics.Helpers;
 using Chromatics.Views;
 using Microsoft.VisualBasic.FileIO;
@@ -128,7 +130,7 @@ namespace Chromatics.ViewModels
                 () => RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.deviceOpenRGBEnabled = v; AppSettings.SaveSettings(cur); }));
 
-            DeviceToggles.Add(MakeDeviceToggle("PlayStation", "[BETA] Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
+            DeviceToggles.Add(MakeDeviceToggle("PlayStation (Beta)", "[BETA] Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
                 s.devicePlayStationEnabled,
                 () => RGBController.LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
                 () => RGBController.UnloadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
@@ -136,7 +138,7 @@ namespace Chromatics.ViewModels
 
             // Hue is special — enabling opens the bridge-pairing dialog first.
             DeviceToggles.Add(new DeviceToggleItem(
-                "Hue",
+                "Hue (Beta)",
                 "[BETA] Enable/disable Philips HUE device library. Default: Disabled",
                 s.deviceHueEnabled,
                 async () =>
@@ -170,6 +172,67 @@ namespace Chromatics.ViewModels
                     }
                     var cur = AppSettings.GetSettings();
                     cur.deviceHueEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
+            // LIFX is special — enabling runs network discovery + opens an
+            // adoption dialog so the user picks which bulbs Chromatics drives.
+            // Re-enabling re-prompts with existing adoptions pre-checked
+            // (matches the user spec: see SettingsModel.deviceLifxAdoptedDevices).
+            DeviceToggles.Add(new DeviceToggleItem(
+                "LIFX (Beta)",
+                "[BETA] Enable/disable LIFX device library (LAN protocol). Default: Disabled",
+                s.deviceLifxEnabled,
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+                    var owner = GetMainWindow();
+
+                    var alreadyAdopted = (cur.deviceLifxAdoptedDevices ?? new System.Collections.Generic.List<LifxAdoptedDevice>())
+                        .ToDictionary(d => d.Mac, d => d, StringComparer.OrdinalIgnoreCase);
+
+                    var dlg = new LifxAdoptionDialog(alreadyAdopted);
+                    if (owner != null)
+                        await dlg.ShowDialog(owner);
+                    else
+                        dlg.Show();
+
+                    if (!dlg.Saved) return false;
+
+                    cur.deviceLifxAdoptedDevices = dlg.SelectedDevices;
+                    cur.deviceLifxEnabled = true;
+                    AppSettings.SaveSettings(cur);
+
+                    LifxRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                    foreach (var d in cur.deviceLifxAdoptedDevices)
+                    {
+                        System.Net.IPEndPoint ep = null;
+                        if (!string.IsNullOrEmpty(d.LastIp) && System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                            ep = new System.Net.IPEndPoint(ip, Chromatics.Extensions.RGB.NET.Devices.LIFX.Protocol.LifxDiscovery.LifxPort);
+                        LifxRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                            new LifxClientDefinition(d.Mac, d.Label, ep, d.ProductId, d.ZoneCount));
+                    }
+
+                    // LoadDeviceProvider runs LoadDevices synchronously, which
+                    // for LIFX includes a 2.5s discovery sweep + per-device
+                    // probes (~800ms) and original-state captures (~500ms).
+                    // On the UI thread that adds up to multi-second hangs
+                    // after the dialog closes. Push the load to a background
+                    // thread so the toggle returns immediately and the UI
+                    // stays responsive while devices come online.
+                    _ = Task.Run(() => RGBController.LoadDeviceProvider(LifxRGBDeviceProvider.Instance));
+                    return true;
+                },
+                () =>
+                {
+                    if (LifxRGBDeviceProvider.Instance != null)
+                    {
+                        LifxRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        RGBController.UnloadDeviceProvider(LifxRGBDeviceProvider.Instance);
+                        LifxRGBDeviceProvider.Instance.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceLifxEnabled = false;
                     AppSettings.SaveSettings(cur);
                 }));
         }

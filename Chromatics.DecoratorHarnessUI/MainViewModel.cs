@@ -5,6 +5,8 @@ using System.Timers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Extensions.RGB.NET.Devices;
+using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures;
@@ -73,6 +75,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         new("Wooting",      () => WootingDeviceProvider.Instance),
         new("Novation",     () => NovationDeviceProvider.Instance),
         new("OpenRGB",      () => OpenRGBDeviceProvider.Instance),
+        new("PlayStation",  () => PlayStationControllerRGBDeviceProvider.Instance),
+        new("LIFX",         () => LifxRGBDeviceProvider.Instance),
     ];
 
     [ObservableProperty] private ProviderItem? _selectedProvider;
@@ -87,7 +91,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
-    private void LoadProvider()
+    private async Task LoadProvider()
     {
         if (SelectedProvider is null) return;
 
@@ -95,6 +99,43 @@ public partial class MainViewModel : ObservableObject, IDisposable
         try
         {
             var provider = SelectedProvider.Factory();
+
+            // LIFX is the only provider in the harness that needs an
+            // adoption gate — the LAN protocol has no concept of "all
+            // devices on the segment", so the user has to pick which
+            // bulbs Chromatics drives. Reuses the main app's adoption
+            // dialog (we have a project reference to Chromatics) and
+            // persists picks to a harness-local file so the user
+            // doesn't have to re-discover every launch.
+            if (provider is LifxRGBDeviceProvider lifxProvider)
+            {
+                var saved = LoadHarnessLifxAdoptions();
+                var alreadyAdopted = saved.ToDictionary(d => d.Mac, d => d, StringComparer.OrdinalIgnoreCase);
+
+                var owner = GetMainWindow();
+                var dlg = new Chromatics.Views.LifxAdoptionDialog(alreadyAdopted);
+                if (owner is not null) await dlg.ShowDialog(owner);
+                else dlg.Show();
+
+                if (!dlg.Saved)
+                {
+                    ProviderStatus = "Cancelled";
+                    return;
+                }
+
+                SaveHarnessLifxAdoptions(dlg.SelectedDevices);
+
+                lifxProvider.ClientDefinitions.Clear();
+                foreach (var d in dlg.SelectedDevices)
+                {
+                    System.Net.IPEndPoint? ep = null;
+                    if (!string.IsNullOrEmpty(d.LastIp) && System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                        ep = new System.Net.IPEndPoint(ip, Chromatics.Extensions.RGB.NET.Devices.LIFX.Protocol.LifxDiscovery.LifxPort);
+                    lifxProvider.ClientDefinitions.Add(
+                        new LifxClientDefinition(d.Mac, d.Label, ep, d.ProductId, d.ZoneCount));
+                }
+            }
+
             provider.Initialize(throwExceptions: false);
             _surface.Load(provider);
             _loadedProvider = provider;
@@ -114,6 +155,41 @@ public partial class MainViewModel : ObservableObject, IDisposable
         {
             ProviderStatus = $"Error: {ex.Message}";
         }
+    }
+
+    private static Avalonia.Controls.Window? GetMainWindow()
+    {
+        return Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
+    }
+
+    private static string LifxAdoptionsPath => System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "Chromatics.DecoratorHarnessUI",
+        "lifx-adopted.json");
+
+    private static List<Chromatics.Models.LifxAdoptedDevice> LoadHarnessLifxAdoptions()
+    {
+        try
+        {
+            if (!System.IO.File.Exists(LifxAdoptionsPath)) return new();
+            var json = System.IO.File.ReadAllText(LifxAdoptionsPath);
+            return System.Text.Json.JsonSerializer.Deserialize<List<Chromatics.Models.LifxAdoptedDevice>>(json) ?? new();
+        }
+        catch { return new(); }
+    }
+
+    private static void SaveHarnessLifxAdoptions(IEnumerable<Chromatics.Models.LifxAdoptedDevice> adoptions)
+    {
+        try
+        {
+            var dir = System.IO.Path.GetDirectoryName(LifxAdoptionsPath);
+            if (!string.IsNullOrEmpty(dir)) System.IO.Directory.CreateDirectory(dir);
+            var json = System.Text.Json.JsonSerializer.Serialize(adoptions, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            System.IO.File.WriteAllText(LifxAdoptionsPath, json);
+        }
+        catch { /* best-effort; harness will just re-prompt next launch */ }
     }
 
     // ── Effect selection ─────────────────────────────────────────────────
