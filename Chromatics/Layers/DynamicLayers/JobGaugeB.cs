@@ -215,7 +215,7 @@ namespace Chromatics.Layers
                     jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobWARNonDefiance.Color);
                     jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobWARNegative.Color);
 
-                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusName == "Defiance") != null)
+                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusNameEnglish == "Defiance") != null)
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobWARDefiance.Color);
                     }

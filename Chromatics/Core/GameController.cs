@@ -90,9 +90,27 @@ namespace Chromatics.Core
 
             foreach (var device in devices)
             {
+                // Per-device EffectLayer toggle from the Mappings tab silences
+                // the title-screen animation on devices the user has unticked.
+                // The earlier title-detection bug (chat-log race) is gone, so
+                // it's safe to re-apply this filter at the initial build —
+                // the title animation actually runs long enough now for the
+                // filter to matter.
+                var deviceGuid = RGBController.GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty
+                    && !MappingLayers.IsDeviceEffectsEnabled(deviceGuid))
+                    continue;
+
                 var ledgroup = new ListLedGroup(surface, device);
 
-                var starfield = new StarfieldDecorator(ledgroup, (ledgroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
+                // numberOfLeds = ceil(count/4) with a floor of 1 — makes the
+                // animation actually pick a "star" on 1–3 LED devices (Hue,
+                // DualShock 4 lightbar, single-LED accessories) where the
+                // old `count/4` rounded down to 0 and no LED ever entered
+                // the fade cycle. With 1 star on a 1-LED device, that LED
+                // becomes the star and cycles through highlight colours.
+                int starCount = Math.Max(1, ledgroup.Count() / 4);
+                var starfield = new StarfieldDecorator(ledgroup, starCount, 10, 500, highlightColors, surface, false, baseColor);
                 ledgroup.ZIndex = 1000;
 
                 foreach (var led in device)
@@ -103,8 +121,45 @@ namespace Chromatics.Core
                 ledgroup.Brush = new SolidColorBrush(baseColor);
                 ledgroup.AddDecorator(starfield);
 
-                RGBController.RegisterTaggedEffect("title", ledgroup);
+                RGBController.RegisterTaggedEffect("title", deviceGuid, ledgroup);
             }
+        }
+
+        // Per-device builder used by RGBController.SyncTaggedEffectsForDevice
+        // when the user re-enables effects on a specific device while the
+        // title-screen animation is currently running. Mirrors the foreach
+        // body of BuildTitleScreenAnimation but for one device only.
+        internal static void BuildTitleEffectForDeviceInternal(RGB.NET.Core.IRGBDevice device, Guid deviceGuid)
+        {
+            if (!RGBController.GetEffectsSettings().effect_titlescreen) return;
+
+            var surface = RGBController.GetLiveSurfaces();
+            if (surface == null || device == null) return;
+
+            var palette = RGBController.GetActivePalette();
+            var baseColor = ColorHelper.ColorToRGBColor(palette.MenuBase.Color);
+            var highlightColors = new Color[] {
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight1.Color),
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight2.Color),
+                ColorHelper.ColorToRGBColor(palette.MenuHighlight3.Color)
+            };
+
+            var ledgroup = new ListLedGroup(surface, device);
+
+            // See BuildTitleScreenAnimation for the floor-of-1 rationale.
+            int starCount = Math.Max(1, ledgroup.Count() / 4);
+            var starfield = new StarfieldDecorator(ledgroup, starCount, 10, 500, highlightColors, surface, false, baseColor);
+            ledgroup.ZIndex = 1000;
+
+            foreach (var led in device)
+            {
+                ledgroup.AddLed(led);
+            }
+
+            ledgroup.Brush = new SolidColorBrush(baseColor);
+            ledgroup.AddDecorator(starfield);
+
+            RGBController.RegisterTaggedEffect("title", deviceGuid, ledgroup);
         }
 
         public static void Setup()
@@ -490,11 +545,20 @@ namespace Chromatics.Core
                 if (handler.Reader != null && handler.Reader.CanGetActors() && handler.Reader.CanGetChatLog())
                 {
                     var getCurrentPlayer = handler.Reader.GetCurrentPlayer();
-                    var chatLogCount = handler.Reader.GetChatLog().ChatLogItems.Count;
+                    var isLoggedIn = handler.Reader.GetGameState().IsLoggedIn;
 
                     var runningEffects = RGBController.GetRunningEffects();
 
-                    if (getCurrentPlayer.Entity == null && chatLogCount <= 0 && !handler.Reader.GetGameState().IsLoggedIn)
+                    // Title-screen detection: player entity not loaded AND
+                    // not logged in. We deliberately do NOT also require
+                    // chatLogCount == 0 — Sharlayan's chat reader picks up
+                    // system messages ("Welcome to FFXIV", etc.) on the
+                    // title screen, which would flip the count to 1 within
+                    // a frame of the title animation building and
+                    // incorrectly re-classify the user as in-game. Entity
+                    // + login state alone are unambiguous for title vs
+                    // in-game.
+                    if (getCurrentPlayer.Entity == null && !isLoggedIn)
                     {
                         //Game is still on Main Menu or Character Screen
                         if (!_onTitle || wasPreviewed)
@@ -620,6 +684,29 @@ namespace Chromatics.Core
                             break;
 
                         case LayerType.EffectLayer:
+                            // requestUpdate-driven detach for effect-class
+                            // ledgroups. Mirrors the equivalent block on
+                            // BaseLayer / DynamicLayer above. Without this,
+                            // toggling the per-device EffectLayer enable
+                            // checkbox left effect groups (DutyFinderBell,
+                            // DamageFlash, Cutscene, Vegas, …) sitting on the
+                            // surface with their last brush state — visible
+                            // as a "frozen effect" obscuring the underlying
+                            // base / dynamic painting until something else
+                            // detached them.
+                            if (layer.requestUpdate)
+                            {
+                                var effectLiveGroups = RGBController.GetLiveLayerGroups();
+                                if (effectLiveGroups.TryGetValue(layer.layerID, out var prevEffectGroups))
+                                {
+                                    foreach (var g in prevEffectGroups)
+                                    {
+                                        g?.RemoveAllDecorators();
+                                        g?.Detach();
+                                    }
+                                    effectLiveGroups.Remove(layer.layerID);
+                                }
+                            }
                             var effectProcessors = EffectLayerProcessorFactory.GetProcessors();
                             foreach (var effectProcessor in effectProcessors)
                             {

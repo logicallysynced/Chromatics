@@ -42,6 +42,23 @@ namespace Chromatics.Layers
             var effectSettings = RGBController.GetEffectsSettings();
             var _layergroups = RGBController.GetLiveLayerGroups();
 
+            // Per-device "all effects off" gate from the EffectLayer enable
+            // checkbox on the Mappings tab. Mirrors the same check in every
+            // other effect-class processor (DutyFinderBell, DamageFlash, …).
+            //
+            // Important: NO global side effects here. The pre-existing
+            // vegas-mode-off path below calls RGBController.SetBaseLayerEffect
+            // and RGBController.ResetLayerGroups because vegas-mode is itself
+            // a global setting; tearing the world down is appropriate. Our
+            // per-device case must NOT touch other devices, so we only
+            // dispose the gradient decorators owned by this layer's model.
+            if (!MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
+            {
+                if (layerProcessorModel.TryGetValue(layer.layerID, out var disposeModel))
+                    DisposeModel(disposeModel);
+                return;
+            }
+
             GoldSaucerVegasEffectModel model;
             ListLedGroup layergroup;
 

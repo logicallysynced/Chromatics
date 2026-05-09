@@ -725,6 +725,8 @@
   "Wooting": "Wooting",
   "Novation": "Novation",
   "OpenRGB": "OpenRGB",
+  "PlayStation": "PlayStation",
+  "PlayStation (Beta)": "PlayStation (Beta)",
   "Copy All": "Tout copier",
   "Close Chromatics when FFXIV closes.": "Fermer Chromatics lorsque FFXIV se ferme.",
   "Reactive Weather": "Météo réactive",
@@ -807,5 +809,15 @@
   "Unsupported device? If you have OpenRGB installed and running, enable it in Settings → Device Providers — it covers many third-party devices.": "Appareil non pris en charge ? Si OpenRGB est installé et en cours d’exécution, activez-le dans Paramètres → Fournisseurs d’appareils — il prend en charge de nombreux appareils tiers.",
   "The Battle Stance dynamic layer reacts to whether you're in combat — great for ambient lighting cues.": "La couche dynamique Posture de combat réagit selon que vous êtes en combat ou non — idéale pour des indications lumineuses d’ambiance.",
   "Send anonymous performance and error telemetry to help improve Chromatics.": "Envoyez des données anonymes de télémétrie sur les performances et les erreurs pour aider à améliorer Chromatics.",
-  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "Par défaut : activé. Contrôle la télémétrie en arrière-plan (mesures de performance, erreurs non fatales). Les rapports de plantage sont indépendants — si Chromatics plante, il vous est toujours demandé votre accord avant tout envoi. Aucune information permettant de vous identifier personnellement n’est collectée. Consultez la section Confidentialité du README pour plus de détails."
+  "Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.": "Par défaut : activé. Contrôle la télémétrie en arrière-plan (mesures de performance, erreurs non fatales). Les rapports de plantage sont indépendants — si Chromatics plante, il vous est toujours demandé votre accord avant tout envoi. Aucune information permettant de vous identifier personnellement n’est collectée. Consultez la section Confidentialité du README pour plus de détails.",
+  "[BETA] Enable/disable LIFX device library (LAN protocol). Default: Disabled": "[BÊTA] Activer/désactiver la bibliothèque d’appareils LIFX (protocole LAN). Par défaut : désactivée",
+  "Choose LIFX devices": "Choisir les appareils LIFX",
+  "Select which LIFX devices Chromatics should control. You can change this later from Settings.": "Sélectionnez les appareils LIFX que Chromatics doit contrôler. Vous pourrez modifier cela plus tard dans les Paramètres.",
+  "Searching for LIFX devices on your network...": "Recherche des appareils LIFX sur votre réseau...",
+  "No LIFX devices found. Check that they are powered on and connected to the same network.": "Aucun appareil LIFX trouvé. Vérifiez qu’ils sont allumés et connectés au même réseau.",
+  "{0} LIFX device(s) found.": "{0} appareil(s) LIFX trouvé(s).",
+  "Discovery failed: {0}": "Échec de la découverte : {0}",
+  "(offline)": "(hors ligne)",
+  "offline": "hors ligne",
+  "Search again": "Rechercher à nouveau"
 }

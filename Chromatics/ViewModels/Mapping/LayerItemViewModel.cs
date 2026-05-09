@@ -138,6 +138,24 @@ namespace Chromatics.ViewModels.Mapping
         {
             Commit(l => l.Enabled = value);
             _onLayerStateChanged?.Invoke();
+
+            // EffectLayer is the per-device "all effects" toggle. Two side-
+            // effects to fire here so the visual change is immediate AND
+            // scoped strictly to this device:
+            //   1. Mark every layer on this device with requestUpdate=true so
+            //      the existing cleanup blocks in GameController.Update detach
+            //      stale ledgroups on the next frame. Without this, effect-
+            //      class groups sit frozen on their last brush evaluation and
+            //      obscure the underlying base / dynamic painting.
+            //   2. Tagged effects (startup, title) reconciled per-device —
+            //      detach this device's group OR build a fresh one. Other
+            //      devices' groups are untouched, so their animation phase
+            //      isn't disturbed.
+            if (_layer.rootLayerType == LayerType.EffectLayer)
+            {
+                MappingLayers.MarkDeviceLayersForUpdate(_layer.deviceGuid);
+                Core.RGBController.SyncTaggedEffectsForDevice(_layer.deviceGuid);
+            }
         }
         partial void OnZIndexChanged(int value)
         {

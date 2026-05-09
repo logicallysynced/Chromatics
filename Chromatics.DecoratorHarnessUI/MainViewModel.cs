@@ -5,6 +5,8 @@ using System.Timers;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Chromatics.Extensions.RGB.NET.Decorators;
+using Chromatics.Extensions.RGB.NET.Devices;
+using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures;
@@ -73,6 +75,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         new("Wooting",      () => WootingDeviceProvider.Instance),
         new("Novation",     () => NovationDeviceProvider.Instance),
         new("OpenRGB",      () => OpenRGBDeviceProvider.Instance),
+        new("PlayStation",  () => PlayStationControllerRGBDeviceProvider.Instance),
+        new("LIFX",         () => LifxRGBDeviceProvider.Instance),
     ];
 
     [ObservableProperty] private ProviderItem? _selectedProvider;
@@ -87,7 +91,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     }
 
     [RelayCommand]
-    private void LoadProvider()
+    private async Task LoadProvider()
     {
         if (SelectedProvider is null) return;
 
@@ -95,6 +99,43 @@ public partial class MainViewModel : ObservableObject, IDisposable
         try
         {
             var provider = SelectedProvider.Factory();
+
+            // LIFX is the only provider in the harness that needs an
+            // adoption gate — the LAN protocol has no concept of "all
+            // devices on the segment", so the user has to pick which
+            // bulbs Chromatics drives. Reuses the main app's adoption
+            // dialog (we have a project reference to Chromatics) and
+            // persists picks to a harness-local file so the user
+            // doesn't have to re-discover every launch.
+            if (provider is LifxRGBDeviceProvider lifxProvider)
+            {
+                var saved = LoadHarnessLifxAdoptions();
+                var alreadyAdopted = saved.ToDictionary(d => d.Mac, d => d, StringComparer.OrdinalIgnoreCase);
+
+                var owner = GetMainWindow();
+                var dlg = new Chromatics.Views.LifxAdoptionDialog(alreadyAdopted);
+                if (owner is not null) await dlg.ShowDialog(owner);
+                else dlg.Show();
+
+                if (!dlg.Saved)
+                {
+                    ProviderStatus = "Cancelled";
+                    return;
+                }
+
+                SaveHarnessLifxAdoptions(dlg.SelectedDevices);
+
+                lifxProvider.ClientDefinitions.Clear();
+                foreach (var d in dlg.SelectedDevices)
+                {
+                    System.Net.IPEndPoint? ep = null;
+                    if (!string.IsNullOrEmpty(d.LastIp) && System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                        ep = new System.Net.IPEndPoint(ip, Chromatics.Extensions.RGB.NET.Devices.LIFX.Protocol.LifxDiscovery.LifxPort);
+                    lifxProvider.ClientDefinitions.Add(
+                        new LifxClientDefinition(d.Mac, d.Label, ep, d.ProductId, d.ZoneCount));
+                }
+            }
+
             provider.Initialize(throwExceptions: false);
             _surface.Load(provider);
             _loadedProvider = provider;
@@ -114,6 +155,41 @@ public partial class MainViewModel : ObservableObject, IDisposable
         {
             ProviderStatus = $"Error: {ex.Message}";
         }
+    }
+
+    private static Avalonia.Controls.Window? GetMainWindow()
+    {
+        return Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+            ? desktop.MainWindow
+            : null;
+    }
+
+    private static string LifxAdoptionsPath => System.IO.Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        "Chromatics.DecoratorHarnessUI",
+        "lifx-adopted.json");
+
+    private static List<Chromatics.Models.LifxAdoptedDevice> LoadHarnessLifxAdoptions()
+    {
+        try
+        {
+            if (!System.IO.File.Exists(LifxAdoptionsPath)) return new();
+            var json = System.IO.File.ReadAllText(LifxAdoptionsPath);
+            return System.Text.Json.JsonSerializer.Deserialize<List<Chromatics.Models.LifxAdoptedDevice>>(json) ?? new();
+        }
+        catch { return new(); }
+    }
+
+    private static void SaveHarnessLifxAdoptions(IEnumerable<Chromatics.Models.LifxAdoptedDevice> adoptions)
+    {
+        try
+        {
+            var dir = System.IO.Path.GetDirectoryName(LifxAdoptionsPath);
+            if (!string.IsNullOrEmpty(dir)) System.IO.Directory.CreateDirectory(dir);
+            var json = System.Text.Json.JsonSerializer.Serialize(adoptions, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            System.IO.File.WriteAllText(LifxAdoptionsPath, json);
+        }
+        catch { /* best-effort; harness will just re-prompt next launch */ }
     }
 
     // ── Effect selection ─────────────────────────────────────────────────
@@ -176,12 +252,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
         // whichever they're building an effect for.
         new("Hunter's Ring — Howling Blade (M8)",    "[RAID] Presets"),
         new("Hunter's Ring — Howling Blade (M8S)",   "[RAID] Presets"),
+        // Cruiserweight tier (M9-M11)
+        new("Ring Noir (M9)",                        "[RAID] Presets"),
+        new("The X-Ring (M10)",                      "[RAID] Presets"),
+        new("The Crown (M11)",                       "[RAID] Presets"),
         // Arcadia (M12/M12S) runs a scripted three-beat choreography in-game.
         // Each beat is its own preset; the harness cannot replay the per-layer
         // state machine, so each one is previewable in isolation.
         new("Arcadia P1 Effect 1 — Intro",           "[RAID] Presets"),
         new("Arcadia P1 Effect 2 — Post-Flash",      "[RAID] Presets"),
         new("Arcadia P2 (M12)",                      "[RAID] Presets"),
+        // Other zones with raid effects
+        new("Hell on Rails",                         "[RAID] Presets"),
+        new("The Ageless Necropolis / Lightless Abyss", "[RAID] Presets"),
+        new("Recollection",                          "[RAID] Presets"),
+        new("The Unmaking",                          "[RAID] Presets"),
     ];
 
     public static EffectEntry[] WeatherPresets { get; } =
@@ -199,6 +284,15 @@ public partial class MainViewModel : ObservableObject, IDisposable
         new("Astromagnetic Storm",         "[WEATHER] Presets"),
         new("Umbral Static",              "[WEATHER] Presets"),
         new("Everlasting Light",           "[WEATHER] Presets"),
+        // 7.x weather animations
+        new("Atmospheric Phantasms",       "[WEATHER] Presets"),
+        new("Illusory Disturbances",       "[WEATHER] Presets"),
+        new("Gravitational Flux",          "[WEATHER] Presets"),
+        new("Meteor Showers",              "[WEATHER] Presets"),
+        new("Sporing Mist",                "[WEATHER] Presets"),
+        new("Annealing Winds",             "[WEATHER] Presets"),
+        new("Glass Storms",                "[WEATHER] Presets"),
+        new("Bubble Bloom",                "[WEATHER] Presets"),
     ];
 
     public ObservableCollection<EffectEntry> AllEffects { get; } = new(
@@ -667,6 +761,45 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 ColorBase = AvColors.Black;
                 SetColors(ToAv(255, 0, 4), ToAv(93, 0, 255), ToAv(255, 117, 0), ToAv(249, 255, 0));
                 break;
+            // Cruiserweight tier (M9-M11) — defaults mirror RaidEffectProcessor.ApplyRaidEffect
+            case "Ring Noir (M9)":
+                ParamBpm = 47; ParamBeamWidth = 2.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(220, 20, 60), ToAv(120, 0, 30));
+                break;
+            case "The X-Ring (M10)":
+                ParamBpm = 180; ParamBpmSpeed = "/4"; ParamPulseRadius = 6.0; ParamFadeWidth = 2.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 200, 0), ToAv(255, 255, 255));
+                break;
+            case "The Crown (M11)":
+                ParamBpm = 135; ParamBpmSpeed = "/4"; ParamWedgeDegrees = 180;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 215, 0), ToAv(255, 80, 0), ToAv(255, 0, 120), ToAv(180, 0, 255));
+                break;
+            // Other raid zones
+            case "Hell on Rails":
+                ParamBpm = 110; ParamBpmSpeed = "/2"; ParamFlickerOpacity = 0.5; ParamFlickerSpeed = 8;
+                ParamMatrixDir = "Left";
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(0, 255, 120), ToAv(0, 200, 80));
+                break;
+            case "The Ageless Necropolis / Lightless Abyss":
+                ParamBpm = 160; ParamBpmSpeed = "/8"; ParamBeamWidth = 3.5;
+                ParamLaserDir = "RandomDiagonal";
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(180, 180, 220), ToAv(120, 80, 200), ToAv(80, 200, 200), ToAv(220, 220, 255));
+                break;
+            case "Recollection":
+                ParamBpm = 27; ParamDiagonalDir = "Random"; ParamTextureType = "Conical";
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(120, 200, 255), ToAv(255, 220, 180), ToAv(180, 120, 255));
+                break;
+            case "The Unmaking":
+                ParamBpm = 175; ParamAccentEvery = 4; ParamDecay = 0.5;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 60, 60), ToAv(255, 200, 100), ToAv(255, 255, 255));
+                break;
             case "Moon Dust (Mare Lamentorum)":
                 ParamInterval = 20; ParamFadeSpeed = 900;
                 ColorBase = ToAv(0, 0, 0);
@@ -731,6 +864,47 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 ParamSpeed = 180; ParamSize = 100;
                 ColorBase = ToAv(255, 248, 220);
                 SetColors(ToAv(255, 255, 0));
+                break;
+            // 7.x weather animations — defaults mirror ReactiveWeather.cs effect cases
+            case "Atmospheric Phantasms":
+                ParamRippleSpeed = 6.0; ParamPulseRadius = 12.0; ParamSpawnInterval = 0.5; ParamFadeWidth = 2.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(80, 200, 255), ToAv(180, 120, 255));
+                break;
+            case "Illusory Disturbances":
+                ParamRippleSpeed = 6.0; ParamPulseRadius = 12.0; ParamSpawnInterval = 0.5; ParamFadeWidth = 2.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(255, 200, 80), ToAv(255, 80, 200), ToAv(120, 200, 255));
+                break;
+            case "Gravitational Flux":
+                ParamBpm = 36; ParamBeamWidth = 2.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(180, 80, 255), ToAv(80, 40, 180));
+                break;
+            case "Meteor Showers":
+                ParamInterval = 20; ParamFadeSpeed = 900; ParamNumberOfLeds = 10;
+                ColorBase = ToAv(20, 10, 40);
+                SetColors(ToAv(255, 200, 80), ToAv(255, 120, 40));
+                break;
+            case "Sporing Mist":
+                ParamInterval = 20; ParamFadeSpeed = 900; ParamNumberOfLeds = 10;
+                ColorBase = ToAv(20, 60, 30);
+                SetColors(ToAv(180, 255, 120), ToAv(120, 200, 80));
+                break;
+            case "Annealing Winds":
+                ParamSpeed = 200; ParamDirection = true;
+                ColorBase = ToAv(180, 80, 40);
+                SetColors(ToAv(255, 180, 80));
+                break;
+            case "Glass Storms":
+                ParamInterval = 20; ParamFadeSpeed = 900; ParamNumberOfLeds = 10;
+                ColorBase = ToAv(120, 140, 160);
+                SetColors(ToAv(220, 230, 240));
+                break;
+            case "Bubble Bloom":
+                ParamBpm = 32; ParamBpmSpeed = "Sync"; ParamWedgeDegrees = 180;
+                ColorBase = ToAv(20, 60, 80);
+                SetColors(ToAv(180, 220, 255));
                 break;
 
             // Raw decorators — sensible defaults
@@ -1195,11 +1369,78 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 $"var pulse = new BPMCircularPulseEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamPulseRadius}, {ParamFadeWidth}, colors, surface, baseCol);\n\n" +
                 "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(pulse, layer, runningEffects);",
 
-            "Arcadia P1 Effect 2 — Post-Flash" =>
+            "Arcadia P1 Effect 2 — Post-Flash" or "The Unmaking" =>
                 $"var baseCol = {bS};\n" +
                 $"var colors = {arr};\n" +
                 $"var strike = new BPMThunderstrikeEffect(layer, {ParamBpm}, {ParamAccentEvery}, {ParamDecay}, colors, surface, baseCol);\n\n" +
                 "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(strike, layer, runningEffects);",
+
+            "Ring Noir (M9)" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var heartbeat = new BPMHeartbeatEffect(layer, {ParamBpm}, {ParamBeamWidth}, colors, surface, baseCol);\n\n" +
+                "SetEffect(heartbeat, layer, runningEffects);",
+
+            "The X-Ring (M10)" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var pulse = new BPMCircularPulseEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamPulseRadius}, {ParamFadeWidth}, colors, surface, baseCol);\n\n" +
+                "SetEffect(pulse, layer, runningEffects);",
+
+            "The Crown (M11)" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var spinner = new BPMSpinnerEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamWedgeDegrees}, colors, surface, baseCol);\n\n" +
+                "SetEffect(spinner, layer, runningEffects);",
+
+            "Hell on Rails" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var matrix = new BPMMatrixEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamFlickerOpacity}, {ParamFlickerSpeed}, colors, surface, MatrixEffect.MatrixDirection.{ParamMatrixDir}, baseCol);\n\n" +
+                "SetEffect(matrix, layer, runningEffects);",
+
+            "The Ageless Necropolis / Lightless Abyss" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var laser = new BPMLaserEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamBeamWidth}, colors, surface, LaserEffect.LaserDirection.{ParamLaserDir}, baseCol);\n\n" +
+                "SetEffect(laser, layer, runningEffects);",
+
+            "Recollection" =>
+                $"var animationCol1 = {s0};\nvar animationCol2 = {s1};\nvar animationCol3 = {s2};\n\n" +
+                "var animationGradient = new LinearGradient(\n" +
+                "    new GradientStop(0f, animationCol1), new GradientStop(0.33f, animationCol2), new GradientStop(0.66f, animationCol3));\n\n" +
+                $"var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, {ParamBpm}, DiagonalDirection.{ParamDiagonalDir});\n\n" +
+                "SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);",
+
+            "Atmospheric Phantasms" or "Illusory Disturbances" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var pulse = new CircularPulseEffect(layer, {ParamRippleSpeed}, {ParamPulseRadius}, {ParamSpawnInterval}, {ParamFadeWidth}, colors, surface, baseCol);\n\n" +
+                "SetEffect(pulse, layer, runningEffects);",
+
+            "Gravitational Flux" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var heartbeat = new BPMHeartbeatEffect(layer, {ParamBpm}, {ParamBeamWidth}, colors, surface, baseCol);\n\n" +
+                "SetEffect(heartbeat, layer, runningEffects);",
+
+            "Meteor Showers" or "Sporing Mist" or "Glass Storms" =>
+                $"var baseCol = {bS};\n" +
+                $"var animationCol = {arr};\n" +
+                $"var starfield = new StarfieldDecorator(layer, {ParamNumberOfLeds}, {ParamInterval}, {ParamFadeSpeed}, animationCol, surface, false, baseCol);\n\n" +
+                "layer.Brush = new SolidColorBrush(baseCol);\nSetEffect(starfield, layer, runningEffects);",
+
+            "Annealing Winds" =>
+                $"var baseCol = {bS};\nvar animationCol = {s0};\n\n" +
+                "var animationGradient = new LinearGradient(new GradientStop(0f, baseCol), new GradientStop(0.25f, animationCol), new GradientStop(0.75f, baseCol), new GradientStop(1f, animationCol));\n" +
+                $"var gradientMove = new MoveGradientDecorator(surface, {ParamSpeed}, true);\n\n" +
+                "SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);",
+
+            "Bubble Bloom" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var spinner = new BPMSpinnerEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamWedgeDegrees}, colors, surface, baseCol);\n\n" +
+                "SetEffect(spinner, layer, runningEffects);",
 
             "Blasting Ring (Brute Bomber)" =>
                 $"var baseCol = {bS};\n" +
@@ -1592,11 +1833,65 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 return () => group.RemoveDecorator(dec);
             }
             case "Arcadia P1 Effect 2 — Post-Flash":
+            case "The Unmaking":
             {
                 group.Brush = new SolidColorBrush(baseCol);
                 var dec = new BPMThunderstrikeEffect(group, ParamBpm, ParamAccentEvery, ParamDecay, colors, _surface, baseCol);
                 group.AddDecorator(dec);
                 return () => group.RemoveDecorator(dec);
+            }
+            case "Ring Noir (M9)":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMHeartbeatEffect(group, ParamBpm, ParamBeamWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "The X-Ring (M10)":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMCircularPulseEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamPulseRadius, ParamFadeWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "The Crown (M11)":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMSpinnerEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamWedgeDegrees, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Hell on Rails":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dir = Enum.Parse<MatrixEffect.MatrixDirection>(ParamMatrixDir);
+                var dec = new BPMMatrixEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamFlickerOpacity, ParamFlickerSpeed, colors, _surface, dir, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "The Ageless Necropolis / Lightless Abyss":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dir = Enum.Parse<LaserEffect.LaserDirection>(ParamLaserDir);
+                var dec = new BPMLaserEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamBeamWidth, colors, _surface, dir, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Recollection":
+            {
+                // Diagonal-gradient effect — mirrors RaidEffectProcessor's
+                // SetRadialGradientEffect path with three colour stops, no
+                // base-colour stop (hence Build3StopGradient over only the
+                // animation colours, the same shape Recollection uses
+                // in-game).
+                var g = new LinearGradient(
+                    new GradientStop(0f, s0),
+                    new GradientStop(0.33f, s1),
+                    new GradientStop(0.66f, s2));
+                var dec = new MoveBPMDiagonalGradientDecorator(_surface, ParamBpm, Enum.Parse<DiagonalDirection>(ParamDiagonalDir));
+                g.AddDecorator(dec);
+                group.Brush = new TextureBrush(new ConicalGradientTexture(new Size(100, 100), g));
+                return () => g.RemoveDecorator(dec);
             }
 
             // ── Weather presets (starfield-based) ──
@@ -1605,9 +1900,42 @@ public partial class MainViewModel : ObservableObject, IDisposable
             case "Showers":
             case "Snow":
             case "Blizzards":
+            case "Meteor Showers":
+            case "Sporing Mist":
+            case "Glass Storms":
             {
                 group.Brush = new SolidColorBrush(baseCol);
                 var dec = new StarfieldDecorator(group, Math.Max(4, group.Count() / 4), ParamInterval, ParamFadeSpeed, colors, _surface, false, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Atmospheric Phantasms":
+            case "Illusory Disturbances":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new CircularPulseEffect(group, ParamRippleSpeed, ParamPulseRadius, ParamSpawnInterval, ParamFadeWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Gravitational Flux":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMHeartbeatEffect(group, ParamBpm, ParamBeamWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "Annealing Winds":
+            {
+                var g = Build2ColorOscGradient(baseCol, s0); g.WrapGradient = true;
+                var dec = new MoveGradientDecorator(_surface, ParamSpeed, ParamDirection);
+                g.AddDecorator(dec);
+                group.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), g));
+                return () => g.RemoveDecorator(dec);
+            }
+            case "Bubble Bloom":
+            {
+                group.Brush = new SolidColorBrush(baseCol);
+                var dec = new BPMSpinnerEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamWedgeDegrees, colors, _surface, baseCol);
                 group.AddDecorator(dec);
                 return () => group.RemoveDecorator(dec);
             }

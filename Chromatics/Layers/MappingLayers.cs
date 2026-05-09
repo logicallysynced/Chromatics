@@ -86,6 +86,44 @@ namespace Chromatics.Layers
             return layer;
         }
 
+        // Stamps requestUpdate=true on every layer belonging to the given
+        // device. Used when the per-device EffectLayer toggle on the Mappings
+        // tab flips — the existing requestUpdate cleanup paths in
+        // GameController.Update detach all the device's live ledgroups for the
+        // next frame, so base and dynamic layers re-paint cleanly and effect-
+        // class ledgroups (which would otherwise sit frozen on their last
+        // brush evaluation) drop off the surface.
+        public static void MarkDeviceLayersForUpdate(Guid deviceGuid)
+        {
+            foreach (var l in _layers.Values)
+            {
+                if (l.deviceGuid == deviceGuid)
+                    l.requestUpdate = true;
+            }
+        }
+
+        // True iff the user has the EffectLayer row enabled for this device on
+        // the Mappings tab. The EffectLayer row's checkbox acts as a master
+        // "effects" switch covering not just the effect-layer-rooted processors
+        // (raid effects, duty bell, damage flash, cutscene, …) but ALL game-
+        // state-driven painting on the device — base layers (Reactive Weather,
+        // Job Classes, …), dynamic layers (HP tracker, key bindings, …), and
+        // overlays (raid-effect overlay, raid highlight). GameController
+        // consults this in its per-layer dispatch loop and skips processing
+        // entirely for layers on a device whose effects are disabled.
+        //
+        // Defaults to true if no EffectLayer row exists for the device — the
+        // device is unmanaged from the Mappings tab so don't suppress anything.
+        public static bool IsDeviceEffectsEnabled(Guid deviceGuid)
+        {
+            foreach (var l in _layers.Values)
+            {
+                if (l.rootLayerType == LayerType.EffectLayer && l.deviceGuid == deviceGuid)
+                    return l.Enabled;
+            }
+            return true;
+        }
+
         // Swaps from QWERTY canonical positions to each target layout. Each dict
         // maps LedId (on QWERTY) -> LedId at the same printed letter on the
         // target layout. The dicts are involutions (swaps), so applying the same

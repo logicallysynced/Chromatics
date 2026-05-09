@@ -35,7 +35,18 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         public StarfieldDecorator(ListLedGroup _ledGroup, int numberOfLeds, double interval, double fadeSpeed, Color[] colors, RGBSurface surface, bool updateIfDisabled = false, Color baseColor = default(Color)) : base(surface, updateIfDisabled)
         {
             this.ledGroup = _ledGroup;
-            this.numberOfLeds = numberOfLeds;
+            // Floor numberOfLeds to 1 when the ledgroup has any LEDs at all.
+            // Most callers compute `count / 4`, which rounds down to 0 on
+            // 1–3 LED devices (Hue bulbs, DualShock 4 lightbar, single-LED
+            // accessories). With 0 stars, no LED ever enters fadingInLeds /
+            // fadingOutLeds, so the device shows nothing — the animation
+            // appears completely missing on small devices. Clamping to 1
+            // ensures the single LED becomes the "star" and cycles through
+            // highlight colours, which is the correct visual analogue.
+            int requestedLeds = numberOfLeds;
+            if (requestedLeds < 1 && _ledGroup != null && _ledGroup.Count() > 0)
+                requestedLeds = 1;
+            this.numberOfLeds = requestedLeds;
             this.interval = interval;
             this.fadeSpeed = fadeSpeed;
             this.colors = colors;

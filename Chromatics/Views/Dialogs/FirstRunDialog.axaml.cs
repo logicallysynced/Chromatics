@@ -3,6 +3,9 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
 using Chromatics.Core;
+using Chromatics.Enums;
+using Chromatics.Extensions;
+using Chromatics.Localization;
 using System;
 using System.Linq;
 
@@ -10,6 +13,8 @@ namespace Chromatics.Views.Dialogs
 {
     public partial class FirstRunDialog : Window
     {
+        private bool _suppressLanguageWrite;
+
         public FirstRunDialog()
         {
             InitializeComponent();
@@ -17,13 +22,45 @@ namespace Chromatics.Views.Dialogs
             foreach (var tile in Tiles())
                 tile.IsCheckedChanged += OnTileChanged;
 
+            // Populate the language picker from the Language enum so it stays
+            // in lock-step with the Settings → Language dropdown. Suppress the
+            // SelectionChanged write-back during initial selection so we don't
+            // re-persist the unchanged value on dialog open.
+            var current = AppSettings.GetSettings().systemLanguage;
+            var options = Enum.GetValues<Language>()
+                .Select(l => new LanguageEntry(l, l.GetDisplayName()))
+                .ToArray();
+            _suppressLanguageWrite = true;
+            LanguageBox.ItemsSource = options;
+            LanguageBox.SelectedItem = options.FirstOrDefault(o => o.Value == current) ?? options[0];
+            _suppressLanguageWrite = false;
+
             UpdateContinueState();
+        }
+
+        private sealed record LanguageEntry(Language Value, string DisplayName)
+        {
+            public override string ToString() => DisplayName;
+        }
+
+        private void OnLanguageChanged(object? sender, SelectionChangedEventArgs e)
+        {
+            if (_suppressLanguageWrite) return;
+            if (LanguageBox.SelectedItem is not LanguageEntry entry) return;
+
+            var s = AppSettings.GetSettings();
+            s.systemLanguage = entry.Value;
+            AppSettings.SaveSettings(s);
+            // Bumps LocalizationService.Version, which all {loc:Tr Key='...'}
+            // bindings in this dialog (and elsewhere) re-evaluate against — so
+            // the dialog re-renders in the new language immediately.
+            LocalizationService.Instance.SetLanguage(entry.Value);
         }
 
         private ToggleButton[] Tiles() =>
         [
             TileRazer, TileLogitech, TileCorsair, TileCoolermaster,
-            TileSteelSeries, TileAsus, TileMsi, TileWooting, TileNovation, TileOpenRgb,
+            TileSteelSeries, TileAsus, TileMsi, TileWooting, TileNovation, TileOpenRgb, TilePlayStation,
         ];
 
         private void OnTileChanged(object? sender, RoutedEventArgs e) => UpdateContinueState();
@@ -49,6 +86,7 @@ namespace Chromatics.Views.Dialogs
             s.deviceWootingEnabled      = TileWooting.IsChecked      ?? false;
             s.deviceNovationEnabled     = TileNovation.IsChecked     ?? false;
             s.deviceOpenRGBEnabled      = TileOpenRgb.IsChecked      ?? false;
+            s.devicePlayStationEnabled  = TilePlayStation.IsChecked  ?? false;
 
             // Hue is deliberately omitted from the wizard — it needs the
             // bridge-pairing dialog which is inappropriate for first-run flow.

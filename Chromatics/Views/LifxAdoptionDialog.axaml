@@ -1,0 +1,91 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        xmlns:vm="clr-namespace:Chromatics.ViewModels"
+        x:Class="Chromatics.Views.LifxAdoptionDialog"
+        x:DataType="vm:LifxAdoptionDialogViewModel"
+        Title="{loc:Tr Key='Choose LIFX devices'}"
+        Width="560" Height="460"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Margin="20">
+
+        <TextBlock Grid.Row="0"
+                   Text="{loc:Tr Key='Select which LIFX devices Chromatics should control. You can change this later from Settings.'}"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,12" />
+
+        <Border Grid.Row="1"
+                Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                CornerRadius="4"
+                Padding="10,6"
+                Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" />
+                <ProgressBar IsIndeterminate="True"
+                             IsVisible="{Binding IsDiscovering}"
+                             Width="80" Height="8"
+                             VerticalAlignment="Center" />
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="2"
+                BorderThickness="1"
+                CornerRadius="4"
+                Padding="0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Bulbs}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="12,8" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource SystemControlBackgroundAltMediumLowBrush}">
+                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                    <CheckBox Grid.Column="0"
+                                              IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                              VerticalAlignment="Center"
+                                              Margin="0,0,12,0" />
+
+                                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Label}" FontWeight="SemiBold" />
+                                        <TextBlock Opacity="0.7" FontSize="11">
+                                            <Run Text="{Binding ProductName}" />
+                                            <Run Text=" · " />
+                                            <Run Text="{Binding IpDisplay}" />
+                                        </TextBlock>
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="2"
+                                               Text="{loc:Tr Key='offline'}"
+                                               Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                               FontSize="11"
+                                               VerticalAlignment="Center"
+                                               IsVisible="{Binding !IsOnline}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <StackPanel Grid.Row="3"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,12,0,0">
+            <Button Name="DiscoverAgainButton"
+                    Content="{loc:Tr Key='Search again'}"
+                    Click="OnDiscoverAgain"
+                    MinWidth="120" />
+            <Button Name="CancelButton"
+                    Content="{loc:Tr Key=Cancel}"
+                    Click="OnCancel"
+                    MinWidth="100" />
+            <Button Name="SaveButton"
+                    Content="{loc:Tr Key=Save}"
+                    Classes="accent"
+                    Click="OnSave"
+                    MinWidth="100" />
+        </StackPanel>
+    </Grid>
+</Window>

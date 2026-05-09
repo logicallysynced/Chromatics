@@ -1,6 +1,7 @@
 ﻿using Chromatics.Extensions.RGB.NET.ColorCorrections;
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
+using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -59,6 +60,12 @@ namespace Chromatics.Core
         // Keys are short, hardcoded category names ("startup", "title");
         // values are the ListLedGroups that belong to that animation.
         private static readonly Dictionary<string, List<ListLedGroup>> _taggedEffects = new();
+        // Parallel index keyed by source device — lets the EffectLayer per-device
+        // toggle attach/detach a single device's tagged group without disturbing
+        // the rest of the rig. Populated by the deviceGuid-aware overload of
+        // RegisterTaggedEffect; kept in sync by StopTaggedEffects /
+        // DetachTaggedEffectForDevice.
+        private static readonly Dictionary<string, Dictionary<Guid, ListLedGroup>> _taggedEffectsByDevice = new();
         private static readonly System.Threading.Lock _taggedEffectsLock = new();
 
         private static Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
@@ -214,7 +221,42 @@ namespace Chromatics.Core
                     {
                         Logger.WriteConsole(Enums.LoggerTypes.Error, $"[HueDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
                     }
-                    
+
+                }
+
+                if (appSettings.devicePlayStationEnabled)
+                {
+                    LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance);
+                }
+
+                if (appSettings.deviceLifxEnabled)
+                {
+                    try
+                    {
+                        // Hydrate the provider's adopted-device list from settings
+                        // before LoadDeviceProvider triggers discovery / endpoint
+                        // resolution. An empty list short-circuits LoadDevices —
+                        // the user can re-open the adoption dialog from Settings
+                        // to add devices without a re-toggle.
+                        LifxRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        foreach (var d in appSettings.deviceLifxAdoptedDevices ?? new List<LifxAdoptedDevice>())
+                        {
+                            System.Net.IPEndPoint ep = null;
+                            if (!string.IsNullOrEmpty(d.LastIp) &&
+                                System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                            {
+                                ep = new System.Net.IPEndPoint(ip, Chromatics.Extensions.RGB.NET.Devices.LIFX.Protocol.LifxDiscovery.LifxPort);
+                            }
+                            LifxRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new LifxClientDefinition(d.Mac, d.Label, ep, d.ProductId, d.ZoneCount));
+                        }
+
+                        LoadDeviceProvider(LifxRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[LifxDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
                 }
                             
             
@@ -243,9 +285,25 @@ namespace Chromatics.Core
         {
             if (surface != null && device != null && surface.Devices.Contains(device))
             {
+                // For LIFX, send the captured pre-Chromatics state (colour
+                // + power) before detaching so the bulb returns to whatever
+                // the user had before adoption. surface.Detach alone just
+                // stops further updates, leaving the bulb on the last
+                // colour we sent — which is undesirable when the user
+                // explicitly disables a single device. Run on a worker so
+                // the UI thread doesn't block on the UDP send sequence.
+                if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
+                {
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await lifxDev.RestoreOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
+
                 surface.Detach(device);
-                
-                
+
+
                 if (_activeDevices.ContainsKey(device))
                 {
                     _activeDevices[device] = false;
@@ -264,6 +322,20 @@ namespace Chromatics.Core
             {
                 surface.Attach(device);
                 AttachGlobalBrightness(device);
+
+                // Re-capture the bulb's current state on per-device re-enable.
+                // The user may have changed the colour / power between the
+                // disable and re-enable (LIFX app, automation, etc.), and
+                // they expect the next disable to restore whatever was on
+                // the bulb just before Chromatics retook control.
+                if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
+                {
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await lifxDev.CaptureOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
 
                 if (_activeDevices.ContainsKey(device))
                 {
@@ -285,6 +357,26 @@ namespace Chromatics.Core
                 corrections.Add(GlobalBrightnessCorrection.Instance);
         }
 
+        // Reverse lookup from IRGBDevice to the Chromatics-managed GUID. Used by
+        // tagged-effect builders (RunStartupEffects, BuildTitleScreenAnimation)
+        // that iterate surface.Devices and need to consult the per-device
+        // EffectLayer toggle. Returns Guid.Empty when the device hasn't yet been
+        // registered through DevicesChanged.Added — caller treats Empty as "no
+        // toggle known, paint as normal".
+        public static Guid GetDeviceGuid(IRGBDevice device)
+        {
+            if (device == null) return Guid.Empty;
+            lock (_devicesLock)
+            {
+                foreach (var kvp in _devices)
+                {
+                    if (ReferenceEquals(kvp.Value, device))
+                        return kvp.Key;
+                }
+            }
+            return Guid.Empty;
+        }
+
         // Per-device brightness needs the device GUID, which is only known
         // once DevicesChanged.Added fires. Called from there after the GUID
         // has been computed; idempotent on re-attach.
@@ -304,6 +396,7 @@ namespace Chromatics.Core
             if (device is Chromatics.Extensions.RGB.NET.Devices.Hue.HueDevice hueDevice)
                 hueDevice.SetPerDeviceBrightness(correction);
         }
+
 
         // Pushes a new per-device brightness value to the active correction.
         // Called by MappingLayers.SetDeviceBrightness after persisting; the
@@ -368,6 +461,21 @@ namespace Chromatics.Core
                     _devices.Add(guid, device);
                 }
 
+                // Attach to the RGBSurface here for hot-plug ONLY. Startup
+                // attachment is owned by SurfaceExtensions.Load, which calls
+                // provider.Initialize() (during which DevicesChanged fires
+                // for every initial device) and THEN surface.Attach(provider.Devices).
+                // Attaching during Initialize would cause Load's later
+                // surface.Attach pass to throw "already attached", so we
+                // gate on IRGBDeviceProvider.IsInitialized — false during
+                // Initialize, true once Load has completed and any
+                // subsequent AddDevice is from a provider's runtime
+                // hot-plug logic (e.g. PlayStation USB/BT connect).
+                var senderProvider = sender as IRGBDeviceProvider;
+                bool isHotPlug = senderProvider?.IsInitialized == true;
+                if (isHotPlug && surface != null && !surface.Devices.Contains(device))
+                    surface.Attach(device);
+
                 AttachGlobalBrightness(device);
                 AttachPerDeviceBrightness(device, guid);
 
@@ -386,6 +494,23 @@ namespace Chromatics.Core
                     _activeDevices.Add(device, true);
                 }
 
+                // Hot-plug into a running startup animation: rebuild the
+                // "startup" tagged ledgroups so the new device participates.
+                // RunStartupEffects builds a fresh ListLedGroup per device at
+                // the moment it's called — devices added later are otherwise
+                // never included, which is what manifested as "DS5 hot-plug
+                // controller stays on firmware-default blue while the rest
+                // of the rig is in the startup rainbow".
+                //
+                // Gated on isHotPlug + an existing "startup" tag so we don't
+                // restart the animation during the initial DevicesChanged
+                // burst (Load owns that path), and so we don't accidentally
+                // re-fire startup over the user's running game effects.
+                if (isHotPlug && HasActiveTaggedEffect("startup"))
+                {
+                    RunStartupEffects();
+                }
+
                 DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
 
             }
@@ -398,6 +523,18 @@ namespace Chromatics.Core
                 #else
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Lost {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
                 #endif
+
+                // Detach from the surface for hot-plug only — same reasoning
+                // as the Added branch above. During provider unload
+                // (UnloadDeviceProvider) the surface.Detach is already done
+                // before Reset() fires DevicesChanged.Removed for each device.
+                // Detaching here too would throw "not attached".
+                var senderProviderRemoved = sender as IRGBDeviceProvider;
+                bool isHotUnplug = senderProviderRemoved?.IsInitialized == true;
+                if (isHotUnplug && surface != null && surface.Devices.Contains(device))
+                {
+                    try { surface.Detach(device); } catch { }
+                }
 
                 lock (_devicesLock)
                 {
@@ -525,6 +662,7 @@ namespace Chromatics.Core
 
         public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true)
         {
+            bool anyRemoved = false;
             try
             {
                 if (loadedDeviceProviders.Contains(provider))
@@ -546,6 +684,7 @@ namespace Chromatics.Core
                         }
 
                         _activeDevices.Remove(device);
+                        anyRemoved = true;
                     }
 
                     provider.Exception -= deviceExceptionEventHandler;
@@ -562,6 +701,14 @@ namespace Chromatics.Core
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault()?.DeviceInfo.DeviceName}] UnloadDeviceProvider Error: {ex.Message}");
             }
 
+            // Notify listeners that the device set changed. The DevicesChanged
+            // handler already fires DeviceConnectionChanged on hot-unplug, but
+            // a provider-level disable from Settings unsubscribes that handler
+            // before the manual surface.Detach loop runs above, so the event
+            // never reaches the Mapping view. Firing once here covers the
+            // settings-disable path for every provider in one place.
+            if (anyRemoved)
+                DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static bool IsLoaded()
@@ -637,6 +784,105 @@ namespace Chromatics.Core
             return true;
         }
 
+        // Reconciles a single device's contribution to any currently-active
+        // tagged effect (startup animation, title screen) with the device's
+        // EffectLayer toggle state. Per-device — does NOT touch other devices'
+        // groups, so toggling one device does not disturb the rest of the
+        // rig's animation phase.
+        //
+        //   - Effects toggled OFF for the device: detach + remove its group
+        //     from the tagged-effect tracking. Other devices' groups keep
+        //     painting at their current phase.
+        //   - Effects toggled ON for the device: build a new group for just
+        //     this device using the current animation's gradient/decorator
+        //     setup, attach it, and register under the existing tag. Joins
+        //     mid-animation; the new group inherits the global gradient
+        //     phase (MoveGradientDecorator advances over time, doesn't
+        //     restart on re-attach).
+        public static void SyncTaggedEffectsForDevice(Guid deviceGuid)
+        {
+            if (deviceGuid == Guid.Empty) return;
+            bool effectsEnabled = MappingLayers.IsDeviceEffectsEnabled(deviceGuid);
+
+            // Resolve the IRGBDevice for this guid — needed when (re)building.
+            IRGBDevice device;
+            lock (_devicesLock) { _devices.TryGetValue(deviceGuid, out device); }
+            if (device == null) return;
+
+            SyncTaggedEffectForDevice("startup", deviceGuid, device, effectsEnabled,
+                                      buildIfEnabled: () => BuildStartupEffectForDevice(device, deviceGuid));
+            SyncTaggedEffectForDevice("title", deviceGuid, device, effectsEnabled,
+                                      buildIfEnabled: () => BuildTitleEffectForDevice(device, deviceGuid));
+        }
+
+        private static void SyncTaggedEffectForDevice(string tag, Guid deviceGuid, IRGBDevice device,
+                                                      bool effectsEnabled, Action buildIfEnabled)
+        {
+            if (!HasActiveTaggedEffect(tag)) return;
+
+            ListLedGroup existing = null;
+            lock (_taggedEffectsLock)
+            {
+                if (_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
+                    byDevice.TryGetValue(deviceGuid, out existing);
+            }
+
+            if (!effectsEnabled && existing != null)
+            {
+                // Effects just turned OFF for this device — detach its group
+                // without disturbing groups on other devices.
+                lock (_taggedEffectsLock)
+                {
+                    if (_taggedEffects.TryGetValue(tag, out var groups))
+                        groups.Remove(existing);
+                    if (_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
+                        byDevice.Remove(deviceGuid);
+                }
+                _runningEffects.Remove(existing);
+                try { existing.RemoveAllDecorators(); } catch { }
+                try { existing.Detach(); } catch { }
+            }
+            else if (effectsEnabled && existing == null)
+            {
+                // Effects just turned ON for this device — build + register a
+                // fresh group. Inherits the global animation phase from the
+                // shared MoveGradientDecorator (if any).
+                buildIfEnabled?.Invoke();
+            }
+        }
+
+        // Builds the startup-rainbow ledgroup for a single device. Mirrors
+        // the per-device branch of RunStartupEffects so a hot-toggle of
+        // EffectLayer can attach just this device without rebuilding others.
+        private static void BuildStartupEffectForDevice(IRGBDevice device, Guid deviceGuid)
+        {
+            if (!_effects.effect_startupanimation) return;
+
+            var move = new MoveGradientDecorator(surface)
+            {
+                IsEnabled = true,
+                Speed = 100,
+            };
+            var gradient = new RainbowGradient();
+            var ledgroup = new ListLedGroup(surface);
+            ledgroup.ZIndex = 1000;
+            foreach (var led in device) ledgroup.AddLed(led);
+            gradient.AddDecorator(move);
+
+            if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+                ledgroup.Brush = new TextureBrush(new ConicalGradientTexture(new Size(100, 100), gradient));
+            else
+                ledgroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), gradient));
+
+            RegisterTaggedEffect("startup", deviceGuid, ledgroup);
+        }
+
+        // Builds the title-screen starfield ledgroup for a single device.
+        // Defers to GameController for the construction details since the
+        // colour palette + decorator config live there.
+        private static void BuildTitleEffectForDevice(IRGBDevice device, Guid deviceGuid)
+            => GameController.BuildTitleEffectForDeviceInternal(device, deviceGuid);
+
         public static void RunStartupEffects()
         {
             // Drop the surface to the idle tick rate whether or not the startup
@@ -660,6 +906,15 @@ namespace Chromatics.Core
 
             foreach (var device in devices)
             {
+                // Per-device "all effects off" gate from the EffectLayer
+                // checkbox on the Mappings tab. If the user has unticked
+                // effects for this device, skip its startup-animation
+                // ledgroup so the rainbow doesn't paint there.
+                var deviceGuid = GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty
+                    && !MappingLayers.IsDeviceEffectsEnabled(deviceGuid))
+                    continue;
+
                 var gradient = new RainbowGradient();
                 var ledgroup = new ListLedGroup(surface);
 
@@ -681,7 +936,7 @@ namespace Chromatics.Core
                 }
 
 
-                RegisterTaggedEffect("startup", ledgroup);
+                RegisterTaggedEffect("startup", deviceGuid, ledgroup);
             }
         }
 
@@ -712,6 +967,7 @@ namespace Chromatics.Core
             lock (_taggedEffectsLock)
             {
                 foreach (var groups in _taggedEffects.Values) groups.Clear();
+                _taggedEffectsByDevice.Clear();
             }
         }
 
@@ -721,6 +977,13 @@ namespace Chromatics.Core
         // weather, etc.). The group is also added to the global
         // _runningEffects list so existing teardown paths still see it.
         public static void RegisterTaggedEffect(string tag, ListLedGroup group)
+            => RegisterTaggedEffect(tag, Guid.Empty, group);
+
+        // Variant that records the source device GUID alongside the group so
+        // the per-device EffectLayer toggle can attach/detach a single
+        // device's contribution to a tagged animation (startup rainbow, title
+        // starfield) without restarting the whole animation across the rig.
+        public static void RegisterTaggedEffect(string tag, Guid deviceGuid, ListLedGroup group)
         {
             if (group == null || string.IsNullOrEmpty(tag)) return;
             lock (_taggedEffectsLock)
@@ -728,6 +991,13 @@ namespace Chromatics.Core
                 if (!_taggedEffects.TryGetValue(tag, out var groups))
                     _taggedEffects[tag] = groups = new List<ListLedGroup>();
                 groups.Add(group);
+
+                if (deviceGuid != Guid.Empty)
+                {
+                    if (!_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
+                        _taggedEffectsByDevice[tag] = byDevice = new Dictionary<Guid, ListLedGroup>();
+                    byDevice[deviceGuid] = group;
+                }
             }
             _runningEffects.Add(group);
         }
@@ -742,6 +1012,18 @@ namespace Chromatics.Core
         // the last-rendered animation frame. Without this, disabling the
         // startup rainbow leaves whatever colours were last on the LEDs
         // (typically a frozen rainbow) until something else paints them.
+        // Returns true if at least one ledgroup is currently registered under
+        // the given tag. Cheap to call from the DevicesChanged hot path —
+        // single dict lookup under the same lock the writers use.
+        public static bool HasActiveTaggedEffect(string tag)
+        {
+            if (string.IsNullOrEmpty(tag)) return false;
+            lock (_taggedEffectsLock)
+            {
+                return _taggedEffects.TryGetValue(tag, out var groups) && groups.Count > 0;
+            }
+        }
+
         public static void StopTaggedEffects(string tag)
         {
             List<ListLedGroup> snapshot;
@@ -750,6 +1032,8 @@ namespace Chromatics.Core
                 if (!_taggedEffects.TryGetValue(tag, out var groups) || groups.Count == 0) return;
                 snapshot = new List<ListLedGroup>(groups);
                 groups.Clear();
+                if (_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
+                    byDevice.Clear();
             }
 
             // Disable decorators + write black DIRECTLY to each LED's Color

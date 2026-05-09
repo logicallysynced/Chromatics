@@ -305,7 +305,7 @@ namespace Chromatics.Layers
                     jobGauge.maxValue = 100; //Paldain Max Oath Gauge
                     jobGauge.minValue = 0;
 
-                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusName == "Iron Will") != null)
+                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusNameEnglish == "Iron Will") != null)
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobPLDIronWill.Color);
                     }
@@ -420,7 +420,7 @@ namespace Chromatics.Layers
                     jobGauge.maxValue = 100; //Scholar Faerie Gauge Max
                     jobGauge.minValue = 0;
 
-                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusName == "Summon Seraph") != null)
+                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusNameEnglish == "Summon Seraph") != null)
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobSCHSeraph.Color);
                     }
@@ -494,7 +494,7 @@ namespace Chromatics.Layers
                     jobGauge.maxValue = 100; //Dark Knight Blood Gauge Max
                     jobGauge.minValue = 0;
 
-                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusName == "Grit") != null)
+                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusNameEnglish == "Grit") != null)
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobDRKGrit.Color);
                     }
@@ -598,7 +598,7 @@ namespace Chromatics.Layers
                     jobGauge.maxValue = 100;
                     jobGauge.minValue = 0;
 
-                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusName == "Royal Guard") != null)
+                    if (currentPlayer.Entity.StatusItems.Find(i => i.StatusNameEnglish == "Royal Guard") != null)
                     {
                         jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobGNBRoyalGuard.Color);
                     }

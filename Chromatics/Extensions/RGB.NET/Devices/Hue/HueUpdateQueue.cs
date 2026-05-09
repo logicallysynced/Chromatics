@@ -45,6 +45,22 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         private static readonly System.Threading.Lock _errorLogLock = new();
         private static readonly TimeSpan ErrorLogInterval = TimeSpan.FromSeconds(15);
 
+        // Bridge-side interpolation window between successive color updates.
+        // Without this, every Update() snaps the bulb to the new color
+        // instantly and rapid colour changes (Vegas effect, cutscene
+        // animation, weather transitions) read as strobe-like pops on
+        // bulbs that lack hardware fade. Hue Play has a built-in fade in
+        // firmware so it looks fine without; software lights (LST, LCA,
+        // E27 colour) need the bridge to do the interpolation for them.
+        //
+        // 150ms is 1.5x the per-bulb update interval (100ms — see
+        // CreateUpdateTrigger) so successive frames overlap and the
+        // bridge retargets mid-fade, producing a continuous gradient
+        // rather than a fade-then-hold staircase. Going higher feels
+        // laggy on dynamic effects; going lower stops smoothing rapid
+        // changes since the fade completes between frames.
+        private const int FadeDurationMs = 150;
+
         #endregion
 
         #region Constructors
@@ -168,7 +184,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     UpdateLight req;
                     if (isBlack || brightness <= 0)
                     {
-                        req = new UpdateLight().TurnOff();
+                        // Fade to off rather than snapping. A black frame mid-effect
+                        // (e.g. between two Vegas pulses) used to read as a hard cut;
+                        // with Duration the bulb dims smoothly into the off state.
+                        req = new UpdateLight
+                        {
+                            On = new On { IsOn = false },
+                            Dynamics = new Dynamics { Duration = FadeDurationMs },
+                        };
                     }
                     else
                     {
@@ -184,7 +207,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         req = new UpdateLight
                         {
                             On = new On { IsOn = true },
-                            Dynamics = new Dynamics { Speed = 0 },
+                            Dynamics = new Dynamics { Duration = FadeDurationMs },
                             Dimming = new Dimming { Brightness = finalBrightness },
                         };
 
