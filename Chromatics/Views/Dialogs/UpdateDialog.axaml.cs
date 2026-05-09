@@ -4,6 +4,9 @@ using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Chromatics.Helpers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Chromatics.Views.Dialogs
@@ -30,10 +33,48 @@ namespace Chromatics.Views.Dialogs
                 BetaNote.IsVisible  = true;
             }
 
-            var notes = result.Info.TargetFullRelease.NotesMarkdown;
-            ChangelogMarkdown.Markdown = string.IsNullOrWhiteSpace(notes)
-                ? "(No release notes provided.)"
-                : notes;
+            ChangelogMarkdown.Markdown = BuildCumulativeChangelog(result);
+        }
+
+        // Concatenate notes from every release between the user's installed
+        // version and the target — Velopack stores the changelog markdown on
+        // each VelopackAsset at pack time, so DeltasToTarget gives us all
+        // intermediate version notes. Showing only TargetFullRelease.Notes
+        // would skip every release the user hasn't seen yet, which is the
+        // common case for someone who skipped a few updates.
+        private static string BuildCumulativeChangelog(UpdateResult result)
+        {
+            var versions = new List<(NuGet.Versioning.SemanticVersion Version, string Notes)>();
+
+            void AddIfNotes(NuGet.Versioning.SemanticVersion? v, string? notes)
+            {
+                if (v == null || string.IsNullOrWhiteSpace(notes)) return;
+                if (versions.Any(e => e.Version.Equals(v))) return;
+                versions.Add((v, notes!));
+            }
+
+            AddIfNotes(result.Info.TargetFullRelease?.Version, result.Info.TargetFullRelease?.NotesMarkdown);
+
+            if (result.Info.DeltasToTarget != null)
+                foreach (var d in result.Info.DeltasToTarget)
+                    AddIfNotes(d.Version, d.NotesMarkdown);
+
+            if (versions.Count == 0)
+                return "(No release notes provided.)";
+
+            // Newest first — same ordering as the CHANGELOG.md file the user
+            // is used to seeing on GitHub.
+            versions.Sort((a, b) => b.Version.CompareTo(a.Version));
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < versions.Count; i++)
+            {
+                if (i > 0) sb.AppendLine().AppendLine("---").AppendLine();
+                sb.Append("## ").AppendLine(versions[i].Version.ToString());
+                sb.AppendLine();
+                sb.AppendLine(versions[i].Notes.Trim());
+            }
+            return sb.ToString();
         }
 
         private async void OnInstall(object sender, RoutedEventArgs e)
