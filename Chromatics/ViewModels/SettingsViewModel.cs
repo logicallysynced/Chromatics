@@ -6,6 +6,7 @@ using Chromatics.Localization;
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
+using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using Chromatics.Models;
 using Chromatics.Helpers;
 using Chromatics.Views;

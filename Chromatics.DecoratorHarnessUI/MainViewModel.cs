@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Chromatics.Extensions.RGB.NET.Decorators;
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
+using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures;
