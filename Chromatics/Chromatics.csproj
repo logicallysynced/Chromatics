@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows7.0</TargetFramework>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.1.26.0</Version>
+    <Version>4.1.27.0</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>logicallysynced 2026</Copyright>

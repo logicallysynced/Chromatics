@@ -199,6 +199,15 @@ namespace Chromatics.ViewModels
 
                     if (!dlg.Saved) return false;
 
+                    // If discovery turned up nothing OR the user unchecked
+                    // everything before saving, treat the enable as a no-op
+                    // and leave the toggle off. Without this the provider
+                    // would load with an empty ClientDefinitions list — no
+                    // devices appear in the surface but the Settings tab
+                    // shows the toggle as "on", which is misleading.
+                    if (dlg.SelectedDevices == null || dlg.SelectedDevices.Count == 0)
+                        return false;
+
                     cur.deviceLifxAdoptedDevices = dlg.SelectedDevices;
                     cur.deviceLifxEnabled = true;
                     AppSettings.SaveSettings(cur);
