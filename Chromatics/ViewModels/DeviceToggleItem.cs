@@ -31,6 +31,15 @@ namespace Chromatics.ViewModels
                     OnPropertyChanged();
                     return;
                 }
+                // Optimistic update: reflect the user's click immediately so
+                // the binding sees a real state transition. Without this the
+                // setter never wrote _isEnabled or fired PropertyChanged on
+                // the way in, so when SetIsEnabledAsync rejected the change
+                // and wrote _isEnabled = false, the value matched what the
+                // binding had already cached and the UI didn't refresh
+                // until the toggle was re-realised (e.g. tab navigation).
+                _isEnabled = value;
+                OnPropertyChanged();
                 _ = SetIsEnabledAsync(value);
             }
         }
