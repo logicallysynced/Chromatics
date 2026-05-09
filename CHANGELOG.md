@@ -2,9 +2,13 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.1.29
+
+- Fixed a benign error that could appear in the log when disabling Hue (or any device provider) — "The device 'X' is not attached to this surface." The provider unload path no longer tries to detach a device that's already been removed.
+
 ## 4.1.28
 
-- Device-provider toggles in Settings now revert immediately when a provider declines to enable — for example, cancelling the Hue bridge pairing dialog, or closing the LIFX adoption dialog without selecting any devices. Previously the toggle could stay highlighted until you navigated away from the Settings tab and back.
+- 
 
 ## 4.1.26
 
