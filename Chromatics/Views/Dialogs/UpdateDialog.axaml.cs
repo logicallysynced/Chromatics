@@ -31,7 +31,7 @@ namespace Chromatics.Views.Dialogs
             }
 
             var notes = result.Info.TargetFullRelease.NotesMarkdown;
-            ChangelogText.Text = string.IsNullOrWhiteSpace(notes)
+            ChangelogMarkdown.Markdown = string.IsNullOrWhiteSpace(notes)
                 ? "(No release notes provided.)"
                 : notes;
         }

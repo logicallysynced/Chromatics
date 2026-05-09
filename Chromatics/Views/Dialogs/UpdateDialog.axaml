@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:loc="clr-namespace:Chromatics.Localization"
+        xmlns:md="clr-namespace:Markdown.Avalonia;assembly=Markdown.Avalonia"
         x:Class="Chromatics.Views.Dialogs.UpdateDialog"
         Title="{loc:Tr Key='Update Available'}"
         Width="520"
@@ -40,7 +41,7 @@
                    IsVisible="False"
                    Margin="0,0,0,12" />
 
-        <!-- Changelog -->
+        <!-- Changelog — MarkdownScrollViewer renders bullets, **bold**, links etc. inline. -->
         <Border Grid.Row="3"
                 BorderThickness="1"
                 CornerRadius="4"
@@ -49,13 +50,7 @@
                 Margin="0,0,0,16"
                 Padding="12"
                 Background="{DynamicResource SystemControlBackgroundAltHighBrush}">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <TextBlock Name="ChangelogText"
-                           TextWrapping="Wrap"
-                           LineHeight="20"
-                           FontFamily="Consolas,Courier New,monospace"
-                           FontSize="12" />
-            </ScrollViewer>
+            <md:MarkdownScrollViewer Name="ChangelogMarkdown" />
         </Border>
 
         <!-- Progress (hidden until download starts) -->

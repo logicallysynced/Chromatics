@@ -5,7 +5,7 @@
   },
   "projects": {
     "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj": {
-      "version": "4.1.22",
+      "version": "4.1.23",
       "restore": {
         "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
         "projectName": "Chromatics",
@@ -94,6 +94,10 @@
             "HueApi.Entertainment": {
               "target": "Package",
               "version": "[3.1.0, )"
+            },
+            "Markdown.Avalonia.Tight": {
+              "target": "Package",
+              "version": "[12.0.0-a3, )"
             },
             "NAudio": {
               "target": "Package",
@@ -475,11 +479,6 @@
             "System.Xml.XPath": "(,4.3.32767]",
             "System.Xml.XPath.XDocument": "(,5.0.32767]"
           }
-        }
-      },
-      "runtimes": {
-        "win-x64": {
-          "#import": []
         }
       }
     }
