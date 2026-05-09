@@ -1,5 +1,4 @@
 using Chromatics.Core;
-using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using HidSharp;
 using RGB.NET.Core;
 using System;
@@ -9,7 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chromatics.Extensions.RGB.NET.Devices
+namespace Chromatics.Extensions.RGB.NET.Devices.PlayStation
 {
     // Custom RGB.NET device provider for Sony's PlayStation controllers — DualShock 4
     // (PS4) and DualSense / DualSense Edge (PS5). Talks raw HID via HidSharp; no
