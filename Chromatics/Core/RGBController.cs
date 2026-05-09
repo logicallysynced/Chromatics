@@ -744,6 +744,29 @@ namespace Chromatics.Core
                     surface.Load(provider);
                     loadedDeviceProviders.Add(provider);
 
+                    // surface.Load attaches every device in provider.Devices
+                    // unconditionally (the comment in DevicesChanged about
+                    // "startup attachment is owned by SurfaceExtensions.Load"
+                    // is the source of truth here). Our pre-Load skip-attach
+                    // loop above is moot for async providers (Hue/LIFX),
+                    // whose Devices collection is empty until Initialize
+                    // runs INSIDE Load. To honour the persisted disable
+                    // state we have to detach the disabled devices here,
+                    // AFTER Load has populated provider.Devices and put
+                    // them on the surface.
+                    foreach (var device in provider.Devices)
+                    {
+                        var guidProbe = Helpers.DeviceHelper.GenerateDeviceGuid(device.DeviceInfo.DeviceName);
+                        if (!Layers.MappingLayers.IsDeviceDisabled(guidProbe))
+                            continue;
+                        if (surface.Devices.Contains(device))
+                            surface.Detach(device);
+                        if (_activeDevices.ContainsKey(device))
+                            _activeDevices[device] = false;
+                        else
+                            _activeDevices.Add(device, false);
+                    }
+
                     if (_loaded)
                     {
                         StopEffects();

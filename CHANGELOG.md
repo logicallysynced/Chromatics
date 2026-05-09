@@ -2,12 +2,12 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.1.32
+## 4.1.33
 
 - Added Auto-discovery for Hue bridges.
 - Updated Hue light adoption. After pairing, Chromatics shows a picker so you can choose exactly which Hue lights it should control. Existing setups upgraded from earlier builds keep all their bulbs (one-time auto-adopt of whatever the bridge currently exposes); from then on you can deselect bulbs you don't want from the same dialog.
 - Hue bulbs now restore their original colour and on/off state when Chromatics releases control — disabling Hue, disabling an individual bulb on the Mappings tab, or closing the app puts each bulb back the way you had it before adoption. Same UX as LIFX.
-- Disabling a device on the Mappings tab now sticks across restarts. Disabled devices still show in the Mappings list — re-enable from the same toggle and Chromatics will (re)take control.
+- Disabling a device on the Mappings tab now sticks across restarts.
 - Fixed an error that could appear in the log when disabling Hue (or any device provider) — "The device 'X' is not attached to this surface."
 
 
