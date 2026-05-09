@@ -94,6 +94,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // trigger/client are torn down so the bridge returns to a known-off state
         // on provider unload or app close. Callers are responsible for swallowing
         // exceptions so a dead bridge never blocks shutdown.
+        //
+        // Kept for source-history continuity; new callers should prefer
+        // RestoreOriginalStateAsync below, which restores the full pre-
+        // Chromatics state (colour, brightness, on/off) instead of
+        // unconditionally turning the bulb off.
         public Task TurnOffAsync()
         {
             if (_light == null || _client == null) return Task.CompletedTask;
@@ -104,6 +109,70 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             catch
             {
                 return Task.CompletedTask;
+            }
+        }
+
+        // Captured state from before Chromatics first painted the bulb.
+        // We store the live Light object directly because Hue's CLIP v2
+        // response types (Color, Dimming, On, ColorTemperature) implement
+        // the same IUpdate* interfaces UpdateLight expects, so we can
+        // round-trip them straight through without translating to and from
+        // an intermediate struct. Restored on disable / dispose / per-
+        // device disable in the Mapping tab so the user returns to
+        // whatever they had pre-adoption.
+        private Light _capturedLight;
+
+        // Best-effort snapshot of the bulb's current state before the trigger
+        // ramps up. Failures are logged but non-fatal — the worst case is the
+        // bulb gets turned off on disable instead of being restored.
+        public async Task CaptureOriginalStateAsync(CancellationToken ct = default)
+        {
+            if (_light == null || _client == null) return;
+            try
+            {
+                var resp = await _client.Light.GetByIdAsync(_light.Id).ConfigureAwait(false);
+                if (resp == null || resp.Data == null || resp.Data.Count == 0) return;
+                _capturedLight = resp.Data[0];
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(LoggerTypes.Devices, $"[Hue] {_light?.Metadata?.Name ?? ""}: failed to capture original state ({ex.Message}).");
+            }
+        }
+
+        // Push the captured state back to the bulb. No-op when no state was
+        // captured (offline at adoption time, etc.) — safer than guessing.
+        // Two sequential updates: colour + brightness first, power as a
+        // separate call so the bridge processes the visual change before
+        // toggling on/off (a single combined update with on=false sometimes
+        // skips the colour change entirely on certain firmware).
+        public async Task RestoreOriginalStateAsync(CancellationToken ct = default)
+        {
+            if (_light == null || _client == null || _capturedLight == null) return;
+            try
+            {
+                var update = new UpdateLight
+                {
+                    Color = _capturedLight.Color,
+                    Dimming = _capturedLight.Dimming,
+                    ColorTemperature = _capturedLight.ColorTemperature,
+                    Dynamics = new Dynamics { Duration = FadeDurationMs },
+                };
+                await _client.Light.UpdateAsync(_light.Id, update).ConfigureAwait(false);
+
+                if (_capturedLight.On != null)
+                {
+                    var powerUpdate = new UpdateLight
+                    {
+                        On = _capturedLight.On,
+                        Dynamics = new Dynamics { Duration = FadeDurationMs },
+                    };
+                    await _client.Light.UpdateAsync(_light.Id, powerUpdate).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(LoggerTypes.Devices, $"[Hue] {_light?.Metadata?.Name ?? ""}: failed to restore original state ({ex.Message}).");
             }
         }
 

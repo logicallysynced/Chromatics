@@ -205,6 +205,51 @@ namespace Chromatics.Core
                         {
                             //HueRGBDeviceProvider.Instance.Exception += (sender, e) => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue Device Error: {e.Exception.Message}");
 
+                            // Auto-adopt migration. Pre-v4.1.31 builds had no
+                            // adoption list — every bulb the bridge exposed was
+                            // automatically adopted. After upgrading, an
+                            // existing user's deviceHueAdoptedDevices is empty
+                            // but they have layers.chromatics4 entries
+                            // referencing Hue device GUIDs. Querying the bridge
+                            // once and seeding the adoption list keeps those
+                            // mappings working without a user prompt; the user
+                            // can later open Settings -> Hue to deselect bulbs.
+                            //
+                            // Falling back silently: if the bridge is offline
+                            // or the client key is stale, we leave the adopted
+                            // list empty and let HueRGBDeviceProvider's
+                            // "empty list = adopt everything" path handle it
+                            // for this session. Migration retries next launch.
+                            if ((appSettings.deviceHueAdoptedDevices == null || appSettings.deviceHueAdoptedDevices.Count == 0)
+                                && !string.IsNullOrEmpty(appSettings.deviceHueBridgeClientKey))
+                            {
+                                try
+                                {
+                                    var api = new HueApi.LocalHueApi(appSettings.deviceHueBridgeIP, appSettings.deviceHueBridgeClientKey);
+                                    var lights = api.Light.GetAllAsync().GetAwaiter().GetResult();
+                                    var devicesResp = api.Device.GetAllAsync().GetAwaiter().GetResult();
+                                    var modelByDevice = devicesResp.Data.ToDictionary(d => d.Id, d => d.ProductData?.ModelId ?? "");
+
+                                    var migrated = lights.Data.Select(l => new Models.HueAdoptedDevice
+                                    {
+                                        LightId = l.Id,
+                                        Label = l.Metadata?.Name ?? l.Id.ToString(),
+                                        ModelId = l.Owner != null && modelByDevice.TryGetValue(l.Owner.Rid, out var m) ? m : (l.Type ?? ""),
+                                    }).ToList();
+
+                                    if (migrated.Count > 0)
+                                    {
+                                        appSettings.deviceHueAdoptedDevices = migrated;
+                                        AppSettings.SaveSettings(appSettings);
+                                        Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] Adopted {migrated.Count} bulb(s) from existing bridge pairing. Open Settings -> Hue to deselect any you don't want Chromatics to control.");
+                                    }
+                                }
+                                catch (Exception migEx)
+                                {
+                                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Hue] Auto-adopt migration failed: {migEx.Message}. Bridge may be offline; will retry on next launch.");
+                                }
+                            }
+
                             // ClientKey is the entertainment-streaming PSK and is
                             // unused by the CLIP-based HueUpdateQueue. Leave empty
                             // until/unless we add an entertainment streaming path
@@ -298,18 +343,26 @@ namespace Chromatics.Core
 
             if (surface != null && device != null && surface.Devices.Contains(device))
             {
-                // For LIFX, send the captured pre-Chromatics state (colour
-                // + power) before detaching so the bulb returns to whatever
-                // the user had before adoption. surface.Detach alone just
-                // stops further updates, leaving the bulb on the last
-                // colour we sent — which is undesirable when the user
+                // For LIFX / Hue, send the captured pre-Chromatics state
+                // (colour + power) before detaching so the bulb returns to
+                // whatever the user had before adoption. surface.Detach
+                // alone just stops further updates, leaving the bulb on the
+                // last colour we sent — which is undesirable when the user
                 // explicitly disables a single device. Run on a worker so
-                // the UI thread doesn't block on the UDP send sequence.
+                // the UI thread doesn't block on the UDP / HTTP sends.
                 if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
                 {
                     System.Threading.Tasks.Task.Run(async () =>
                     {
                         try { await lifxDev.RestoreOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
+                else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
+                {
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await hueDev.RestoreOriginalStateAsync(); }
                         catch { /* best-effort */ }
                     });
                 }
@@ -349,14 +402,22 @@ namespace Chromatics.Core
 
                 // Re-capture the bulb's current state on per-device re-enable.
                 // The user may have changed the colour / power between the
-                // disable and re-enable (LIFX app, automation, etc.), and
-                // they expect the next disable to restore whatever was on
-                // the bulb just before Chromatics retook control.
+                // disable and re-enable (Hue / LIFX app, automation, etc.),
+                // and they expect the next disable to restore whatever was
+                // on the bulb just before Chromatics retook control.
                 if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
                 {
                     System.Threading.Tasks.Task.Run(async () =>
                     {
                         try { await lifxDev.CaptureOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
+                else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
+                {
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await hueDev.CaptureOriginalStateAsync(); }
                         catch { /* best-effort */ }
                     });
                 }
