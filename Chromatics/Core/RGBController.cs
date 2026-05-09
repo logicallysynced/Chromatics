@@ -283,6 +283,19 @@ namespace Chromatics.Core
 
         public static void RemoveDevice(IRGBDevice device)
         {
+            // Persist the disable so it survives restarts. Lookup runs
+            // BEFORE the detach because surface.Detach removes the device
+            // from _devices via the DevicesChanged.Removed handler in some
+            // providers, which would race the GUID lookup. Disabled state
+            // is keyed on the same GenerateDeviceGuid the rest of the
+            // codebase uses for stable per-device identity.
+            if (device != null)
+            {
+                var deviceGuid = GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty)
+                    Layers.MappingLayers.SetDeviceDisabled(deviceGuid, true);
+            }
+
             if (surface != null && device != null && surface.Devices.Contains(device))
             {
                 // For LIFX, send the captured pre-Chromatics state (colour
@@ -318,6 +331,17 @@ namespace Chromatics.Core
 
         public static void AddDevice(IRGBDevice device)
         {
+            // Clear the persisted disable bit before attaching so a
+            // subsequent restart or LoadDeviceProvider doesn't skip the
+            // attach. Capture is done by the caller-specific branch below
+            // (CaptureOriginalStateAsync for LIFX/Hue) AFTER attach.
+            if (device != null)
+            {
+                var deviceGuid = GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty)
+                    Layers.MappingLayers.SetDeviceDisabled(deviceGuid, false);
+            }
+
             if (surface != null && device != null && !surface.Devices.Contains(device))
             {
                 surface.Attach(device);
@@ -471,9 +495,16 @@ namespace Chromatics.Core
                 // Initialize, true once Load has completed and any
                 // subsequent AddDevice is from a provider's runtime
                 // hot-plug logic (e.g. PlayStation USB/BT connect).
+                //
+                // Persisted per-device disable state (schema v5+) wins over
+                // hot-plug attach: if the user disabled this device in the
+                // Mapping tab, leave it detached. They'll re-enable it via
+                // the Mapping tab toggle when they want it back, which
+                // triggers AddDevice + (for Hue/LIFX) state capture.
                 var senderProvider = sender as IRGBDeviceProvider;
                 bool isHotPlug = senderProvider?.IsInitialized == true;
-                if (isHotPlug && surface != null && !surface.Devices.Contains(device))
+                bool isDisabled = Layers.MappingLayers.IsDeviceDisabled(guid);
+                if (isHotPlug && !isDisabled && surface != null && !surface.Devices.Contains(device))
                     surface.Attach(device);
 
                 AttachGlobalBrightness(device);
@@ -487,11 +518,11 @@ namespace Chromatics.Core
 
                 if (_activeDevices.ContainsKey(device))
                 {
-                    _activeDevices[device] = true;
+                    _activeDevices[device] = !isDisabled;
                 }
                 else
                 {
-                    _activeDevices.Add(device, true);
+                    _activeDevices.Add(device, !isDisabled);
                 }
 
                 // Hot-plug into a running startup animation: rebuild the
@@ -620,7 +651,20 @@ namespace Chromatics.Core
                     foreach (var device in provider.Devices)
                     {
                         Console.WriteLine(@"Device: " + device.DeviceInfo.DeviceName);
-                        surface.Attach(device);
+
+                        // Skip surface.Attach for devices the user previously
+                        // disabled in the Mapping tab (persisted via
+                        // layers.chromatics4 schema v5+). The device still
+                        // gets registered through DevicesChanged.Added so it
+                        // appears in the Mapping tab list — re-enabling it
+                        // there calls AddDevice which performs the attach
+                        // and (for stateful providers like Hue/LIFX) captures
+                        // the bulb's pre-Chromatics state.
+                        var guidProbe = Helpers.DeviceHelper.GenerateDeviceGuid(device.DeviceInfo.DeviceName);
+                        bool disabled = Layers.MappingLayers.IsDeviceDisabled(guidProbe);
+
+                        if (!disabled)
+                            surface.Attach(device);
                         AttachGlobalBrightness(device);
                     }
 
