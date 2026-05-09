@@ -669,7 +669,19 @@ namespace Chromatics.Core
                 {
                     foreach (var device in provider.Devices)
                     {
-                        surface.Detach(device);
+                        // Guard against double-detach. RGB.NET's surface throws
+                        // "The device 'X' is not attached to this surface." when
+                        // Detach is called on a device that's already been
+                        // removed (e.g. via a per-device disable in the Mapping
+                        // tab, or a hot-unplug DevicesChanged race during
+                        // provider teardown). The same device may also appear
+                        // in provider.Devices after we've already detached it
+                        // earlier in this loop on certain provider
+                        // implementations. Skipping the detach in that case is
+                        // safe — the rest of the cleanup (_devices /
+                        // _activeDevices removal) still runs.
+                        if (surface != null && surface.Devices.Contains(device))
+                            surface.Detach(device);
 
                         // Remove from _devices so the GUID slot is freed. Without this,
                         // re-enabling the same provider constructs fresh device objects with the
