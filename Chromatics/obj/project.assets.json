@@ -1365,7 +1365,7 @@
           "buildTransitive/Sentry.Profiling.targets": {}
         }
       },
-      "Sharlayan/9.0.30": {
+      "Sharlayan/9.0.31-prerelease.41": {
         "type": "package",
         "dependencies": {
           "Lumina": "7.4.0",
@@ -3314,17 +3314,17 @@
         "sentry.profiling.nuspec"
       ]
     },
-    "Sharlayan/9.0.30": {
-      "sha512": "dcsORJOOBfUQTCqqUVZMo9Imlxaq3/IxqtLtH4IePlF+W57LRqH043pN1QS/e3QFwlnipvGjhaAVONC4XqM4ew==",
+    "Sharlayan/9.0.31-prerelease.41": {
+      "sha512": "NcavMDeoDUKDvjyecAfZ7WlYVp5SpSJ1w7z0rcja0ytOh03QsE3rEqDOiNf6deKvfvz6kBcxjl0oP/F7elVnvA==",
       "type": "package",
-      "path": "sharlayan/9.0.30",
+      "path": "sharlayan/9.0.31-prerelease.41",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Logo.png",
         "lib/net10.0/Sharlayan.dll",
         "lib/net10.0/Sharlayan.xml",
-        "sharlayan.9.0.30.nupkg.sha512",
+        "sharlayan.9.0.31-prerelease.41.nupkg.sha512",
         "sharlayan.nuspec"
       ]
     },
@@ -3687,7 +3687,7 @@
       "RGB.NET.Presets >= 3.2.0",
       "Sentry >= 6.5.0",
       "Sentry.Profiling >= 6.5.0",
-      "Sharlayan >= 9.0.30",
+      "Sharlayan >= 9.0.31-prerelease.41",
       "System.Drawing.Common >= 10.0.7",
       "Velopack >= 0.0.1298"
     ]
@@ -3697,7 +3697,7 @@
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
-    "version": "4.1.24",
+    "version": "4.1.25",
     "restore": {
       "projectUniqueName": "D:\\Git Projects\\roxaskeyheart\\Chromatics Workbench\\Chromatics\\Chromatics\\Chromatics.csproj",
       "projectName": "Chromatics",
@@ -3871,7 +3871,7 @@
           },
           "Sharlayan": {
             "target": "Package",
-            "version": "[9.0.30, )"
+            "version": "[9.0.31-prerelease.41, )"
           },
           "System.Drawing.Common": {
             "target": "Package",
