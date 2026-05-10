@@ -31,6 +31,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         private readonly string _modelId;
         private readonly Lock _lock = new();
         private volatile bool _shuttingDown;
+        // Set true while the device is disabled in the Mapping tab so any
+        // buffered LED data that arrives via OnUpdate after surface.Detach
+        // gets dropped instead of racing the restore-to-original UpdateAsync.
+        // Cleared on re-enable in RGBController.AddDevice.
+        private volatile bool _perDeviceDisable;
         private PerDeviceBrightnessCorrection _perDeviceBrightness;
 
         // Rate-limit error logs GLOBALLY across every HueUpdateQueue
@@ -86,6 +91,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // trigger could fire one more color update for some bulbs after we've
         // already sent TurnOff, racing the bridge into the wrong final state.
         public void BeginShutdown() => _shuttingDown = true;
+
+        public void SetPerDeviceDisabled(bool disabled) => _perDeviceDisable = disabled;
 
         public void SetPerDeviceBrightness(PerDeviceBrightnessCorrection correction)
             => _perDeviceBrightness = correction;
@@ -183,8 +190,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             lock (_lock)
             {
                 // Provider has begun teardown — drop the update so it can't race
-                // ahead of (or behind) the explicit TurnOff sequence.
-                if (_shuttingDown) return true;
+                // ahead of (or behind) the explicit TurnOff sequence. Same
+                // for per-device disable from the Mapping tab so a buffered
+                // colour frame can't race the restore-to-original send.
+                if (_shuttingDown || _perDeviceDisable) return true;
 
                 try
                 {

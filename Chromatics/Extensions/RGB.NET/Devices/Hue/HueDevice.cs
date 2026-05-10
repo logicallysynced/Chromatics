@@ -20,6 +20,8 @@ public class HueDevice : AbstractRGBDevice<HueDeviceInfo>
     public Task CaptureOriginalStateAsync() => _updateQueue.CaptureOriginalStateAsync();
     public Task RestoreOriginalStateAsync() => _updateQueue.RestoreOriginalStateAsync();
 
+    public void SetPerDeviceDisabled(bool disabled) => _updateQueue.SetPerDeviceDisabled(disabled);
+
     // Forwarded into the update queue so SetBrightness on the bridge picks
     // up the per-device multiplier — uniform RGB scaling doesn't affect xy.
     public void SetPerDeviceBrightness(PerDeviceBrightnessCorrection correction)

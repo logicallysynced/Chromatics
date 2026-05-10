@@ -98,14 +98,28 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
                     var info = new LifxDeviceInfo(def);
                     var dev = new LifxDevice(info, queue, def);
 
-                    // Capture original state before the surface paints anything.
-                    // This races with the trigger ramping up but
-                    // CaptureOriginalStateAsync uses a separate UDP socket so
-                    // it can't deadlock against the SetColor stream.
-                    // CaptureOriginalStateAsync also turns the bulb on if it
-                    // was off, so layers become visible immediately rather
-                    // than waiting for the user to toggle physical power.
-                    await dev.CaptureOriginalStateAsync().ConfigureAwait(false);
+                    // Devices the user disabled in the Mapping tab in a
+                    // previous session must not be touched at startup. Two
+                    // things we'd otherwise do are wrong here:
+                    //   1) CaptureOriginalStateAsync's "turn on if off"
+                    //      branch would silently power the bulb back up
+                    //      every launch — and the next capture cycle would
+                    //      then observe Powered=true and poison _original
+                    //      so subsequent disables stop turning the bulb
+                    //      back off. Pass turnOnIfOff: false to skip it.
+                    //   2) The brief surface.Load → post-Load detach pass
+                    //      window in RGBController could let the queue's
+                    //      trigger drain a buffered LED frame and send a
+                    //      paint UDP packet before the per-device disable
+                    //      flag is set. Setting it here, before the device
+                    //      is added to the surface, closes that window.
+                    var deviceGuid = Chromatics.Helpers.DeviceHelper.GenerateDeviceGuid(info.DeviceName);
+                    bool disabled = Chromatics.Layers.MappingLayers.IsDeviceDisabled(deviceGuid);
+
+                    if (disabled)
+                        queue.SetPerDeviceDisabled(true);
+
+                    await dev.CaptureOriginalStateAsync(turnOnIfOff: !disabled).ConfigureAwait(false);
 
                     devices.Add(dev);
                 }
