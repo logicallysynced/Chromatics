@@ -139,6 +139,19 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                                 var queue = new HueUpdateQueue(GetUpdateTrigger(), light, modelId, localHueApi);
                                 HueDevice device = new HueDevice(deviceInfo, queue);
 
+                                // Bulbs persisted-disabled in the Mapping tab
+                                // get the queue gated immediately so the brief
+                                // surface.Load → post-Load detach window in
+                                // RGBController can't drain a buffered LED
+                                // frame and send an UpdateLight to the bridge
+                                // before the disable flag is set. Hue's
+                                // CaptureOriginalStateAsync is harmless here
+                                // (it only reads), but Update sends colour +
+                                // power, which would visibly turn the bulb on.
+                                var deviceGuid = Chromatics.Helpers.DeviceHelper.GenerateDeviceGuid(deviceInfo.DeviceName);
+                                if (Chromatics.Layers.MappingLayers.IsDeviceDisabled(deviceGuid))
+                                    queue.SetPerDeviceDisabled(true);
+
                                 // Snapshot the bulb's current state before the
                                 // surface starts pushing colour updates. Failures
                                 // are logged inside; we still add the device to

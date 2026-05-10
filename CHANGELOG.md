@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.1.33
+## 4.1.37
 
 - Added Auto-discovery for Hue bridges.
 - Updated Hue light adoption. After pairing, Chromatics shows a picker so you can choose exactly which Hue lights it should control. Existing setups upgraded from earlier builds keep all their bulbs (one-time auto-adopt of whatever the bridge currently exposes); from then on you can deselect bulbs you don't want from the same dialog.

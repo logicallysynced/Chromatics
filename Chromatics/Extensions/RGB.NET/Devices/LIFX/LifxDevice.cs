@@ -21,8 +21,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
         public LifxClientDefinition Definition => _def;
 
         public void BeginShutdown() => _updateQueue.BeginShutdown();
-        public Task CaptureOriginalStateAsync() => _updateQueue.CaptureOriginalStateAsync();
+        public Task CaptureOriginalStateAsync(bool turnOnIfOff = true) => _updateQueue.CaptureOriginalStateAsync(turnOnIfOff);
         public Task RestoreOriginalStateAsync() => _updateQueue.RestoreOriginalStateAsync();
+
+        public void SetPerDeviceDisabled(bool disabled) => _updateQueue.SetPerDeviceDisabled(disabled);
+        public void ResetCache() => _updateQueue.ResetCache();
+        public void EnsurePoweredOn() => _updateQueue.EnsurePoweredOn();
 
         public void SetPerDeviceBrightness(PerDeviceBrightnessCorrection correction)
             => _updateQueue.SetPerDeviceBrightness(correction);
