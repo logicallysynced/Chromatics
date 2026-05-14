@@ -128,7 +128,12 @@ namespace Chromatics.Views
             }
             catch (Exception ex)
             {
-                Logger.WriteConsole(LoggerTypes.Error, $"[Hue] Bridge pair failed: {ex.Message}");
+                // User-initiated pairing — connection refused / unreachable /
+                // wrong IP / TLS handshake failures are all expected outcomes
+                // of "user typed something into the IP box and pressed Submit".
+                // The status line already tells them the pair failed and which
+                // address it tried; Sentry doesn't need a copy of every one.
+                Logger.WriteConsole(LoggerTypes.Error, $"[Hue] Bridge pair failed: {ex.Message}", forwardToSentry: false);
                 StatusText.Text = string.Format(LocalizationService.Instance["Unable to connect to the Hue bridge at {0}."], ip);
             }
 
