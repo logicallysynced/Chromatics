@@ -10,6 +10,7 @@ using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using Chromatics.Models;
 using Chromatics.Helpers;
 using Chromatics.Views;
+using Chromatics.Views.Dialogs;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using RGB.NET.Devices.Asus;
@@ -281,15 +282,18 @@ namespace Chromatics.ViewModels
                 "QMK Keyboards (Beta)",
                 "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled",
                 s.deviceQmkRawHidEnabled,
-                () =>
+                async () =>
                 {
                     var cur = AppSettings.GetSettings();
+
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[QMK] Scanning for QMK-compatible keyboards on the USB bus...");
 
                     // Discovery + auto-adopt: run on a background thread to
                     // keep the Settings dialog responsive — per-device VIA
                     // handshakes can take 200-500ms each on a sluggish USB
                     // stack, and discovery + handshake of 5+ boards adds up.
-                    return Task.Run(() =>
+                    bool result = await Task.Run(() =>
                     {
                         var discovered = Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol.QmkRawHidDiscovery.Discover();
                         if (discovered.Count == 0)
@@ -334,6 +338,22 @@ namespace Chromatics.ViewModels
                             Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance);
                         return true;
                     });
+
+                    if (!result)
+                    {
+                        // The "no boards found" path. Logger.WriteConsole has
+                        // already written the detailed enumeration breakdown
+                        // (count of HID devices seen, candidates with the
+                        // Raw HID interface, open-failures, etc.). Surface a
+                        // short user-facing dialog too so it's obvious why
+                        // the toggle didn't take — without this the toggle
+                        // flashes on then back off with no visible feedback.
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No QMK Keyboards Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any QMK keyboards on this PC. Make sure your keyboard is plugged in over USB and that its firmware has Raw HID enabled (this is the default for any VIA-compatible build). If you have VIA, Vial, or OpenRGB running, close it before enabling this provider — they hold the Raw HID interface exclusively. See the console for a detailed breakdown of which HID devices were enumerated."]);
+                    }
+
+                    return result;
                 },
                 () =>
                 {

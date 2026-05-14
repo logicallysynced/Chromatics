@@ -1,3 +1,5 @@
+using Chromatics.Core;
+using Chromatics.Enums;
 using HidSharp;
 using HidSharp.Reports;
 using System;
@@ -44,17 +46,48 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
             var results = new List<Candidate>();
             HidDevice[] all;
             try { all = DeviceList.Local.GetHidDevices() as HidDevice[] ?? new List<HidDevice>(DeviceList.Local.GetHidDevices()).ToArray(); }
-            catch { return results; }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(LoggerTypes.Devices,
+                    $"[QMK] HID enumeration failed: {ex.Message}",
+                    forwardToSentry: false);
+                return results;
+            }
+
+            Logger.WriteConsole(LoggerTypes.Devices,
+                $"[QMK] Enumerated {all.Length} HID device(s) on the USB bus; scanning for the Raw HID interface (usage page 0x{QmkRawHidConstants.RawHidUsagePage:X4}, usage 0x{QmkRawHidConstants.RawHidUsage:X2})...");
+
+            int rawHidCandidates = 0;
+            int openFailures = 0;
+            int handshakeMisses = 0;
 
             foreach (HidDevice hid in all)
             {
                 if (!ExposesRawHidUsage(hid)) continue;
+                rawHidCandidates++;
 
-                if (!TryHandshake(hid, out var protocol, out int ledCount, out byte cols, out byte rows, out string fwName))
+                Logger.WriteConsole(LoggerTypes.Devices,
+                    $"[QMK] Candidate: VID=0x{hid.VendorID:X4} PID=0x{hid.ProductID:X4} ({SafeProductName(hid)} / {SafeManufacturer(hid)})");
+
+                if (!TryHandshake(hid, out var protocol, out int ledCount, out byte cols, out byte rows, out string fwName, out string failureReason))
+                {
+                    openFailures++;
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        $"[QMK]   handshake skipped — {failureReason}",
+                        forwardToSentry: false);
                     continue;
+                }
 
-                if (protocol == ProtocolSupport.None) continue;
+                if (protocol == ProtocolSupport.None)
+                {
+                    handshakeMisses++;
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[QMK]   neither VIA nor OpenRGB-QMK responded; firmware probably doesn't have Raw HID enabled.");
+                    continue;
+                }
 
+                Logger.WriteConsole(LoggerTypes.Devices,
+                    $"[QMK]   handshake OK — protocol: {protocol}, LEDs: {ledCount}, matrix: {cols}x{rows}");
                 results.Add(new Candidate(hid, protocol, ledCount, cols, rows, fwName));
             }
 
@@ -65,8 +98,17 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
                 return a.Hid.ProductID.CompareTo(b.Hid.ProductID);
             });
 
+            Logger.WriteConsole(LoggerTypes.Devices,
+                $"[QMK] Discovery done: {all.Length} HID devices total, {rawHidCandidates} with Raw HID interface, " +
+                $"{openFailures} could not be opened, {handshakeMisses} did not respond to handshake, {results.Count} usable.");
+
             return results;
         }
+
+        private static string SafeManufacturer(HidDevice hid)
+        { try { return hid.GetManufacturer() ?? ""; } catch { return "?"; } }
+        private static string SafeProductName(HidDevice hid)
+        { try { return hid.GetProductName() ?? ""; } catch { return "?"; } }
 
         // Returns true if any of the HidDevice's top-level collections
         // declares usage page 0xFF60, usage 0x61. Multi-interface USB
@@ -97,17 +139,26 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
         // strictly more capable protocol. Stream is disposed before
         // we return; the provider will reopen it for the device's
         // permanent UpdateQueue.
-        private static bool TryHandshake(HidDevice hid, out ProtocolSupport protocol, out int ledCount, out byte cols, out byte rows, out string firmwareDeviceName)
+        private static bool TryHandshake(HidDevice hid, out ProtocolSupport protocol, out int ledCount, out byte cols, out byte rows, out string firmwareDeviceName, out string failureReason)
         {
             protocol = ProtocolSupport.None;
             ledCount = 0; cols = 0; rows = 0; firmwareDeviceName = string.Empty;
+            failureReason = string.Empty;
 
             HidStream stream;
             try
             {
-                if (!hid.TryOpen(out stream)) return false;
+                if (!hid.TryOpen(out stream))
+                {
+                    failureReason = "could not open the Raw HID interface (likely held exclusively by another app — close VIA / Vial / OpenRGB and try again)";
+                    return false;
+                }
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                failureReason = $"open threw: {ex.Message}";
+                return false;
+            }
 
             try
             {
