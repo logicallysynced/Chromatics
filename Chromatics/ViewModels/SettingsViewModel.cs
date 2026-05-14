@@ -350,7 +350,7 @@ namespace Chromatics.ViewModels
                         // flashes on then back off with no visible feedback.
                         await DialogService.ShowAsync(
                             LocalizationService.Instance["No QMK Keyboards Found"],
-                            LocalizationService.Instance["Chromatics didn't detect any QMK keyboards on this PC. Make sure your keyboard is plugged in over USB and that its firmware has Raw HID enabled (this is the default for any VIA-compatible build). If you have VIA, Vial, or OpenRGB running, close it before enabling this provider — they hold the Raw HID interface exclusively. See the console for a detailed breakdown of which HID devices were enumerated."]);
+                            LocalizationService.Instance["Chromatics didn't detect any QMK keyboards. Make sure your keyboard is plugged in over USB and that its firmware has Raw HID enabled (the default for any VIA-compatible build). If VIA, Vial, or OpenRGB is running, close it before enabling this provider - they hold the Raw HID interface exclusively. See the console for the full list of detected HID devices."]);
                     }
 
                     return result;
