@@ -111,8 +111,24 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         // Discover lights on the bridge
                         var lights = await localHueApi.Light.GetAllAsync();
 
+                        // Adoption filter: only construct devices for bulbs the
+                        // user has explicitly adopted via the Hue adoption
+                        // dialog. Empty list = treat as "adopt everything"
+                        // (auto-adopt migration path — first launch after
+                        // upgrading from a pre-adoption build, the SettingsView
+                        // toggle handler seeds the list before LoadDevices
+                        // runs, so an empty list at this layer means we're
+                        // running through the legacy code path and should keep
+                        // the original "adopt everything" behaviour).
+                        var adopted = appSettings.deviceHueAdoptedDevices ?? new System.Collections.Generic.List<Models.HueAdoptedDevice>();
+                        var adoptedIds = new System.Collections.Generic.HashSet<Guid>(adopted.Select(a => a.LightId));
+                        bool adoptEverything = adoptedIds.Count == 0;
+
                         foreach (var light in lights.Data)
                         {
+                            if (!adoptEverything && !adoptedIds.Contains(light.Id))
+                                continue;
+
                             try
                             {
                                 string modelId = "";
@@ -120,7 +136,29 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                                     modelId = m;
 
                                 HueDeviceInfo deviceInfo = new HueDeviceInfo(light, modelId);
-                                HueDevice device = new HueDevice(deviceInfo, new HueUpdateQueue(GetUpdateTrigger(), light, modelId, localHueApi));
+                                var queue = new HueUpdateQueue(GetUpdateTrigger(), light, modelId, localHueApi);
+                                HueDevice device = new HueDevice(deviceInfo, queue);
+
+                                // Bulbs persisted-disabled in the Mapping tab
+                                // get the queue gated immediately so the brief
+                                // surface.Load → post-Load detach window in
+                                // RGBController can't drain a buffered LED
+                                // frame and send an UpdateLight to the bridge
+                                // before the disable flag is set. Hue's
+                                // CaptureOriginalStateAsync is harmless here
+                                // (it only reads), but Update sends colour +
+                                // power, which would visibly turn the bulb on.
+                                var deviceGuid = Chromatics.Helpers.DeviceHelper.GenerateDeviceGuid(deviceInfo.DeviceName);
+                                if (Chromatics.Layers.MappingLayers.IsDeviceDisabled(deviceGuid))
+                                    queue.SetPerDeviceDisabled(true);
+
+                                // Snapshot the bulb's current state before the
+                                // surface starts pushing colour updates. Failures
+                                // are logged inside; we still add the device to
+                                // the surface so layers paint correctly even if
+                                // the snapshot didn't complete.
+                                await device.CaptureOriginalStateAsync().ConfigureAwait(false);
+
                                 devices.Add(device);
                             }
                             catch (Exception ex)
@@ -152,9 +190,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
             return new HueDeviceUpdateTrigger(0.1);
         }
 
-        // Before tearing down the provider, send TurnOff to every bulb so the
-        // bridge returns to a clean off state when the user disables Hue in
-        // Settings or closes Chromatics.
+        // Before tearing down the provider, restore each bulb to the state
+        // we captured when we adopted it (colour, brightness, on/off), so
+        // the bridge returns to whatever the user had pre-Chromatics when
+        // they disable Hue in Settings or close Chromatics. Bulbs that
+        // failed to capture state get no restore call (logged inside the
+        // queue) — they keep whatever colour was last sent, which is a
+        // strict improvement over the previous unconditional TurnOff.
         //
         // Sequential, not parallel: the Hue bridge throttles concurrent CLIP v2
         // PUTs aggressively (and the HueApi LocalHueApi instance is shared across
@@ -167,9 +209,9 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // Per-bulb timeout is 2s; total budget grows with device count, capped
         // so a dead bridge can't hang shutdown forever.
         //
-        // After the off-pass, clearing _instance lets the next Instance access
-        // construct a fresh provider (prevents ObjectDisposedException on
-        // HueBridgeDialog reconnect or Settings re-toggle).
+        // After the restore-pass, clearing _instance lets the next Instance
+        // access construct a fresh provider (prevents ObjectDisposedException
+        // on HueBridgeDialog reconnect or Settings re-toggle).
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -180,40 +222,41 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     if (devices.Count > 0)
                     {
                         // Step 1: gate every queue so the trigger thread stops sending
-                        // colour updates before we issue TurnOff. Without this gate the
-                        // trigger could fire one more Update() per bulb after we've
-                        // already sent the off command, racing the bridge into the
-                        // wrong final state — which manifested as "sometimes only one
-                        // bulb actually turned off".
+                        // colour updates before we issue the restore. Without this
+                        // gate the trigger could fire one more Update() per bulb
+                        // after we've already sent the restore, racing the bridge
+                        // into the wrong final state — which manifested as
+                        // "sometimes only one bulb actually turned off".
                         foreach (var d in devices)
                             d.BeginShutdown();
 
-                        int totalBudgetSec = Math.Min(15, 2 + devices.Count);
+                        int totalBudgetSec = Math.Min(20, 2 + devices.Count);
                         Task.Run(async () =>
                         {
                             // Step 2: brief grace window so any Update() that was already
                             // mid-flight (holding _lock) finishes its HTTP send before we
-                            // start TurnOff. New Update() calls hit the _shuttingDown
+                            // start the restore. New Update() calls hit the _shuttingDown
                             // gate and return immediately.
                             await Task.Delay(150).ConfigureAwait(false);
 
-                            // Step 3: sequential TurnOff with pacing — Hue bridge throttles
+                            // Step 3: sequential restore with pacing — Hue bridge throttles
                             // concurrent CLIP v2 PUTs and will silently drop most of them
-                            // when fired in parallel.
+                            // when fired in parallel. Each bulb sends 2 PUTs (colour +
+                            // power), so the per-bulb budget is 2.5s.
                             foreach (var d in devices)
                             {
                                 try
                                 {
-                                    var off = d.TurnOffAsync();
-                                    var completed = await Task.WhenAny(off, Task.Delay(2000)).ConfigureAwait(false);
-                                    if (completed != off)
-                                        Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] TurnOff timed out for {d.DeviceInfo.DeviceName}");
+                                    var restore = d.RestoreOriginalStateAsync();
+                                    var completed = await Task.WhenAny(restore, Task.Delay(2500)).ConfigureAwait(false);
+                                    if (completed != restore)
+                                        Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] Restore timed out for {d.DeviceInfo.DeviceName}");
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] TurnOff failed for {d.DeviceInfo.DeviceName}: {ex.Message}");
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] Restore failed for {d.DeviceInfo.DeviceName}: {ex.Message}");
                                 }
-                                await Task.Delay(150).ConfigureAwait(false);
+                                await Task.Delay(200).ConfigureAwait(false);
                             }
                         }).Wait(TimeSpan.FromSeconds(totalBudgetSec));
                     }

@@ -45,6 +45,13 @@ namespace Chromatics.Layers
         private static ConcurrentDictionary<Guid, int> _deviceBrightness
             = new ConcurrentDictionary<Guid, int>();
 
+        // Set of device GUIDs the user disabled from the Mapping tab. Persisted
+        // (schema v5+) so the device stays detached from the surface across
+        // launches. RGBController consults IsDeviceDisabled on attach and
+        // SetDeviceDisabled writes it through to disk via SaveMappings.
+        private static readonly System.Collections.Generic.HashSet<Guid> _disabledDevices = new();
+        private static readonly System.Threading.Lock _disabledDevicesLock = new();
+
 
         public static int AddLayer(int index, LayerType rootLayerType, Guid deviceGuid, RGBDeviceType deviceType, int layerTypeIndex, int zindex, bool enabled, Dictionary<int, LedId> deviceLeds, bool allowBleed, LayerModes layerModes)
         {
@@ -289,11 +296,50 @@ namespace Chromatics.Layers
                 _deviceBrightness[kvp.Key] = kvp.Value;
         }
 
+        // Per-device disable persistence (schema v5+). RGBController reads
+        // IsDeviceDisabled on attach and skips devices that the user has
+        // disabled in the Mapping tab. SetDeviceDisabled flips the value AND
+        // writes layers.chromatics4 so the choice survives restarts.
+        public static bool IsDeviceDisabled(Guid deviceId)
+        {
+            lock (_disabledDevicesLock)
+                return _disabledDevices.Contains(deviceId);
+        }
+
+        public static void SetDeviceDisabled(Guid deviceId, bool disabled)
+        {
+            lock (_disabledDevicesLock)
+            {
+                bool changed = disabled
+                    ? _disabledDevices.Add(deviceId)
+                    : _disabledDevices.Remove(deviceId);
+                if (!changed) return;
+            }
+            _version++;
+            System.Threading.Tasks.Task.Run(() => SaveMappings());
+        }
+
+        internal static IReadOnlyCollection<Guid> GetAllDisabledDevices()
+        {
+            lock (_disabledDevicesLock)
+                return _disabledDevices.ToArray();
+        }
+
+        public static void ReplaceDisabledDevices(IEnumerable<Guid> fresh)
+        {
+            lock (_disabledDevicesLock)
+            {
+                _disabledDevices.Clear();
+                if (fresh == null) return;
+                foreach (var g in fresh) _disabledDevices.Add(g);
+            }
+        }
+
         public static bool LoadMappings(bool over = false)
         {
             if (!FileOperationsHelper.CheckLayerMappingsExist()) return false;
 
-            var (tempLayers, tempDeviceLayouts, tempDeviceBrightness) = FileOperationsHelper.LoadLayerMappings();
+            var (tempLayers, tempDeviceLayouts, tempDeviceBrightness, tempDisabledDevices) = FileOperationsHelper.LoadLayerMappings();
             if (tempLayers == null) return false;
 
             // Device layout overrides live in a separate top-level field in the
@@ -302,6 +348,7 @@ namespace Chromatics.Layers
             // leak stale overrides from a prior session.
             ReplaceDeviceLayouts(tempDeviceLayouts);
             ReplaceDeviceBrightness(tempDeviceBrightness);
+            ReplaceDisabledDevices(tempDisabledDevices);
 
             var flag = false;
             var empty = false;
@@ -380,7 +427,7 @@ namespace Chromatics.Layers
 
         public static bool SaveMappings()
         {
-            FileOperationsHelper.SaveLayerMappings(_layers, _deviceLayouts, _deviceBrightness);
+            FileOperationsHelper.SaveLayerMappings(_layers, _deviceLayouts, _deviceBrightness, GetAllDisabledDevices());
             return true;
         }
 
@@ -555,14 +602,18 @@ namespace Chromatics.Layers
     // the source of truth for the on-disk shape.
     //   v3: layers + deviceLayouts
     //   v4: layers + deviceLayouts + deviceBrightness
+    //   v5: + disabledDevices (set of GUIDs the user disabled in the
+    //       Mapping tab; persisted across launches so the device stays
+    //       detached from the surface until re-enabled)
     public class MappingFileV3
     {
-        public int schemaVersion { get; set; } = 4;
+        public int schemaVersion { get; set; } = 5;
         public ConcurrentDictionary<int, Layer> layers { get; set; } = new ConcurrentDictionary<int, Layer>();
         public Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> deviceLayouts { get; set; }
             = new Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();
         public Dictionary<Guid, int> deviceBrightness { get; set; }
             = new Dictionary<Guid, int>();
+        public List<Guid> disabledDevices { get; set; } = new List<Guid>();
     }
 
     public class Layer : IMappingLayer

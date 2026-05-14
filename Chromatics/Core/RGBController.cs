@@ -2,6 +2,7 @@
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
+using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -205,6 +206,51 @@ namespace Chromatics.Core
                         {
                             //HueRGBDeviceProvider.Instance.Exception += (sender, e) => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Hue Device Error: {e.Exception.Message}");
 
+                            // Auto-adopt migration. Pre-v4.1.31 builds had no
+                            // adoption list — every bulb the bridge exposed was
+                            // automatically adopted. After upgrading, an
+                            // existing user's deviceHueAdoptedDevices is empty
+                            // but they have layers.chromatics4 entries
+                            // referencing Hue device GUIDs. Querying the bridge
+                            // once and seeding the adoption list keeps those
+                            // mappings working without a user prompt; the user
+                            // can later open Settings -> Hue to deselect bulbs.
+                            //
+                            // Falling back silently: if the bridge is offline
+                            // or the client key is stale, we leave the adopted
+                            // list empty and let HueRGBDeviceProvider's
+                            // "empty list = adopt everything" path handle it
+                            // for this session. Migration retries next launch.
+                            if ((appSettings.deviceHueAdoptedDevices == null || appSettings.deviceHueAdoptedDevices.Count == 0)
+                                && !string.IsNullOrEmpty(appSettings.deviceHueBridgeClientKey))
+                            {
+                                try
+                                {
+                                    var api = new HueApi.LocalHueApi(appSettings.deviceHueBridgeIP, appSettings.deviceHueBridgeClientKey);
+                                    var lights = api.Light.GetAllAsync().GetAwaiter().GetResult();
+                                    var devicesResp = api.Device.GetAllAsync().GetAwaiter().GetResult();
+                                    var modelByDevice = devicesResp.Data.ToDictionary(d => d.Id, d => d.ProductData?.ModelId ?? "");
+
+                                    var migrated = lights.Data.Select(l => new Models.HueAdoptedDevice
+                                    {
+                                        LightId = l.Id,
+                                        Label = l.Metadata?.Name ?? l.Id.ToString(),
+                                        ModelId = l.Owner != null && modelByDevice.TryGetValue(l.Owner.Rid, out var m) ? m : (l.Type ?? ""),
+                                    }).ToList();
+
+                                    if (migrated.Count > 0)
+                                    {
+                                        appSettings.deviceHueAdoptedDevices = migrated;
+                                        AppSettings.SaveSettings(appSettings);
+                                        Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] Adopted {migrated.Count} bulb(s) from existing bridge pairing. Open Settings -> Hue to deselect any you don't want Chromatics to control.");
+                                    }
+                                }
+                                catch (Exception migEx)
+                                {
+                                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Hue] Auto-adopt migration failed: {migEx.Message}. Bridge may be offline; will retry on next launch.");
+                                }
+                            }
+
                             // ClientKey is the entertainment-streaming PSK and is
                             // unused by the CLIP-based HueUpdateQueue. Leave empty
                             // until/unless we add an entertainment streaming path
@@ -283,20 +329,52 @@ namespace Chromatics.Core
 
         public static void RemoveDevice(IRGBDevice device)
         {
+            // Persist the disable so it survives restarts. Lookup runs
+            // BEFORE the detach because surface.Detach removes the device
+            // from _devices via the DevicesChanged.Removed handler in some
+            // providers, which would race the GUID lookup. Disabled state
+            // is keyed on the same GenerateDeviceGuid the rest of the
+            // codebase uses for stable per-device identity.
+            if (device != null)
+            {
+                var deviceGuid = GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty)
+                    Layers.MappingLayers.SetDeviceDisabled(deviceGuid, true);
+            }
+
             if (surface != null && device != null && surface.Devices.Contains(device))
             {
-                // For LIFX, send the captured pre-Chromatics state (colour
-                // + power) before detaching so the bulb returns to whatever
-                // the user had before adoption. surface.Detach alone just
-                // stops further updates, leaving the bulb on the last
-                // colour we sent — which is undesirable when the user
+                // For LIFX / Hue, send the captured pre-Chromatics state
+                // (colour + power) before detaching so the bulb returns to
+                // whatever the user had before adoption. surface.Detach
+                // alone just stops further updates, leaving the bulb on the
+                // last colour we sent — which is undesirable when the user
                 // explicitly disables a single device. Run on a worker so
-                // the UI thread doesn't block on the UDP send sequence.
+                // the UI thread doesn't block on the UDP / HTTP sends.
+                //
+                // SetPerDeviceDisabled is set BEFORE Task.Run kicks the
+                // restore so any decorator data still buffered in the
+                // queue's _currentDataSet from a TimerUpdateTrigger tick
+                // that raced surface.Detach gets dropped. Without this
+                // gate the restore's chunked SetExtendedColorZones
+                // packets interleave with the late decorator chunks and
+                // leave half a chained Beam strip stuck on the last
+                // decorator colour.
                 if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
                 {
+                    lifxDev.SetPerDeviceDisabled(true);
                     System.Threading.Tasks.Task.Run(async () =>
                     {
                         try { await lifxDev.RestoreOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
+                else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
+                {
+                    hueDev.SetPerDeviceDisabled(true);
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await hueDev.RestoreOriginalStateAsync(); }
                         catch { /* best-effort */ }
                     });
                 }
@@ -318,24 +396,110 @@ namespace Chromatics.Core
 
         public static void AddDevice(IRGBDevice device)
         {
+            // Clear the persisted disable bit before attaching so a
+            // subsequent restart or LoadDeviceProvider doesn't skip the
+            // attach. Capture is done by the caller-specific branch below
+            // (CaptureOriginalStateAsync for LIFX/Hue) AFTER attach.
+            if (device != null)
+            {
+                var deviceGuid = GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty)
+                    Layers.MappingLayers.SetDeviceDisabled(deviceGuid, false);
+            }
+
             if (surface != null && device != null && !surface.Devices.Contains(device))
             {
                 surface.Attach(device);
                 AttachGlobalBrightness(device);
 
-                // Re-capture the bulb's current state on per-device re-enable.
-                // The user may have changed the colour / power between the
-                // disable and re-enable (LIFX app, automation, etc.), and
-                // they expect the next disable to restore whatever was on
-                // the bulb just before Chromatics retook control.
+                // Open the queue back up SYNCHRONOUSLY — order matters because
+                // surface.Update(true) below is a single critical section that
+                // both renders LedGroups (populating RequestedColor on every
+                // painted LED) and dispatches a flushed device.Update for each
+                // attached device. If the queue is still gated when that
+                // dispatch fires, the resulting SetData would be drained by
+                // OnUpdate and ignored by Update, leaving the bulb at its
+                // restored "original" colour with no Chromatics paint.
                 if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
                 {
-                    System.Threading.Tasks.Task.Run(async () =>
+                    lifxDev.ResetCache();
+                    lifxDev.SetPerDeviceDisabled(false);
+                }
+                else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
+                {
+                    hueDev.SetPerDeviceDisabled(false);
+                }
+
+                // Tagged effects (startup rainbow, title-screen starfield)
+                // build their per-device ListLedGroup at the moment the tag
+                // is started — devices that were disabled at the time
+                // RunStartupEffects ran have no tagged group covering their
+                // LEDs, so Render never paints them and led.Color never
+                // changes. Without this, re-enabling a device while the
+                // startup rainbow is running leaves the bulb dark and the
+                // Mapping-tab preview shows no activity. Mirrors the
+                // behaviour of DevicesChanged.Added's "running animation,
+                // join the rig" path for hot-plug.
+                var deviceGuid = GetDeviceGuid(device);
+                if (deviceGuid != Guid.Empty)
+                    SyncTaggedEffectsForDevice(deviceGuid);
+
+                // Mark all layers tied to this device for re-process so
+                // their processors rebuild fresh ListLedGroups and re-paint
+                // the LEDs from scratch on the next GameController tick.
+                // This dirties the LEDs even when the layer's colour hasn't
+                // changed since pre-disable — without it, a Static red
+                // layer on a re-enabled bulb sees "RequestedColor==Color"
+                // (Render kept painting red during the disabled period and
+                // led.Update ran every surface tick to keep _color in
+                // sync), IsDirty=false, no SetData call, no UDP / HTTP.
+                foreach (var layer in MappingLayers.GetLayers().Values)
+                {
+                    if (layer.deviceGuid == deviceGuid)
+                        layer.requestUpdate = true;
+                }
+
+                // Force a full surface render + flushed device update in a
+                // single locked pass. Render walks every attached LedGroup
+                // and writes RequestedColor for each LED it covers; the
+                // following device.Update(true) phase then returns every
+                // LED with RequestedColor.A > 0 regardless of IsDirty,
+                // so the queue receives the LED state immediately on
+                // re-enable instead of waiting for the next decorator
+                // tick to dirty something. Caches in LIFX's queue are
+                // already cleared above so the per-zone diff doesn't
+                // suppress this flush.
+                try { surface.Update(flushLeds: true); } catch { }
+
+                // For LIFX, the bulb may have come up powered-off (we
+                // honour the persisted disable state at startup with
+                // CaptureOriginalStateAsync(turnOnIfOff: false)). The
+                // paint frames above pre-load the per-zone HSBK on the
+                // bulb but do not switch it on — SetExtendedColorZones
+                // doesn't toggle power. Send an explicit SetLightPower
+                // AFTER the flush so the bulb wakes up already showing
+                // the freshly-painted Chromatics state instead of the
+                // last restored frame. EnsurePoweredOn deliberately
+                // does NOT recapture _original — we used to re-run
+                // CaptureOriginalStateAsync here for its auto-on side
+                // effect, but the recapture's GetExtendedColorZones
+                // query saw the rainbow paints we'd just sent and
+                // poisoned _original.Zones, so the next disable
+                // restored to "rainbow" instead of pre-Chromatics.
+                // _original from app startup is still the right thing
+                // to restore to.
+                if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDevPower)
+                {
+                    System.Threading.Tasks.Task.Run(() =>
                     {
-                        try { await lifxDev.CaptureOriginalStateAsync(); }
+                        try { lifxDevPower.EnsurePoweredOn(); }
                         catch { /* best-effort */ }
                     });
                 }
+                // Hue's Update() includes On=true on every paint frame,
+                // so the bridge powers the bulb on automatically as soon
+                // as the surface.Update flush above lands. No equivalent
+                // power-on call needed.
 
                 if (_activeDevices.ContainsKey(device))
                 {
@@ -471,9 +635,16 @@ namespace Chromatics.Core
                 // Initialize, true once Load has completed and any
                 // subsequent AddDevice is from a provider's runtime
                 // hot-plug logic (e.g. PlayStation USB/BT connect).
+                //
+                // Persisted per-device disable state (schema v5+) wins over
+                // hot-plug attach: if the user disabled this device in the
+                // Mapping tab, leave it detached. They'll re-enable it via
+                // the Mapping tab toggle when they want it back, which
+                // triggers AddDevice + (for Hue/LIFX) state capture.
                 var senderProvider = sender as IRGBDeviceProvider;
                 bool isHotPlug = senderProvider?.IsInitialized == true;
-                if (isHotPlug && surface != null && !surface.Devices.Contains(device))
+                bool isDisabled = Layers.MappingLayers.IsDeviceDisabled(guid);
+                if (isHotPlug && !isDisabled && surface != null && !surface.Devices.Contains(device))
                     surface.Attach(device);
 
                 AttachGlobalBrightness(device);
@@ -487,11 +658,11 @@ namespace Chromatics.Core
 
                 if (_activeDevices.ContainsKey(device))
                 {
-                    _activeDevices[device] = true;
+                    _activeDevices[device] = !isDisabled;
                 }
                 else
                 {
-                    _activeDevices.Add(device, true);
+                    _activeDevices.Add(device, !isDisabled);
                 }
 
                 // Hot-plug into a running startup animation: rebuild the
@@ -620,7 +791,20 @@ namespace Chromatics.Core
                     foreach (var device in provider.Devices)
                     {
                         Console.WriteLine(@"Device: " + device.DeviceInfo.DeviceName);
-                        surface.Attach(device);
+
+                        // Skip surface.Attach for devices the user previously
+                        // disabled in the Mapping tab (persisted via
+                        // layers.chromatics4 schema v5+). The device still
+                        // gets registered through DevicesChanged.Added so it
+                        // appears in the Mapping tab list — re-enabling it
+                        // there calls AddDevice which performs the attach
+                        // and (for stateful providers like Hue/LIFX) captures
+                        // the bulb's pre-Chromatics state.
+                        var guidProbe = Helpers.DeviceHelper.GenerateDeviceGuid(device.DeviceInfo.DeviceName);
+                        bool disabled = Layers.MappingLayers.IsDeviceDisabled(guidProbe);
+
+                        if (!disabled)
+                            surface.Attach(device);
                         AttachGlobalBrightness(device);
                     }
 
@@ -637,6 +821,42 @@ namespace Chromatics.Core
 
                     surface.Load(provider);
                     loadedDeviceProviders.Add(provider);
+
+                    // surface.Load attaches every device in provider.Devices
+                    // unconditionally (the comment in DevicesChanged about
+                    // "startup attachment is owned by SurfaceExtensions.Load"
+                    // is the source of truth here). Our pre-Load skip-attach
+                    // loop above is moot for async providers (Hue/LIFX),
+                    // whose Devices collection is empty until Initialize
+                    // runs INSIDE Load. To honour the persisted disable
+                    // state we have to detach the disabled devices here,
+                    // AFTER Load has populated provider.Devices and put
+                    // them on the surface.
+                    //
+                    // For Hue/LIFX we ALSO set the queue's per-device
+                    // disable flag so any decorator data that managed to
+                    // get buffered during the brief surface-load window
+                    // (Load → render tick → device.Update → SetData) gets
+                    // dropped by the queue's next OnUpdate instead of
+                    // being sent to the bulb. The flag stays set until
+                    // the user re-enables the device via AddDevice, which
+                    // captures fresh state and clears the flag.
+                    foreach (var device in provider.Devices)
+                    {
+                        var guidProbe = Helpers.DeviceHelper.GenerateDeviceGuid(device.DeviceInfo.DeviceName);
+                        if (!Layers.MappingLayers.IsDeviceDisabled(guidProbe))
+                            continue;
+                        if (surface.Devices.Contains(device))
+                            surface.Detach(device);
+                        if (device is Extensions.RGB.NET.Devices.LIFX.LifxDevice lifxDev)
+                            lifxDev.SetPerDeviceDisabled(true);
+                        else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
+                            hueDev.SetPerDeviceDisabled(true);
+                        if (_activeDevices.ContainsKey(device))
+                            _activeDevices[device] = false;
+                        else
+                            _activeDevices.Add(device, false);
+                    }
 
                     if (_loaded)
                     {
@@ -669,7 +889,19 @@ namespace Chromatics.Core
                 {
                     foreach (var device in provider.Devices)
                     {
-                        surface.Detach(device);
+                        // Guard against double-detach. RGB.NET's surface throws
+                        // "The device 'X' is not attached to this surface." when
+                        // Detach is called on a device that's already been
+                        // removed (e.g. via a per-device disable in the Mapping
+                        // tab, or a hot-unplug DevicesChanged race during
+                        // provider teardown). The same device may also appear
+                        // in provider.Devices after we've already detached it
+                        // earlier in this loop on certain provider
+                        // implementations. Skipping the detach in that case is
+                        // safe — the rest of the cleanup (_devices /
+                        // _activeDevices removal) still runs.
+                        if (surface != null && surface.Devices.Contains(device))
+                            surface.Detach(device);
 
                         // Remove from _devices so the GUID slot is freed. Without this,
                         // re-enabling the same provider constructs fresh device objects with the

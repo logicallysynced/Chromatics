@@ -24,6 +24,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
         private readonly LifxProductCatalog.ProductInfo _product;
         private readonly Lock _lock = new();
         private volatile bool _shuttingDown;
+        // Set true while the device is disabled in the Mapping tab. Causes
+        // Update() to no-op so any decorator data already buffered in
+        // _currentDataSet (or arriving from a TimerUpdateTrigger tick that
+        // raced surface.Detach) gets silently dropped instead of racing the
+        // restore-to-original send. Toggled back to false on re-enable in
+        // RGBController.AddDevice, after the queue's diff cache has been
+        // reset and the device has been re-attached.
+        private volatile bool _perDeviceDisable;
         private byte _seq;
 
         private PerDeviceBrightnessCorrection _perDeviceBrightness;
@@ -61,6 +69,49 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 
         public void BeginShutdown() => _shuttingDown = true;
 
+        public void SetPerDeviceDisabled(bool disabled) => _perDeviceDisable = disabled;
+
+        // Send a stand-alone SetLightPower(on=true) without touching
+        // _original. Used by RGBController.AddDevice on per-device re-enable
+        // so a bulb that was left powered-off (e.g. honoured at startup
+        // via CaptureOriginalStateAsync(turnOnIfOff: false)) actually
+        // shows the freshly-painted layers. The previous code path piggy-
+        // backed on the recapture's auto-on branch, which had the side
+        // effect of overwriting _original.Zones with whatever paint
+        // frames had reached the bulb between AddDevice and the
+        // recapture query — poisoning the next disable's restore target.
+        // Sending power-on directly keeps _original intact.
+        public void EnsurePoweredOn(uint durationMs = 300)
+        {
+            try
+            {
+                lock (_lock)
+                {
+                    if (_shuttingDown || _perDeviceDisable) return;
+                    SendSetLightPower(on: true, durationMs: durationMs);
+                }
+            }
+            catch { /* best-effort */ }
+        }
+
+        // Drop the diff caches so the next Update sends every zone (or every
+        // matrix cell) regardless of what the strip cached the last time it
+        // was active. Without this, a re-enable after the user toggles the
+        // device off-then-on in the Mapping tab can be silently suppressed:
+        // _strip's per-zone HSBK still matches the new frame's HSBK because
+        // the LedGroups continued painting the same colours during the
+        // disabled period, so SendMultizoneFrame would skip every chunk.
+        public void ResetCache()
+        {
+            lock (_lock)
+            {
+                _strip = null;
+                _stripZones = 0;
+                _lastSinglePayload = null;
+                _matrixCells = null;
+            }
+        }
+
         public void SetPerDeviceBrightness(PerDeviceBrightnessCorrection correction)
             => _perDeviceBrightness = correction;
 
@@ -68,7 +119,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
         // start-up so we have something to restore to on disable / app close.
         // Best-effort: a 500ms timeout keeps a single unreachable bulb from
         // stalling provider startup for the others.
-        public async Task CaptureOriginalStateAsync(CancellationToken ct = default)
+        public async Task CaptureOriginalStateAsync(bool turnOnIfOff = true, CancellationToken ct = default)
         {
             try
             {
@@ -77,13 +128,25 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
                 {
                     _original = state;
 
-                    // If the bulb was off when we adopted it, turn it on so
-                    // active layers are visible. SetColor on a powered-off
-                    // LIFX bulb queues the colour but doesn't switch it on —
-                    // we have to send SetLightPower explicitly. The original
-                    // power state stays in _original.Powered for restoration
-                    // on disable / app close.
-                    if (!state.Powered)
+                    // If the bulb was off when we adopted it AND the caller
+                    // wants us to make layers visible, turn it on. SetColor
+                    // on a powered-off LIFX bulb queues the colour but
+                    // doesn't switch it on — we have to send SetLightPower
+                    // explicitly. The original power state stays in
+                    // _original.Powered for restoration on disable / app
+                    // close.
+                    //
+                    // turnOnIfOff is set false by the provider for devices
+                    // that are persisted-disabled in the Mapping tab: we
+                    // still need to capture state (so a later re-enable
+                    // can restore correctly), but the bulb must remain in
+                    // whatever state the user left it. Without this gate,
+                    // a restart with a disabled device would silently
+                    // wake the bulb up — and worse, the next capture
+                    // cycle would observe Powered=true and poison
+                    // _original so subsequent disables stop turning the
+                    // bulb back off.
+                    if (turnOnIfOff && !state.Powered)
                     {
                         SendSetLightPower(on: true, durationMs: 300);
                     }
@@ -137,18 +200,41 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
             if (_original == null) return;
             try
             {
-                bool isMultizone = _def.ZoneCount > 1 || _product.IsMultizone;
-                if (isMultizone && _original.Zones != null && _original.Zones.Length > 0)
+                // Take _lock so the colour send can't interleave with an
+                // in-flight Update from the trigger thread. RemoveDevice
+                // sets _perDeviceDisable=true before invoking us, so any
+                // queued decorator data that races surface.Detach gets
+                // dropped (no-op Update); the lock here covers the case
+                // where Update was already inside its critical section,
+                // mid-chunk, when the disable fired. Without this, the
+                // restore's per-chunk SetExtendedColorZones packets
+                // interleaved with the decorator's late chunks and
+                // produced "half the strip restored, half left at the
+                // last decorator colour" on chained Beam setups.
+                lock (_lock)
                 {
-                    SendExtendedColorZones(_original.Zones, _original.Zones.Length, durationMs: 200);
-                }
-                else
-                {
-                    SendSetColor(_original.Hue, _original.Saturation, _original.Brightness, _original.Kelvin, durationMs: 200);
+                    bool isMultizone = _def.ZoneCount > 1 || _product.IsMultizone;
+                    if (isMultizone && _original.Zones != null && _original.Zones.Length > 0)
+                    {
+                        SendExtendedColorZones(_original.Zones, _original.Zones.Length, durationMs: 200);
+                    }
+                    else
+                    {
+                        SendSetColor(_original.Hue, _original.Saturation, _original.Brightness, _original.Kelvin, durationMs: 200);
+                    }
                 }
 
+                // Brief gap so the bulb finishes the colour transition
+                // before we toggle power. Done outside the lock so
+                // shorter-running calls (a one-shot SetColor on a single
+                // bulb) can release the queue between the colour and
+                // power packets.
                 await Task.Delay(50, ct).ConfigureAwait(false);
-                SendSetLightPower(_original.Powered, durationMs: 200);
+
+                lock (_lock)
+                {
+                    SendSetLightPower(_original.Powered, durationMs: 200);
+                }
             }
             catch { /* swallow — best-effort during teardown */ }
         }
@@ -157,7 +243,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
         {
             lock (_lock)
             {
-                if (_shuttingDown) return true;
+                if (_shuttingDown || _perDeviceDisable) return true;
                 if (dataSet.IsEmpty) return true;
 
                 try

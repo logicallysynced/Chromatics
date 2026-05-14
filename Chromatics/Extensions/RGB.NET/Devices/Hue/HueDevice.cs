@@ -17,6 +17,10 @@ public class HueDevice : AbstractRGBDevice<HueDeviceInfo>
 
     public void BeginShutdown() => _updateQueue.BeginShutdown();
     public Task TurnOffAsync() => _updateQueue.TurnOffAsync();
+    public Task CaptureOriginalStateAsync() => _updateQueue.CaptureOriginalStateAsync();
+    public Task RestoreOriginalStateAsync() => _updateQueue.RestoreOriginalStateAsync();
+
+    public void SetPerDeviceDisabled(bool disabled) => _updateQueue.SetPerDeviceDisabled(disabled);
 
     // Forwarded into the update queue so SetBrightness on the bridge picks
     // up the per-device multiplier — uniform RGB scaling doesn't affect xy.

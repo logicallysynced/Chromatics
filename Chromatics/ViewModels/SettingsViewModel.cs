@@ -6,6 +6,7 @@ using Chromatics.Localization;
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
+using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using Chromatics.Models;
 using Chromatics.Helpers;
 using Chromatics.Views;
@@ -136,7 +137,11 @@ namespace Chromatics.ViewModels
                 () => RGBController.UnloadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.devicePlayStationEnabled = v; AppSettings.SaveSettings(cur); }));
 
-            // Hue is special — enabling opens the bridge-pairing dialog first.
+            // Hue is special — enabling opens the bridge-pairing dialog (with
+            // auto-discovery) and then the bulb-adoption dialog. Both must
+            // succeed and result in a non-empty selection for the toggle to
+            // stick. If either is cancelled, or the user adopts no bulbs,
+            // the toggle reverts to off — same UX as the LIFX flow below.
             DeviceToggles.Add(new DeviceToggleItem(
                 "Hue (Beta)",
                 "[BETA] Enable/disable Philips HUE device library. Default: Disabled",
@@ -145,21 +150,43 @@ namespace Chromatics.ViewModels
                 {
                     var cur = AppSettings.GetSettings();
                     var owner = GetMainWindow();
-                    var dlg = new HueBridgeDialog(cur.deviceHueBridgeIP);
-                    if (owner != null)
-                    {
-                        await dlg.ShowDialog(owner);
-                    }
-                    else
-                    {
-                        dlg.Show();
-                    }
 
-                    if (!dlg.BridgeConfigured) return false;
+                    // Step 1: bridge dialog (discovery + pair).
+                    var bridgeDlg = new HueBridgeDialog(cur.deviceHueBridgeIP);
+                    if (owner != null) await bridgeDlg.ShowDialog(owner);
+                    else bridgeDlg.Show();
 
-                    cur.deviceHueBridgeIP = dlg.BridgeIp;
+                    if (!bridgeDlg.BridgeConfigured) return false;
+
+                    cur.deviceHueBridgeIP = bridgeDlg.BridgeIp;
+                    if (!string.IsNullOrEmpty(bridgeDlg.BridgeKey))
+                        cur.deviceHueBridgeClientKey = bridgeDlg.BridgeKey;
+
+                    // Step 2: adoption dialog (pick which bulbs Chromatics
+                    // controls). Pre-checks bulbs the user previously adopted.
+                    var alreadyAdopted = (cur.deviceHueAdoptedDevices ?? new System.Collections.Generic.List<HueAdoptedDevice>())
+                        .ToDictionary(d => d.LightId, d => d);
+
+                    var adoptDlg = new HueAdoptionDialog(cur.deviceHueBridgeIP, cur.deviceHueBridgeClientKey, alreadyAdopted);
+                    if (owner != null) await adoptDlg.ShowDialog(owner);
+                    else adoptDlg.Show();
+
+                    if (!adoptDlg.Saved) return false;
+                    if (adoptDlg.SelectedDevices == null || adoptDlg.SelectedDevices.Count == 0) return false;
+
+                    cur.deviceHueAdoptedDevices = adoptDlg.SelectedDevices;
                     cur.deviceHueEnabled = true;
                     AppSettings.SaveSettings(cur);
+
+                    // LoadDeviceProvider runs LoadDevices synchronously, which
+                    // for Hue includes the bulb fetch + GetService probes +
+                    // CaptureOriginalStateAsync per bulb. Push to a background
+                    // thread so the toggle returns immediately and the UI
+                    // stays responsive while bulbs come online.
+                    HueRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                    HueRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                        new HueClientDefinition(cur.deviceHueBridgeIP, "chromatics", ""));
+                    _ = Task.Run(() => RGBController.LoadDeviceProvider(HueRGBDeviceProvider.Instance));
                     return true;
                 },
                 () =>
@@ -198,6 +225,15 @@ namespace Chromatics.ViewModels
                         dlg.Show();
 
                     if (!dlg.Saved) return false;
+
+                    // If discovery turned up nothing OR the user unchecked
+                    // everything before saving, treat the enable as a no-op
+                    // and leave the toggle off. Without this the provider
+                    // would load with an empty ClientDefinitions list — no
+                    // devices appear in the surface but the Settings tab
+                    // shows the toggle as "on", which is misleading.
+                    if (dlg.SelectedDevices == null || dlg.SelectedDevices.Count == 0)
+                        return false;
 
                     cur.deviceLifxAdoptedDevices = dlg.SelectedDevices;
                     cur.deviceLifxEnabled = true;
