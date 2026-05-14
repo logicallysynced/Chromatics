@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.1.39
+
+- Updated underlying UI dependencies (Avalonia 12.0.3, System.Drawing.Common 10.0.8) for stability and bug fixes. No functional changes.
+
 ## 4.1.38
 
 - Added Auto-discovery for Hue bridges.
