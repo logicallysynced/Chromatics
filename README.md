@@ -16,21 +16,23 @@
 
 **Language Support:** Chromatics only supports the global version of FFXIV (all languages included). Korean & Chinese versions of the game are not supported.
 
-> ### ⚠️ Upgrading from Chromatics 3?
-> Chromatics 4 stores your settings in a new location on your computer, and **your previous settings will not be carried across automatically**. You can bring your layers and colour palette across manually using the steps below.
->
-> **To bring your layer mappings across:**
-> 1. Find your old `layers.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
-> 2. Open Chromatics 4 and go to the **Mapping** tab.
-> 3. Click **Import** and select your `layers.chromatics3` file.
->
-> **To bring your colour palette across:**
-> 1. Find your old `palette.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
-> 2. Open Chromatics 4 and go to the **Palette** tab.
-> 3. Click **Import** and select your `palette.chromatics3` file.
->
-> You'll need to set up your effects from scratch. Sorry about that - the rebuild changed too much under the hood for everything to carry over automatically.
+### ⚠️ Upgrading from Chromatics 3?
+Chromatics 4 stores your settings in a new location on your computer, and **your previous settings will not be carried across automatically**. You can bring your layers and colour palette across manually using the steps below.
+
+**To bring your layer mappings across:**
+1. Find your old `layers.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
+2. Open Chromatics 4 and go to the **Mapping** tab.
+3. Click **Import** and select your `layers.chromatics3` file.
+
+**To bring your colour palette across:**
+1. Find your old `palette.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
+2. Open Chromatics 4 and go to the **Palette** tab.
+3. Click **Import** and select your `palette.chromatics3` file.
+
+You'll need to set up your effects from scratch. Sorry about that - the rebuild changed too much under the hood for everything to carry over automatically.
 <br><br>
+
+### What is Chromatics? ### 
 Chromatics is a third-party add-on for Final Fantasy XIV that turns your RGB devices into an extension of the game. It ships with a range of scenes and effects, including:
 * HP/MP/GP/CP
 * Keybinds - lights your keys depending on your mapped keybind status

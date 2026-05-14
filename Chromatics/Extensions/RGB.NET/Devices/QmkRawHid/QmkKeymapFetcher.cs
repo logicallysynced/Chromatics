@@ -1,303 +1,158 @@
 using Chromatics.Core;
 using Chromatics.Enums;
-using Chromatics.Helpers;
 using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net.Http;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
 {
-    // Option C from the design discussion: resolve a per-board layout for any
-    // QMK keyboard the user has adopted. Pulls two artifacts:
+    // Lookup of QMK per-board keymap data — matrix-position-to-keycap-label
+    // mapping for ~500 QMK boards (the subset whose keyboard.json includes
+    // "label" fields). Sourced from snakkarike/qmk_firmware and pre-processed
+    // into Chromatics/Resources/qmk_keymap_data.json by
+    // build_qmk_keymap_index.py at the workspace root.
     //
-    //   1) A flat VID/PID → keyboard.json path index hosted on chromatics-docs.
-    //      Built by scripts/build_qmk_keymap_index.py from snakkarike/qmk_firmware
-    //      and refreshed independently of a Chromatics release.
+    // The file ships as an embedded resource inside the Chromatics assembly,
+    // so this lookup is purely in-memory: no network fetch, no disk cache,
+    // no failure mode for offline users. Bundled size is ~450 KB compact
+    // JSON for 2650 boards (boards without labels get an empty entry so the
+    // runtime still knows the board is recognised; the layout merge then
+    // falls back to LedId.Custom_* for every LED on that board).
     //
-    //   2) The board's own keyboard.json (or older info.json) fetched on demand
-    //      from snakkarike/qmk_firmware via the GitHub raw CDN. We parse its
-    //      layouts.<first>.layout array, building a (matrix_row, matrix_col) →
-    //      keycap-label dictionary. The label is fed to QmkKeycodeMap to derive
-    //      the semantic LedId.Keyboard_* for each per-key LED.
-    //
-    // Coverage is mixed by design — QMK's schema is inconsistent across boards.
-    // Some keyboard.json files include "label" fields on every layout entry
-    // (NK87 etc. — full semantic mapping); some omit them entirely (NK65 — only
-    // matrix coords). When a label isn't available the merge step falls back to
-    // LedId.Custom_* for that LED, and the user positions it via the Mapping
-    // tab. Better partial than nothing.
-    //
-    // Cache lives under FileOperationsHelper.GetConfigDirectory()/QmkKeymaps
-    // (i.e. %AppData%/Chromatics/QmkKeymaps) so it survives Velopack updates
-    // and gets wiped by Settings → Reset (see SettingsViewModel.ResetChromatics).
+    // The bundled data refreshes when build_qmk_keymap_index.py is re-run
+    // and the resulting JSON is committed. Re-run periodically to pick up
+    // newly-upstreamed boards.
     internal static class QmkKeymapFetcher
     {
-        private const string IndexUrl = "https://raw.githubusercontent.com/logicallysynced/chromatics-docs/main/qmk_keymap_index.json";
-        private const string KeymapRawBase = "https://raw.githubusercontent.com/snakkarike/qmk_firmware/master/";
+        private const string ResourceName = "Chromatics.Resources.qmk_keymap_data.json";
 
-        private const int RequestTimeoutSeconds = 8;
-        private static readonly TimeSpan IndexCacheTtl = TimeSpan.FromDays(14);
-
-        private static readonly HttpClient _http = new(new HttpClientHandler { AllowAutoRedirect = true })
-        {
-            Timeout = TimeSpan.FromSeconds(RequestTimeoutSeconds),
-        };
-
-        // Loaded index: VID:PID key → repo-relative path. Populated lazily.
-        private static Dictionary<string, string> _indexByVidPid;
-        private static readonly object _indexInitLock = new();
+        // Loaded once, never mutated. Key = "VID:PID" hex uppercase
+        // (e.g. "8968:4E4C"); value = the parsed Labels dict.
+        private static Dictionary<string, QmkKeymap> _byVidPid;
+        private static readonly object _initLock = new();
 
         public sealed class QmkKeymap
         {
-            // Keycap label at each keyswitch matrix coordinate. Only entries
-            // whose source JSON included a "label" field appear here — boards
-            // without labels return an empty dictionary and the merge step
-            // falls back to LedId.Custom_* for every LED.
+            // Keycap label at each keyswitch matrix coordinate.  Boards
+            // present in the bundle but with no labels in their source JSON
+            // get an empty dictionary — discovery still recognises them but
+            // the layout merge step falls back to LedId.Custom_* for every
+            // LED.
             public IReadOnlyDictionary<(byte col, byte row), string> Labels { get; set; }
         }
 
-        public static async Task<QmkKeymap> TryGetKeymapAsync(int vendorId, int productId)
+        // Returns the cached entry for (vendorId, productId), or null if the
+        // board isn't in the bundle. Synchronous — the data is already in
+        // memory once the embedded resource has been parsed. Kept async-shaped
+        // so callers don't have to be rewritten when the implementation
+        // changed (and so a future fallback to remote fetch can re-add the
+        // await without another API churn).
+        public static Task<QmkKeymap> TryGetKeymapAsync(int vendorId, int productId)
         {
             try
             {
-                string diskPath = ResolveCachePath(vendorId, productId);
-                if (TryLoadCachedKeymap(diskPath, out var cached)) return cached;
-
-                if (!TryEnsureIndex()) return null;
+                if (!TryEnsureLoaded()) return Task.FromResult<QmkKeymap>(null);
                 string key = $"{vendorId:X4}:{productId:X4}";
-                if (!_indexByVidPid.TryGetValue(key, out string repoPath)) return null;
-
-                string url = KeymapRawBase + UrlPathEncode(repoPath);
-                string body = await _http.GetStringAsync(url).ConfigureAwait(false);
-                var parsed = ParseKeyboardJson(body);
-                if (parsed == null) return null;
-
-                TrySaveCache(diskPath, body);
-                return parsed;
+                return Task.FromResult(_byVidPid.TryGetValue(key, out var km) ? km : null);
             }
             catch (Exception ex)
             {
                 Logger.WriteConsole(LoggerTypes.Devices,
-                    $"[QMK] keymap fetch failed for {vendorId:X4}:{productId:X4} ({ex.Message}); falling back to Custom1..N.",
+                    $"[QMK] keymap lookup failed for {vendorId:X4}:{productId:X4} ({ex.Message}); falling back to Custom1..N.",
                     forwardToSentry: false);
-                return null;
+                return Task.FromResult<QmkKeymap>(null);
             }
         }
 
-        // ── Index ────────────────────────────────────────────────────
+        // ── Bundle load ──────────────────────────────────────────────
 
-        private static bool TryEnsureIndex()
+        private static bool TryEnsureLoaded()
         {
-            if (_indexByVidPid != null) return true;
-            lock (_indexInitLock)
+            if (_byVidPid != null) return true;
+            lock (_initLock)
             {
-                if (_indexByVidPid != null) return true;
-                _indexByVidPid = LoadIndex();
-                return _indexByVidPid != null;
+                if (_byVidPid != null) return true;
+                _byVidPid = LoadBundle();
+                return _byVidPid != null;
             }
         }
 
-        private static Dictionary<string, string> LoadIndex()
+        private static Dictionary<string, QmkKeymap> LoadBundle()
         {
-            string indexCache = Path.Combine(GetCacheDir(), "_index.json");
-            string body = null;
-
-            if (File.Exists(indexCache))
+            try
             {
-                var age = DateTime.UtcNow - File.GetLastWriteTimeUtc(indexCache);
-                if (age < IndexCacheTtl)
-                {
-                    try { body = File.ReadAllText(indexCache); }
-                    catch { /* fall through to refetch */ }
-                }
-            }
-
-            if (string.IsNullOrEmpty(body))
-            {
-                try { body = _http.GetStringAsync(IndexUrl).GetAwaiter().GetResult(); }
-                catch (Exception ex)
+                var asm = typeof(QmkKeymapFetcher).Assembly;
+                using var stream = asm.GetManifestResourceStream(ResourceName);
+                if (stream == null)
                 {
                     Logger.WriteConsole(LoggerTypes.Devices,
-                        $"[QMK] keymap index fetch failed ({ex.Message}); per-key semantic layout will use Custom1..N for now.",
+                        $"[QMK] embedded keymap bundle '{ResourceName}' missing; per-key semantic mapping will use Custom1..N for every board.",
                         forwardToSentry: false);
-                    return null;
+                    return new Dictionary<string, QmkKeymap>();
                 }
-                try { File.WriteAllText(indexCache, body); } catch { /* best-effort */ }
+                using var doc = JsonDocument.Parse(stream);
+                return ParseBundle(doc.RootElement);
             }
-
-            return ParseIndex(body);
-        }
-
-        // Index format: { "_source": ..., "_generated_utc": ..., "_count": N,
-        //                 "index": { "ABCD:1234": "keyboards/<vendor>/<board>/keyboard.json", ... } }
-        private static Dictionary<string, string> ParseIndex(string json)
-        {
-            var dict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            try
+            catch (Exception ex)
             {
-                using var doc = JsonDocument.Parse(json);
-                if (doc.RootElement.TryGetProperty("index", out var inner))
-                {
-                    foreach (var kvp in inner.EnumerateObject())
-                    {
-                        string path = kvp.Value.GetString();
-                        if (!string.IsNullOrEmpty(path))
-                            dict[kvp.Name] = path;
-                    }
-                }
+                Logger.WriteConsole(LoggerTypes.Error,
+                    $"[QMK] failed to load embedded keymap bundle: {ex.Message}",
+                    forwardToSentry: false);
+                return new Dictionary<string, QmkKeymap>();
             }
-            catch { /* malformed — return whatever parsed */ }
-            return dict;
         }
 
-        // ── Keyboard.json parse ──────────────────────────────────────
-
-        // Schema we care about (everything else ignored):
-        //   "layouts": {
-        //     "LAYOUT_<something>": {
-        //       "layout": [
-        //         { "matrix": [row, col], "label": "Esc", "x": 0, "y": 0 },
-        //         ...
-        //       ]
-        //     },
-        //     ...
+        // Bundle schema (see build_qmk_keymap_index.py):
+        //   {
+        //     "_source": ..., "_generated_utc": ..., "_count": N,
+        //     "boards": {
+        //       "VID:PID": [[col, row, "label"], ...],
+        //       ...
+        //     }
         //   }
-        //
-        // QMK boards frequently expose multiple LAYOUT_* alternates (ANSI vs ISO
-        // vs split-spacebar) — we pick the first that yielded any labels. The
-        // alternates usually share matrix coords for the keys they overlap on,
-        // so the choice is mostly cosmetic for our purposes.
-        //
-        // Label coverage varies wildly across boards. NK87's entries have
-        // "label": "Esc"; NK65's same field is absent. We emit only what's
-        // actually there; the merge step in BuildLayout falls back to
-        // LedId.Custom_* for LEDs whose (col,row) has no label.
-        private static QmkKeymap ParseKeyboardJson(string json)
+        private static Dictionary<string, QmkKeymap> ParseBundle(JsonElement root)
         {
-            try
+            var result = new Dictionary<string, QmkKeymap>(StringComparer.OrdinalIgnoreCase);
+            if (!root.TryGetProperty("boards", out var boards) || boards.ValueKind != JsonValueKind.Object)
+                return result;
+
+            foreach (var board in boards.EnumerateObject())
             {
-                using var doc = JsonDocument.Parse(json);
-                var root = doc.RootElement;
-
                 var labels = new Dictionary<(byte col, byte row), string>();
-                if (root.TryGetProperty("layouts", out var layouts) && layouts.ValueKind == JsonValueKind.Object)
+                if (board.Value.ValueKind == JsonValueKind.Array)
                 {
-                    foreach (var layoutProp in layouts.EnumerateObject())
+                    foreach (var rec in board.Value.EnumerateArray())
                     {
-                        if (!layoutProp.Value.TryGetProperty("layout", out var layoutArr)) continue;
-                        if (layoutArr.ValueKind != JsonValueKind.Array) continue;
-                        if (layoutArr.GetArrayLength() == 0) continue;
-
-                        foreach (var entry in layoutArr.EnumerateArray())
-                        {
-                            if (entry.ValueKind != JsonValueKind.Object) continue;
-                            if (!entry.TryGetProperty("matrix", out var mat)) continue;
-                            if (mat.ValueKind != JsonValueKind.Array || mat.GetArrayLength() < 2) continue;
-                            if (!entry.TryGetProperty("label", out var labelProp)) continue;
-                            if (labelProp.ValueKind != JsonValueKind.String) continue;
-
-                            int row = mat[0].GetInt32();
-                            int col = mat[1].GetInt32();
-                            if (row < 0 || row > byte.MaxValue || col < 0 || col > byte.MaxValue) continue;
-
-                            string label = labelProp.GetString();
-                            if (string.IsNullOrWhiteSpace(label)) continue;
-
-                            // First-write-wins across alternate layouts: a key
-                            // that appears in LAYOUT_60_ansi and LAYOUT_60_iso
-                            // at the same matrix coord keeps the ANSI label,
-                            // which is the conventional preferred default.
-                            var key = ((byte)col, (byte)row);
-                            if (!labels.ContainsKey(key))
-                                labels[key] = label;
-                        }
-
-                        // First layout with content satisfies us — alternates
-                        // mostly share matrix coords, no reason to keep parsing.
-                        if (labels.Count > 0) break;
+                        if (rec.ValueKind != JsonValueKind.Array || rec.GetArrayLength() < 3) continue;
+                        int col = rec[0].GetInt32();
+                        int row = rec[1].GetInt32();
+                        if (rec[2].ValueKind != JsonValueKind.String) continue;
+                        string label = rec[2].GetString();
+                        if (col < 0 || col > byte.MaxValue || row < 0 || row > byte.MaxValue) continue;
+                        if (string.IsNullOrWhiteSpace(label)) continue;
+                        // First-write-wins on collision within a board (shouldn't
+                        // happen — the build script already de-dupes).
+                        var key = ((byte)col, (byte)row);
+                        if (!labels.ContainsKey(key))
+                            labels[key] = label;
                     }
                 }
-
-                return new QmkKeymap { Labels = labels };
+                result[board.Name] = new QmkKeymap { Labels = labels };
             }
-            catch { return null; }
+            return result;
         }
 
-        // ── Cache ────────────────────────────────────────────────────
-
-        // Public so SettingsViewModel.ResetChromatics can wipe the cache when
-        // the user resets the app. Recursive delete; missing dir is a no-op.
-        public static void ClearCache()
-        {
-            try
-            {
-                var dir = GetCacheDir();
-                if (Directory.Exists(dir))
-                    Directory.Delete(dir, recursive: true);
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteConsole(LoggerTypes.Devices,
-                    $"[QMK] keymap cache clear failed: {ex.Message}",
-                    forwardToSentry: false);
-            }
-
-            lock (_indexInitLock) { _indexByVidPid = null; }
-        }
-
-        private static string GetCacheDir()
-        {
-            string dir = Path.Combine(FileOperationsHelper.GetConfigDirectory(), "QmkKeymaps");
-            try { Directory.CreateDirectory(dir); } catch { /* best-effort */ }
-            return dir;
-        }
-
-        private static string ResolveCachePath(int vid, int pid)
-            => Path.Combine(GetCacheDir(), $"{vid:X4}_{pid:X4}.json");
-
-        private static bool TryLoadCachedKeymap(string path, out QmkKeymap keymap)
-        {
-            keymap = null;
-            try
-            {
-                if (!File.Exists(path)) return false;
-                string body = File.ReadAllText(path);
-                keymap = ParseKeyboardJson(body);
-                return keymap != null;
-            }
-            catch { return false; }
-        }
-
-        private static void TrySaveCache(string path, string body)
-        {
-            try { File.WriteAllText(path, body); }
-            catch (Exception ex)
-            {
-                Logger.WriteConsole(LoggerTypes.Devices,
-                    $"[QMK] keymap cache write failed for {Path.GetFileName(path)}: {ex.Message}.",
-                    forwardToSentry: false);
-            }
-        }
-
-        // Path-segment encode (preserve slashes) for paths containing spaces or
-        // other characters QMK keymap filenames occasionally use.
-        private static string UrlPathEncode(string path)
-        {
-            return string.Join("/", path.Split('/').Select(Uri.EscapeDataString));
-        }
-
-        // ── Layout merge: firmware LED records + keymap labels → LedId list ──
+        // ── Layout merge: firmware LED records + bundled labels → LedId list ──
 
         // Combines the firmware's GetLedInfo records (per-LED matrix col/row)
-        // with the keymap's labels (per matrix coord → "Esc" / "F1" / etc.) to
-        // assign a semantic LedId.Keyboard_* to each LED. LEDs whose
-        // (col, row) doesn't appear in the keymap (underglow, board variants,
-        // or boards whose keyboard.json omits labels entirely) fall back to
+        // with the bundle's labels (per matrix coord → "Esc" / "F1" / etc.)
+        // to assign a semantic LedId.Keyboard_* to each LED. LEDs whose
+        // (col, row) doesn't appear in the bundle (underglow, board variants,
+        // or boards whose source JSON omits labels entirely) fall back to
         // LedId.Custom1+firmwareIndex.
         //
         // Physical placement is derived from matrix coords × a fixed cell
@@ -331,9 +186,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             }
 
             // De-dupe LedIds: two LEDs claiming the same semantic id (left vs
-            // right Shift both label "Shift", for instance) keep the first
-            // and demote the rest to Custom_* so RGB.NET's uniqueness
-            // invariant holds.
+            // right Shift both labelled "Shift") keep the first and demote
+            // the rest to Custom_* so RGB.NET's uniqueness invariant holds.
             var seen = new HashSet<LedId>();
             for (int i = 0; i < entries.Count; i++)
             {

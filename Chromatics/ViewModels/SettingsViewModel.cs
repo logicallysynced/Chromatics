@@ -609,12 +609,6 @@ namespace Chromatics.ViewModels
                     var path = Path.Combine(env, f);
                     if (File.Exists(path)) FileSystem.DeleteFile(path);
                 }
-
-                // Provider-specific caches live alongside the settings files
-                // and want clearing too. QMK Raw HID caches per-board VIA
-                // keymap JSONs + the upstream VID/PID index under
-                // QmkKeymaps/; the fetcher's static state is also reset.
-                Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkKeymapFetcher.ClearCache();
             }
             catch (Exception ex)
             {
