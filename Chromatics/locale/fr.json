@@ -837,5 +837,8 @@
   "Loading lights from your Hue bridge...": "Chargement des lumières depuis votre pont Hue...",
   "No lights found on this bridge.": "Aucune lumière trouvée sur ce pont.",
   "{0} Hue light(s) on this bridge.": "{0} lumière(s) Hue sur ce pont.",
-  "Couldn't read lights from the bridge: {0}": "Impossible de lire les lumières depuis le pont : {0}"
+  "Couldn't read lights from the bridge: {0}": "Impossible de lire les lumières depuis le pont : {0}",
+  "QMK Keyboards (Beta)": "Claviers QMK (bêta)",
+  "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.": "Claviers QMK via Raw HID. Couvre NovelKeys, KBDFans, Drop, GMMK, Glorious et tout autre clavier personnalisé exécutant QMK avec Raw HID activé.",
+  "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled": "[BÊTA] Activer/désactiver la prise en charge des claviers QMK Raw HID. Adopte automatiquement tout clavier compatible QMK avec Raw HID activé (couvre NovelKeys, KBDFans, Drop, GMMK, Glorious et autres claviers QMK personnalisés). Par défaut : désactivé"
 }

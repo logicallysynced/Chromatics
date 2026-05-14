@@ -60,7 +60,7 @@ namespace Chromatics.Views.Dialogs
         private ToggleButton[] Tiles() =>
         [
             TileRazer, TileLogitech, TileCorsair, TileCoolermaster,
-            TileSteelSeries, TileAsus, TileMsi, TileWooting, TileNovation, TileOpenRgb, TilePlayStation,
+            TileSteelSeries, TileAsus, TileMsi, TileWooting, TileNovation, TileOpenRgb, TilePlayStation, TileQmkRawHid,
         ];
 
         private void OnTileChanged(object? sender, RoutedEventArgs e) => UpdateContinueState();
@@ -87,10 +87,13 @@ namespace Chromatics.Views.Dialogs
             s.deviceNovationEnabled     = TileNovation.IsChecked     ?? false;
             s.deviceOpenRGBEnabled      = TileOpenRgb.IsChecked      ?? false;
             s.devicePlayStationEnabled  = TilePlayStation.IsChecked  ?? false;
+            s.deviceQmkRawHidEnabled    = TileQmkRawHid.IsChecked    ?? false;
 
-            // Hue is deliberately omitted from the wizard — it needs the
-            // bridge-pairing dialog which is inappropriate for first-run flow.
-            // Users enable Hue from Settings → Device Providers when ready.
+            // Hue and LIFX are deliberately omitted from the wizard — both
+            // need bridge / network-discovery dialogs that are inappropriate
+            // for first-run. Users enable them from Settings → Device
+            // Providers when ready. QMK is fine here: discovery is local
+            // (USB HID) and auto-adopt happens on first provider load.
 
             s.firstrun = false;
             AppSettings.SaveSettings(s);

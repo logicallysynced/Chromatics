@@ -837,5 +837,8 @@
   "Loading lights from your Hue bridge...": "Lampen von Ihrer Hue Bridge werden geladen...",
   "No lights found on this bridge.": "Auf dieser Bridge wurden keine Lampen gefunden.",
   "{0} Hue light(s) on this bridge.": "{0} Hue-Lampe(n) auf dieser Bridge.",
-  "Couldn't read lights from the bridge: {0}": "Lampen konnten nicht von der Bridge gelesen werden: {0}"
+  "Couldn't read lights from the bridge: {0}": "Lampen konnten nicht von der Bridge gelesen werden: {0}",
+  "QMK Keyboards (Beta)": "QMK-Tastaturen (Beta)",
+  "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.": "QMK-Tastaturen über Raw HID. Umfasst NovelKeys, KBDFans, Drop, GMMK, Glorious und jede andere benutzerdefinierte Tastatur, auf der QMK mit aktiviertem Raw HID läuft.",
+  "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled": "[BETA] QMK-Raw-HID-Tastaturunterstützung aktivieren/deaktivieren. Übernimmt automatisch jede QMK-kompatible Tastatur mit aktiviertem Raw HID (umfasst NovelKeys, KBDFans, Drop, GMMK, Glorious und andere benutzerdefinierte QMK-Boards). Standard: Deaktiviert"
 }

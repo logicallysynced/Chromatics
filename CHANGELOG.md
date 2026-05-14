@@ -2,9 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.1.39
+## 4.1.40
 
-- Updated underlying UI dependencies (Avalonia 12.0.3, System.Drawing.Common 10.0.8) for stability and bug fixes. No functional changes.
+- **New:** QMK Raw HID keyboard support (Beta). Covers custom keyboards from NovelKeys, KBDFans, Drop, GMMK, Glorious and any other brand running QMK firmware with Raw HID enabled. Enable it from Settings → Device Providers, or pick it on the first-run device selector. Chromatics auto-detects compatible boards on USB and adopts them — no firmware flashing or extra software required. Per-key lighting is driven via the OpenRGB-QMK plugin when the firmware has it installed; otherwise Chromatics drives the firmware's built-in RGB matrix base colour and effect mode (the VIA fallback path). For per-key boards, Chromatics looks up the physical key layout from the via-keyboards database automatically on first connect so the Highlight / Keybind layers line up with the right keys out of the box.
+- Updated dependency libraries to latest version
 
 ## 4.1.38
 

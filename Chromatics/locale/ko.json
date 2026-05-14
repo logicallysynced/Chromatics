@@ -838,5 +838,8 @@
   "Loading lights from your Hue bridge...": "Hue 브리지에서 조명을 불러오는 중...",
   "No lights found on this bridge.": "이 브리지에서 조명을 찾을 수 없습니다.",
   "{0} Hue light(s) on this bridge.": "이 브리지에 Hue 조명 {0}개가 있습니다.",
-  "Couldn't read lights from the bridge: {0}": "브리지에서 조명을 읽을 수 없습니다: {0}"
+  "Couldn't read lights from the bridge: {0}": "브리지에서 조명을 읽을 수 없습니다: {0}",
+  "QMK Keyboards (Beta)": "QMK 키보드(베타)",
+  "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.": "Raw HID를 통한 QMK 키보드입니다. NovelKeys, KBDFans, Drop, GMMK, Glorious 및 Raw HID가 활성화된 QMK를 실행하는 기타 모든 커스텀 키보드를 지원합니다.",
+  "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled": "[베타] QMK Raw HID 키보드 지원을 활성화/비활성화합니다. Raw HID가 활성화된 모든 QMK 호환 키보드를 자동으로 채택합니다(NovelKeys, KBDFans, Drop, GMMK, Glorious 및 기타 커스텀 QMK 보드 포함). 기본값: 비활성화"
 }

@@ -837,5 +837,8 @@
   "Loading lights from your Hue bridge...": "正在从您的 Hue 网桥加载灯光...",
   "No lights found on this bridge.": "此网桥上未找到灯。",
   "{0} Hue light(s) on this bridge.": "此网桥上有 {0} 个 Hue 灯。",
-  "Couldn't read lights from the bridge: {0}": "无法从网桥读取灯光：{0}"
+  "Couldn't read lights from the bridge: {0}": "无法从网桥读取灯光：{0}",
+  "QMK Keyboards (Beta)": "QMK 键盘（测试版）",
+  "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.": "通过 Raw HID 连接的 QMK 键盘。涵盖 NovelKeys、KBDFans、Drop、GMMK、Glorious，以及任何其他启用了 Raw HID 且运行 QMK 的自定义键盘。",
+  "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled": "[测试版] 启用/禁用 QMK Raw HID 键盘支持。自动采用任何启用了 Raw HID 的 QMK 兼容键盘（涵盖 NovelKeys、KBDFans、Drop、GMMK、Glorious，以及其他自定义 QMK 键盘）。默认：禁用"
 }

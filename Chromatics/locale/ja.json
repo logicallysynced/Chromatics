@@ -838,5 +838,8 @@
   "Loading lights from your Hue bridge...": "Hueブリッジからライトを読み込んでいます...",
   "No lights found on this bridge.": "このブリッジにはライトが見つかりませんでした。",
   "{0} Hue light(s) on this bridge.": "このブリッジには{0}個のHueライトがあります。",
-  "Couldn't read lights from the bridge: {0}": "ブリッジからライトを読み取れませんでした: {0}"
+  "Couldn't read lights from the bridge: {0}": "ブリッジからライトを読み取れませんでした: {0}",
+  "QMK Keyboards (Beta)": "QMKキーボード（ベータ）",
+  "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.": "Raw HID経由のQMKキーボード。NovelKeys、KBDFans、Drop、GMMK、Glorious、およびRaw HIDが有効なQMKを実行しているその他のカスタムキーボードに対応します。",
+  "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled": "［ベータ］QMK Raw HIDキーボード対応を有効／無効にします。Raw HIDが有効なQMK対応キーボードを自動的に採用します（NovelKeys、KBDFans、Drop、GMMK、Glorious、およびその他のカスタムQMKボードに対応）。デフォルト：無効"
 }

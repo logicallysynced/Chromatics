@@ -304,8 +304,70 @@ namespace Chromatics.Core
                         Logger.WriteConsole(Enums.LoggerTypes.Error, $"[LifxDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
                     }
                 }
-                            
-            
+
+                if (appSettings.deviceQmkRawHidEnabled)
+                {
+                    try
+                    {
+                        // QMK Raw HID provider — auto-adopts every QMK-compatible
+                        // keyboard discovered on the USB bus when the user has
+                        // an empty persisted adopted-set (first launch after
+                        // enabling). The adopted-set is the union of (a) the
+                        // boards the user has explicitly seen in the Mapping
+                        // tab and not removed via per-device disable, and (b)
+                        // any new boards that appear on subsequent launches
+                        // — the keymap fetch + handshake is cheap so refreshing
+                        // is fine. Persistence stays in
+                        // deviceQmkRawHidAdoptedDevices for the next launch's
+                        // hot-plug filter.
+                        Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance.AdoptedDevices.Clear();
+                        var adopted = appSettings.deviceQmkRawHidAdoptedDevices ?? new List<QmkRawHidAdoptedDevice>();
+                        if (adopted.Count == 0)
+                        {
+                            // Discover once and adopt everything that responds.
+                            // Subsequent launches will reuse the persisted list
+                            // unless the user explicitly clears it.
+                            var discovered = Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol.QmkRawHidDiscovery.Discover();
+                            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                            foreach (var c in discovered)
+                            {
+                                string mfg = "";
+                                string prod = "";
+                                try { mfg = c.Hid.GetManufacturer() ?? ""; } catch { }
+                                try { prod = c.Hid.GetProductName() ?? ""; } catch { }
+                                var key = $"{c.Hid.VendorID:X4}:{c.Hid.ProductID:X4}:{mfg}:{prod}";
+                                if (!seen.Add(key)) continue;
+                                adopted.Add(new QmkRawHidAdoptedDevice
+                                {
+                                    VendorId = c.Hid.VendorID,
+                                    ProductId = c.Hid.ProductID,
+                                    Manufacturer = mfg,
+                                    Product = prod,
+                                    LedCount = c.LedCount,
+                                    Protocol = c.Protocol.ToString(),
+                                    ViaKeymapKey = string.Empty,
+                                });
+                            }
+                            appSettings.deviceQmkRawHidAdoptedDevices = adopted;
+                            if (adopted.Count > 0) AppSettings.SaveSettings(appSettings);
+                        }
+
+                        foreach (var d in adopted)
+                        {
+                            Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance.AdoptedDevices.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidAdoptedDeviceFilter(
+                                    d.VendorId, d.ProductId, d.Manufacturer, d.Product));
+                        }
+
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[QmkRawHidDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 
                 _timerUpdateTrigger = new TimerUpdateTrigger();
@@ -378,6 +440,16 @@ namespace Chromatics.Core
                         catch { /* best-effort */ }
                     });
                 }
+                else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
+                {
+                    // QMK boards have no captured pre-Chromatics state to
+                    // restore — the firmware's built-in RGB matrix mode
+                    // resumes by itself as soon as Update() stops sending
+                    // frames. Gate the queue so any buffered frames in
+                    // flight don't slip through, then let the firmware
+                    // take over.
+                    qmkDev.SetPerDeviceDisabled(true);
+                }
 
                 surface.Detach(device);
 
@@ -428,6 +500,11 @@ namespace Chromatics.Core
                 else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
                 {
                     hueDev.SetPerDeviceDisabled(false);
+                }
+                else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
+                {
+                    qmkDev.ResetCache();
+                    qmkDev.SetPerDeviceDisabled(false);
                 }
 
                 // Tagged effects (startup rainbow, title-screen starfield)
@@ -852,6 +929,8 @@ namespace Chromatics.Core
                             lifxDev.SetPerDeviceDisabled(true);
                         else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
                             hueDev.SetPerDeviceDisabled(true);
+                        else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
+                            qmkDev.SetPerDeviceDisabled(true);
                         if (_activeDevices.ContainsKey(device))
                             _activeDevices[device] = false;
                         else
@@ -1236,7 +1315,7 @@ namespace Chromatics.Core
 
         // Tear down ONLY the groups registered under `tag` — used when the
         // user disables Startup Animation / Title Screen via the Effects
-        // tab and we need to stop the rainbow / starfield mid-cycle without
+        // tab and we need to stop the effects mid-cycle without
         // killing other running effects on the surface.
         //
         // LEDs are painted BLACK and one surface render is forced before

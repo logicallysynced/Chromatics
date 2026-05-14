@@ -70,6 +70,10 @@
                 <ToggleButton Classes="tile" Name="TilePlayStation"
                               Width="150" Height="80"
                               Content="{loc:Tr Key='PlayStation (Beta)'}" />
+                <ToggleButton Classes="tile" Name="TileQmkRawHid"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.'}"
+                              Content="{loc:Tr Key='QMK Keyboards (Beta)'}" />
             </WrapPanel>
         </ScrollViewer>
 

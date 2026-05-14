@@ -271,6 +271,83 @@ namespace Chromatics.ViewModels
                     cur.deviceLifxEnabled = false;
                     AppSettings.SaveSettings(cur);
                 }));
+
+            // QMK Raw HID — auto-adopts every QMK-compatible board on first
+            // enable (no picker dialog yet; per-keyboard disable via the
+            // Mapping tab covers the "I don't want this one" case for v1
+            // Beta). Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any
+            // other custom keyboard running QMK with Raw HID enabled.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "QMK Keyboards (Beta)",
+                "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled",
+                s.deviceQmkRawHidEnabled,
+                () =>
+                {
+                    var cur = AppSettings.GetSettings();
+
+                    // Discovery + auto-adopt: run on a background thread to
+                    // keep the Settings dialog responsive — per-device VIA
+                    // handshakes can take 200-500ms each on a sluggish USB
+                    // stack, and discovery + handshake of 5+ boards adds up.
+                    return Task.Run(() =>
+                    {
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol.QmkRawHidDiscovery.Discover();
+                        if (discovered.Count == 0)
+                        {
+                            // No boards responded — leave the toggle off so
+                            // the user sees the immediate "didn't take" UX
+                            // rather than an empty-but-on provider.
+                            return false;
+                        }
+
+                        var adopted = new System.Collections.Generic.List<QmkRawHidAdoptedDevice>();
+                        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance.AdoptedDevices.Clear();
+                        foreach (var c in discovered)
+                        {
+                            string mfg = ""; string prod = "";
+                            try { mfg  = c.Hid.GetManufacturer() ?? ""; } catch { }
+                            try { prod = c.Hid.GetProductName() ?? ""; } catch { }
+                            var key = $"{c.Hid.VendorID:X4}:{c.Hid.ProductID:X4}:{mfg}:{prod}";
+                            if (!seen.Add(key)) continue;
+
+                            adopted.Add(new QmkRawHidAdoptedDevice
+                            {
+                                VendorId = c.Hid.VendorID,
+                                ProductId = c.Hid.ProductID,
+                                Manufacturer = mfg,
+                                Product = prod,
+                                LedCount = c.LedCount,
+                                Protocol = c.Protocol.ToString(),
+                                ViaKeymapKey = string.Empty,
+                            });
+                            Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance.AdoptedDevices.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidAdoptedDeviceFilter(
+                                    c.Hid.VendorID, c.Hid.ProductID, mfg, prod));
+                        }
+
+                        cur.deviceQmkRawHidAdoptedDevices = adopted;
+                        cur.deviceQmkRawHidEnabled = true;
+                        AppSettings.SaveSettings(cur);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance);
+                        return true;
+                    });
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        prov.AdoptedDevices.Clear();
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceQmkRawHidEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
         }
 
         private static Avalonia.Controls.Window GetMainWindow()
