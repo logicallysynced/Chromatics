@@ -3,6 +3,7 @@ using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
+using Chromatics.Extensions.RGB.NET.Devices.Alienware;
 using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using Chromatics.Helpers;
 using Chromatics.Layers;
@@ -445,6 +446,73 @@ namespace Chromatics.Core
                     }
                 }
 
+                if (appSettings.deviceAlienwareEnabled)
+                {
+                    try
+                    {
+                        // Auto-adopt on first enable. Mirrors the QMK / Yeelight
+                        // pattern: when the persisted adopted-set is empty,
+                        // sweep the HID bus once and adopt every Alienware
+                        // device that responds. Subsequent launches reuse the
+                        // persisted list and re-bind by VID/PID/DevicePath.
+                        var adopted = appSettings.deviceAlienwareAdoptedDevices ?? new List<AlienwareAdoptedDevice>();
+                        if (adopted.Count == 0)
+                        {
+                            try
+                            {
+                                var discovered = Chromatics.Extensions.RGB.NET.Devices.Alienware.Protocol.AlienwareDiscovery.Discover();
+                                var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                                foreach (var c in discovered)
+                                {
+                                    string key = $"{c.Hid.VendorID:X4}:{c.Hid.ProductID:X4}:{c.Hid.DevicePath}";
+                                    if (!seen.Add(key)) continue;
+                                    adopted.Add(new AlienwareAdoptedDevice
+                                    {
+                                        VendorId = c.Hid.VendorID,
+                                        ProductId = c.Hid.ProductID,
+                                        Manufacturer = c.Manufacturer,
+                                        Product = c.Product,
+                                        DevicePath = c.Hid.DevicePath,
+                                        ApiVersion = c.ApiVersion.ToString(),
+                                        LightCount = c.LightCount,
+                                        ReportLength = c.ReportLength,
+                                    });
+                                }
+                                if (adopted.Count > 0)
+                                {
+                                    appSettings.deviceAlienwareAdoptedDevices = adopted;
+                                    AppSettings.SaveSettings(appSettings);
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Alienware] Adopted {adopted.Count} AlienFX device(s) discovered on the HID bus.");
+                                }
+                                else
+                                {
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, "[Alienware] No AlienFX devices detected. Make sure your machine is an Alienware / Dell G-series with AlienFX hardware, and that the Alienware Command Center isn't holding the HID interface exclusively.", forwardToSentry: false);
+                                }
+                            }
+                            catch (Exception discEx)
+                            {
+                                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Alienware] Initial discovery sweep failed: {discEx.Message}");
+                            }
+                        }
+
+                        Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        foreach (var d in adopted)
+                        {
+                            if (!Enum.TryParse<Chromatics.Extensions.RGB.NET.Devices.Alienware.Protocol.AlienwareApiVersion>(d.ApiVersion, out var api))
+                                api = Chromatics.Extensions.RGB.NET.Devices.Alienware.Protocol.AlienwareApiVersion.Unknown;
+                            Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareClientDefinition(
+                                    d.VendorId, d.ProductId, d.Manufacturer, d.Product,
+                                    api, d.LightCount, d.ReportLength, d.DevicePath));
+                        }
+
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[AlienwareDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
 
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 

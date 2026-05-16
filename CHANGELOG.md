@@ -2,9 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.0
+## 4.2.1
 
-- **New (Beta):** Yeelight LAN device support. Auto-discovers Yeelight bulbs, light strips, lamps, and ceiling lights on your network and adopts whatever it finds when you enable the provider. Chromatics talks the Yeelight LAN protocol directly over your local network. No cloud account, no third-party DLLs, no proxy software. When a bulb's firmware supports Music Mode, Chromatics enables it automatically so colour changes track at full frame rate instead of being capped at 1 per second by the bulb's normal rate limit. Dual-light bulbs like the Bedside Lamp 2 expose two LEDs (main and background) so you can map them independently. Light strips paint as one colour because Yeelight's LAN protocol doesn't expose per-zone addressing on its strip products. Enable from Settings → Device Providers; remember to turn on LAN Control in the Yeelight or Mi Home app first.
+- **New:** Yeelight LAN device support (Beta). Auto-discovers Yeelight bulbs, light strips, lamps, and ceiling lights on the LAN. Music Mode handshake removes the bulb's normal 1-per-second command cap. Dual-light bulbs like the Bedside Lamp 2 surface as two LEDs (main and background) you can map independently. Enable from Settings → Device Providers; turn on LAN Control in the Yeelight or Mi Home app first.
+- **New:** Alienware AlienFX device support (Beta). Auto-discovers AlienFX hardware on the HID bus and adopts everything it finds. Covers Aurora R7-R14 desktops, m15 / m17 / x15 / x17 laptops, the per-key notebook line (Area51m-R2, m15R3+, m17R3), and per-key external keyboards (AW510K, AW920K, AW768, AW410K). Pure managed implementation, no Dell driver or Alienware Command Center needed. Close AWCC before enabling — it holds the HID interface exclusively.
+- PlayStation, Hue & LIFX devices are no longer classed as Beta.
 - Minor fixes to Logitech implementation.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
 

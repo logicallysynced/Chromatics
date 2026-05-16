@@ -450,6 +450,84 @@ namespace Chromatics.ViewModels
                     cur.deviceYeelightEnabled = false;
                     AppSettings.SaveSettings(cur);
                 }));
+
+            // Alienware AlienFX — pure managed HID via HidSharp, no native
+            // DLL or Dell driver. Three HID dialects (V4 zone chassis, V5
+            // notebook per-key, V8 external per-key) dispatched from one
+            // provider; auto-adopt every AlienFX device discovered on
+            // first enable. Mapping tab handles per-device disable.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Alienware (Beta)",
+                "[BETA] Enable/disable Alienware AlienFX device support. Auto-adopts any AlienFX-capable Alienware or Dell G-series chassis, notebook keyboard, or external keyboard discovered on the HID bus. Default: Disabled",
+                s.deviceAlienwareEnabled,
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[Alienware] Scanning for AlienFX devices on the HID bus...");
+
+                    bool result = await Task.Run(() =>
+                    {
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.Alienware.Protocol.AlienwareDiscovery.Discover();
+                        if (discovered.Count == 0) return false;
+
+                        var adopted = new System.Collections.Generic.List<AlienwareAdoptedDevice>();
+                        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+
+                        foreach (var c in discovered)
+                        {
+                            string key = $"{c.Hid.VendorID:X4}:{c.Hid.ProductID:X4}:{c.Hid.DevicePath}";
+                            if (!seen.Add(key)) continue;
+
+                            adopted.Add(new AlienwareAdoptedDevice
+                            {
+                                VendorId = c.Hid.VendorID,
+                                ProductId = c.Hid.ProductID,
+                                Manufacturer = c.Manufacturer,
+                                Product = c.Product,
+                                DevicePath = c.Hid.DevicePath,
+                                ApiVersion = c.ApiVersion.ToString(),
+                                LightCount = c.LightCount,
+                                ReportLength = c.ReportLength,
+                            });
+
+                            Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareClientDefinition(
+                                    c.Hid.VendorID, c.Hid.ProductID, c.Manufacturer, c.Product,
+                                    c.ApiVersion, c.LightCount, c.ReportLength, c.Hid.DevicePath));
+                        }
+
+                        cur.deviceAlienwareAdoptedDevices = adopted;
+                        cur.deviceAlienwareEnabled = true;
+                        AppSettings.SaveSettings(cur);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance);
+                        return true;
+                    });
+
+                    if (!result)
+                    {
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No Alienware Devices Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any AlienFX hardware on this PC. Make sure you're on an Alienware (or Dell G-series) machine with AlienFX lighting. If Alienware Command Center or another AlienFX tool is running, close it before enabling this provider - they hold the HID interface exclusively."]);
+                    }
+                    return result;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        prov.ClientDefinitions.Clear();
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceAlienwareEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
         }
 
         private static Avalonia.Controls.Window GetMainWindow()

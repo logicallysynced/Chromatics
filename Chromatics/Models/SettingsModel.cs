@@ -54,6 +54,7 @@ namespace Chromatics.Models
         public bool deviceYeelightEnabled { get; set; } = false;
         public List<YeelightAdoptedDevice> deviceYeelightAdoptedDevices { get; set; } = new();
         public bool deviceAlienwareEnabled { get; set; } = false;
+        public List<AlienwareAdoptedDevice> deviceAlienwareAdoptedDevices { get; set; } = new();
         public string deviceHueBridgeIP { get; set; } = "127.0.0.1";
         public string deviceHueBridgeClientKey { get; set; } = "";
         public double deviceHueBridgeBrightness { get; set; } = -1;
