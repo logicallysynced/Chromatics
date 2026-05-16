@@ -4,6 +4,7 @@ All notable changes to Chromatics are documented here.
 
 ## 4.1.45
 
+- Minor fixes to Logitech implementation.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
 
 ## 4.1.44
