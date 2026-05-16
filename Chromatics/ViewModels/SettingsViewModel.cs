@@ -57,6 +57,8 @@ namespace Chromatics.ViewModels
             _betaChannel = s.betaChannel;
             _alwaysRunAsAdmin = s.alwaysRunAsAdmin;
             _enableCrashReports = s.enableCrashReports;
+            _dynamicLightingEnabled = s.deviceDynamicLightingEnabled;
+            _dynamicLightingBypassConflictCheck = s.dynamicLightingBypassConflictCheck;
             _closeWithGame = s.closeWithGame;
             _globalBrightness = s.globalbrightness;
 
@@ -532,13 +534,68 @@ namespace Chromatics.ViewModels
             // Phase 1 ships foreground-only; the sparse package that
             // unlocks background writes (so colours apply during FFXIV
             // gameplay) lands in a follow-up commit.
-            DeviceToggles.Add(MakeDeviceToggle(
+            DeviceToggles.Add(new DeviceToggleItem(
                 "Dynamic Lighting (Beta)",
-                "[BETA] Enable/disable the Windows Dynamic Lighting provider. Picks up any device the OS lists in Settings -> Personalization -> Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Background writes during gameplay arrive in a follow-up patch. Default: Disabled",
+                "[BETA] Enable/disable the Windows Dynamic Lighting provider. Picks up any device Windows lists in Settings -> Personalization -> Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Default: Disabled",
                 s.deviceDynamicLightingEnabled,
-                () => RGBController.LoadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance),
-                () => RGBController.UnloadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance),
-                v => { var c = AppSettings.GetSettings(); c.deviceDynamicLightingEnabled = v; AppSettings.SaveSettings(c); }));
+                async () =>
+                {
+                    // Conflict popup (vendor providers already enabled).
+                    await ShowDynamicLightingOverlapPopupIfNeededAsync("Dynamic Lighting (Beta)").ConfigureAwait(true);
+
+                    // First-time hint dialog walking the user through the
+                    // Settings → Personalization → Dynamic Lighting steps
+                    // for background access. Honest about the Phase 1
+                    // foreground-only limitation.
+                    var cur = AppSettings.GetSettings();
+                    if (!cur.dynamicLightingHintShown)
+                    {
+                        try
+                        {
+                            var owner = GetMainWindow();
+                            var hintDlg = new DynamicLightingHintDialog();
+                            if (owner != null) await hintDlg.ShowDialog(owner).ConfigureAwait(true);
+                            else hintDlg.Show();
+                        }
+                        catch { /* dialog failure shouldn't block enable */ }
+                    }
+
+                    RGBController.LoadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
+
+                    // Empty-result handling: if Windows enumerated zero
+                    // compatible devices, unload the provider and leave the
+                    // toggle off rather than ship an enabled-but-empty
+                    // provider. Mirrors the LIFX / Yeelight pattern. The
+                    // "no devices" dialog explains what to check (Settings
+                    // -> Personalization -> Dynamic Lighting must list at
+                    // least one device).
+                    if (DynamicLightingRGBDeviceProvider.Instance.AdoptedDeviceCount == 0)
+                    {
+                        RGBController.UnloadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
+                        var cc = AppSettings.GetSettings();
+                        cc.deviceDynamicLightingEnabled = false;
+                        AppSettings.SaveSettings(cc);
+                        RefreshDynamicLightingState();
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No Dynamic Lighting devices found"],
+                            LocalizationService.Instance["Chromatics didn't detect any Dynamic Lighting devices on this PC. Open Settings -> Personalization -> Dynamic Lighting in Windows and check that at least one compatible device is listed there. If your hardware is listed but Chromatics still doesn't see it, it may be hidden by an enabled vendor provider conflict; Settings -> Advanced has a toggle to control that."]);
+                        return false;
+                    }
+
+                    var c = AppSettings.GetSettings();
+                    c.deviceDynamicLightingEnabled = true;
+                    AppSettings.SaveSettings(c);
+                    RefreshDynamicLightingState();
+                    return true;
+                },
+                () =>
+                {
+                    RGBController.UnloadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
+                    var c = AppSettings.GetSettings();
+                    c.deviceDynamicLightingEnabled = false;
+                    AppSettings.SaveSettings(c);
+                    RefreshDynamicLightingState();
+                }));
         }
 
         private static Avalonia.Controls.Window GetMainWindow()
@@ -734,6 +791,43 @@ namespace Chromatics.ViewModels
                     Chromatics.Core.SentryService.ApplyConsent(value);
                 }
             }
+        }
+
+        // Mirrors SettingsModel.deviceDynamicLightingEnabled — read-only
+        // here, kept in sync by the device-toggle row's saveFlag callback
+        // (via RefreshDynamicLightingState). The Advanced bypass checkbox
+        // binds its IsVisible to this so the row only shows when Dynamic
+        // Lighting is the active provider.
+        private bool _dynamicLightingEnabled;
+        public bool DynamicLightingEnabled
+        {
+            get => _dynamicLightingEnabled;
+            private set => SetProperty(ref _dynamicLightingEnabled, value);
+        }
+
+        private bool _dynamicLightingBypassConflictCheck;
+        public bool DynamicLightingBypassConflictCheck
+        {
+            get => _dynamicLightingBypassConflictCheck;
+            set
+            {
+                if (SetProperty(ref _dynamicLightingBypassConflictCheck, value))
+                {
+                    var s = AppSettings.GetSettings();
+                    s.dynamicLightingBypassConflictCheck = value;
+                    AppSettings.SaveSettings(s);
+                }
+            }
+        }
+
+        // Called by the Dynamic Lighting device-toggle row's saveFlag so
+        // the Advanced section's bypass checkbox shows / hides in lock-step
+        // with the provider enable state.
+        public void RefreshDynamicLightingState()
+        {
+            var s = AppSettings.GetSettings();
+            DynamicLightingEnabled = s.deviceDynamicLightingEnabled;
+            DynamicLightingBypassConflictCheck = s.dynamicLightingBypassConflictCheck;
         }
 
         private bool _closeWithGame;

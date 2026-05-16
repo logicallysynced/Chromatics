@@ -7,12 +7,30 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
     {
         public DynamicLightingDeviceInfo(DynamicLightingClientDefinition def)
         {
-            DeviceName = def.DisplayName;
-            // The OS doesn't expose the OEM/manufacturer string through
-            // LampArray itself — it's part of the underlying USB descriptor
-            // but Microsoft's WinRT surface drops it. Use a stable label
-            // instead of a noisy "Unknown".
-            Manufacturer = "Windows Dynamic Lighting";
+            // Windows hands us bare model names through DeviceInformation.Name
+            // ("G512" rather than "Logitech G512"), and two devices from the
+            // same vendor can collide in the Mappings tab combo without the
+            // prefix. Re-prefix by looking up the OEM name from the LampArray
+            // HardwareVendorId and tag with "(Dynamic Lighting)" so the
+            // device is also distinguishable from the same physical board's
+            // entry under its vendor SDK provider.
+            string baseName = def.DisplayName ?? string.Empty;
+            string vendorPrefix = def.LampArray != null
+                ? DynamicLightingVendorOverlap.TryGetVendorDisplayName(def.LampArray.HardwareVendorId)
+                : null;
+
+            bool alreadyPrefixed = !string.IsNullOrEmpty(vendorPrefix)
+                && baseName.StartsWith(vendorPrefix, System.StringComparison.OrdinalIgnoreCase);
+
+            string prefixed = (vendorPrefix == null || alreadyPrefixed)
+                ? baseName
+                : $"{vendorPrefix} {baseName}".Trim();
+
+            DeviceName = string.IsNullOrWhiteSpace(prefixed)
+                ? "Dynamic Lighting device"
+                : $"{prefixed} (Dynamic Lighting)";
+
+            Manufacturer = vendorPrefix ?? "Windows Dynamic Lighting";
             Model = def.LampArray?.LampArrayKind.ToString() ?? "LampArray";
             DeviceType = MapDeviceType(def.LampArray?.LampArrayKind ?? LampArrayKind.Undefined);
         }

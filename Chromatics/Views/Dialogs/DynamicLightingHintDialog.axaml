@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        x:Class="Chromatics.Views.Dialogs.DynamicLightingHintDialog"
+        Title="{loc:Tr Key='Windows Dynamic Lighting setup'}"
+        Width="640" Height="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+
+        <TextBlock Grid.Row="0"
+                   Text="{loc:Tr Key='Windows Dynamic Lighting setup'}"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,12" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+
+                <TextBlock TextWrapping="Wrap"
+                           Text="{loc:Tr Key='Chromatics has detected one or more devices on this PC that support Windows Dynamic Lighting. For the best experience, set Chromatics as the priority controller in Windows.'}" />
+
+                <Border Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                        CornerRadius="4"
+                        Padding="12,10">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{loc:Tr Key='Steps in Windows Settings'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='1. Open Settings → Personalization → Dynamic Lighting, or click Open Windows Settings below.'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='2. Confirm Use Dynamic Lighting on my devices is on.'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='3. Turn off Compatible apps in the foreground always control lighting so other apps cannot block Chromatics during gameplay.'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='4. Under Background controllers, drag Chromatics to the top of the priority list.'}" />
+                    </StackPanel>
+                </Border>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button Name="OpenSettingsButton"
+                    Content="{loc:Tr Key='Open Windows Settings'}"
+                    Click="OnOpenSettings"
+                    MinWidth="180" />
+            <Button Name="GotItButton"
+                    Content="{loc:Tr Key='Got it'}"
+                    Click="OnGotIt"
+                    Classes="accent"
+                    MinWidth="120" />
+        </StackPanel>
+    </Grid>
+</Window>

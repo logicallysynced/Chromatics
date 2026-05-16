@@ -521,11 +521,9 @@ namespace Chromatics.Core
                     try
                     {
                         // Windows Dynamic Lighting (LampArray). DeviceWatcher
-                        // inside the provider handles initial enumeration AND
+                        // inside the provider handles initial enumeration and
                         // hot-plug, so there's no per-device adoption list to
-                        // hydrate. Phase 1 ships foreground-only; the sparse
-                        // signed package that unlocks background writes lands
-                        // in a follow-up commit.
+                        // hydrate before LoadDeviceProvider.
                         LoadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
                     }
                     catch (Exception ex)

@@ -109,6 +109,10 @@
                     <CheckBox Content="{loc:Tr Key='Send anonymous performance and error telemetry to help improve Chromatics.'}"
                               IsChecked="{Binding EnableCrashReports, Mode=TwoWay}"
                               ToolTip.Tip="{loc:Tr Key='Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.'}" />
+                    <CheckBox Content="{loc:Tr Key='Allow Dynamic Lighting to control devices already covered by another Chromatics provider.'}"
+                              IsChecked="{Binding DynamicLightingBypassConflictCheck, Mode=TwoWay}"
+                              IsVisible="{Binding DynamicLightingEnabled}"
+                              ToolTip.Tip="{loc:Tr Key='Default: Enabled. When enabled, Dynamic Lighting adopts every compatible device Windows lists regardless of overlap with other Chromatics providers. Disable this if a device flickers because both Dynamic Lighting and its vendor provider are writing to it at the same time - the vendor provider will then take exclusive control of overlapping devices and Dynamic Lighting will silently skip them.'}" />
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <Button Content="{loc:Tr Key='Check for Updates'}"
                                 Click="OnCheckUpdatesClick"

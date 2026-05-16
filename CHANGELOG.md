@@ -2,9 +2,9 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.5
+## 4.2.6
 
-- **New:** Windows Dynamic Lighting (Beta). Picks up any device the OS lists in Settings → Personalization → Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen, etc.).
+- **New:** Windows Dynamic Lighting (Beta). Picks up any device Windows lists in Settings → Personalization → Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen, etc.). Each device shows up in the Mappings tab tagged "(Dynamic Lighting)" and prefixed with its vendor (e.g. "Logitech G512 (Dynamic Lighting)") so it's distinct from the same physical device's entry under its vendor SDK provider.
 - **New:** Yeelight LAN device support (Beta), with an adoption picker dialog so you can choose which bulbs Chromatics controls.
 - **New:** Alienware AlienFX device support (Beta), covering both zone-based chassis and per-key keyboards (AW510K, AW920K). Chromatics now flags Alienware Command Center conflicts directly in the console.
 - Hue, LIFX and Yeelight tiles added to the first-run wizard, each with their own discovery flow.

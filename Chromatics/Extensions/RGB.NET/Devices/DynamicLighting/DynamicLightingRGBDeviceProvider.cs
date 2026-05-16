@@ -17,17 +17,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
     // Talks to the Windows.Devices.Lights.LampArray WinRT API. Devices
     // that expose the standard HID Lighting and Illumination usage page
     // (0x59, HUTRR84) are picked up by Windows automatically; any
-    // device the OS exposes via LampArray.GetDeviceSelector() is a
+    // device Windows exposes via LampArray.GetDeviceSelector() is a
     // candidate for adoption here.
-    //
-    // **Foreground / background priority caveat (Phase 1).** Without a
-    // sparse signed package declaring the `com.microsoft.windows.lighting`
-    // AppExtension, Windows only accepts our writes while Chromatics
-    // has foreground focus. During FFXIV gameplay the game has focus
-    // and our writes silently no-op. Phase 2 of the Dynamic Lighting
-    // work adds the sparse package so background writes are accepted.
-    // Until then this provider only renders when Chromatics is the
-    // active window, which is documented in the Settings tooltip.
     //
     // Discovery uses Windows' DeviceWatcher so hot-plug works without
     // any per-frame polling on our side. The watcher fires Added /
@@ -57,6 +48,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
 
         private DeviceWatcher _watcher;
         private readonly ConcurrentDictionary<string, DynamicLightingDevice> _devicesById = new(StringComparer.OrdinalIgnoreCase);
+
+        // Count of devices currently adopted by this provider. Polled by
+        // SettingsViewModel's toggle handler after LoadDeviceProvider so
+        // it can flip the toggle back off (and surface a dialog) when
+        // Windows enumerated zero compatible devices.
+        public int AdoptedDeviceCount => _devicesById.Count;
 
         protected override void InitializeSDK()
         {
@@ -102,7 +99,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
             if (devices.Count == 0)
             {
                 Logger.WriteConsole(LoggerTypes.Devices,
-                    "[DynamicLighting] No Dynamic Lighting devices detected. Compatible hardware (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen) shows up here when its firmware enables the Dynamic Lighting HID profile and Settings -> Personalization -> Dynamic Lighting is turned on.",
+                    "[DynamicLighting] No Dynamic Lighting devices detected. Compatible hardware (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen) shows up here when its firmware enables the Dynamic Lighting HID profile and Settings -> Personalization -> Dynamic Lighting is turned on in Windows.",
                     forwardToSentry: false);
             }
             return devices;
@@ -119,30 +116,37 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
                 var lampArray = await LampArray.FromIdAsync(info.Id).AsTask().ConfigureAwait(false);
                 if (lampArray == null || lampArray.LampCount <= 0) return null;
 
-                // Auto-deduplication: if this device's OEM has a Chromatics
-                // vendor provider currently enabled, skip adoption so the
-                // vendor SDK retains exclusive control. Without this two
-                // providers would race on the same physical device every
-                // frame and the user would see flickering.
+                // Conflict check: when the user has opted into the
+                // conservative conflict-handling behaviour (Settings ->
+                // Advanced -> "Block Dynamic Lighting on devices already
+                // covered by a vendor provider"), skip adoption of any
+                // device whose OEM has a Chromatics vendor provider
+                // currently enabled. The vendor SDK retains exclusive
+                // control of the device.
                 //
-                // The vendor SDK is the safer default because it predates
-                // Dynamic Lighting (better per-device test coverage) and
-                // doesn't have the foreground/background priority gate
-                // Dynamic Lighting carries.
+                // Default is the bypass path (adopt every device Windows
+                // exposes regardless of overlap), since most users
+                // running Dynamic Lighting want it to work on every
+                // supported device. The opt-in conservative path is
+                // for users who see flickering from both providers
+                // writing to the same hardware.
                 try
                 {
                     var settings = AppSettings.GetSettings();
-                    string overlapVendor = DynamicLightingVendorOverlap.TryGetEnabledVendorOwner(
-                        lampArray.HardwareVendorId, settings);
-                    if (overlapVendor != null)
+                    if (!settings.dynamicLightingBypassConflictCheck)
                     {
-                        Logger.WriteConsole(LoggerTypes.Devices,
-                            $"[DynamicLighting] Skipped '{info.Name}' (VID 0x{lampArray.HardwareVendorId:X4}); the {overlapVendor} provider is enabled and owns this device. Disable {overlapVendor} in Settings -> Device Providers if you want Dynamic Lighting to control it instead.",
-                            forwardToSentry: false);
-                        return null;
+                        string overlapVendor = DynamicLightingVendorOverlap.TryGetEnabledVendorOwner(
+                            lampArray.HardwareVendorId, settings);
+                        if (overlapVendor != null)
+                        {
+                            Logger.WriteConsole(LoggerTypes.Devices,
+                                $"[DynamicLighting] Skipped '{info.Name}' (VID 0x{lampArray.HardwareVendorId:X4}); the {overlapVendor} provider is enabled and owns this device. Settings -> Advanced controls this behaviour.",
+                                forwardToSentry: false);
+                            return null;
+                        }
                     }
                 }
-                catch { /* dedup is best-effort; never block adoption on a dedup-check failure */ }
+                catch { /* conflict check is best-effort; never block adoption on a check failure */ }
 
                 var def = new DynamicLightingClientDefinition(info.Id, info.Name, lampArray);
                 var trigger = (DynamicLightingUpdateTrigger)GetUpdateTrigger();

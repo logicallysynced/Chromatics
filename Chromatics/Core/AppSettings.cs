@@ -13,7 +13,9 @@ namespace Chromatics.Core
     {
         private static SettingsModel _settings = new SettingsModel();
 
-        public static readonly string currentSettingsVersion = "2";
+        // v3: adds deviceDynamicLightingEnabled, dynamicLightingHintShown,
+        // and dynamicLightingBypassConflictCheck (v4.2.6+).
+        public static readonly string currentSettingsVersion = "3";
         public static readonly string currentEffectsVersion = "2";
         public static readonly string currentPalettesVersion = "1";
         public static readonly string currentMappingLayerVersion = "2";

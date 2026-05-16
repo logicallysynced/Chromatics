@@ -32,7 +32,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
         // OEMs that signed onto the HID Lighting and Illumination
         // standard. CoolerMaster, Wooting, Novation, Corsair, OpenRGB
         // are NOT in this list — none of them ship Dynamic Lighting
-        // firmware as of 2026.
+        // firmware.
         private static readonly Dictionary<uint, OverlapEntry> _byVendorId = new()
         {
             // Razer
@@ -46,6 +46,36 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
             // SteelSeries Apex
             [0x1038] = new("SteelSeries", s => s.deviceSteelseriesEnabled),
         };
+
+        // Friendly display-name table for ALL Dynamic Lighting OEMs we
+        // know about, used to prefix the OS-supplied device name in
+        // DynamicLightingDeviceInfo (Windows often hands us a bare
+        // model name like "G512" instead of "Logitech G512"). Includes
+        // vendors that don't overlap with a Chromatics vendor provider
+        // (HyperX, HP/Omen) so their devices still get a vendor
+        // prefix.
+        private static readonly Dictionary<uint, string> _vendorDisplayNames = new()
+        {
+            [0x1532] = "Razer",
+            [0x046D] = "Logitech",
+            [0x0B05] = "ASUS",
+            [0x1462] = "MSI",
+            [0x1038] = "SteelSeries",
+            [0x0951] = "HyperX",
+            [0x03F0] = "HP",
+            [0x187C] = "Alienware",
+            [0x1B1C] = "Corsair",
+            [0x2516] = "Cooler Master",
+            [0x04D9] = "Holtek",
+            [0x05AC] = "Apple",
+        };
+
+        // Returns a friendly vendor display name for the supplied USB
+        // vendor id (Razer, Logitech, ASUS, etc.). Returns null when
+        // the vendor isn't in our table — caller falls back to the
+        // bare device name string.
+        public static string TryGetVendorDisplayName(uint hardwareVendorId)
+            => _vendorDisplayNames.TryGetValue(hardwareVendorId, out var name) ? name : null;
 
         // Returns the vendor display name when the supplied USB vendor id
         // belongs to an OEM whose Chromatics provider is currently enabled.
