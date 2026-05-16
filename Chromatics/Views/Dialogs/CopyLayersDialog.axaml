@@ -9,7 +9,7 @@
         WindowStartupLocation="CenterOwner"
         CanResize="False"
         ShowInTaskbar="False">
-    <Grid RowDefinitions="Auto,Auto,Auto,Auto,*,Auto,Auto" Margin="24">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto" Margin="24">
 
         <TextBlock Grid.Row="0"
                    Text="{loc:Tr Key='Copy layers between devices'}"
@@ -18,7 +18,7 @@
                    Margin="0,0,0,6" />
 
         <TextBlock Grid.Row="1"
-                   Text="{loc:Tr Key='Pick which layers from the source device to duplicate onto the destination. Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device). Dynamic layers are added without disturbing existing dynamic layers.'}"
+                   Text="{loc:Tr Key='Pick which dynamic layers from the source device to duplicate onto the destination. Base and Effect layers are not copied; they belong to the destination device. New dynamic layers are added without disturbing any that already exist on the destination.'}"
                    TextWrapping="Wrap"
                    Opacity="0.8"
                    Margin="0,0,0,16" />
@@ -52,8 +52,22 @@
                       HorizontalAlignment="Stretch" />
         </Grid>
 
+        <!-- Select / clear all -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    Margin="0,0,0,8"
+                    IsVisible="{Binding !HasNoLayers}">
+            <Button Content="{loc:Tr Key='Select all'}"
+                    Click="OnSelectAll"
+                    MinWidth="100" />
+            <Button Content="{loc:Tr Key='Clear all'}"
+                    Click="OnClearAll"
+                    MinWidth="100" />
+        </StackPanel>
+
         <!-- Layer rows -->
-        <Border Grid.Row="4"
+        <Border Grid.Row="5"
                 BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
                 BorderThickness="1"
                 CornerRadius="4">
@@ -67,31 +81,16 @@
                                         BorderThickness="0,0,0,1"
                                         BorderBrush="{DynamicResource SystemControlBackgroundAltMediumLowBrush}">
                                     <StackPanel Spacing="6">
-                                        <!-- Header: checkbox + name + type badge -->
-                                        <Grid ColumnDefinitions="Auto,*,Auto">
+                                        <!-- Header: checkbox + name -->
+                                        <Grid ColumnDefinitions="Auto,*">
                                             <CheckBox Grid.Column="0"
                                                       IsChecked="{Binding IsSelected, Mode=TwoWay}"
                                                       VerticalAlignment="Center"
                                                       Margin="0,0,12,0" />
-                                            <StackPanel Grid.Column="1"
-                                                        VerticalAlignment="Center"
-                                                        Spacing="2">
-                                                <TextBlock Text="{Binding DisplayName}"
-                                                           FontWeight="SemiBold" />
-                                                <TextBlock Text="{loc:Tr Key='Replaces the existing layer of this type on the destination.'}"
-                                                           IsVisible="{Binding WillReplaceExisting}"
-                                                           FontSize="11"
-                                                           Opacity="0.75"
-                                                           TextWrapping="Wrap" />
-                                            </StackPanel>
-                                            <Border Grid.Column="2"
-                                                    Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
-                                                    CornerRadius="3"
-                                                    Padding="6,2">
-                                                <TextBlock Text="{Binding TypeBadge}"
-                                                           FontSize="11"
-                                                           Opacity="0.85" />
-                                            </Border>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding DisplayName}"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center" />
                                         </Grid>
 
                                         <!-- Per-LED mapping expander (Dynamic layers only) -->
@@ -133,18 +132,20 @@
                     </ItemsControl>
                 </ScrollViewer>
 
-                <!-- Empty state when source device has no layers -->
+                <!-- Empty state when source device has no dynamic layers -->
                 <TextBlock IsVisible="{Binding HasNoLayers}"
-                           Text="{loc:Tr Key='The source device has no layers to copy.'}"
+                           Text="{loc:Tr Key='The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.'}"
                            HorizontalAlignment="Center"
                            VerticalAlignment="Center"
                            Opacity="0.7"
-                           FontStyle="Italic" />
+                           FontStyle="Italic"
+                           TextWrapping="Wrap"
+                           MaxWidth="420" />
             </Grid>
         </Border>
 
         <!-- Summary -->
-        <TextBlock Grid.Row="5"
+        <TextBlock Grid.Row="6"
                    Text="{Binding SummaryText}"
                    Margin="0,12,0,0"
                    FontStyle="Italic"
@@ -152,7 +153,7 @@
                    TextWrapping="Wrap" />
 
         <!-- Buttons -->
-        <StackPanel Grid.Row="6"
+        <StackPanel Grid.Row="7"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Spacing="8"
@@ -164,6 +165,7 @@
             <Button Name="CopyButton"
                     Content="{loc:Tr Key='Copy layers'}"
                     Click="OnCopy"
+                    IsEnabled="{Binding CanCopy}"
                     Classes="accent"
                     MinWidth="120" />
         </StackPanel>

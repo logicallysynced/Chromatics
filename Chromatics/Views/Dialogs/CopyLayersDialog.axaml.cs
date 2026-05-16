@@ -33,6 +33,9 @@ namespace Chromatics.Views.Dialogs
             Close();
         }
 
+        private void OnSelectAll(object? sender, RoutedEventArgs e) => _vm.SelectAll();
+        private void OnClearAll(object? sender, RoutedEventArgs e) => _vm.ClearAll();
+
         private async void OnCopy(object? sender, RoutedEventArgs e)
         {
             if (_vm.SelectedSource == null || _vm.SelectedDestination == null) return;
@@ -53,11 +56,10 @@ namespace Chromatics.Views.Dialogs
                     _vm.SelectedDestination.DeviceType,
                     plans);
 
-                string template = LocalizationService.Instance["Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped."];
+                string template = LocalizationService.Instance["Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped."];
                 string body = string.Format(template,
-                    result.LayersAdded + result.LayersReplaced,
+                    result.LayersAdded,
                     _vm.SelectedDestination.Name,
-                    result.LayersReplaced,
                     result.LedMappingsDropped);
                 await DialogService.ShowAsync(LocalizationService.Instance["Copy complete"], body);
                 Applied = true;

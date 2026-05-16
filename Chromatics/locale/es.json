@@ -911,5 +911,11 @@
   "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0} capa(s) seleccionada(s). {1} sustituirá una capa existente en el destino.",
   "Nothing to copy": "Nada que copiar",
   "Select at least one layer to copy.": "Selecciona al menos una capa para copiar.",
-  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "Se copiaron {0} capa(s) a {1}. {2} sustituyó una capa existente. {3} LED(s) de origen no tenían asignación de destino y se omitieron."
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "Se copiaron {0} capa(s) a {1}. {2} sustituyó una capa existente. {3} LED(s) de origen no tenían asignación de destino y se omitieron.",
+  "Pick which dynamic layers from the source device to duplicate onto the destination. Base and Effect layers are not copied; they belong to the destination device. New dynamic layers are added without disturbing any that already exist on the destination.": "Elige qué capas dinámicas del dispositivo de origen quieres duplicar en el de destino. Las capas Base y Efecto no se copian; pertenecen al dispositivo de destino. Las nuevas capas dinámicas se añaden sin alterar las que ya existan en el destino.",
+  "Select all": "Seleccionar todo",
+  "Clear all": "Borrar todo",
+  "The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.": "El dispositivo de origen no tiene capas dinámicas para copiar. Añádele primero una capa dinámica en la pestaña Asignaciones.",
+  "{0} layer(s) selected.": "{0} capa(s) seleccionada(s).",
+  "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "Se copiaron {0} capa(s) dinámica(s) a {1}. {2} LED(s) de origen no tenían asignación de destino y se omitieron."
 }

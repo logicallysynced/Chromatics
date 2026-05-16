@@ -911,5 +911,11 @@
   "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "已选择 {0} 个图层。{1} 个将替换目标设备上的现有图层。",
   "Nothing to copy": "没有可复制的内容",
   "Select at least one layer to copy.": "请至少选择一个要复制的图层。",
-  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "已将 {0} 个图层复制到 {1}。{2} 个替换了现有图层。{3} 个源 LED 没有目标映射，已跳过。"
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "已将 {0} 个图层复制到 {1}。{2} 个替换了现有图层。{3} 个源 LED 没有目标映射，已跳过。",
+  "Pick which dynamic layers from the source device to duplicate onto the destination. Base and Effect layers are not copied; they belong to the destination device. New dynamic layers are added without disturbing any that already exist on the destination.": "选择要从源设备复制到目标设备的动态图层。基础图层和效果图层不会被复制；它们属于目标设备。新的动态图层会被添加，且不会影响目标设备上任何已存在的图层。",
+  "Select all": "全选",
+  "Clear all": "全部清除",
+  "The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.": "源设备没有可复制的动态图层。请先在“映射”选项卡中为其添加一个动态图层。",
+  "{0} layer(s) selected.": "已选择 {0} 个图层。",
+  "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "已将 {0} 个动态图层复制到 {1}。{2} 个源 LED 没有目标映射，已被跳过。"
 }

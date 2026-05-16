@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.9
+
+- Copy-layers dialog refinements: only dynamic layers are listed (base and effect layers stay with their device); a Select all / Clear all pair sits above the layer list; the Copy button stays disabled until at least one layer is ticked; if the source device has no dynamic layers, the list shows a hint pointing back to the Mappings tab.
+
 ## 4.2.8
 
 - Reworked the copy-layers dialog to operate layer-by-layer instead of LED-by-LED. Pick which layers from the source device to copy; Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device); Dynamic layers append without disturbing existing ones, and expose a per-key remap section for the keys that layer actually uses.

@@ -912,5 +912,11 @@
   "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0} 個のレイヤーが選択されています。{1} 個はコピー先の既存レイヤーを置き換えます。",
   "Nothing to copy": "コピーするものがありません",
   "Select at least one layer to copy.": "コピーするレイヤーを少なくとも 1 つ選択してください。",
-  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0} 個のレイヤーを {1} にコピーしました。{2} 個は既存レイヤーを置き換えました。{3} 個のソース LED にはコピー先のマッピングがなかったためスキップされました。"
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0} 個のレイヤーを {1} にコピーしました。{2} 個は既存レイヤーを置き換えました。{3} 個のソース LED にはコピー先のマッピングがなかったためスキップされました。",
+  "Pick which dynamic layers from the source device to duplicate onto the destination. Base and Effect layers are not copied; they belong to the destination device. New dynamic layers are added without disturbing any that already exist on the destination.": "ソースデバイスからコピー先に複製する動的レイヤーを選択してください。ベースレイヤーとエフェクトレイヤーはコピーされません。これらはコピー先デバイスに属します。新しい動的レイヤーは、コピー先に既に存在するレイヤーに影響を与えずに追加されます。",
+  "Select all": "すべて選択",
+  "Clear all": "すべてクリア",
+  "The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.": "ソースデバイスにはコピーする動的レイヤーがありません。まず［マッピング］タブで動的レイヤーを追加してください。",
+  "{0} layer(s) selected.": "{0} 個のレイヤーが選択されています。",
+  "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} 個の動的レイヤーを {1} にコピーしました。{2} 個のソース LED にはコピー先のマッピングがなかったため、スキップされました。"
 }

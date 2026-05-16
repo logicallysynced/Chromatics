@@ -912,5 +912,11 @@
   "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0}개의 레이어가 선택되었습니다. {1}개가 대상의 기존 레이어를 대체합니다.",
   "Nothing to copy": "복사할 항목 없음",
   "Select at least one layer to copy.": "복사할 레이어를 하나 이상 선택하세요.",
-  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0}개의 레이어를 {1}에 복사했습니다. {2}개가 기존 레이어를 대체했습니다. {3}개의 원본 LED에 대상 매핑이 없어 건너뛰었습니다."
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0}개의 레이어를 {1}에 복사했습니다. {2}개가 기존 레이어를 대체했습니다. {3}개의 원본 LED에 대상 매핑이 없어 건너뛰었습니다.",
+  "Pick which dynamic layers from the source device to duplicate onto the destination. Base and Effect layers are not copied; they belong to the destination device. New dynamic layers are added without disturbing any that already exist on the destination.": "소스 장치에서 대상 장치로 복제할 동적 레이어를 선택하세요. 기본 레이어와 효과 레이어는 복사되지 않으며, 대상 장치에 속합니다. 새 동적 레이어는 대상 장치에 이미 있는 레이어에 영향을 주지 않고 추가됩니다.",
+  "Select all": "모두 선택",
+  "Clear all": "모두 지우기",
+  "The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.": "소스 장치에 복사할 동적 레이어가 없습니다. 먼저 매핑 탭에서 동적 레이어를 추가하세요.",
+  "{0} layer(s) selected.": "{0}개의 레이어가 선택되었습니다.",
+  "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0}개의 동적 레이어를 {1}에 복사했습니다. {2}개의 소스 LED에는 대상 매핑이 없어 건너뛰었습니다."
 }

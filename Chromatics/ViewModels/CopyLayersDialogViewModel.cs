@@ -65,6 +65,22 @@ namespace Chromatics.ViewModels
         [ObservableProperty] private DeviceItem _selectedDestination;
         [ObservableProperty] private string _summaryText;
         [ObservableProperty] private bool _hasNoLayers;
+        [ObservableProperty] private bool _canCopy;
+
+        public void SelectAll()
+        {
+            foreach (var row in LayerRows) row.IsSelected = true;
+            // UpdateSummary fires from each row's PropertyChanged handler,
+            // but recompute once at the end so the summary stays consistent
+            // even if a row was already selected and didn't trigger.
+            UpdateSummary();
+        }
+
+        public void ClearAll()
+        {
+            foreach (var row in LayerRows) row.IsSelected = false;
+            UpdateSummary();
+        }
 
         partial void OnSelectedSourceChanged(DeviceItem value)
         {
@@ -110,8 +126,14 @@ namespace Chromatics.ViewModels
             foreach (var led in dst.OrderBy(l => (int)l.Id))
                 AvailableDestLedIds.Add(led.Id);
 
+            // Only Dynamic layers are copyable. Base and Effect layers
+            // are at-most-one per device by design and don't carry the
+            // per-LedId mapping data that makes copying meaningful;
+            // filtering them out here keeps the dialog focused on
+            // the layers users actually want to duplicate.
             var sourceLayers = MappingLayers.GetLayers().Values
-                .Where(l => l.deviceGuid == SelectedSource.DeviceId)
+                .Where(l => l.deviceGuid == SelectedSource.DeviceId
+                         && l.rootLayerType == LayerType.DynamicLayer)
                 .OrderBy(l => l.layerIndex)
                 .ToList();
 
@@ -165,9 +187,9 @@ namespace Chromatics.ViewModels
         private void UpdateSummary()
         {
             int selected = LayerRows.Count(r => r.IsSelected);
-            int replacing = LayerRows.Count(r => r.IsSelected && r.WillReplaceExisting);
-            string template = LocalizationService.Instance["{0} layer(s) selected. {1} will replace an existing layer on the destination."];
-            SummaryText = string.Format(template, selected, replacing);
+            CanCopy = selected > 0;
+            string template = LocalizationService.Instance["{0} layer(s) selected."];
+            SummaryText = string.Format(template, selected);
         }
 
         // Build the list of copy plans for LayerCopier.Apply. Walks

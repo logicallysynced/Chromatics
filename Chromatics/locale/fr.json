@@ -911,5 +911,11 @@
   "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0} couche(s) sélectionnée(s). {1} remplacera une couche existante sur la destination.",
   "Nothing to copy": "Rien à copier",
   "Select at least one layer to copy.": "Sélectionnez au moins une couche à copier.",
-  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0} couche(s) copiée(s) vers {1}. {2} a remplacé une couche existante. {3} LED source n’avaient aucun mappage de destination et ont été ignorées."
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0} couche(s) copiée(s) vers {1}. {2} a remplacé une couche existante. {3} LED source n’avaient aucun mappage de destination et ont été ignorées.",
+  "Pick which dynamic layers from the source device to duplicate onto the destination. Base and Effect layers are not copied; they belong to the destination device. New dynamic layers are added without disturbing any that already exist on the destination.": "Choisissez les calques dynamiques de l’appareil source à dupliquer vers la destination. Les calques Base et Effect ne sont pas copiés ; ils appartiennent à l’appareil de destination. Les nouveaux calques dynamiques sont ajoutés sans perturber ceux qui existent déjà sur la destination.",
+  "Select all": "Tout sélectionner",
+  "Clear all": "Tout effacer",
+  "The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.": "L’appareil source ne comporte aucun calque dynamique à copier. Ajoutez-lui d’abord un calque dynamique dans l’onglet Mappages.",
+  "{0} layer(s) selected.": "{0} calque(s) sélectionné(s).",
+  "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} calque(s) dynamique(s) copié(s) vers {1}. {2} LED source n’avaient aucun mappage de destination et ont été ignorées."
 }
