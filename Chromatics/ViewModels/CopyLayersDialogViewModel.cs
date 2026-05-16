@@ -222,29 +222,20 @@ namespace Chromatics.ViewModels
             return plans;
         }
 
-        // Friendly per-layer label. Format: "{RootType}: {SubType}"
-        // (e.g. "Base: Static", "Dynamic: HPTracker", "Effect").
-        // Falls back to the enum value when the lookup table doesn't
-        // have a localised display name for the sub-type.
+        // Friendly per-layer label. Only Dynamic layers reach this
+        // dialog (Base / Effect are filtered out in RebuildLayerRows),
+        // so the label is just the dynamic sub-type name — no need
+        // to prefix every row with "Dynamic:" when it's the only
+        // category in the list.
         private static string BuildLayerDisplayName(Layer layer)
         {
-            string rootName = layer.rootLayerType switch
+            return layer.rootLayerType switch
             {
-                LayerType.BaseLayer => LocalizationService.Instance["Base"],
+                LayerType.DynamicLayer => DynamicLayerTypeFromComboIndex(layer.layerTypeindex).ToString(),
+                LayerType.BaseLayer => ((BaseLayerType)layer.layerTypeindex).ToString(),
                 LayerType.EffectLayer => LocalizationService.Instance["Effect"],
-                LayerType.DynamicLayer => LocalizationService.Instance["Dynamic"],
                 _ => layer.rootLayerType.ToString(),
             };
-
-            string subName = layer.rootLayerType switch
-            {
-                LayerType.BaseLayer => ((BaseLayerType)layer.layerTypeindex).ToString(),
-                LayerType.DynamicLayer => DynamicLayerTypeFromComboIndex(layer.layerTypeindex).ToString(),
-                LayerType.EffectLayer => null, // Effect has no sub-type combo
-                _ => null,
-            };
-
-            return string.IsNullOrEmpty(subName) ? rootName : $"{rootName}: {subName}";
         }
 
         private static string BuildLayerTypeBadge(LayerType rootLayerType) => rootLayerType switch

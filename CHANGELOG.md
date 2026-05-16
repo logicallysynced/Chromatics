@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.11
+
+- Copy-layers dialog drops the redundant "Dynamic:" prefix from each row's label. The dialog only lists dynamic layers, so each row just shows the layer's sub-type name (e.g. "HPTracker", "Highlight") on its own.
+
 ## 4.2.10
 
 - Copy-layers dialog now lists the source device's dynamic layers in the same order they appear on the Mappings tab (descending zindex, top-most layer first), instead of insertion order.
