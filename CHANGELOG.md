@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.2
+## 4.2.3
 
 - **New:** Yeelight LAN device support (Beta), with an adoption picker dialog so you can choose which bulbs Chromatics controls.
 - **New:** Alienware AlienFX device support (Beta), covering both zone-based chassis and per-key keyboards (AW510K, AW920K). Chromatics now flags Alienware Command Center conflicts directly in the console.
