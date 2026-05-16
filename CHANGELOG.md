@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.1.45
+
+- Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
+
 ## 4.1.44
 
 - **New:** QMK Raw HID keyboard support (Beta). Covers custom keyboards from NovelKeys, KBDFans, Drop, GMMK, Glorious, and any other brand running QMK firmware with Raw HID enabled. Enable it from Settings → Device Providers or pick it on the first-run device selector. Chromatics auto-detects compatible boards over USB and adopts them with no firmware flashing or extra software required. The provider drives per-key lighting through the OpenRGB-QMK plugin when the firmware has it installed; otherwise it controls the firmware's built-in RGB matrix base colour and effect mode via VIA. A pre-built key layout database covering 2650 QMK boards ships with Chromatics, so the Highlight and Keybind layers map to the correct physical keys without manual setup.

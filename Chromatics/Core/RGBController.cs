@@ -17,7 +17,6 @@ using RGB.NET.Devices.OpenRGB;
 using RGB.NET.Devices.Razer;
 using RGB.NET.Devices.SteelSeries;
 using RGB.NET.Devices.Wooting;
-using RGB.NET.Layout;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
@@ -661,35 +660,29 @@ namespace Chromatics.Core
             {
                 //Device Added
 
-                //Handle cases where a device is loaded with 0 LEDs
-                if (device.Count() <= 0 && device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
-                {
-                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis XL keyboard-ISO.xml";
+                // Some providers hand us a device with zero LEDs (SDK silent
+                // on the geometry, or a model we have no layout for). Without
+                // at least one Led the device is invisible to every layer,
+                // so synthesise a sensible default grid from KeyLocalization
+                // — keyboards get the full QWERTY ANSI 104, headsets get a
+                // 2x2 left-ear / right-ear quartet.
+                Helpers.DefaultLayoutInference.Apply(device);
 
-                    if (File.Exists(path))
-                    {
-                        var layout = DeviceLayout.Load(path);
-                        LayoutExtension.ApplyTo(layout, device, true);
-
-                        #if DEBUG
-                            Debug.WriteLine($"Loaded layout for {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}. New Leds: {device.Count()}");
-                        #endif
-                    }
-                }
-                else if (device.Count() <= 0 && device.DeviceInfo.DeviceType == RGBDeviceType.Headset)
-                {
-                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis 4 LEDs headset.xml";
-
-                    if (File.Exists(path))
-                    {
-                        var layout = DeviceLayout.Load(path);
-                        LayoutExtension.ApplyTo(layout, device, true);
-
-                        #if DEBUG
-                            Debug.WriteLine($"Loaded layout for {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}. New Leds: {device.Count()}");
-                        #endif
-                    }
-                }
+                // Logitech per-key keyboards arrive from RGB.NET with every
+                // LED at Y=0 (LogitechPerKeyRGBDevice.InitializeLayout lays
+                // them out in a single horizontal row at pos*19,0). That
+                // breaks any decorator that reads Led.Location for spatial
+                // computation — most visibly conical gradients, which use
+                // atan2(dy, dx) and degenerate to a left-half / right-half
+                // fade when every dy is 0. Per-key matrix-grid effects
+                // (CircularPulse via DeviceGridHelper) are unaffected
+                // because they use the QWERTY row/col grid, not Location.
+                //
+                // Apply the matching shipped layout XML over the top so
+                // Location matches the physical keycap. Mice / headsets
+                // get the same treatment for consistency. Falls through
+                // silently when the model has no shipped layout.
+                Helpers.LogitechLayoutFixup.Apply(device, enviroment);
 
                 lock (_devicesLock)
                 {
@@ -899,6 +892,18 @@ namespace Chromatics.Core
                     surface.Load(provider);
                     loadedDeviceProviders.Add(provider);
 
+                    // Warn the user when a freshly-loaded provider gives us
+                    // devices whose hardware/SDK can't accept per-LED writes
+                    // (zone-only or single-colour fallback). Effects that
+                    // depend on per-LED spatial position — radial pulses,
+                    // ripples, audio-visualizer columns — degrade visually
+                    // on those devices, and the user can't tell whether
+                    // it's a Chromatics bug or hardware limit without this
+                    // hint. Logitech is the only provider with a known set
+                    // of zone/per-device fallback classes; the helper is
+                    // pattern-matchable and easy to extend.
+                    WarnLimitedDevices(provider);
+
                     // surface.Load attaches every device in provider.Devices
                     // unconditionally (the comment in DevicesChanged about
                     // "startup attachment is owned by SurfaceExtensions.Load"
@@ -956,7 +961,41 @@ namespace Chromatics.Core
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault().DeviceInfo.DeviceName}] LoadDeviceProvider Error: {ex.Message}");
                 return false;
             }
-            
+
+        }
+
+        // Surface a one-time console warning per provider load when devices
+        // can't accept per-LED writes — zone-based or single-colour SDK
+        // fallbacks. Effects that depend on per-LED spatial position
+        // (CircularPulse, BPMRipple, AudioVisualizer) degrade visibly on
+        // those devices, and the user otherwise has no way to tell whether
+        // it's a hardware limit or a Chromatics bug. Pattern-match on the
+        // device's runtime class — RGB.NET names them <Brand><Family>RGBDevice
+        // (LogitechZoneRGBDevice, LogitechPerDeviceRGBDevice, etc.).
+        // Extend the type-name list as new providers ship limited-mode
+        // device classes.
+        private static readonly Dictionary<string, string> _limitedDeviceTypeWarnings = new(StringComparer.Ordinal)
+        {
+            ["LogitechZoneRGBDevice"]      = "is using zone-based lighting (the SDK limits this model to a small number of zones); radial effects (CircularPulse, BPMRipple, AudioVisualizer) will look like horizontal stripes rather than circles",
+            ["LogitechPerDeviceRGBDevice"] = "is using single-colour lighting (the SDK exposes one zone for the whole device); radial and per-key effects will paint a single uniform colour",
+        };
+
+        private static void WarnLimitedDevices(IRGBDeviceProvider provider)
+        {
+            if (provider == null) return;
+            try
+            {
+                foreach (var device in provider.Devices)
+                {
+                    string typeName = device.GetType().Name;
+                    if (!_limitedDeviceTypeWarnings.TryGetValue(typeName, out var description)) continue;
+
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices,
+                        $"[Devices] '{device.DeviceInfo.DeviceName}' {description}.",
+                        forwardToSentry: false);
+                }
+            }
+            catch { /* diagnostic — never fatal */ }
         }
 
         public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true)

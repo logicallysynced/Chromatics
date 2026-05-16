@@ -23,4 +23,21 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
 
+  <!--
+    Native SDK wrappers (LogitechLedEnginesWrapper.dll, CUESDK.dll, etc.)
+    are not shipped in the RGB.NET NuGet packages — they're obtained from
+    each vendor's SDK installer and live in the main Chromatics project's
+    bin/<config>/<tfm>/x64 output. Mirror them into the harness's bin so
+    the harness can run the same set of providers without asking the user
+    to copy files manually after every clean rebuild.
+  -->
+  <Target Name="CopyNativeSdkDlls" AfterTargets="Build">
+    <ItemGroup>
+      <_NativeSdkDlls Include="$(MSBuildThisFileDirectory)..\Chromatics\bin\$(Configuration)\$(TargetFramework)\x64\*.dll" />
+      <_NativeSdkDllsX86 Include="$(MSBuildThisFileDirectory)..\Chromatics\bin\$(Configuration)\$(TargetFramework)\x86\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_NativeSdkDlls)" DestinationFolder="$(OutputPath)x64" SkipUnchangedFiles="true" Condition="@(_NativeSdkDlls -> Count()) &gt; 0" />
+    <Copy SourceFiles="@(_NativeSdkDllsX86)" DestinationFolder="$(OutputPath)x86" SkipUnchangedFiles="true" Condition="@(_NativeSdkDllsX86 -> Count()) &gt; 0" />
+  </Target>
+
 </Project>
