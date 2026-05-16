@@ -8,8 +8,9 @@ on:
 
 jobs:
   build-and-test:
-    # GDI + WASAPI loopback means the project targets
-    # net10.0-windows7.0 and can only build on a Windows runner.
+    # GDI + WASAPI loopback + Windows.Devices.Lights.LampArray means
+    # the project targets net10.0-windows10.0.17763.0 and can only
+    # build on a Windows runner.
     runs-on: windows-latest
 
     steps:
@@ -21,8 +22,19 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # nuget.org occasionally returns 502 Bad Gateway mid-restore (saw
+      # one such failure on commit bb0c9ed, second run on the same SHA
+      # succeeded immediately). Retry up to 3 times before failing the
+      # build to absorb transient feed flakiness without needing a
+      # manual re-run.
       - name: Restore
-        run: dotnet restore Chromatics.sln
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_wait_seconds: 30
+          shell: pwsh
+          command: dotnet restore Chromatics.sln
 
       - name: Build (Release, no restore)
         run: dotnet build Chromatics.sln --configuration Release --no-restore --nologo

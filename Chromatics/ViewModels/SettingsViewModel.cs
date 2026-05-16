@@ -28,6 +28,7 @@ using RGB.NET.Devices.Razer;
 using RGB.NET.Devices.SteelSeries;
 using RGB.NET.Devices.Wooting;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -556,17 +557,64 @@ namespace Chromatics.ViewModels
             Action<bool> saveFlag)
         {
             return new DeviceToggleItem(label, tooltip, initial,
-                () =>
+                async () =>
                 {
+                    // Surface the Dynamic Lighting overlap popup before
+                    // we kick off the load. Either side (vendor → DL or
+                    // DL → vendor) gets a one-shot warning naming the
+                    // other provider so the user knows what to expect.
+                    // The auto-dedup in DynamicLightingRGBDeviceProvider
+                    // makes the actual conflict harmless (vendor SDK
+                    // wins on overlapping devices), but we still tell
+                    // the user up-front rather than make them figure it
+                    // out from the device list.
+                    await ShowDynamicLightingOverlapPopupIfNeededAsync(label).ConfigureAwait(true);
+
                     load();
                     saveFlag(true);
-                    return Task.FromResult(true);
+                    return true;
                 },
                 () =>
                 {
                     unload();
                     saveFlag(false);
                 });
+        }
+
+        // Shows a one-shot popup naming the other half of an overlap
+        // (DL → enabled vendor providers, or vendor → DL when DL is
+        // enabled). Returns immediately for any provider that doesn't
+        // overlap with Dynamic Lighting (Corsair, Wooting, Coolermaster,
+        // Novation, OpenRGB, etc.) so the helper is safe to call
+        // unconditionally from MakeDeviceToggle.
+        private static async Task ShowDynamicLightingOverlapPopupIfNeededAsync(string enablingProviderLabel)
+        {
+            try
+            {
+                var settings = AppSettings.GetSettings();
+
+                bool isDl = enablingProviderLabel.StartsWith("Dynamic Lighting", StringComparison.OrdinalIgnoreCase);
+                IReadOnlyList<string> conflicts;
+                if (isDl)
+                {
+                    conflicts = Chromatics.Extensions.RGB.NET.Devices.DynamicLighting.DynamicLightingVendorOverlap
+                        .GetEnabledOverlappingVendorNames(settings);
+                    if (conflicts.Count == 0) return;
+                }
+                else
+                {
+                    if (!Chromatics.Extensions.RGB.NET.Devices.DynamicLighting.DynamicLightingVendorOverlap
+                            .IsOverlappingVendorName(enablingProviderLabel)) return;
+                    if (!settings.deviceDynamicLightingEnabled) return;
+                    conflicts = new[] { "Dynamic Lighting" };
+                }
+
+                string title = LocalizationService.Instance["Provider conflict"];
+                string template = LocalizationService.Instance["{0} overlaps with {1}. Both providers may try to control the same physical devices on this PC. To prevent flickering, the existing vendor SDK takes priority on overlapping devices and Dynamic Lighting silently skips them; you can override per device from the Mappings tab."];
+                string body = string.Format(template, enablingProviderLabel, string.Join(", ", conflicts));
+                await DialogService.ShowAsync(title, body).ConfigureAwait(true);
+            }
+            catch { /* popup is advisory; never block toggle on failure */ }
         }
 
         private bool _winStart;

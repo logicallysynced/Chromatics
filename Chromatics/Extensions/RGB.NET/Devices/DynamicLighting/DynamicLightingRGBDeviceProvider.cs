@@ -119,6 +119,31 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
                 var lampArray = await LampArray.FromIdAsync(info.Id).AsTask().ConfigureAwait(false);
                 if (lampArray == null || lampArray.LampCount <= 0) return null;
 
+                // Auto-deduplication: if this device's OEM has a Chromatics
+                // vendor provider currently enabled, skip adoption so the
+                // vendor SDK retains exclusive control. Without this two
+                // providers would race on the same physical device every
+                // frame and the user would see flickering.
+                //
+                // The vendor SDK is the safer default because it predates
+                // Dynamic Lighting (better per-device test coverage) and
+                // doesn't have the foreground/background priority gate
+                // Dynamic Lighting carries.
+                try
+                {
+                    var settings = AppSettings.GetSettings();
+                    string overlapVendor = DynamicLightingVendorOverlap.TryGetEnabledVendorOwner(
+                        lampArray.HardwareVendorId, settings);
+                    if (overlapVendor != null)
+                    {
+                        Logger.WriteConsole(LoggerTypes.Devices,
+                            $"[DynamicLighting] Skipped '{info.Name}' (VID 0x{lampArray.HardwareVendorId:X4}); the {overlapVendor} provider is enabled and owns this device. Disable {overlapVendor} in Settings -> Device Providers if you want Dynamic Lighting to control it instead.",
+                            forwardToSentry: false);
+                        return null;
+                    }
+                }
+                catch { /* dedup is best-effort; never block adoption on a dedup-check failure */ }
+
                 var def = new DynamicLightingClientDefinition(info.Id, info.Name, lampArray);
                 var trigger = (DynamicLightingUpdateTrigger)GetUpdateTrigger();
                 var queue = new DynamicLightingUpdateQueue(trigger, def);

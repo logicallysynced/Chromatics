@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.4
+## 4.2.5
 
 - **New:** Windows Dynamic Lighting (Beta). Picks up any device the OS lists in Settings → Personalization → Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen, etc.).
 - **New:** Yeelight LAN device support (Beta), with an adoption picker dialog so you can choose which bulbs Chromatics controls.
