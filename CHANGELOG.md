@@ -2,6 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.4
+
+- **New:** Windows Dynamic Lighting device support (Beta, foreground-only). Picks up any device the OS lists in Settings → Personalization → Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Works while Chromatics has focus; background writes during gameplay land in a follow-up patch (needs a sparse signed package).
+- Bumped the project's minimum Windows target to Windows 10 1809 (build 17763) so the Windows.Devices.Lights.LampArray API is available. .NET 10 already required Windows 10 1809+ at runtime regardless, so no actual OS support drops.
+
 ## 4.2.3
 
 - **New:** Yeelight LAN device support (Beta), with an adoption picker dialog so you can choose which bulbs Chromatics controls.

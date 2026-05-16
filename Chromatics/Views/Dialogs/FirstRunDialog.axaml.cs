@@ -51,6 +51,7 @@ namespace Chromatics.Views.Dialogs
             TileLifx.IsCheckedChanged += OnLifxTileChanged;
             TileYeelight.IsCheckedChanged += OnYeelightTileChanged;
             TileAlienware.IsCheckedChanged += OnTileChanged;
+            TileDynamicLighting.IsCheckedChanged += OnTileChanged;
 
             // Populate the language picker from the Language enum so it stays
             // in lock-step with the Settings → Language dropdown. Suppress the
@@ -101,7 +102,7 @@ namespace Chromatics.Views.Dialogs
         [
             TileRazer, TileLogitech, TileCorsair, TileCoolermaster,
             TileSteelSeries, TileAsus, TileMsi, TileWooting, TileNovation, TileOpenRgb, TilePlayStation, TileQmkRawHid,
-            TileHue, TileLifx, TileYeelight, TileAlienware,
+            TileHue, TileLifx, TileYeelight, TileAlienware, TileDynamicLighting,
         ];
 
         private void OnTileChanged(object? sender, RoutedEventArgs e) => UpdateContinueState();
@@ -265,7 +266,8 @@ namespace Chromatics.Views.Dialogs
             s.deviceOpenRGBEnabled      = TileOpenRgb.IsChecked      ?? false;
             s.devicePlayStationEnabled  = TilePlayStation.IsChecked  ?? false;
             s.deviceQmkRawHidEnabled    = TileQmkRawHid.IsChecked    ?? false;
-            s.deviceAlienwareEnabled    = TileAlienware.IsChecked    ?? false;
+            s.deviceAlienwareEnabled       = TileAlienware.IsChecked       ?? false;
+            s.deviceDynamicLightingEnabled = TileDynamicLighting.IsChecked ?? false;
 
             // Network-discovery providers: persist the adoption results
             // captured during the in-dialog discovery flows. The tile's

@@ -8,6 +8,7 @@ using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using Chromatics.Extensions.RGB.NET.Devices.Alienware;
+using Chromatics.Extensions.RGB.NET.Devices.DynamicLighting;
 using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
 using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using Chromatics.Models;
@@ -522,6 +523,21 @@ namespace Chromatics.ViewModels
                     cur.deviceAlienwareEnabled = false;
                     AppSettings.SaveSettings(cur);
                 }));
+
+            // Windows Dynamic Lighting (LampArray). Discovery is handled
+            // by the Windows DeviceWatcher inside the provider so there's
+            // no per-device adoption picker — every Dynamic-Lighting-
+            // capable device the OS exposes shows up automatically.
+            // Phase 1 ships foreground-only; the sparse package that
+            // unlocks background writes (so colours apply during FFXIV
+            // gameplay) lands in a follow-up commit.
+            DeviceToggles.Add(MakeDeviceToggle(
+                "Dynamic Lighting (Beta)",
+                "[BETA] Enable/disable the Windows Dynamic Lighting provider. Picks up any device the OS lists in Settings -> Personalization -> Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Background writes during gameplay arrive in a follow-up patch. Default: Disabled",
+                s.deviceDynamicLightingEnabled,
+                () => RGBController.LoadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance),
+                () => RGBController.UnloadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance),
+                v => { var c = AppSettings.GetSettings(); c.deviceDynamicLightingEnabled = v; AppSettings.SaveSettings(c); }));
         }
 
         private static Avalonia.Controls.Window GetMainWindow()

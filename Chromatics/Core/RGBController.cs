@@ -4,6 +4,7 @@ using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using Chromatics.Extensions.RGB.NET.Devices.Alienware;
+using Chromatics.Extensions.RGB.NET.Devices.DynamicLighting;
 using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
 using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using Chromatics.Helpers;
@@ -512,6 +513,24 @@ namespace Chromatics.Core
                     catch (Exception ex)
                     {
                         Logger.WriteConsole(Enums.LoggerTypes.Error, $"[AlienwareDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+                if (appSettings.deviceDynamicLightingEnabled)
+                {
+                    try
+                    {
+                        // Windows Dynamic Lighting (LampArray). DeviceWatcher
+                        // inside the provider handles initial enumeration AND
+                        // hot-plug, so there's no per-device adoption list to
+                        // hydrate. Phase 1 ships foreground-only; the sparse
+                        // signed package that unlocks background writes lands
+                        // in a follow-up commit.
+                        LoadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[DynamicLightingDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
                     }
                 }
 

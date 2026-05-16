@@ -90,6 +90,10 @@
                               Width="150" Height="80"
                               ToolTip.Tip="{loc:Tr Key='Alienware AlienFX hardware (chassis, notebook keyboards, external keyboards). Close Alienware Command Center first - it holds the AlienFX HID interface exclusively.'}"
                               Content="{loc:Tr Key='Alienware (Beta)'}" />
+                <ToggleButton Classes="tile" Name="TileDynamicLighting"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='Windows Dynamic Lighting picks up any device the OS lists in Settings -> Personalization -> Dynamic Lighting. Covers Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX and more. Background writes during gameplay land in a follow-up patch.'}"
+                              Content="{loc:Tr Key='Dynamic Lighting (Beta)'}" />
             </WrapPanel>
         </ScrollViewer>
 

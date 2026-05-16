@@ -866,5 +866,8 @@
   "Philips Hue smart bulbs over your local Hue Bridge.": "通过你的本地 Hue Bridge 控制 Philips Hue 智能灯泡。",
   "LIFX bulbs, strips and tiles on your local network. No cloud account required.": "本地网络中的 LIFX 灯泡、灯带和灯板。无需云账户。",
   "Yeelight bulbs, light strips and lamps on your local network. Requires LAN Control enabled in the Yeelight or Mi Home app.": "本地网络中的 Yeelight 灯泡、灯带和灯具。需要在 Yeelight 或米家应用中启用局域网控制。",
-  "Alienware AlienFX hardware (chassis, notebook keyboards, external keyboards). Close Alienware Command Center first - it holds the AlienFX HID interface exclusively.": "Alienware AlienFX 硬件（机箱、笔记本键盘、外接键盘）。请先关闭 Alienware Command Center——它会独占 AlienFX HID 接口。"
+  "Alienware AlienFX hardware (chassis, notebook keyboards, external keyboards). Close Alienware Command Center first - it holds the AlienFX HID interface exclusively.": "Alienware AlienFX 硬件（机箱、笔记本键盘、外接键盘）。请先关闭 Alienware Command Center——它会独占 AlienFX HID 接口。",
+  "Dynamic Lighting (Beta)": "动态光效（测试版）",
+  "Windows Dynamic Lighting picks up any device the OS lists in Settings -> Personalization -> Dynamic Lighting. Covers Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX and more. Background writes during gameplay land in a follow-up patch.": "Windows 动态光效会识别操作系统在“设置 -> 个性化 -> 动态光效”中列出的任何设备。涵盖 Razer、Logitech G LIGHTSYNC、ASUS ROG、HyperX 等更多设备。游戏过程中的后台写入将在后续补丁中推出。",
+  "[BETA] Enable/disable the Windows Dynamic Lighting provider. Picks up any device the OS lists in Settings -> Personalization -> Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Background writes during gameplay arrive in a follow-up patch. Default: Disabled": "[测试版] 启用/禁用 Windows 动态光效提供程序。会识别操作系统在“设置 -> 个性化 -> 动态光效”中列出的任何设备（Razer、Logitech G LIGHTSYNC、ASUS ROG、HyperX、MSI、SteelSeries、HP/Omen）。游戏过程中的后台写入将在后续补丁中推出。默认：禁用"
 }
