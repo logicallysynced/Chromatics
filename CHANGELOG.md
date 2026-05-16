@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.10
+
+- Copy-layers dialog now lists the source device's dynamic layers in the same order they appear on the Mappings tab (descending zindex, top-most layer first), instead of insertion order.
+
 ## 4.2.9
 
 - Copy-layers dialog refinements: only dynamic layers are listed (base and effect layers stay with their device); a Select all / Clear all pair sits above the layer list; the Copy button stays disabled until at least one layer is ticked; if the source device has no dynamic layers, the list shows a hint pointing back to the Mappings tab.

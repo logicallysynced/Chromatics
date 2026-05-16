@@ -131,10 +131,16 @@ namespace Chromatics.ViewModels
             // per-LedId mapping data that makes copying meaningful;
             // filtering them out here keeps the dialog focused on
             // the layers users actually want to duplicate.
+            //
+            // Order matches the Mappings tab: descending zindex so the
+            // top-most layer in the Mappings list is the top row in
+            // the copy dialog. MappingViewModel.RefreshLayers uses
+            // `.OrderByDescending(l => l.zindex)`; mirror that here
+            // so the two views stay visually consistent.
             var sourceLayers = MappingLayers.GetLayers().Values
                 .Where(l => l.deviceGuid == SelectedSource.DeviceId
                          && l.rootLayerType == LayerType.DynamicLayer)
-                .OrderBy(l => l.layerIndex)
+                .OrderByDescending(l => l.zindex)
                 .ToList();
 
             if (sourceLayers.Count == 0)
