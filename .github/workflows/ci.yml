@@ -14,6 +14,16 @@ on:
 permissions:
   contents: read
 
+# Deduplicate push + pull_request runs on the same branch. A commit pushed to
+# a PR branch fires both a `push` event and a `pull_request:synchronize`
+# event; with the same concurrency group key (resolved from
+# pull_request.head.ref on PR events and ref_name on push events), the
+# newer run cancels the older one, so we get a single CI completion per
+# commit instead of two parallel ones.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
     # GDI + WASAPI loopback + Windows.Devices.Lights.LampArray plus the
