@@ -899,5 +899,17 @@
   "Copy complete": "Copia completada",
   "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "Se copiaron {0} capa(s) a {1}. {2} LED(s) de origen no tenían asignación de destino y se omitieron.",
   "Copy failed": "Error al copiar",
-  "Copy failed: {0}": "Error al copiar: {0}"
+  "Copy failed: {0}": "Error al copiar: {0}",
+  "Default: Disabled. By default the vendor SDK provider (Razer, Logitech, ASUS, MSI, SteelSeries) takes exclusive control of any device it shares with Dynamic Lighting, and Dynamic Lighting silently skips those duplicates so the two providers cannot fight for the same hardware. Enable this to let Dynamic Lighting adopt every compatible device Windows lists regardless of overlap. Expect flickering if both providers end up writing to the same device.": "Predeterminado: desactivado. De forma predeterminada, el proveedor del SDK del fabricante (Razer, Logitech, ASUS, MSI, SteelSeries) toma el control exclusivo de cualquier dispositivo que comparta con Dynamic Lighting, y Dynamic Lighting omite silenciosamente esos duplicados para que los dos proveedores no compitan por el mismo hardware. Activa esta opción para permitir que Dynamic Lighting adopte todos los dispositivos compatibles que Windows enumere, independientemente de si se solapan. Es de esperar que haya parpadeos si ambos proveedores terminan escribiendo en el mismo dispositivo.",
+  "Pick which layers from the source device to duplicate onto the destination. Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device). Dynamic layers are added without disturbing existing dynamic layers.": "Elige qué capas del dispositivo de origen duplicar en el destino. Las capas Base y Efecto sustituyen la capa correspondiente en el destino (solo se permite una de cada tipo por dispositivo). Las capas Dinámicas se añaden sin alterar las capas dinámicas existentes.",
+  "Key mapping for this layer": "Asignación de teclas para esta capa",
+  "Replaces the existing layer of this type on the destination.": "Sustituye la capa existente de este tipo en el destino.",
+  "The source device has no layers to copy.": "El dispositivo de origen no tiene capas para copiar.",
+  "Base": "Base",
+  "Effect": "Efecto",
+  "Dynamic": "Dinámica",
+  "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0} capa(s) seleccionada(s). {1} sustituirá una capa existente en el destino.",
+  "Nothing to copy": "Nada que copiar",
+  "Select at least one layer to copy.": "Selecciona al menos una capa para copiar.",
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "Se copiaron {0} capa(s) a {1}. {2} sustituyó una capa existente. {3} LED(s) de origen no tenían asignación de destino y se omitieron."
 }

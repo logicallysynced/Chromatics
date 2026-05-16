@@ -900,5 +900,17 @@
   "Copy complete": "복사 완료",
   "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0}개의 레이어를 {1}에 복사했습니다. {2}개의 원본 LED에는 대상 매핑이 없어 건너뛰었습니다.",
   "Copy failed": "복사 실패",
-  "Copy failed: {0}": "복사 실패: {0}"
+  "Copy failed: {0}": "복사 실패: {0}",
+  "Default: Disabled. By default the vendor SDK provider (Razer, Logitech, ASUS, MSI, SteelSeries) takes exclusive control of any device it shares with Dynamic Lighting, and Dynamic Lighting silently skips those duplicates so the two providers cannot fight for the same hardware. Enable this to let Dynamic Lighting adopt every compatible device Windows lists regardless of overlap. Expect flickering if both providers end up writing to the same device.": "기본값: 비활성화됨. 기본적으로 공급업체 SDK 제공업체(Razer, Logitech, ASUS, MSI, SteelSeries)는 Dynamic Lighting과 공유하는 모든 장치에 대한 독점 제어권을 가지며, Dynamic Lighting은 두 제공업체가 동일한 하드웨어를 두고 충돌하지 않도록 이러한 중복 항목을 조용히 건너뜁니다. 이 옵션을 활성화하면 중복 여부와 관계없이 Windows가 나열하는 모든 호환 장치를 Dynamic Lighting이 사용하도록 할 수 있습니다. 두 제공업체가 결국 동일한 장치에 쓰기를 수행하면 깜박임이 발생할 수 있습니다.",
+  "Pick which layers from the source device to duplicate onto the destination. Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device). Dynamic layers are added without disturbing existing dynamic layers.": "원본 장치에서 대상 장치로 복제할 레이어를 선택하세요. 기본 및 효과 레이어는 대상의 일치하는 레이어를 대체합니다(장치당 각각 하나만 허용됨). 동적 레이어는 기존 동적 레이어에 영향을 주지 않고 추가됩니다.",
+  "Key mapping for this layer": "이 레이어의 키 매핑",
+  "Replaces the existing layer of this type on the destination.": "대상에 있는 이 유형의 기존 레이어를 대체합니다.",
+  "The source device has no layers to copy.": "원본 장치에 복사할 레이어가 없습니다.",
+  "Base": "기본",
+  "Effect": "효과",
+  "Dynamic": "동적",
+  "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0}개의 레이어가 선택되었습니다. {1}개가 대상의 기존 레이어를 대체합니다.",
+  "Nothing to copy": "복사할 항목 없음",
+  "Select at least one layer to copy.": "복사할 레이어를 하나 이상 선택하세요.",
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0}개의 레이어를 {1}에 복사했습니다. {2}개가 기존 레이어를 대체했습니다. {3}개의 원본 LED에 대상 매핑이 없어 건너뛰었습니다."
 }

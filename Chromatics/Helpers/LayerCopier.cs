@@ -1,3 +1,4 @@
+using Chromatics.Enums;
 using Chromatics.Layers;
 using Chromatics.Models;
 using RGB.NET.Core;
@@ -7,133 +8,169 @@ using System.Linq;
 
 namespace Chromatics.Helpers
 {
-    // Builds + applies a "copy all layers from device A to device B"
-    // operation. Splits into two phases so the user can review the
-    // proposed LedId mapping in CopyLayersDialog before committing
-    // anything to disk.
+    // Layer-by-layer copy from one device to another.
     //
-    //   1. ComputeDefaultMapping(source, dest)
-    //      Returns a fresh Dictionary<LedId, LedId> that maps every
-    //      LedId on the source device to the best-fit LedId on the
-    //      dest device. Caller mutates this dict via the dialog UI
-    //      before invoking Apply.
+    // Caller builds a list of LayerCopyPlan entries from the dialog
+    // (one per source layer the user ticked, plus the per-LedId
+    // mapping for any Dynamic layers) and hands it to Apply. The
+    // engine handles Base/Effect uniqueness automatically — if the
+    // destination already has a Base or Effect layer, the existing
+    // one is removed before the new one is added, so the user
+    // doesn't end up with two of either.
     //
-    //   2. Apply(sourceGuid, destGuid, destDeviceType, mapping)
-    //      Walks MappingLayers' layer collection, finds every layer
-    //      bound to sourceGuid, and creates a parallel layer on
-    //      destGuid with the same root / dynamic type, zindex,
-    //      Enabled flag, allowBleed flag, and layer modes — but
-    //      with deviceLeds remapped through the supplied mapping.
-    //      Original layers on the source device are left alone.
-    //
-    // Mapping defaults:
-    //   - Keyboard → Keyboard: identity match by LedId. Keyboard
-    //     layouts are stable across vendors thanks to
-    //     KeyLocalization, so Escape on a Razer board lands on
-    //     Escape on a Logitech / Alienware / Dynamic Lighting
-    //     board without further work.
-    //   - Cross-type (Mouse → Headset, etc.) or same-type
-    //     non-keyboard: exact LedId match first (Custom1 → Custom1),
-    //     falling back to positional index match for LedIds that
-    //     don't exist on the dest. Capped at min(sourceLedCount,
-    //     destLedCount) so the user doesn't see a half-mapped
-    //     dest with phantom LedIds.
+    // For Dynamic layers, multiple instances are allowed; the new
+    // layer is appended without touching anything pre-existing on
+    // the destination.
     public static class LayerCopier
     {
         // Returns true iff this device pair is a legal copy target.
-        // Keyboards can only copy to keyboards (semantic layouts
-        // can't sensibly project onto a mouse / chassis / strip).
-        // Everything else is permitted to copy onto everything
-        // else.
+        // Keyboards can only copy to keyboards — the consistent
+        // ANSI 104 layout across vendors lets per-key mappings
+        // project meaningfully. Other device types can cross-copy
+        // freely (mouse → headset, chassis → strip).
         public static bool IsCopyAllowed(RGBDeviceType source, RGBDeviceType dest)
         {
-            bool srcIsKeyboard = source == RGBDeviceType.Keyboard;
-            bool dstIsKeyboard = dest == RGBDeviceType.Keyboard;
-            if (srcIsKeyboard != dstIsKeyboard) return false;
+            bool srcKb = source == RGBDeviceType.Keyboard;
+            bool dstKb = dest == RGBDeviceType.Keyboard;
+            if (srcKb != dstKb) return false;
             return true;
         }
 
-        public static Dictionary<LedId, LedId> ComputeDefaultMapping(IRGBDevice source, IRGBDevice dest)
+        // Default LedId mapping for a SINGLE layer being copied. Only
+        // computes entries for LedIds in `usedSourceLedIds` — the set
+        // of LedIds the source layer actually paints. Keeps the per-
+        // layer mapping UI focused on the keys that matter for that
+        // specific layer rather than the entire source device.
+        public static Dictionary<LedId, LedId> ComputeDefaultMappingForLayer(
+            IReadOnlyCollection<LedId> usedSourceLedIds,
+            IRGBDevice source,
+            IRGBDevice dest)
         {
             var map = new Dictionary<LedId, LedId>();
-            if (source == null || dest == null) return map;
+            if (usedSourceLedIds == null || source == null || dest == null) return map;
+            if (usedSourceLedIds.Count == 0) return map;
 
-            var sourceLeds = source.OrderBy(l => (int)l.Id).ToList();
-            var destLeds = dest.OrderBy(l => (int)l.Id).ToList();
-            if (sourceLeds.Count == 0 || destLeds.Count == 0) return map;
-
-            var destIds = new HashSet<LedId>(destLeds.Select(l => l.Id));
             bool keyboardPair = source.DeviceInfo.DeviceType == RGBDeviceType.Keyboard
                              && dest.DeviceInfo.DeviceType == RGBDeviceType.Keyboard;
 
+            var destLeds = dest.OrderBy(l => (int)l.Id).ToList();
+            var destIds = new HashSet<LedId>(destLeds.Select(l => l.Id));
+
             if (keyboardPair)
             {
-                // Identity match. Source LedIds that don't exist on
-                // the destination are dropped silently; we surface
-                // the gap in the dialog so the user can decide
-                // whether to manually remap them.
-                foreach (var sled in sourceLeds)
-                    if (destIds.Contains(sled.Id))
-                        map[sled.Id] = sled.Id;
+                // Identity match by LedId for keyboard-pair copies.
+                foreach (var ledId in usedSourceLedIds)
+                    if (destIds.Contains(ledId))
+                        map[ledId] = ledId;
                 return map;
             }
 
-            // Non-keyboard pair (same type or cross-type). Strategy:
-            // exact match where the dest has the same LedId; fall
-            // back to positional index match otherwise.
+            // Non-keyboard pair (same type or cross-type): exact match
+            // first; positional fallback otherwise (Nth LED in source
+            // ordering → Nth LED in dest ordering).
+            var sourceLeds = source.OrderBy(l => (int)l.Id).ToList();
             int n = Math.Min(sourceLeds.Count, destLeds.Count);
+            var positionalFallback = new Dictionary<LedId, LedId>();
             for (int i = 0; i < n; i++)
+                positionalFallback[sourceLeds[i].Id] = destLeds[i].Id;
+
+            foreach (var ledId in usedSourceLedIds)
             {
-                var sled = sourceLeds[i];
-                if (destIds.Contains(sled.Id))
-                    map[sled.Id] = sled.Id;
-                else
-                    map[sled.Id] = destLeds[i].Id;
+                if (destIds.Contains(ledId))
+                    map[ledId] = ledId;
+                else if (positionalFallback.TryGetValue(ledId, out var fallback))
+                    map[ledId] = fallback;
             }
             return map;
         }
 
+        // One copy operation. The view-model passes a list of these
+        // into Apply; each represents "copy this source layer onto
+        // the destination with this LedId mapping".
+        public sealed class LayerCopyPlan
+        {
+            public Layer SourceLayer { get; init; }
+
+            // Source LedId → destination LedId. Entries missing for
+            // an LedId in the source layer's deviceLeds drop that
+            // LedId during copy (the destination layer simply
+            // doesn't cover it).
+            public IReadOnlyDictionary<LedId, LedId> Mapping { get; init; } = new Dictionary<LedId, LedId>();
+        }
+
         public sealed class CopyResult
         {
-            public int LayersCopied { get; init; }
+            public int LayersAdded { get; init; }
+            public int LayersReplaced { get; init; }
             public int LedMappingsDropped { get; init; }
+        }
+
+        // True when the destination already has a layer of the
+        // given root type (Base or Effect). Dialog uses this to
+        // decide whether to show the "will replace existing"
+        // warning per-row.
+        public static bool DestinationAlreadyHasLayerOfType(Guid destGuid, LayerType rootLayerType)
+        {
+            if (destGuid == Guid.Empty) return false;
+            if (rootLayerType != LayerType.BaseLayer && rootLayerType != LayerType.EffectLayer) return false;
+            return MappingLayers.GetLayers().Values
+                .Any(l => l.deviceGuid == destGuid && l.rootLayerType == rootLayerType);
         }
 
         public static CopyResult Apply(
             Guid sourceGuid,
             Guid destGuid,
             RGBDeviceType destDeviceType,
-            IReadOnlyDictionary<LedId, LedId> ledMap)
+            IReadOnlyList<LayerCopyPlan> plans)
         {
             if (sourceGuid == Guid.Empty || destGuid == Guid.Empty || sourceGuid == destGuid)
-                return new CopyResult { LayersCopied = 0, LedMappingsDropped = 0 };
+                return new CopyResult();
+            if (plans == null || plans.Count == 0)
+                return new CopyResult();
 
-            ledMap ??= new Dictionary<LedId, LedId>();
+            int added = 0;
+            int replaced = 0;
+            int dropped = 0;
 
-            // Snapshot to avoid mutating the live dict while iterating.
-            var existing = MappingLayers.GetLayers()
-                .Where(kvp => kvp.Value.deviceGuid == sourceGuid)
-                .Select(kvp => kvp.Value)
-                .OrderBy(l => l.layerIndex)
-                .ToList();
-
-            if (existing.Count == 0)
-                return new CopyResult { LayersCopied = 0, LedMappingsDropped = 0 };
-
-            int layersCopied = 0;
-            int droppedMappings = 0;
-
-            foreach (var src in existing)
+            foreach (var plan in plans)
             {
-                var remappedDeviceLeds = new Dictionary<int, LedId>();
+                var src = plan.SourceLayer;
+                if (src == null) continue;
+                var mapping = plan.Mapping ?? new Dictionary<LedId, LedId>();
+
+                // Base / Effect: at most one per device. Remove the
+                // existing one on dest (if any) before adding the
+                // copy.
+                bool isStructural = src.rootLayerType == LayerType.BaseLayer
+                                 || src.rootLayerType == LayerType.EffectLayer;
+                if (isStructural)
+                {
+                    var existing = MappingLayers.GetLayers().Values
+                        .Where(l => l.deviceGuid == destGuid && l.rootLayerType == src.rootLayerType)
+                        .Select(l => l.layerID)
+                        .ToList();
+                    foreach (var existingId in existing)
+                        MappingLayers.RemoveLayer(existingId);
+                    if (existing.Count > 0) replaced++;
+                    else added++;
+                }
+                else
+                {
+                    added++;
+                }
+
+                // Remap deviceLeds: drop entries whose source LedId
+                // has no mapping; otherwise translate to the dest
+                // LedId.
+                var remapped = new Dictionary<int, LedId>();
                 if (src.deviceLeds != null)
                 {
                     foreach (var (positionIndex, sourceLedId) in src.deviceLeds)
                     {
-                        if (ledMap.TryGetValue(sourceLedId, out var destLedId))
-                            remappedDeviceLeds[positionIndex] = destLedId;
+                        if (mapping.TryGetValue(sourceLedId, out var destLedId))
+                            remapped[positionIndex] = destLedId;
                         else
-                            droppedMappings++;
+                            dropped++;
                     }
                 }
 
@@ -146,17 +183,17 @@ namespace Chromatics.Helpers
                     layerTypeIndex: src.layerTypeindex,
                     zindex: src.zindex,
                     enabled: src.Enabled,
-                    deviceLeds: remappedDeviceLeds,
+                    deviceLeds: remapped,
                     allowBleed: src.allowBleed,
                     layerModes: src.layerModes);
-                layersCopied++;
             }
 
             MappingLayers.SaveMappings();
             return new CopyResult
             {
-                LayersCopied = layersCopied,
-                LedMappingsDropped = droppedMappings,
+                LayersAdded = added,
+                LayersReplaced = replaced,
+                LedMappingsDropped = dropped,
             };
         }
     }

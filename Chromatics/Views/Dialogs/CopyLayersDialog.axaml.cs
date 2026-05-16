@@ -38,15 +38,27 @@ namespace Chromatics.Views.Dialogs
             if (_vm.SelectedSource == null || _vm.SelectedDestination == null) return;
             try
             {
-                var mapping = _vm.BuildResolvedMapping();
+                var plans = _vm.BuildPlans();
+                if (plans.Count == 0)
+                {
+                    await DialogService.ShowAsync(
+                        LocalizationService.Instance["Nothing to copy"],
+                        LocalizationService.Instance["Select at least one layer to copy."]);
+                    return;
+                }
+
                 var result = LayerCopier.Apply(
                     _vm.SelectedSource.DeviceId,
                     _vm.SelectedDestination.DeviceId,
                     _vm.SelectedDestination.DeviceType,
-                    mapping);
+                    plans);
 
-                string template = LocalizationService.Instance["Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped."];
-                string body = string.Format(template, result.LayersCopied, _vm.SelectedDestination.Name, result.LedMappingsDropped);
+                string template = LocalizationService.Instance["Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped."];
+                string body = string.Format(template,
+                    result.LayersAdded + result.LayersReplaced,
+                    _vm.SelectedDestination.Name,
+                    result.LayersReplaced,
+                    result.LedMappingsDropped);
                 await DialogService.ShowAsync(LocalizationService.Instance["Copy complete"], body);
                 Applied = true;
             }

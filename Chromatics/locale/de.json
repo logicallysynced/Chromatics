@@ -899,5 +899,17 @@
   "Copy complete": "Kopiervorgang abgeschlossen",
   "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} Ebene(n) nach {1} kopiert. {2} Quell-LED(s) hatten keine Zielzuordnung und wurden übersprungen.",
   "Copy failed": "Kopiervorgang fehlgeschlagen",
-  "Copy failed: {0}": "Kopiervorgang fehlgeschlagen: {0}"
+  "Copy failed: {0}": "Kopiervorgang fehlgeschlagen: {0}",
+  "Default: Disabled. By default the vendor SDK provider (Razer, Logitech, ASUS, MSI, SteelSeries) takes exclusive control of any device it shares with Dynamic Lighting, and Dynamic Lighting silently skips those duplicates so the two providers cannot fight for the same hardware. Enable this to let Dynamic Lighting adopt every compatible device Windows lists regardless of overlap. Expect flickering if both providers end up writing to the same device.": "Standard: Deaktiviert. Standardmäßig übernimmt der SDK-Anbieter des Herstellers (Razer, Logitech, ASUS, MSI, SteelSeries) die exklusive Kontrolle über jedes Gerät, das er mit Dynamic Lighting teilt, und Dynamic Lighting überspringt diese Duplikate stillschweigend, damit die beiden Anbieter nicht um dieselbe Hardware konkurrieren. Aktivieren Sie diese Option, damit Dynamic Lighting jedes kompatible Gerät übernimmt, das Windows auflistet, unabhängig von Überschneidungen. Rechnen Sie mit Flackern, wenn beide Anbieter letztendlich auf dasselbe Gerät schreiben.",
+  "Pick which layers from the source device to duplicate onto the destination. Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device). Dynamic layers are added without disturbing existing dynamic layers.": "Wählen Sie aus, welche Ebenen vom Quellgerät auf das Zielgerät dupliziert werden sollen. Basis- und Effektebenen ersetzen die entsprechende Ebene auf dem Zielgerät (pro Gerät ist jeweils nur eine erlaubt). Dynamische Ebenen werden hinzugefügt, ohne vorhandene dynamische Ebenen zu beeinträchtigen.",
+  "Key mapping for this layer": "Tastenzuordnung für diese Ebene",
+  "Replaces the existing layer of this type on the destination.": "Ersetzt die vorhandene Ebene dieses Typs auf dem Zielgerät.",
+  "The source device has no layers to copy.": "Das Quellgerät hat keine Ebenen zum Kopieren.",
+  "Base": "Basis",
+  "Effect": "Effekt",
+  "Dynamic": "Dynamisch",
+  "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0} Ebene(n) ausgewählt. {1} ersetzt eine vorhandene Ebene auf dem Zielgerät.",
+  "Nothing to copy": "Nichts zu kopieren",
+  "Select at least one layer to copy.": "Wählen Sie mindestens eine Ebene zum Kopieren aus.",
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0} Ebene(n) nach {1} kopiert. {2} hat eine vorhandene Ebene ersetzt. {3} Quell-LED(s) hatten keine Zielzuordnung und wurden übersprungen."
 }

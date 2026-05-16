@@ -2,6 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.8
+
+- Reworked the copy-layers dialog to operate layer-by-layer instead of LED-by-LED. Pick which layers from the source device to copy; Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device); Dynamic layers append without disturbing existing ones, and expose a per-key remap section for the keys that layer actually uses.
+- Dynamic Lighting "Allow Dynamic Lighting to control devices already covered by another Chromatics provider" defaults to off. The vendor SDK provider takes exclusive control of overlapping devices by default; tick the Advanced toggle to let Dynamic Lighting claim every Windows-listed device regardless.
+
 ## 4.2.7
 
 - **New:** Windows Dynamic Lighting (Beta).

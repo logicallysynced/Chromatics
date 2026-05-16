@@ -899,5 +899,17 @@
   "Copy complete": "Copie terminée",
   "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} calque(s) copiés vers {1}. {2} LED source n’avaient aucune correspondance de destination et ont été ignorées.",
   "Copy failed": "Échec de la copie",
-  "Copy failed: {0}": "Échec de la copie : {0}"
+  "Copy failed: {0}": "Échec de la copie : {0}",
+  "Default: Disabled. By default the vendor SDK provider (Razer, Logitech, ASUS, MSI, SteelSeries) takes exclusive control of any device it shares with Dynamic Lighting, and Dynamic Lighting silently skips those duplicates so the two providers cannot fight for the same hardware. Enable this to let Dynamic Lighting adopt every compatible device Windows lists regardless of overlap. Expect flickering if both providers end up writing to the same device.": "Par défaut : désactivé. Par défaut, le fournisseur SDK du fabricant (Razer, Logitech, ASUS, MSI, SteelSeries) prend le contrôle exclusif de tout appareil qu’il partage avec Dynamic Lighting, et Dynamic Lighting ignore silencieusement ces doublons afin que les deux fournisseurs ne puissent pas se disputer le même matériel. Activez cette option pour permettre à Dynamic Lighting d’adopter tous les appareils compatibles répertoriés par Windows, même en cas de chevauchement. Attendez-vous à des scintillements si les deux fournisseurs finissent par écrire sur le même appareil.",
+  "Pick which layers from the source device to duplicate onto the destination. Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device). Dynamic layers are added without disturbing existing dynamic layers.": "Choisissez les couches de l’appareil source à dupliquer vers la destination. Les couches de base et d’effet remplacent la couche correspondante sur la destination (une seule de chaque est autorisée par appareil). Les couches dynamiques sont ajoutées sans perturber les couches dynamiques existantes.",
+  "Key mapping for this layer": "Mappage des touches pour cette couche",
+  "Replaces the existing layer of this type on the destination.": "Remplace la couche existante de ce type sur la destination.",
+  "The source device has no layers to copy.": "L’appareil source n’a aucune couche à copier.",
+  "Base": "Base",
+  "Effect": "Effet",
+  "Dynamic": "Dynamique",
+  "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0} couche(s) sélectionnée(s). {1} remplacera une couche existante sur la destination.",
+  "Nothing to copy": "Rien à copier",
+  "Select at least one layer to copy.": "Sélectionnez au moins une couche à copier.",
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0} couche(s) copiée(s) vers {1}. {2} a remplacé une couche existante. {3} LED source n’avaient aucun mappage de destination et ont été ignorées."
 }

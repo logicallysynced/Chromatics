@@ -62,13 +62,15 @@ namespace Chromatics.Models
         public List<AlienwareAdoptedDevice> deviceAlienwareAdoptedDevices { get; set; } = new();
         public bool deviceDynamicLightingEnabled { get; set; } = false;
         public bool dynamicLightingHintShown { get; set; } = false;
-        // Default: true (bypass on). Dynamic Lighting adopts every
-        // device Windows enumerates regardless of whether a Chromatics
-        // vendor provider could also drive it. Users who hit flickering
-        // from both providers writing to the same device can untick
-        // this in Settings -> Advanced to opt into the conservative
-        // auto-deduplication behaviour (vendor SDK wins on overlap).
-        public bool dynamicLightingBypassConflictCheck { get; set; } = true;
+        // Default: false (bypass off, conservative dedup is on).
+        // Dynamic Lighting silently skips devices that a Chromatics
+        // vendor provider could also drive — the vendor SDK retains
+        // exclusive control of overlapping hardware. Users who want
+        // Dynamic Lighting to claim every device Windows enumerates
+        // (and are willing to accept the risk of two providers writing
+        // to the same device simultaneously) can tick this in
+        // Settings -> Advanced to opt out of the dedup behaviour.
+        public bool dynamicLightingBypassConflictCheck { get; set; } = false;
         public string deviceHueBridgeIP { get; set; } = "127.0.0.1";
         public string deviceHueBridgeClientKey { get; set; } = "";
         public double deviceHueBridgeBrightness { get; set; } = -1;

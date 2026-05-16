@@ -900,5 +900,17 @@
   "Copy complete": "コピー完了",
   "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0}個のレイヤーを{1}にコピーしました。{2}個のコピー元LEDにはコピー先のマッピングがないためスキップされました。",
   "Copy failed": "コピー失敗",
-  "Copy failed: {0}": "コピー失敗: {0}"
+  "Copy failed: {0}": "コピー失敗: {0}",
+  "Default: Disabled. By default the vendor SDK provider (Razer, Logitech, ASUS, MSI, SteelSeries) takes exclusive control of any device it shares with Dynamic Lighting, and Dynamic Lighting silently skips those duplicates so the two providers cannot fight for the same hardware. Enable this to let Dynamic Lighting adopt every compatible device Windows lists regardless of overlap. Expect flickering if both providers end up writing to the same device.": "既定: 無効。既定では、ベンダー SDK プロバイダー（Razer、Logitech、ASUS、MSI、SteelSeries）は、Dynamic Lighting と共有しているデバイスを排他的に制御し、Dynamic Lighting はそれらの重複を暗黙的にスキップするため、2 つのプロバイダーが同じハードウェアを取り合うことはありません。これを有効にすると、重複の有無に関係なく、Windows が一覧表示するすべての互換デバイスを Dynamic Lighting が採用します。両方のプロバイダーが同じデバイスに書き込むことになると、ちらつきが発生する可能性があります。",
+  "Pick which layers from the source device to duplicate onto the destination. Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device). Dynamic layers are added without disturbing existing dynamic layers.": "ソース デバイスからコピー先へ複製するレイヤーを選択します。ベース レイヤーとエフェクト レイヤーは、コピー先の対応するレイヤーを置き換えます（各デバイスにつきそれぞれ 1 つのみ許可されます）。動的レイヤーは、既存の動的レイヤーに影響を与えずに追加されます。",
+  "Key mapping for this layer": "このレイヤーのキー マッピング",
+  "Replaces the existing layer of this type on the destination.": "コピー先にあるこの種類の既存レイヤーを置き換えます。",
+  "The source device has no layers to copy.": "ソース デバイスにはコピーするレイヤーがありません。",
+  "Base": "ベース",
+  "Effect": "エフェクト",
+  "Dynamic": "動的",
+  "{0} layer(s) selected. {1} will replace an existing layer on the destination.": "{0} 個のレイヤーが選択されています。{1} 個はコピー先の既存レイヤーを置き換えます。",
+  "Nothing to copy": "コピーするものがありません",
+  "Select at least one layer to copy.": "コピーするレイヤーを少なくとも 1 つ選択してください。",
+  "Copied {0} layer(s) to {1}. {2} replaced an existing layer. {3} source LED(s) had no destination mapping and were skipped.": "{0} 個のレイヤーを {1} にコピーしました。{2} 個は既存レイヤーを置き換えました。{3} 個のソース LED にはコピー先のマッピングがなかったためスキップされました。"
 }
