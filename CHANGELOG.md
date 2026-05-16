@@ -4,17 +4,14 @@ All notable changes to Chromatics are documented here.
 
 ## 4.2.4
 
-- **New:** Windows Dynamic Lighting device support (Beta, foreground-only). Picks up any device the OS lists in Settings → Personalization → Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Works while Chromatics has focus; background writes during gameplay land in a follow-up patch (needs a sparse signed package).
-- Bumped the project's minimum Windows target to Windows 10 1809 (build 17763) so the Windows.Devices.Lights.LampArray API is available. .NET 10 already required Windows 10 1809+ at runtime regardless, so no actual OS support drops.
-
-## 4.2.3
-
+- **New:** Windows Dynamic Lighting (Beta). Picks up any device the OS lists in Settings → Personalization → Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen, etc.).
 - **New:** Yeelight LAN device support (Beta), with an adoption picker dialog so you can choose which bulbs Chromatics controls.
 - **New:** Alienware AlienFX device support (Beta), covering both zone-based chassis and per-key keyboards (AW510K, AW920K). Chromatics now flags Alienware Command Center conflicts directly in the console.
 - Hue, LIFX and Yeelight tiles added to the first-run wizard, each with their own discovery flow.
 - PlayStation, Hue & LIFX devices are no longer classed as Beta.
 - Minor fixes to Logitech implementation.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
+- Bumped the project's minimum Windows target to Windows 10 1809 (build 17763) so the Windows.Devices.Lights.LampArray API is available. .NET 10 already required Windows 10 1809+ at runtime regardless, so no actual OS support drops.
 
 ## 4.1.44
 
