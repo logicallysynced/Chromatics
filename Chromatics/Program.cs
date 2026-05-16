@@ -44,7 +44,18 @@ namespace Chromatics
             // that UpdateService depends on, so this must run even under a
             // debugger. Lifecycle args are never passed during debug sessions,
             // so Run() just registers the locator and returns cleanly.
-            VelopackApp.Build().Run();
+            //
+            // OnBeforeUninstallFastCallback removes the Dynamic Lighting sparse
+            // package registration before Velopack kills the process, so the
+            // app stops appearing in Settings → Personalization → Dynamic
+            // Lighting → Background light control after uninstall.
+            VelopackApp.Build()
+                .OnBeforeUninstallFastCallback(_ =>
+                {
+                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                        SparsePackageRegistrar.Deregister();
+                })
+                .Run();
 
             if (!ThereCanOnlyBeOne())
             {
@@ -108,6 +119,16 @@ namespace Chromatics
             // independent of the wizard and always runs on cold start.
             RunExpansionMigrationIfNeeded(appSettings);
             AppSettings.SaveSettings(appSettings);
+
+            // Re-register the Dynamic Lighting sparse package on startup if the
+            // user already had the DL provider enabled. Catches the upgrade
+            // path: a new Chromatics version ships a new sparse-package version,
+            // so the OS-side registration needs to be refreshed to match.
+            // Initial registration on first enable is driven from the Settings
+            // toggle (see SettingsViewModel); this is just the keep-in-sync
+            // pass on subsequent launches.
+            if (appSettings.deviceDynamicLightingEnabled && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                SparsePackageRegistrar.EnsureRegistered();
 
             try
             {

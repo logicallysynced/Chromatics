@@ -2,38 +2,18 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.12
+## 4.2.13
 
-- Windows Dynamic Lighting conflict-bypass checkbox in Settings → Advanced now shows regardless of whether the Dynamic Lighting provider is currently enabled, and is prefixed "Windows Dynamic Lighting:" so its scope is unambiguous in the Advanced list.
-
-## 4.2.11
-
-- Copy-layers dialog drops the redundant "Dynamic:" prefix from each row's label. The dialog only lists dynamic layers, so each row just shows the layer's sub-type name (e.g. "HPTracker", "Highlight") on its own.
-
-## 4.2.10
-
-- Copy-layers dialog now lists the source device's dynamic layers in the same order they appear on the Mappings tab (descending zindex, top-most layer first), instead of insertion order.
-
-## 4.2.9
-
-- Copy-layers dialog refinements: only dynamic layers are listed (base and effect layers stay with their device); a Select all / Clear all pair sits above the layer list; the Copy button stays disabled until at least one layer is ticked; if the source device has no dynamic layers, the list shows a hint pointing back to the Mappings tab.
-
-## 4.2.8
-
-- Reworked the copy-layers dialog to operate layer-by-layer instead of LED-by-LED. Pick which layers from the source device to copy; Base and Effect layers replace the matching layer on the destination (only one of each is allowed per device); Dynamic layers append without disturbing existing ones, and expose a per-key remap section for the keys that layer actually uses.
-- Dynamic Lighting "Allow Dynamic Lighting to control devices already covered by another Chromatics provider" defaults to off. The vendor SDK provider takes exclusive control of overlapping devices by default; tick the Advanced toggle to let Dynamic Lighting claim every Windows-listed device regardless.
-
-## 4.2.7
-
-- **New:** Windows Dynamic Lighting (Beta).
-- **New:** Yeelight LAN device support (Beta).
-- **New:** Alienware AlienFX device support (Beta).
+- **New:** Windows Dynamic Lighting (Beta). Controls compatible devices during gameplay, not only while Chromatics has focus. The in-game part needs Windows 11 22H2 or newer; on older builds only the foreground side works. After enabling the provider in Chromatics, open Settings → Personalization → Dynamic Lighting → Background light control in Windows and drag Chromatics to the top. Chromatics only appears in that Windows list while its Dynamic Lighting provider is on; turning it off or uninstalling Chromatics removes the entry.
+- **New:** Yeelight device support (Beta).
+- **New:** Alienware LightFX device support (Beta).
 - **New:** Copy layers between devices. A small copy icon next to the device brightness button on the Mappings tab opens a dialog that duplicates every layer from one device onto another.
 - Hue, LIFX and Yeelight tiles added to the first-run wizard, each with their own discovery flow.
 - PlayStation, Hue & LIFX devices are no longer classed as Beta.
 - Minor fixes to Logitech implementation.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
-- Bumped the project's minimum Windows target to Windows 10 1809 (build 17763) so the Windows.Devices.Lights.LampArray API is available. .NET 10 already required Windows 10 1809+ at runtime regardless, so no actual OS support drops.
+- Bumped the project's minimum Windows target to Windows 10 1809 (build 17763).
+- Chromatics installer is now officially signed for extra security.
 
 ## 4.1.44
 

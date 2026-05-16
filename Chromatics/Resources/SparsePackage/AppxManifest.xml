@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Sparse package manifest for Chromatics.
+
+  This manifest is built by publish.py into a signed .appx and bundled next to
+  Chromatics.exe. On startup SparsePackageRegistrar.EnsureRegisteredAsync
+  calls PackageManager.AddPackageByUriAsync with ExternalLocationUri pointing
+  at the install dir, which grants Chromatics package identity without forcing
+  a full MSIX conversion of the install.
+
+  Identity required by AmbientLightingServer to grant background LampArray
+  access — see https://learn.microsoft.com/windows/uwp/devices-sensors/lighting-dynamic-lamparray.
+  The com.microsoft.windows.lighting AppExtension is what makes Chromatics
+  appear in Settings → Personalization → Dynamic Lighting → Background light
+  control on Win11 22H2+.
+
+  Publisher MUST exactly match the cert Subject of the signing cert
+  ("CN=Danielle Thompson") or Windows rejects the registration with
+  ERROR_INSTALL_OPEN_PACKAGE_FAILED (0x80073CF0).
+
+  Version is rewritten at pack time by publish.py from Chromatics.csproj.
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  IgnorableNamespaces="uap rescap uap3">
+
+  <Identity
+    Name="com.logicallysynced.Chromatics"
+    Publisher="CN=Danielle Thompson"
+    Version="{{VERSION}}" />
+
+  <Properties>
+    <DisplayName>Chromatics</DisplayName>
+    <PublisherDisplayName>logicallysynced</PublisherDisplayName>
+    <Logo>Square150x150Logo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="Chromatics"
+                 Executable="Chromatics.exe"
+                 EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="Chromatics"
+        Description="FFXIV RGB lighting app"
+        BackgroundColor="transparent"
+        Square150x150Logo="Square150x150Logo.png"
+        Square44x44Logo="Square44x44Logo.png" />
+      <Extensions>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension
+            Name="com.microsoft.windows.lighting"
+            Id="ChromaticsLighting"
+            PublicFolder="Public"
+            DisplayName="Chromatics" />
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+</Package>
