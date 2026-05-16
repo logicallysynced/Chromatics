@@ -852,5 +852,20 @@
   "Alienware (Beta)": "Alienware(베타)",
   "No Alienware Devices Found": "Alienware 장치를 찾을 수 없음",
   "Chromatics didn't detect any AlienFX hardware on this PC. Make sure you're on an Alienware (or Dell G-series) machine with AlienFX lighting. If Alienware Command Center or another AlienFX tool is running, close it before enabling this provider - they hold the HID interface exclusively.": "Chromatics가 이 PC에서 AlienFX 하드웨어를 감지하지 못했습니다. AlienFX 조명이 있는 Alienware(또는 Dell G 시리즈) 시스템인지 확인하세요. Alienware Command Center 또는 다른 AlienFX 도구가 실행 중이라면 이 제공자를 활성화하기 전에 종료하세요. 이러한 도구는 HID 인터페이스를 독점적으로 사용합니다.",
-  "[BETA] Enable/disable Alienware AlienFX device support. Auto-adopts any AlienFX-capable Alienware or Dell G-series chassis, notebook keyboard, or external keyboard discovered on the HID bus. Default: Disabled": "[베타] Alienware AlienFX 장치 지원을 활성화/비활성화합니다. HID 버스에서 발견된 AlienFX 지원 Alienware 또는 Dell G 시리즈 섀시, 노트북 키보드 또는 외부 키보드를 자동으로 적용합니다. 기본값: 비활성화"
+  "[BETA] Enable/disable Alienware AlienFX device support. Auto-adopts any AlienFX-capable Alienware or Dell G-series chassis, notebook keyboard, or external keyboard discovered on the HID bus. Default: Disabled": "[베타] Alienware AlienFX 장치 지원을 활성화/비활성화합니다. HID 버스에서 발견된 AlienFX 지원 Alienware 또는 Dell G 시리즈 섀시, 노트북 키보드 또는 외부 키보드를 자동으로 적용합니다. 기본값: 비활성화",
+  "Hue": "Hue",
+  "LIFX": "LIFX",
+  "Enable/disable Philips HUE device library. Default: Disabled": "Philips HUE 장치 라이브러리를 활성화/비활성화합니다. 기본값: 비활성화",
+  "Enable/disable LIFX device library (LAN protocol). Default: Disabled": "LIFX 장치 라이브러리(LAN 프로토콜)를 활성화/비활성화합니다. 기본값: 비활성화",
+  "Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled": "PlayStation 컨트롤러 조명(USB 또는 Bluetooth를 통한 DualShock 4 / DualSense)을 활성화/비활성화합니다. 기본값: 비활성화",
+  "Choose Yeelight devices": "Yeelight 장치 선택",
+  "Select which Yeelight devices Chromatics should control. You can change this later from Settings.": "Chromatics가 제어할 Yeelight 장치를 선택하세요. 나중에 설정에서 변경할 수 있습니다.",
+  "Searching for Yeelight devices on your network...": "네트워크에서 Yeelight 장치를 검색하는 중...",
+  "No Yeelight devices found. Make sure each bulb has LAN Control enabled in the Yeelight or Mi Home app.": "Yeelight 장치를 찾을 수 없습니다. 각 전구에서 Yeelight 또는 Mi Home 앱의 LAN 제어가 활성화되어 있는지 확인하세요.",
+  "{0} Yeelight device(s) found.": "Yeelight 장치 {0}개를 찾았습니다.",
+  "[BETA] Enable/disable Yeelight LAN device support. Discovers Yeelight bulbs, light strips, lamps, and ceiling lights on your LAN (requires LAN Control enabled in the Yeelight / Mi Home app). Default: Disabled": "[베타] Yeelight LAN 장치 지원을 활성화/비활성화합니다. LAN에서 Yeelight 전구, 라이트 스트립, 램프 및 천장등을 검색합니다(Yeelight / Mi Home 앱에서 LAN 제어 활성화 필요). 기본값: 비활성화",
+  "Philips Hue smart bulbs over your local Hue Bridge.": "로컬 Hue Bridge를 통한 Philips Hue 스마트 전구입니다.",
+  "LIFX bulbs, strips and tiles on your local network. No cloud account required.": "로컬 네트워크의 LIFX 전구, 스트립 및 타일입니다. 클라우드 계정이 필요하지 않습니다.",
+  "Yeelight bulbs, light strips and lamps on your local network. Requires LAN Control enabled in the Yeelight or Mi Home app.": "로컬 네트워크의 Yeelight 전구, 라이트 스트립 및 램프입니다. Yeelight 또는 Mi Home 앱에서 LAN 제어를 활성화해야 합니다.",
+  "Alienware AlienFX hardware (chassis, notebook keyboards, external keyboards). Close Alienware Command Center first - it holds the AlienFX HID interface exclusively.": "Alienware AlienFX 하드웨어(섀시, 노트북 키보드, 외장 키보드). 먼저 Alienware Command Center를 닫으세요. 이 프로그램이 AlienFX HID 인터페이스를 독점적으로 사용합니다."
 }

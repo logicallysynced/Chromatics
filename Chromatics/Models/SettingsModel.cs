@@ -1,4 +1,9 @@
 ﻿using Chromatics.Enums;
+using Chromatics.Extensions.RGB.NET.Devices.Alienware;
+using Chromatics.Extensions.RGB.NET.Devices.Hue;
+using Chromatics.Extensions.RGB.NET.Devices.LIFX;
+using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
+using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -851,5 +851,20 @@
   "Alienware (Beta)": "Alienware（测试版）",
   "No Alienware Devices Found": "未找到 Alienware 设备",
   "Chromatics didn't detect any AlienFX hardware on this PC. Make sure you're on an Alienware (or Dell G-series) machine with AlienFX lighting. If Alienware Command Center or another AlienFX tool is running, close it before enabling this provider - they hold the HID interface exclusively.": "Chromatics 未在此电脑上检测到任何 AlienFX 硬件。请确保你使用的是带有 AlienFX 灯效的 Alienware（或 Dell G 系列）设备。如果 Alienware Command Center 或其他 AlienFX 工具正在运行，请在启用此提供程序之前将其关闭——它们会独占 HID 接口。",
-  "[BETA] Enable/disable Alienware AlienFX device support. Auto-adopts any AlienFX-capable Alienware or Dell G-series chassis, notebook keyboard, or external keyboard discovered on the HID bus. Default: Disabled": "【测试版】启用/禁用 Alienware AlienFX 设备支持。会自动采用在 HID 总线上发现的任何支持 AlienFX 的 Alienware 或 Dell G 系列机箱、笔记本键盘或外接键盘。默认：禁用"
+  "[BETA] Enable/disable Alienware AlienFX device support. Auto-adopts any AlienFX-capable Alienware or Dell G-series chassis, notebook keyboard, or external keyboard discovered on the HID bus. Default: Disabled": "【测试版】启用/禁用 Alienware AlienFX 设备支持。会自动采用在 HID 总线上发现的任何支持 AlienFX 的 Alienware 或 Dell G 系列机箱、笔记本键盘或外接键盘。默认：禁用",
+  "Hue": "Hue",
+  "LIFX": "LIFX",
+  "Enable/disable Philips HUE device library. Default: Disabled": "启用/禁用 Philips HUE 设备库。默认：已禁用",
+  "Enable/disable LIFX device library (LAN protocol). Default: Disabled": "启用/禁用 LIFX 设备库（LAN 协议）。默认：已禁用",
+  "Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled": "启用/禁用 PlayStation 控制器灯光（通过 USB 或蓝牙连接的 DualShock 4 / DualSense）。默认：已禁用",
+  "Choose Yeelight devices": "选择 Yeelight 设备",
+  "Select which Yeelight devices Chromatics should control. You can change this later from Settings.": "选择 Chromatics 应控制哪些 Yeelight 设备。你稍后可以在“设置”中更改此项。",
+  "Searching for Yeelight devices on your network...": "正在你的网络中搜索 Yeelight 设备...",
+  "No Yeelight devices found. Make sure each bulb has LAN Control enabled in the Yeelight or Mi Home app.": "未找到 Yeelight 设备。请确保每个灯泡都已在 Yeelight 或米家应用中启用局域网控制。",
+  "{0} Yeelight device(s) found.": "找到 {0} 个 Yeelight 设备。",
+  "[BETA] Enable/disable Yeelight LAN device support. Discovers Yeelight bulbs, light strips, lamps, and ceiling lights on your LAN (requires LAN Control enabled in the Yeelight / Mi Home app). Default: Disabled": "[测试版] 启用/禁用 Yeelight LAN 设备支持。在你的局域网上发现 Yeelight 灯泡、灯带、灯具和吸顶灯（需要在 Yeelight / 米家应用中启用局域网控制）。默认：已禁用",
+  "Philips Hue smart bulbs over your local Hue Bridge.": "通过你的本地 Hue Bridge 控制 Philips Hue 智能灯泡。",
+  "LIFX bulbs, strips and tiles on your local network. No cloud account required.": "本地网络中的 LIFX 灯泡、灯带和灯板。无需云账户。",
+  "Yeelight bulbs, light strips and lamps on your local network. Requires LAN Control enabled in the Yeelight or Mi Home app.": "本地网络中的 Yeelight 灯泡、灯带和灯具。需要在 Yeelight 或米家应用中启用局域网控制。",
+  "Alienware AlienFX hardware (chassis, notebook keyboards, external keyboards). Close Alienware Command Center first - it holds the AlienFX HID interface exclusively.": "Alienware AlienFX 硬件（机箱、笔记本键盘、外接键盘）。请先关闭 Alienware Command Center——它会独占 AlienFX HID 接口。"
 }

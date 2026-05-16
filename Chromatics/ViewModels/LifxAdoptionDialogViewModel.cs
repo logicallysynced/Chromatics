@@ -50,7 +50,7 @@ namespace Chromatics.ViewModels
         // devices are unchecked; devices that were adopted but aren't on the
         // network show with a "(offline)" suffix and are pre-checked so the
         // user keeps them by default.
-        public async Task StartDiscoveryAsync(IReadOnlyDictionary<string, Models.LifxAdoptedDevice> alreadyAdopted, CancellationToken ct)
+        public async Task StartDiscoveryAsync(IReadOnlyDictionary<string, Chromatics.Extensions.RGB.NET.Devices.LIFX.LifxAdoptedDevice> alreadyAdopted, CancellationToken ct)
         {
             IsDiscovering = true;
             UpdateStatus();

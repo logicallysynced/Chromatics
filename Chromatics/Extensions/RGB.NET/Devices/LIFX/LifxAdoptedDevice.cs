@@ -1,4 +1,4 @@
-namespace Chromatics.Models
+namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 {
     // Persisted (settings.json) record of a user-adopted LIFX bulb. Identity
     // is the MAC; LastIp / Label / ProductId / ZoneCount are hints we re-

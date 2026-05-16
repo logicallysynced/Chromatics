@@ -45,7 +45,7 @@ namespace Chromatics.ViewModels
         // Query the bridge for its lights, merging with the user's already-
         // adopted set so previously-adopted bulbs come back pre-checked. New
         // lights since the last adoption are unchecked by default.
-        public async Task LoadBulbsAsync(string bridgeIp, string bridgeKey, IReadOnlyDictionary<Guid, Models.HueAdoptedDevice> alreadyAdopted, CancellationToken ct)
+        public async Task LoadBulbsAsync(string bridgeIp, string bridgeKey, IReadOnlyDictionary<Guid, Chromatics.Extensions.RGB.NET.Devices.Hue.HueAdoptedDevice> alreadyAdopted, CancellationToken ct)
         {
             IsLoading = true;
             UpdateStatus();

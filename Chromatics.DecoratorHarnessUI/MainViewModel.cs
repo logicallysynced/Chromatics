@@ -236,18 +236,18 @@ public partial class MainViewModel : ObservableObject, IDisposable
         "Chromatics.DecoratorHarnessUI",
         "lifx-adopted.json");
 
-    private static List<Chromatics.Models.LifxAdoptedDevice> LoadHarnessLifxAdoptions()
+    private static List<Chromatics.Extensions.RGB.NET.Devices.LIFX.LifxAdoptedDevice> LoadHarnessLifxAdoptions()
     {
         try
         {
             if (!System.IO.File.Exists(LifxAdoptionsPath)) return new();
             var json = System.IO.File.ReadAllText(LifxAdoptionsPath);
-            return System.Text.Json.JsonSerializer.Deserialize<List<Chromatics.Models.LifxAdoptedDevice>>(json) ?? new();
+            return System.Text.Json.JsonSerializer.Deserialize<List<Chromatics.Extensions.RGB.NET.Devices.LIFX.LifxAdoptedDevice>>(json) ?? new();
         }
         catch { return new(); }
     }
 
-    private static void SaveHarnessLifxAdoptions(IEnumerable<Chromatics.Models.LifxAdoptedDevice> adoptions)
+    private static void SaveHarnessLifxAdoptions(IEnumerable<Chromatics.Extensions.RGB.NET.Devices.LIFX.LifxAdoptedDevice> adoptions)
     {
         try
         {

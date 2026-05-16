@@ -1,4 +1,4 @@
-namespace Chromatics.Models
+namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
 {
     // Persisted (settings.json) record of a user-adopted QMK keyboard.
     //

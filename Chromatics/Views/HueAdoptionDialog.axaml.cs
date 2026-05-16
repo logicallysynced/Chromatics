@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Models;
 using Chromatics.ViewModels;
 using System;

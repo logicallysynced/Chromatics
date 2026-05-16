@@ -4,6 +4,7 @@ using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
 using Chromatics.Extensions.RGB.NET.Devices.Alienware;
+using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
 using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using Chromatics.Helpers;
 using Chromatics.Layers;
@@ -232,7 +233,7 @@ namespace Chromatics.Core
                                     var devicesResp = api.Device.GetAllAsync().GetAwaiter().GetResult();
                                     var modelByDevice = devicesResp.Data.ToDictionary(d => d.Id, d => d.ProductData?.ModelId ?? "");
 
-                                    var migrated = lights.Data.Select(l => new Models.HueAdoptedDevice
+                                    var migrated = lights.Data.Select(l => new Chromatics.Extensions.RGB.NET.Devices.Hue.HueAdoptedDevice
                                     {
                                         LightId = l.Id,
                                         Label = l.Metadata?.Name ?? l.Id.ToString(),

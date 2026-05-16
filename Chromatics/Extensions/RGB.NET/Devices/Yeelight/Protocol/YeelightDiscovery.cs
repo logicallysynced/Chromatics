@@ -95,16 +95,20 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight.Protocol
             try { await udp.SendAsync(payload, payload.Length, multicast).ConfigureAwait(false); }
             catch { return Array.Empty<DiscoveredBulb>(); }
 
-            using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
-            timeoutCts.CancelAfter(timeout);
-
-            try
+            // Poll-based receive loop. We deliberately avoid awaiting
+            // ReceiveAsync(cancellationToken) directly because it throws
+            // OperationCanceledException on the timeout / cancel path,
+            // which surfaces as a noisy first-chance exception in the
+            // debugger even when caught. Polling Available + a plain
+            // Task.Delay keeps the loop exception-free in the common
+            // "no bulbs on the LAN" case.
+            DateTime deadline = DateTime.UtcNow + timeout;
+            while (DateTime.UtcNow < deadline && !cancellationToken.IsCancellationRequested)
             {
-                while (!timeoutCts.IsCancellationRequested)
+                if (udp.Available > 0)
                 {
                     UdpReceiveResult resp;
-                    try { resp = await udp.ReceiveAsync(timeoutCts.Token).ConfigureAwait(false); }
-                    catch (OperationCanceledException) { break; }
+                    try { resp = await udp.ReceiveAsync().ConfigureAwait(false); }
                     catch { continue; }
 
                     var bulb = ParseResponse(resp.Buffer);
@@ -118,8 +122,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight.Protocol
                     }
                     results[bulb.Id] = bulb; // last response wins (most recent state)
                 }
+                else
+                {
+                    // 50ms idle tick balances responsiveness (we want to pick
+                    // up bulb replies promptly during the active discovery
+                    // window) with not pegging a CPU core in the empty case.
+                    await Task.Delay(50).ConfigureAwait(false);
+                }
             }
-            catch { /* swallow — partial results are still useful */ }
 
             return new List<DiscoveredBulb>(results.Values);
         }

@@ -80,9 +80,25 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
 
                     if (!hid.TryOpen(out HidStream stream))
                     {
-                        Logger.WriteConsole(LoggerTypes.Error,
-                            $"[Alienware] Could not open {def.Product} ({def.VendorId:X4}:{def.ProductId:X4}). Another app may be holding the AlienFX HID interface exclusively (Alienware Command Center, AlienFX Tools, etc.).",
-                            forwardToSentry: false);
+                        // Most common reason a TryOpen fails on AlienFX
+                        // hardware: Alienware Command Center is running and
+                        // holds the HID interface exclusively. Detect that
+                        // and give the user a specific, actionable hint
+                        // rather than the generic "another app may be
+                        // holding it" message.
+                        var awccProcess = DetectAwccConflict();
+                        if (awccProcess != null)
+                        {
+                            Logger.WriteConsole(LoggerTypes.Error,
+                                $"[Alienware] Could not open {def.Product} ({def.VendorId:X4}:{def.ProductId:X4}). Alienware Command Center ({awccProcess}) is currently running and holds the AlienFX HID interface exclusively. Quit AWCC from the system tray (right-click the AWCC icon → Exit), then re-enable the Alienware provider in Settings.",
+                                forwardToSentry: false);
+                        }
+                        else
+                        {
+                            Logger.WriteConsole(LoggerTypes.Error,
+                                $"[Alienware] Could not open {def.Product} ({def.VendorId:X4}:{def.ProductId:X4}). Another app may be holding the AlienFX HID interface exclusively. Common culprits: Alienware Command Center (AWCC), AlienFX Tools (T-Troll), and the older AlienFX Editor. Close any of these and try again.",
+                                forwardToSentry: false);
+                        }
                         continue;
                     }
 
@@ -106,6 +122,39 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
             }
 
             return devices;
+        }
+
+        // Returns the friendly process name of a running Alienware Command
+        // Center component if one is detected, or null if none are running.
+        // AWCC ships as a multi-process suite — the main UI is `AWCC.exe`,
+        // the background lighting service is `AlienFXService.exe` /
+        // `LightingService.exe` depending on AWCC version, and the
+        // legacy editor is `AlienFXEditor.exe`. Any of these holding the
+        // HID interface is enough to lock us out.
+        private static readonly string[] _awccProcessNames =
+        {
+            "AWCC",
+            "AlienFXService",
+            "LightingService",
+            "AlienFXEditor",
+            "AlienFusionUpdate",
+            "AlienwareCommandCenter",
+        };
+
+        private static string DetectAwccConflict()
+        {
+            try
+            {
+                foreach (var name in _awccProcessNames)
+                {
+                    var procs = System.Diagnostics.Process.GetProcessesByName(name);
+                    if (procs.Length == 0) continue;
+                    foreach (var p in procs) try { p.Dispose(); } catch { /* ignore */ }
+                    return $"{name}.exe";
+                }
+            }
+            catch { /* process enumeration is best-effort */ }
+            return null;
         }
 
         // Find the HidDevice on the bus that matches a client definition.

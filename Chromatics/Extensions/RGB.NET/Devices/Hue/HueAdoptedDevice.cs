@@ -1,6 +1,6 @@
 using System;
 
-namespace Chromatics.Models
+namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 {
     // Persisted (settings.json) record of a user-adopted Hue bulb. LightId is
     // the canonical identity (CLIP v2 Guid for the light resource). Label /

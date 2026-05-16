@@ -69,11 +69,27 @@
                               Content="{loc:Tr Key=OpenRGB}" />
                 <ToggleButton Classes="tile" Name="TilePlayStation"
                               Width="150" Height="80"
-                              Content="{loc:Tr Key='PlayStation (Beta)'}" />
+                              Content="{loc:Tr Key=PlayStation}" />
                 <ToggleButton Classes="tile" Name="TileQmkRawHid"
                               Width="150" Height="80"
                               ToolTip.Tip="{loc:Tr Key='QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.'}"
                               Content="{loc:Tr Key='QMK Keyboards (Beta)'}" />
+                <ToggleButton Classes="tile" Name="TileHue"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='Philips Hue smart bulbs over your local Hue Bridge.'}"
+                              Content="{loc:Tr Key=Hue}" />
+                <ToggleButton Classes="tile" Name="TileLifx"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='LIFX bulbs, strips and tiles on your local network. No cloud account required.'}"
+                              Content="{loc:Tr Key=LIFX}" />
+                <ToggleButton Classes="tile" Name="TileYeelight"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='Yeelight bulbs, light strips and lamps on your local network. Requires LAN Control enabled in the Yeelight or Mi Home app.'}"
+                              Content="{loc:Tr Key='Yeelight (Beta)'}" />
+                <ToggleButton Classes="tile" Name="TileAlienware"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='Alienware AlienFX hardware (chassis, notebook keyboards, external keyboards). Close Alienware Command Center first - it holds the AlienFX HID interface exclusively.'}"
+                              Content="{loc:Tr Key='Alienware (Beta)'}" />
             </WrapPanel>
         </ScrollViewer>
 

@@ -7,6 +7,9 @@ using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
+using Chromatics.Extensions.RGB.NET.Devices.Alienware;
+using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
+using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using Chromatics.Models;
 using Chromatics.Helpers;
 using Chromatics.Views;
@@ -132,7 +135,7 @@ namespace Chromatics.ViewModels
                 () => RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.deviceOpenRGBEnabled = v; AppSettings.SaveSettings(cur); }));
 
-            DeviceToggles.Add(MakeDeviceToggle("PlayStation (Beta)", "[BETA] Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
+            DeviceToggles.Add(MakeDeviceToggle("PlayStation", "Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
                 s.devicePlayStationEnabled,
                 () => RGBController.LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
                 () => RGBController.UnloadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
@@ -144,8 +147,8 @@ namespace Chromatics.ViewModels
             // stick. If either is cancelled, or the user adopts no bulbs,
             // the toggle reverts to off — same UX as the LIFX flow below.
             DeviceToggles.Add(new DeviceToggleItem(
-                "Hue (Beta)",
-                "[BETA] Enable/disable Philips HUE device library. Default: Disabled",
+                "Hue",
+                "Enable/disable Philips HUE device library. Default: Disabled",
                 s.deviceHueEnabled,
                 async () =>
                 {
@@ -208,8 +211,8 @@ namespace Chromatics.ViewModels
             // Re-enabling re-prompts with existing adoptions pre-checked
             // (matches the user spec: see SettingsModel.deviceLifxAdoptedDevices).
             DeviceToggles.Add(new DeviceToggleItem(
-                "LIFX (Beta)",
-                "[BETA] Enable/disable LIFX device library (LAN protocol). Default: Disabled",
+                "LIFX",
+                "Enable/disable LIFX device library (LAN protocol). Default: Disabled",
                 s.deviceLifxEnabled,
                 async () =>
                 {
@@ -370,72 +373,63 @@ namespace Chromatics.ViewModels
                 }));
 
             // Yeelight — LAN-protocol bulbs, strips, lamps, ceiling lights.
-            // Auto-adopts every bulb discovered via SSDP on first enable
-            // (a full Hue/LIFX-style adoption picker dialog is tracked for
-            // a v4.2.x follow-up). Users disable specific bulbs they don't
-            // want Chromatics to drive from the Mapping tab.
+            // Mirrors the LIFX flow: enabling the toggle pops the
+            // YeelightAdoptionDialog which runs SSDP discovery and lets
+            // the user pick which bulbs Chromatics drives. Empty
+            // selection or no bulbs found leaves the toggle off.
             DeviceToggles.Add(new DeviceToggleItem(
                 "Yeelight (Beta)",
-                "[BETA] Enable/disable Yeelight LAN device support. Auto-adopts any Yeelight bulb, light strip, lamp, or ceiling light discovered on your LAN (requires LAN Control enabled in the Yeelight / Mi Home app). Default: Disabled",
+                "[BETA] Enable/disable Yeelight LAN device support. Discovers Yeelight bulbs, light strips, lamps, and ceiling lights on your LAN (requires LAN Control enabled in the Yeelight / Mi Home app). Default: Disabled",
                 s.deviceYeelightEnabled,
                 async () =>
                 {
                     var cur = AppSettings.GetSettings();
-                    Logger.WriteConsole(LoggerTypes.Devices,
-                        "[Yeelight] Scanning for Yeelight bulbs on the LAN...");
+                    var owner = GetMainWindow();
 
-                    bool result = await Task.Run(() =>
+                    var alreadyAdopted = (cur.deviceYeelightAdoptedDevices ?? new System.Collections.Generic.List<YeelightAdoptedDevice>())
+                        .ToDictionary(d => d.Id, d => d, StringComparer.OrdinalIgnoreCase);
+
+                    var dlg = new YeelightAdoptionDialog(alreadyAdopted);
+                    if (owner != null)
+                        await dlg.ShowDialog(owner);
+                    else
+                        dlg.Show();
+
+                    if (!dlg.Saved) return false;
+
+                    // Empty selection or discovery returning nothing → leave
+                    // the toggle off so the user sees the immediate "didn't
+                    // take" UX rather than an empty-but-on provider.
+                    if (dlg.SelectedDevices == null || dlg.SelectedDevices.Count == 0)
+                        return false;
+
+                    cur.deviceYeelightAdoptedDevices = dlg.SelectedDevices;
+                    cur.deviceYeelightEnabled = true;
+                    AppSettings.SaveSettings(cur);
+
+                    Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                    foreach (var d in cur.deviceYeelightAdoptedDevices)
                     {
-                        // SSDP sweep — Yeelight's M-SEARCH on 239.255.255.250:1982.
-                        var discovered = Chromatics.Extensions.RGB.NET.Devices.Yeelight.Protocol.YeelightDiscovery
-                            .DiscoverAsync(TimeSpan.FromMilliseconds(2500))
-                            .GetAwaiter().GetResult();
-
-                        if (discovered.Count == 0) return false;
-
-                        var adopted = new System.Collections.Generic.List<YeelightAdoptedDevice>();
-                        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                        Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance.ClientDefinitions.Clear();
-
-                        foreach (var d in discovered)
+                        System.Net.IPEndPoint ep = null;
+                        if (!string.IsNullOrEmpty(d.LastIp) &&
+                            System.Net.IPAddress.TryParse(d.LastIp, out var ip))
                         {
-                            if (string.IsNullOrEmpty(d.Id) || d.Endpoint == null) continue;
-                            if (!seen.Add(d.Id)) continue;
-
-                            adopted.Add(new YeelightAdoptedDevice
-                            {
-                                Id = d.Id,
-                                Label = d.DisplayLabel,
-                                LastIp = d.Endpoint.Address.ToString(),
-                                LastPort = d.Endpoint.Port,
-                                Model = d.Model,
-                                FirmwareVersion = d.FirmwareVersion,
-                                Support = d.Support is System.Collections.Generic.List<string> list
-                                    ? list
-                                    : new System.Collections.Generic.List<string>(d.Support ?? System.Array.Empty<string>()),
-                            });
-
-                            Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance.ClientDefinitions.Add(
-                                new Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightClientDefinition(
-                                    d.Id, d.DisplayLabel, d.Endpoint, d.Model, d.FirmwareVersion, d.Support));
+                            ep = new System.Net.IPEndPoint(ip, d.LastPort > 0 ? d.LastPort : 55443);
                         }
-
-                        cur.deviceYeelightAdoptedDevices = adopted;
-                        cur.deviceYeelightEnabled = true;
-                        AppSettings.SaveSettings(cur);
-
-                        RGBController.LoadDeviceProvider(
-                            Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance);
-                        return true;
-                    });
-
-                    if (!result)
-                    {
-                        await DialogService.ShowAsync(
-                            LocalizationService.Instance["No Yeelight Bulbs Found"],
-                            LocalizationService.Instance["Chromatics didn't detect any Yeelight bulbs on the LAN. In the Yeelight or Mi Home app, open each bulb's settings and turn on LAN Control. Bulbs must be on the same network segment as your PC. Some routers isolate IoT VLANs from regular client devices - if yours does, you'll need to allow multicast UDP on port 1982 between the segments."]);
+                        Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                            new Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightClientDefinition(
+                                d.Id, d.Label, ep, d.Model, d.FirmwareVersion, d.Support));
                     }
-                    return result;
+
+                    // LoadDeviceProvider runs LoadDevices synchronously which
+                    // for Yeelight includes a discovery sweep + per-bulb TCP
+                    // connect + Music Mode handshake (~1.5s per bulb on a
+                    // healthy LAN). Push to a background thread so the
+                    // toggle returns immediately and the UI stays responsive
+                    // while bulbs come online.
+                    _ = Task.Run(() => RGBController.LoadDeviceProvider(
+                        Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance));
+                    return true;
                 },
                 () =>
                 {

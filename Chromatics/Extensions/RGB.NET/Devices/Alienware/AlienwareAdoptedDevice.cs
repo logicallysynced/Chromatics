@@ -1,4 +1,4 @@
-namespace Chromatics.Models
+namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
 {
     // Persisted (settings.json) record of a user-adopted Alienware device.
     // Identity is the VID/PID/DevicePath tuple. ApiVersion captures which

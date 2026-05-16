@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace Chromatics.Models
+namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight
 {
     // Persisted (settings.json) record of a user-adopted Yeelight bulb /
     // strip / lamp. Identity is the bulb's stable hex Id from SSDP, which

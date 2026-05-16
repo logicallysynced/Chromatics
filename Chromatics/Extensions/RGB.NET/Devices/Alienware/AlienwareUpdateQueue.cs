@@ -49,8 +49,24 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
 
             int count = Math.Max(1, _def.LightCount);
             _ledIndexByLedId = new Dictionary<LedId, int>(count);
-            for (int i = 0; i < count; i++)
-                _ledIndexByLedId[(LedId)((int)LedId.Custom1 + i)] = i;
+
+            // Build the LedId → light-index map using the same ordering
+            // AlienwareDevice.InitializeLayout uses, so each LedId paint
+            // routes to the matching firmware light. Per-key boards
+            // get the ANSI 104 mapping; zone boards get sequential
+            // Custom1..N.
+            if (_def.ApiVersion == Protocol.AlienwareApiVersion.PerKeyV5
+                || _def.ApiVersion == Protocol.AlienwareApiVersion.PerKeyV8)
+            {
+                var keymap = AlienwareDefaultKeymap.BuildAnsi104(count);
+                for (int i = 0; i < keymap.Count; i++)
+                    _ledIndexByLedId[keymap[i].LedId] = i;
+            }
+            else
+            {
+                for (int i = 0; i < count; i++)
+                    _ledIndexByLedId[(LedId)((int)LedId.Custom1 + i)] = i;
+            }
 
             _ledBytes = new byte[count * 3];
         }

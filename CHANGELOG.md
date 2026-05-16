@@ -2,10 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.1
+## 4.2.2
 
-- **New:** Yeelight LAN device support (Beta).
-- **New:** Alienware AlienFX device support (Beta).
+- **New:** Yeelight LAN device support (Beta), with an adoption picker dialog so you can choose which bulbs Chromatics controls.
+- **New:** Alienware AlienFX device support (Beta), covering both zone-based chassis and per-key keyboards (AW510K, AW920K). Chromatics now flags Alienware Command Center conflicts directly in the console.
+- Hue, LIFX and Yeelight tiles added to the first-run wizard, each with their own discovery flow.
 - PlayStation, Hue & LIFX devices are no longer classed as Beta.
 - Minor fixes to Logitech implementation.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
