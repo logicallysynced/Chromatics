@@ -886,5 +886,18 @@
   "3. Turn off Compatible apps in the foreground always control lighting so other apps cannot block Chromatics during gameplay.": "3. Désactivez l’option Les applications compatibles au premier plan contrôlent toujours l’éclairage afin que d’autres applications ne puissent pas bloquer Chromatics pendant le jeu.",
   "4. Under Background controllers, drag Chromatics to the top of the priority list.": "4. Sous Contrôleurs en arrière-plan, faites glisser Chromatics en haut de la liste des priorités.",
   "Open Windows Settings": "Ouvrir les paramètres Windows",
-  "Got it": "Compris"
+  "Got it": "Compris",
+  "Copy all layers from this device onto another device": "Copier tous les calques de cet appareil vers un autre appareil",
+  "Copy layers between devices": "Copier des calques entre appareils",
+  "Duplicate every layer on the source device onto the destination device. Original layers on the source are left untouched. Keyboards can only copy to other keyboards; everything else can cross device types.": "Dupliquer chaque calque de l’appareil source sur l’appareil de destination. Les calques d’origine sur la source restent inchangés. Les claviers ne peuvent être copiés que vers d’autres claviers ; tous les autres éléments peuvent être copiés entre différents types d’appareils.",
+  "Source device": "Appareil source",
+  "Destination": "Destination",
+  "Source LED": "LED source",
+  "Destination LED": "LED de destination",
+  "Copy layers": "Copier les calques",
+  "{0} layer(s) will be copied. {1} source LED(s) have no destination mapping and will be dropped.": "{0} calque(s) seront copiés. {1} LED source n’ont aucune correspondance de destination et seront ignorées.",
+  "Copy complete": "Copie terminée",
+  "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} calque(s) copiés vers {1}. {2} LED source n’avaient aucune correspondance de destination et ont été ignorées.",
+  "Copy failed": "Échec de la copie",
+  "Copy failed: {0}": "Échec de la copie : {0}"
 }

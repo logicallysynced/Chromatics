@@ -887,5 +887,18 @@
   "3. Turn off Compatible apps in the foreground always control lighting so other apps cannot block Chromatics during gameplay.": "3. 게임 플레이 중 다른 앱이 Chromatics를 차단하지 못하도록 포그라운드의 호환 앱이 항상 조명을 제어하도록 허용 옵션을 끄세요.",
   "4. Under Background controllers, drag Chromatics to the top of the priority list.": "4. 백그라운드 컨트롤러에서 Chromatics를 우선순위 목록의 맨 위로 끌어 올리세요.",
   "Open Windows Settings": "Windows 설정 열기",
-  "Got it": "확인"
+  "Got it": "확인",
+  "Copy all layers from this device onto another device": "이 장치의 모든 레이어를 다른 장치로 복사",
+  "Copy layers between devices": "장치 간 레이어 복사",
+  "Duplicate every layer on the source device onto the destination device. Original layers on the source are left untouched. Keyboards can only copy to other keyboards; everything else can cross device types.": "원본 장치의 모든 레이어를 대상 장치에 복제합니다. 원본 장치의 기존 레이어는 그대로 유지됩니다. 키보드는 다른 키보드로만 복사할 수 있으며, 그 외의 장치는 서로 다른 장치 유형 간에도 복사할 수 있습니다.",
+  "Source device": "원본 장치",
+  "Destination": "대상",
+  "Source LED": "원본 LED",
+  "Destination LED": "대상 LED",
+  "Copy layers": "레이어 복사",
+  "{0} layer(s) will be copied. {1} source LED(s) have no destination mapping and will be dropped.": "{0}개의 레이어가 복사됩니다. {1}개의 원본 LED에는 대상 매핑이 없어 제외됩니다.",
+  "Copy complete": "복사 완료",
+  "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0}개의 레이어를 {1}에 복사했습니다. {2}개의 원본 LED에는 대상 매핑이 없어 건너뛰었습니다.",
+  "Copy failed": "복사 실패",
+  "Copy failed: {0}": "복사 실패: {0}"
 }

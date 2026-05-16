@@ -886,5 +886,18 @@
   "3. Turn off Compatible apps in the foreground always control lighting so other apps cannot block Chromatics during gameplay.": "3. Deaktivieren Sie „Kompatible Apps im Vordergrund steuern die Beleuchtung immer“, damit andere Apps Chromatics während des Spielens nicht blockieren können.",
   "4. Under Background controllers, drag Chromatics to the top of the priority list.": "4. Ziehen Sie Chromatics unter „Hintergrundcontroller“ an den Anfang der Prioritätenliste.",
   "Open Windows Settings": "Windows-Einstellungen öffnen",
-  "Got it": "Verstanden"
+  "Got it": "Verstanden",
+  "Copy all layers from this device onto another device": "Alle Ebenen von diesem Gerät auf ein anderes Gerät kopieren",
+  "Copy layers between devices": "Ebenen zwischen Geräten kopieren",
+  "Duplicate every layer on the source device onto the destination device. Original layers on the source are left untouched. Keyboards can only copy to other keyboards; everything else can cross device types.": "Dupliziert jede Ebene auf dem Quellgerät auf das Zielgerät. Die ursprünglichen Ebenen auf der Quelle bleiben unverändert. Tastaturen können nur auf andere Tastaturen kopiert werden; alles andere kann geräteübergreifend kopiert werden.",
+  "Source device": "Quellgerät",
+  "Destination": "Ziel",
+  "Source LED": "Quell-LED",
+  "Destination LED": "Ziel-LED",
+  "Copy layers": "Ebenen kopieren",
+  "{0} layer(s) will be copied. {1} source LED(s) have no destination mapping and will be dropped.": "{0} Ebene(n) werden kopiert. {1} Quell-LED(s) haben keine Zielzuordnung und werden verworfen.",
+  "Copy complete": "Kopiervorgang abgeschlossen",
+  "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} Ebene(n) nach {1} kopiert. {2} Quell-LED(s) hatten keine Zielzuordnung und wurden übersprungen.",
+  "Copy failed": "Kopiervorgang fehlgeschlagen",
+  "Copy failed: {0}": "Kopiervorgang fehlgeschlagen: {0}"
 }

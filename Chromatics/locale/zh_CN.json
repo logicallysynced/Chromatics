@@ -886,5 +886,18 @@
   "3. Turn off Compatible apps in the foreground always control lighting so other apps cannot block Chromatics during gameplay.": "3. 关闭“前台兼容应用始终控制照明”，以免其他应用在游戏过程中阻止 Chromatics。",
   "4. Under Background controllers, drag Chromatics to the top of the priority list.": "4. 在“后台控制器”下，将 Chromatics 拖到优先级列表顶部。",
   "Open Windows Settings": "打开 Windows 设置",
-  "Got it": "知道了"
+  "Got it": "知道了",
+  "Copy all layers from this device onto another device": "将此设备上的所有图层复制到另一台设备",
+  "Copy layers between devices": "在设备之间复制图层",
+  "Duplicate every layer on the source device onto the destination device. Original layers on the source are left untouched. Keyboards can only copy to other keyboards; everything else can cross device types.": "将源设备上的每个图层复制到目标设备。源设备上的原始图层保持不变。键盘只能复制到其他键盘；其他设备可跨设备类型复制。",
+  "Source device": "源设备",
+  "Destination": "目标",
+  "Source LED": "源 LED",
+  "Destination LED": "目标 LED",
+  "Copy layers": "复制图层",
+  "{0} layer(s) will be copied. {1} source LED(s) have no destination mapping and will be dropped.": "将复制 {0} 个图层。{1} 个源 LED 没有目标映射，将被丢弃。",
+  "Copy complete": "复制完成",
+  "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "已将 {0} 个图层复制到 {1}。{2} 个源 LED 没有目标映射，已被跳过。",
+  "Copy failed": "复制失败",
+  "Copy failed: {0}": "复制失败：{0}"
 }

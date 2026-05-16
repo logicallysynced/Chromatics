@@ -886,5 +886,18 @@
   "3. Turn off Compatible apps in the foreground always control lighting so other apps cannot block Chromatics during gameplay.": "3. Desactiva Las aplicaciones compatibles en primer plano siempre controlan la iluminación para que otras aplicaciones no puedan bloquear Chromatics durante la partida.",
   "4. Under Background controllers, drag Chromatics to the top of the priority list.": "4. En Controladores en segundo plano, arrastra Chromatics a la parte superior de la lista de prioridades.",
   "Open Windows Settings": "Abrir configuración de Windows",
-  "Got it": "Entendido"
+  "Got it": "Entendido",
+  "Copy all layers from this device onto another device": "Copiar todas las capas de este dispositivo a otro dispositivo",
+  "Copy layers between devices": "Copiar capas entre dispositivos",
+  "Duplicate every layer on the source device onto the destination device. Original layers on the source are left untouched. Keyboards can only copy to other keyboards; everything else can cross device types.": "Duplica cada capa del dispositivo de origen en el dispositivo de destino. Las capas originales del origen permanecen intactas. Los teclados solo pueden copiarse a otros teclados; todo lo demás puede copiarse entre tipos de dispositivo.",
+  "Source device": "Dispositivo de origen",
+  "Destination": "Destino",
+  "Source LED": "LED de origen",
+  "Destination LED": "LED de destino",
+  "Copy layers": "Copiar capas",
+  "{0} layer(s) will be copied. {1} source LED(s) have no destination mapping and will be dropped.": "Se copiarán {0} capa(s). {1} LED(s) de origen no tienen asignación de destino y se descartarán.",
+  "Copy complete": "Copia completada",
+  "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "Se copiaron {0} capa(s) a {1}. {2} LED(s) de origen no tenían asignación de destino y se omitieron.",
+  "Copy failed": "Error al copiar",
+  "Copy failed: {0}": "Error al copiar: {0}"
 }

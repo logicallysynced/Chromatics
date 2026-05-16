@@ -887,5 +887,18 @@
   "3. Turn off Compatible apps in the foreground always control lighting so other apps cannot block Chromatics during gameplay.": "3. 「フォアグラウンドの対応アプリが常にライティングを制御する」をオフにして、ゲームプレイ中に他のアプリが Chromatics をブロックできないようにします。",
   "4. Under Background controllers, drag Chromatics to the top of the priority list.": "4. 「バックグラウンド コントローラー」で、Chromatics を優先順位リストの一番上にドラッグします。",
   "Open Windows Settings": "Windows 設定を開く",
-  "Got it": "了解"
+  "Got it": "了解",
+  "Copy all layers from this device onto another device": "このデバイスのすべてのレイヤーを別のデバイスにコピー",
+  "Copy layers between devices": "デバイス間でレイヤーをコピー",
+  "Duplicate every layer on the source device onto the destination device. Original layers on the source are left untouched. Keyboards can only copy to other keyboards; everything else can cross device types.": "コピー元デバイスのすべてのレイヤーをコピー先デバイスに複製します。コピー元の元のレイヤーは変更されません。キーボードは他のキーボードにのみコピーできます。それ以外はデバイスの種類をまたいでコピーできます。",
+  "Source device": "コピー元デバイス",
+  "Destination": "コピー先",
+  "Source LED": "コピー元LED",
+  "Destination LED": "コピー先LED",
+  "Copy layers": "レイヤーをコピー",
+  "{0} layer(s) will be copied. {1} source LED(s) have no destination mapping and will be dropped.": "{0}個のレイヤーがコピーされます。{1}個のコピー元LEDにはコピー先のマッピングがないため破棄されます。",
+  "Copy complete": "コピー完了",
+  "Copied {0} layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0}個のレイヤーを{1}にコピーしました。{2}個のコピー元LEDにはコピー先のマッピングがないためスキップされました。",
+  "Copy failed": "コピー失敗",
+  "Copy failed: {0}": "コピー失敗: {0}"
 }

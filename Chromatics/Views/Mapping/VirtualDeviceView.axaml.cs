@@ -193,6 +193,33 @@ namespace Chromatics.Views.Mapping
             DeviceVm?.ResetBrightness();
         }
 
+        private async void OnCopyLayersClick(object sender, RoutedEventArgs e)
+        {
+            var device = DeviceVm;
+            if (device == null) return;
+            var owner = this.FindAncestorOfType<Window>();
+            if (owner == null) return;
+
+            // Live device dictionary from the RGB surface — the dialog
+            // filters its destination list against this so newly-attached
+            // devices appear without needing a Mappings-tab refresh.
+            var connected = Chromatics.Core.RGBController.GetLiveDevices();
+
+            var dlg = new Chromatics.Views.Dialogs.CopyLayersDialog(connected, device.DeviceId);
+            await dlg.ShowDialog(owner);
+
+            if (dlg.Applied)
+            {
+                // Let the Mappings tab pick up the freshly-created layers
+                // on the destination device. The layer list view binds
+                // off MappingLayers.GetLayers and rebuilds on RefreshLayers.
+                if (owner.DataContext is Chromatics.ViewModels.Mapping.MappingViewModel mvm)
+                {
+                    try { mvm.RefreshLayers(); } catch { /* best-effort */ }
+                }
+            }
+        }
+
         private async void OnResetLayoutClick(object sender, RoutedEventArgs e)
         {
             var device = DeviceVm;

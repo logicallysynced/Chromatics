@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.7
+
+- **New:** Copy layers between devices. A small copy icon next to the device brightness button on the Mappings tab opens a dialog that duplicates every layer from one device onto another and lets you adjust the LED-to-LED mapping before committing. Keyboards copy to keyboards (consistent ANSI 104 layout across vendors); other device types can cross-copy (mouse → headset, chassis → strip, etc.).
+
 ## 4.2.6
 
 - **New:** Windows Dynamic Lighting (Beta). Picks up any device Windows lists in Settings → Personalization → Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen, etc.). Each device shows up in the Mappings tab tagged "(Dynamic Lighting)" and prefixed with its vendor (e.g. "Logitech G512 (Dynamic Lighting)") so it's distinct from the same physical device's entry under its vendor SDK provider.
