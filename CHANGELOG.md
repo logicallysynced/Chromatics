@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.12
+
+- Windows Dynamic Lighting conflict-bypass checkbox in Settings → Advanced now shows regardless of whether the Dynamic Lighting provider is currently enabled, and is prefixed "Windows Dynamic Lighting:" so its scope is unambiguous in the Advanced list.
+
 ## 4.2.11
 
 - Copy-layers dialog drops the redundant "Dynamic:" prefix from each row's label. The dialog only lists dynamic layers, so each row just shows the layer's sub-type name (e.g. "HPTracker", "Highlight") on its own.

@@ -109,9 +109,8 @@
                     <CheckBox Content="{loc:Tr Key='Send anonymous performance and error telemetry to help improve Chromatics.'}"
                               IsChecked="{Binding EnableCrashReports, Mode=TwoWay}"
                               ToolTip.Tip="{loc:Tr Key='Default: Enabled. Controls background telemetry (performance metrics, non-fatal errors). Crash reports are independent — if Chromatics crashes, you are always asked before anything is sent. No personally identifying information is collected. See the Privacy section of the README for details.'}" />
-                    <CheckBox Content="{loc:Tr Key='Allow Dynamic Lighting to control devices already covered by another Chromatics provider.'}"
+                    <CheckBox Content="{loc:Tr Key='Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.'}"
                               IsChecked="{Binding DynamicLightingBypassConflictCheck, Mode=TwoWay}"
-                              IsVisible="{Binding DynamicLightingEnabled}"
                               ToolTip.Tip="{loc:Tr Key='Default: Disabled. By default the vendor SDK provider (Razer, Logitech, ASUS, MSI, SteelSeries) takes exclusive control of any device it shares with Dynamic Lighting, and Dynamic Lighting silently skips those duplicates so the two providers cannot fight for the same hardware. Enable this to let Dynamic Lighting adopt every compatible device Windows lists regardless of overlap. Expect flickering if both providers end up writing to the same device.'}" />
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <Button Content="{loc:Tr Key='Check for Updates'}"

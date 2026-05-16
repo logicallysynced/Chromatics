@@ -57,7 +57,6 @@ namespace Chromatics.ViewModels
             _betaChannel = s.betaChannel;
             _alwaysRunAsAdmin = s.alwaysRunAsAdmin;
             _enableCrashReports = s.enableCrashReports;
-            _dynamicLightingEnabled = s.deviceDynamicLightingEnabled;
             _dynamicLightingBypassConflictCheck = s.dynamicLightingBypassConflictCheck;
             _closeWithGame = s.closeWithGame;
             _globalBrightness = s.globalbrightness;
@@ -575,7 +574,6 @@ namespace Chromatics.ViewModels
                         var cc = AppSettings.GetSettings();
                         cc.deviceDynamicLightingEnabled = false;
                         AppSettings.SaveSettings(cc);
-                        RefreshDynamicLightingState();
                         await DialogService.ShowAsync(
                             LocalizationService.Instance["No Dynamic Lighting devices found"],
                             LocalizationService.Instance["Chromatics didn't detect any Dynamic Lighting devices on this PC. Open Settings -> Personalization -> Dynamic Lighting in Windows and check that at least one compatible device is listed there. If your hardware is listed but Chromatics still doesn't see it, it may be hidden by an enabled vendor provider conflict; Settings -> Advanced has a toggle to control that."]);
@@ -585,7 +583,6 @@ namespace Chromatics.ViewModels
                     var c = AppSettings.GetSettings();
                     c.deviceDynamicLightingEnabled = true;
                     AppSettings.SaveSettings(c);
-                    RefreshDynamicLightingState();
                     return true;
                 },
                 () =>
@@ -594,7 +591,6 @@ namespace Chromatics.ViewModels
                     var c = AppSettings.GetSettings();
                     c.deviceDynamicLightingEnabled = false;
                     AppSettings.SaveSettings(c);
-                    RefreshDynamicLightingState();
                 }));
         }
 
@@ -793,18 +789,6 @@ namespace Chromatics.ViewModels
             }
         }
 
-        // Mirrors SettingsModel.deviceDynamicLightingEnabled — read-only
-        // here, kept in sync by the device-toggle row's saveFlag callback
-        // (via RefreshDynamicLightingState). The Advanced bypass checkbox
-        // binds its IsVisible to this so the row only shows when Dynamic
-        // Lighting is the active provider.
-        private bool _dynamicLightingEnabled;
-        public bool DynamicLightingEnabled
-        {
-            get => _dynamicLightingEnabled;
-            private set => SetProperty(ref _dynamicLightingEnabled, value);
-        }
-
         private bool _dynamicLightingBypassConflictCheck;
         public bool DynamicLightingBypassConflictCheck
         {
@@ -818,16 +802,6 @@ namespace Chromatics.ViewModels
                     AppSettings.SaveSettings(s);
                 }
             }
-        }
-
-        // Called by the Dynamic Lighting device-toggle row's saveFlag so
-        // the Advanced section's bypass checkbox shows / hides in lock-step
-        // with the provider enable state.
-        public void RefreshDynamicLightingState()
-        {
-            var s = AppSettings.GetSettings();
-            DynamicLightingEnabled = s.deviceDynamicLightingEnabled;
-            DynamicLightingBypassConflictCheck = s.dynamicLightingBypassConflictCheck;
         }
 
         private bool _closeWithGame;

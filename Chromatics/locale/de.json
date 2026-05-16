@@ -917,5 +917,6 @@
   "Clear all": "Alle löschen",
   "The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.": "Das Quellgerät hat keine dynamischen Ebenen zum Kopieren. Fügen Sie ihm zuerst auf der Registerkarte „Mappings“ eine dynamische Ebene hinzu.",
   "{0} layer(s) selected.": "{0} Ebene(n) ausgewählt.",
-  "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} dynamische Ebene(n) nach {1} kopiert. {2} Quell-LED(s) hatten keine Zielzuordnung und wurden übersprungen."
+  "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} dynamische Ebene(n) nach {1} kopiert. {2} Quell-LED(s) hatten keine Zielzuordnung und wurden übersprungen.",
+  "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Windows Dynamic Lighting: Steuerung von Geräten zulassen, die bereits von einem anderen Chromatics-Anbieter abgedeckt werden."
 }
