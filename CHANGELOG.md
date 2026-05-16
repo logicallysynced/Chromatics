@@ -4,8 +4,8 @@ All notable changes to Chromatics are documented here.
 
 ## 4.2.1
 
-- **New:** Yeelight LAN device support (Beta). Auto-discovers Yeelight bulbs, light strips, lamps, and ceiling lights on the LAN. Music Mode handshake removes the bulb's normal 1-per-second command cap. Dual-light bulbs like the Bedside Lamp 2 surface as two LEDs (main and background) you can map independently. Enable from Settings → Device Providers; turn on LAN Control in the Yeelight or Mi Home app first.
-- **New:** Alienware AlienFX device support (Beta). Auto-discovers AlienFX hardware on the HID bus and adopts everything it finds. Covers Aurora R7-R14 desktops, m15 / m17 / x15 / x17 laptops, the per-key notebook line (Area51m-R2, m15R3+, m17R3), and per-key external keyboards (AW510K, AW920K, AW768, AW410K). Pure managed implementation, no Dell driver or Alienware Command Center needed. Close AWCC before enabling — it holds the HID interface exclusively.
+- **New:** Yeelight LAN device support (Beta).
+- **New:** Alienware AlienFX device support (Beta).
 - PlayStation, Hue & LIFX devices are no longer classed as Beta.
 - Minor fixes to Logitech implementation.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
