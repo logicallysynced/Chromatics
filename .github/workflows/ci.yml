@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [master, 'chromatics-4.0.x', 'chromatics-4.*']
 
+# Minimum-privilege GITHUB_TOKEN: the workflow only checks out the repo and
+# runs build/test/manifest-validation locally on the runner — it never calls
+# the GitHub API to write commits, comments, releases, packages, etc. So
+# contents: read is the only permission needed. Explicit block also silences
+# the GitHub Advanced Security warning about unrestricted token scope.
+permissions:
+  contents: read
+
 jobs:
   build-and-test:
     # GDI + WASAPI loopback + Windows.Devices.Lights.LampArray plus the
