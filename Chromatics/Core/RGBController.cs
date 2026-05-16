@@ -3,6 +3,7 @@ using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
+using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -301,6 +302,84 @@ namespace Chromatics.Core
                     catch (Exception ex)
                     {
                         Logger.WriteConsole(Enums.LoggerTypes.Error, $"[LifxDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+                if (appSettings.deviceYeelightEnabled)
+                {
+                    try
+                    {
+                        // Auto-adopt on first enable. Mirrors the QMK
+                        // provider's pattern: when the persisted adopted-set
+                        // is empty (initial launch after the user enabled
+                        // the Yeelight toggle), run one SSDP sweep and adopt
+                        // every bulb that responds. Subsequent launches
+                        // reuse the persisted list and re-resolve only the
+                        // IPs that may have changed. Users disable specific
+                        // bulbs they don't want Chromatics to drive from the
+                        // Mapping tab.
+                        //
+                        // (A proper Hue/LIFX-style adoption picker dialog
+                        // is tracked as a v4.2.x follow-up — it's
+                        // significantly more UI work and shipping
+                        // auto-adopt first keeps the beta path testable.)
+                        var adopted = appSettings.deviceYeelightAdoptedDevices ?? new List<YeelightAdoptedDevice>();
+                        if (adopted.Count == 0)
+                        {
+                            try
+                            {
+                                var discovered = Chromatics.Extensions.RGB.NET.Devices.Yeelight.Protocol.YeelightDiscovery
+                                    .DiscoverAsync(TimeSpan.FromMilliseconds(2500))
+                                    .GetAwaiter().GetResult();
+                                foreach (var d in discovered)
+                                {
+                                    if (string.IsNullOrEmpty(d.Id) || d.Endpoint == null) continue;
+                                    adopted.Add(new YeelightAdoptedDevice
+                                    {
+                                        Id = d.Id,
+                                        Label = d.DisplayLabel,
+                                        LastIp = d.Endpoint.Address.ToString(),
+                                        LastPort = d.Endpoint.Port,
+                                        Model = d.Model,
+                                        FirmwareVersion = d.FirmwareVersion,
+                                        Support = d.Support is List<string> list ? list : new List<string>(d.Support ?? Array.Empty<string>()),
+                                    });
+                                }
+                                if (adopted.Count > 0)
+                                {
+                                    appSettings.deviceYeelightAdoptedDevices = adopted;
+                                    AppSettings.SaveSettings(appSettings);
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Yeelight] Adopted {adopted.Count} bulb(s) discovered on the LAN. Open the Mapping tab to disable any you don't want Chromatics to control.");
+                                }
+                                else
+                                {
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, "[Yeelight] Discovery found no Yeelight bulbs on the LAN. Make sure each bulb has LAN Control enabled in the Yeelight / Mi Home app (Settings -> LAN Control).", forwardToSentry: false);
+                                }
+                            }
+                            catch (Exception discEx)
+                            {
+                                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Yeelight] Initial discovery sweep failed: {discEx.Message}");
+                            }
+                        }
+
+                        YeelightRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        foreach (var d in adopted)
+                        {
+                            System.Net.IPEndPoint ep = null;
+                            if (!string.IsNullOrEmpty(d.LastIp) &&
+                                System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                            {
+                                ep = new System.Net.IPEndPoint(ip, d.LastPort > 0 ? d.LastPort : 55443);
+                            }
+                            YeelightRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new YeelightClientDefinition(d.Id, d.Label, ep, d.Model, d.FirmwareVersion, d.Support));
+                        }
+
+                        LoadDeviceProvider(YeelightRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[YeelightDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
                     }
                 }
 

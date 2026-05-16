@@ -368,6 +368,88 @@ namespace Chromatics.ViewModels
                     cur.deviceQmkRawHidEnabled = false;
                     AppSettings.SaveSettings(cur);
                 }));
+
+            // Yeelight — LAN-protocol bulbs, strips, lamps, ceiling lights.
+            // Auto-adopts every bulb discovered via SSDP on first enable
+            // (a full Hue/LIFX-style adoption picker dialog is tracked for
+            // a v4.2.x follow-up). Users disable specific bulbs they don't
+            // want Chromatics to drive from the Mapping tab.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Yeelight (Beta)",
+                "[BETA] Enable/disable Yeelight LAN device support. Auto-adopts any Yeelight bulb, light strip, lamp, or ceiling light discovered on your LAN (requires LAN Control enabled in the Yeelight / Mi Home app). Default: Disabled",
+                s.deviceYeelightEnabled,
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[Yeelight] Scanning for Yeelight bulbs on the LAN...");
+
+                    bool result = await Task.Run(() =>
+                    {
+                        // SSDP sweep — Yeelight's M-SEARCH on 239.255.255.250:1982.
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.Yeelight.Protocol.YeelightDiscovery
+                            .DiscoverAsync(TimeSpan.FromMilliseconds(2500))
+                            .GetAwaiter().GetResult();
+
+                        if (discovered.Count == 0) return false;
+
+                        var adopted = new System.Collections.Generic.List<YeelightAdoptedDevice>();
+                        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+
+                        foreach (var d in discovered)
+                        {
+                            if (string.IsNullOrEmpty(d.Id) || d.Endpoint == null) continue;
+                            if (!seen.Add(d.Id)) continue;
+
+                            adopted.Add(new YeelightAdoptedDevice
+                            {
+                                Id = d.Id,
+                                Label = d.DisplayLabel,
+                                LastIp = d.Endpoint.Address.ToString(),
+                                LastPort = d.Endpoint.Port,
+                                Model = d.Model,
+                                FirmwareVersion = d.FirmwareVersion,
+                                Support = d.Support is System.Collections.Generic.List<string> list
+                                    ? list
+                                    : new System.Collections.Generic.List<string>(d.Support ?? System.Array.Empty<string>()),
+                            });
+
+                            Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightClientDefinition(
+                                    d.Id, d.DisplayLabel, d.Endpoint, d.Model, d.FirmwareVersion, d.Support));
+                        }
+
+                        cur.deviceYeelightAdoptedDevices = adopted;
+                        cur.deviceYeelightEnabled = true;
+                        AppSettings.SaveSettings(cur);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance);
+                        return true;
+                    });
+
+                    if (!result)
+                    {
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No Yeelight Bulbs Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any Yeelight bulbs on the LAN. In the Yeelight or Mi Home app, open each bulb's settings and turn on LAN Control. Bulbs must be on the same network segment as your PC. Some routers isolate IoT VLANs from regular client devices - if yours does, you'll need to allow multicast UDP on port 1982 between the segments."]);
+                    }
+                    return result;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        prov.ClientDefinitions.Clear();
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceYeelightEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
         }
 
         private static Avalonia.Controls.Window GetMainWindow()

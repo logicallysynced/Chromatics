@@ -89,11 +89,12 @@ namespace Chromatics.Views.Dialogs
             s.devicePlayStationEnabled  = TilePlayStation.IsChecked  ?? false;
             s.deviceQmkRawHidEnabled    = TileQmkRawHid.IsChecked    ?? false;
 
-            // Hue and LIFX are deliberately omitted from the wizard — both
-            // need bridge / network-discovery dialogs that are inappropriate
-            // for first-run. Users enable them from Settings → Device
-            // Providers when ready. QMK is fine here: discovery is local
-            // (USB HID) and auto-adopt happens on first provider load.
+            // Hue, LIFX, and Yeelight are deliberately omitted from the
+            // wizard — all three need bridge / network-discovery dialogs
+            // that are inappropriate for first-run. Users enable them
+            // from Settings → Device Providers when ready. QMK is fine
+            // here: discovery is local (USB HID) and auto-adopt happens
+            // on first provider load.
 
             s.firstrun = false;
             AppSettings.SaveSettings(s);

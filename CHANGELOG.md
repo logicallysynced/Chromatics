@@ -2,8 +2,9 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.1.45
+## 4.2.0
 
+- **New (Beta):** Yeelight LAN device support. Auto-discovers Yeelight bulbs, light strips, lamps, and ceiling lights on your network and adopts whatever it finds when you enable the provider. Chromatics talks the Yeelight LAN protocol directly over your local network. No cloud account, no third-party DLLs, no proxy software. When a bulb's firmware supports Music Mode, Chromatics enables it automatically so colour changes track at full frame rate instead of being capped at 1 per second by the bulb's normal rate limit. Dual-light bulbs like the Bedside Lamp 2 expose two LEDs (main and background) so you can map them independently. Light strips paint as one colour because Yeelight's LAN protocol doesn't expose per-zone addressing on its strip products. Enable from Settings → Device Providers; remember to turn on LAN Control in the Yeelight or Mi Home app first.
 - Minor fixes to Logitech implementation.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
 
