@@ -918,5 +918,6 @@
   "The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.": "El dispositivo de origen no tiene capas dinámicas para copiar. Añádele primero una capa dinámica en la pestaña Asignaciones.",
   "{0} layer(s) selected.": "{0} capa(s) seleccionada(s).",
   "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "Se copiaron {0} capa(s) dinámica(s) a {1}. {2} LED(s) de origen no tenían asignación de destino y se omitieron.",
-  "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Iluminación dinámica de Windows: permite controlar dispositivos que ya están cubiertos por otro proveedor de Chromatics."
+  "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Iluminación dinámica de Windows: permite controlar dispositivos que ya están cubiertos por otro proveedor de Chromatics.",
+  "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "Iluminación dinámica: Permitir el control de dispositivos ya cubiertos por otro proveedor de Chromatics."
 }

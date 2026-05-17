@@ -156,7 +156,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
                 _devicesById[info.Id] = dev;
 
                 Logger.WriteConsole(LoggerTypes.Devices,
-                    $"[DynamicLighting] Adopted '{info.Name}' ({lampArray.LampArrayKind}, {lampArray.LampCount} lamps).",
+                    $"[DynamicLighting] Adopted '{info.Name}' ({lampArray.LampArrayKind}, {lampArray.LampCount} LEDs).",
                     forwardToSentry: false);
                 return dev;
             }

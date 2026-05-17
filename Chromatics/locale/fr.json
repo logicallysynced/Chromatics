@@ -918,5 +918,6 @@
   "The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.": "L’appareil source ne comporte aucun calque dynamique à copier. Ajoutez-lui d’abord un calque dynamique dans l’onglet Mappages.",
   "{0} layer(s) selected.": "{0} calque(s) sélectionné(s).",
   "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} calque(s) dynamique(s) copié(s) vers {1}. {2} LED source n’avaient aucun mappage de destination et ont été ignorées.",
-  "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Éclairage dynamique Windows : autoriser le contrôle des appareils déjà pris en charge par un autre fournisseur Chromatics."
+  "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Éclairage dynamique Windows : autoriser le contrôle des appareils déjà pris en charge par un autre fournisseur Chromatics.",
+  "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "Éclairage dynamique : autoriser le contrôle des appareils déjà pris en charge par un autre fournisseur Chromatics."
 }

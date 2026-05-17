@@ -2,9 +2,9 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.13
+## 4.2.14
 
-- **New:** Windows Dynamic Lighting (Beta). Controls compatible devices during gameplay, not only while Chromatics has focus. The in-game part needs Windows 11 22H2 or newer; on older builds only the foreground side works. After enabling the provider in Chromatics, open Settings → Personalization → Dynamic Lighting → Background light control in Windows and drag Chromatics to the top. Chromatics only appears in that Windows list while its Dynamic Lighting provider is on; turning it off or uninstalling Chromatics removes the entry.
+- **New:** Windows Dynamic Lighting (Beta).
 - **New:** Yeelight device support (Beta).
 - **New:** Alienware LightFX device support (Beta).
 - **New:** Copy layers between devices. A small copy icon next to the device brightness button on the Mappings tab opens a dialog that duplicates every layer from one device onto another.
@@ -14,6 +14,10 @@ All notable changes to Chromatics are documented here.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
 - Bumped the project's minimum Windows target to Windows 10 1809 (build 17763).
 - Chromatics installer is now officially signed for extra security.
+- Cut down background telemetry frequency. Performance heartbeats now fire every 5 minutes (was every minute) and the first one lands 1 minute into a session (was 15 seconds).
+- Shortened the Dynamic Lighting conflict-bypass label in Settings → Advanced.
+- Dynamic Lighting device adoption log now says "LEDs" instead of "lamps".
+- Mapping tab: when a device disappears because its provider was disabled, the device picker falls back to the first remaining device instead of showing a blank selection.
 
 ## 4.1.44
 

@@ -240,7 +240,12 @@ namespace Chromatics.ViewModels.Mapping
             if (layersChanged)
                 MappingLayers.SaveMappings();
 
-            SelectedDevice ??= Devices.FirstOrDefault();
+            // Re-seed if SelectedDevice is null (first call) OR points at a
+            // device that just got pruned above (e.g. its provider was
+            // disabled). Without the second check the ComboBox renders blank
+            // because SelectedItem no longer matches any entry in ItemsSource.
+            if (SelectedDevice == null || !Devices.Contains(SelectedDevice))
+                SelectedDevice = Devices.FirstOrDefault();
 
             // If SelectedDevice was already set, partial-method didn't run;
             // sync the virtual-device pointer manually so a freshly-enumerated

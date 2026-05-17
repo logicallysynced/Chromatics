@@ -38,13 +38,12 @@ namespace Chromatics.Core
         // its purpose is to exist so ProfilesSampleRate has something to
         // sample against.
         private static System.Threading.Timer _heartbeatTimer;
-        private const double HeartbeatIntervalSeconds = 60.0;
-        // Short first-fire delay so we get at least one heartbeat per session
-        // even on short-lived runs (typical dev-iteration restart cadence is
-        // ~5 minutes and we want CPU/memory baseline data from every run).
-        // Sentry confirmed missing data with the previous 60-second initial
-        // delay — many sessions ended before the first tick ever fired.
-        private const double HeartbeatInitialDelaySeconds = 15.0;
+        private const double HeartbeatIntervalSeconds = 300.0;
+        // First-fire delay so a baseline tick lands on most sessions without
+        // burning quota on transient one-second launches (Velopack lifecycle
+        // probes, --help, etc.). 60s catches typical user sessions while
+        // staying clear of the noisy early seconds.
+        private const double HeartbeatInitialDelaySeconds = 60.0;
 
         // CPU usage is computed from deltas between heartbeats, so we keep
         // the last-sampled values here. Initial call returns 0% (no baseline
