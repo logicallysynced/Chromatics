@@ -919,5 +919,6 @@
   "{0} layer(s) selected.": "{0} calque(s) sélectionné(s).",
   "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} calque(s) dynamique(s) copié(s) vers {1}. {2} LED source n’avaient aucun mappage de destination et ont été ignorées.",
   "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Éclairage dynamique Windows : autoriser le contrôle des appareils déjà pris en charge par un autre fournisseur Chromatics.",
-  "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "Éclairage dynamique : autoriser le contrôle des appareils déjà pris en charge par un autre fournisseur Chromatics."
+  "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "Éclairage dynamique : autoriser le contrôle des appareils déjà pris en charge par un autre fournisseur Chromatics.",
+  "Press the button on the Hue bridge BEFORE clicking Submit.": "Appuyez sur le bouton du pont Hue AVANT de cliquer sur Envoyer."
 }

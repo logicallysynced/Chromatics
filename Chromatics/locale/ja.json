@@ -920,5 +920,6 @@
   "{0} layer(s) selected.": "{0} 個のレイヤーが選択されています。",
   "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0} 個の動的レイヤーを {1} にコピーしました。{2} 個のソース LED にはコピー先のマッピングがなかったため、スキップされました。",
   "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Windows Dynamic Lighting: 別の Chromatics プロバイダーによって既に対象となっているデバイスの制御を許可します。",
-  "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "Dynamic Lighting: 別の Chromatics プロバイダーによってすでに対応されているデバイスの制御を許可します。"
+  "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "Dynamic Lighting: 別の Chromatics プロバイダーによってすでに対応されているデバイスの制御を許可します。",
+  "Press the button on the Hue bridge BEFORE clicking Submit.": "Submitをクリックする前に、Hueブリッジのボタンを押してください。"
 }

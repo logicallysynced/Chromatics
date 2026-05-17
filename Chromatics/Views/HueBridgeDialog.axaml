@@ -77,7 +77,7 @@
 
         <!-- Pairing instruction -->
         <TextBlock Grid.Row="5"
-                   Text="{loc:Tr Key='Press the button on the Hue bridge BEFORE clicking Save.'}"
+                   Text="{loc:Tr Key='Press the button on the Hue bridge BEFORE clicking Submit.'}"
                    TextWrapping="Wrap"
                    FontStyle="Italic"
                    Opacity="0.8"

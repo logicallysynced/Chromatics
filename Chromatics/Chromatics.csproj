@@ -10,14 +10,14 @@
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.2.14.0</Version>
+    <Version>4.2.17.0</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>logicallysynced 2026</Copyright>
     <PackageProjectUrl>https://chromaticsffxiv.com</PackageProjectUrl>
     <NeutralLanguage>en-AU</NeutralLanguage>
     <ApplicationIcon>Resources\Chromatics_icon_144x144.ico</ApplicationIcon>
-    <PackageReleaseNotes>https://github.com/roxaskeyheart/chromatics/releases</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/logicallysynced/chromatics/releases</PackageReleaseNotes>
     <Title>Chromatics</Title>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -93,7 +93,7 @@
     <PackageReference Include="RGB.NET.Devices.Wooting" Version="3.2.0" />
     <PackageReference Include="RGB.NET.HID" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Presets" Version="3.2.0" />
-    <PackageReference Include="Sharlayan" Version="9.0.34" />
+    <PackageReference Include="Sharlayan" Version="9.0.36-prerelease.48" />
   </ItemGroup>
 
   <ItemGroup>

@@ -919,5 +919,6 @@
   "{0} layer(s) selected.": "已选择 {0} 个图层。",
   "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "已将 {0} 个动态图层复制到 {1}。{2} 个源 LED 没有目标映射，已被跳过。",
   "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Windows 动态光效：允许控制已由其他 Chromatics 提供程序覆盖的设备。",
-  "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "动态光效：允许控制已由另一个 Chromatics 提供程序覆盖的设备。"
+  "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "动态光效：允许控制已由另一个 Chromatics 提供程序覆盖的设备。",
+  "Press the button on the Hue bridge BEFORE clicking Submit.": "在点击“提交”之前，请先按下 Hue 网桥上的按钮。"
 }
