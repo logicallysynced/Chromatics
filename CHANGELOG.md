@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.16
+## 4.2.18
 
 - **New:** Windows Dynamic Lighting (Beta).
 - **New:** Yeelight device support (Beta).
@@ -18,7 +18,7 @@ All notable changes to Chromatics are documented here.
 - Shortened the Dynamic Lighting conflict-bypass label in Settings → Advanced.
 - Dynamic Lighting device adoption log now says "LEDs" instead of "lamps".
 - Mapping tab: when a device disappears because its provider was disabled, the device picker falls back to the first remaining device instead of showing a blank selection.
-- Fixed an issue which prevents vegas mode from starting in The Gold Saucer.
+- Fixed an issue which prevented vegas mode from starting in The Gold Saucer.
 - Fixed an issue which sometimes caused the title screen animation to play when loading between zones.
 
 ## 4.1.44

@@ -9,6 +9,11 @@
 # folder is local-only and must not be committed.
 Build Dependencies/Sharlayan/
 
+# Local RGB.NET.Devices.Logitech build for ad-hoc debugging of the Logitech
+# provider. The csproj references it directly via HintPath; this folder is
+# local-only and must not be committed.
+Build Dependencies/RGB.NET/
+
 # Project-scoped MCP server configuration. Local-only — contains personal
 # tool wiring (Sentry hosted MCP) that's specific to maintainer accounts.
 .mcp.json

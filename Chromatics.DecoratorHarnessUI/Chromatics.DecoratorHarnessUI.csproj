@@ -16,6 +16,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Mirror the main Chromatics csproj's local Logitech swap so the
+         harness builds against the same DLL. Revert alongside the main
+         csproj before committing. -->
+    <Reference Include="RGB.NET.Devices.Logitech">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Logitech.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Avalonia" Version="12.0.3" />
     <PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.3" />
