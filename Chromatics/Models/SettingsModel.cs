@@ -49,6 +49,12 @@ namespace Chromatics.Models
         public bool deviceWootingEnabled { get; set; } = true;
         public bool deviceNovationEnabled { get; set; } = true;
         public bool deviceOpenRGBEnabled { get; set; } = false;
+        // Hidden setting — not exposed in the Settings UI. Edit
+        // settings.chromatics4 manually to point Chromatics at a remote
+        // OpenRGB SDK server (e.g. an OpenRGB instance running on another
+        // machine on the LAN). Default 127.0.0.1 covers the common case
+        // of the SDK server running locally. Port stays hardcoded at 6742.
+        public string openRgbServerIp { get; set; } = "127.0.0.1";
         public bool deviceHueEnabled { get; set; } = false;
         public bool devicePlayStationEnabled { get; set; } = false;
         public bool deviceLifxEnabled { get; set; } = false;

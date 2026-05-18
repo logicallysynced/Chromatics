@@ -10,7 +10,7 @@
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.2.19.0</Version>
+    <Version>4.2.20.0</Version>
     <Authors>Danielle Thompson</Authors>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Copyright>logicallysynced 2026</Copyright>
@@ -83,14 +83,22 @@
     <PackageReference Include="RGB.NET.Core" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Devices.Asus" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="3.2.0" />
-    <PackageReference Include="RGB.NET.Devices.Corsair" Version="3.2.0" />
+    <!-- RGB.NET.Devices.Corsair swapped to a local DLL for ad-hoc debugging
+         (see Build Dependencies/RGB.NET/). -->
+    <!--<PackageReference Include="RGB.NET.Devices.Corsair" Version="3.2.0" />-->
     <!-- RGB.NET.Devices.Logitech swapped to a local DLL for ad-hoc debugging
          (see Build Dependencies/RGB.NET/). Revert to PackageReference before
          committing. -->
     <!--<PackageReference Include="RGB.NET.Devices.Logitech" Version="3.2.0" />-->
     <PackageReference Include="RGB.NET.Devices.Msi" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Devices.Novation" Version="3.2.0" />
-    <PackageReference Include="RGB.NET.Devices.OpenRGB" Version="3.2.0" />
+    <!-- RGB.NET.Devices.OpenRGB swapped to a local DLL for ad-hoc debugging
+         (see Build Dependencies/RGB.NET/). OpenRGB.NET stays as a direct
+         PackageReference - it was previously brought in transitively by
+         the now-commented-out provider package. Version matches what
+         RGB.NET.Devices.OpenRGB's deps.json calls for. -->
+    <!--<PackageReference Include="RGB.NET.Devices.OpenRGB" Version="3.2.0" />-->
+    <PackageReference Include="OpenRGB.NET" Version="3.1.1" />
     <!-- RGB.NET.Devices.Razer swapped to a local DLL for ad-hoc debugging
          (see Build Dependencies/RGB.NET/). -->
     <!--<PackageReference Include="RGB.NET.Devices.Razer" Version="3.2.0" />-->
@@ -120,6 +128,14 @@
     </Reference>
     <Reference Include="RGB.NET.Devices.SteelSeries">
       <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.SteelSeries.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Corsair">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Corsair.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.OpenRGB">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.OpenRGB.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>

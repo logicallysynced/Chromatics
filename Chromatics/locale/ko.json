@@ -921,5 +921,11 @@
   "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "{0}개의 동적 레이어를 {1}에 복사했습니다. {2}개의 소스 LED에는 대상 매핑이 없어 건너뛰었습니다.",
   "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Windows 동적 조명: 다른 Chromatics 공급자가 이미 담당하는 장치의 제어를 허용합니다.",
   "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "동적 조명: 다른 Chromatics 공급자가 이미 담당하는 장치의 제어를 허용합니다.",
-  "Press the button on the Hue bridge BEFORE clicking Submit.": "제출을 클릭하기 전에 Hue 브리지의 버튼을 누르세요."
+  "Press the button on the Hue bridge BEFORE clicking Submit.": "제출을 클릭하기 전에 Hue 브리지의 버튼을 누르세요.",
+  "Enable/disable OpenRGB device library. Requires the OpenRGB SDK server to be running (OpenRGB -> Settings -> SDK Server -> Start at Application Start). Default: Disabled": "OpenRGB 장치 라이브러리를 활성화/비활성화합니다. OpenRGB SDK 서버가 실행 중이어야 합니다(OpenRGB -> 설정 -> SDK 서버 -> 애플리케이션 시작 시 시작). 기본값: 비활성화",
+  "No OpenRGB devices found": "OpenRGB 장치를 찾을 수 없음",
+  "Chromatics connected to the OpenRGB SDK server but it reports no devices. Open OpenRGB on the host machine, confirm at least one device shows up there, then enable this provider again. To target a remote server, set openRgbServerIp in settings.chromatics4 (Chromatics %AppData% folder).": "Chromatics가 OpenRGB SDK 서버에 연결되었지만 서버에서 장치가 없다고 보고합니다. 호스트 컴퓨터에서 OpenRGB를 열고, 장치가 하나 이상 표시되는지 확인한 다음 이 공급자를 다시 활성화하세요. 원격 서버를 대상으로 하려면 settings.chromatics4(Chromatics %AppData% 폴더)에서 openRgbServerIp를 설정하세요.",
+  "OpenRGB SDK server unreachable": "OpenRGB SDK 서버에 연결할 수 없음",
+  "Chromatics couldn't reach the OpenRGB SDK server. Open OpenRGB on the host machine, go to Settings -> SDK Server, and enable 'Start at Application Start'. To target a remote server, set openRgbServerIp in settings.chromatics4 (Chromatics %AppData% folder).": "Chromatics가 OpenRGB SDK 서버에 연결할 수 없습니다. 호스트 컴퓨터에서 OpenRGB를 열고 설정 -> SDK 서버로 이동한 다음 '애플리케이션 시작 시 시작'을 활성화하세요. 원격 서버를 대상으로 하려면 settings.chromatics4(Chromatics %AppData% 폴더)에서 openRgbServerIp를 설정하세요.",
+  "Chromatics connected to the OpenRGB SDK server but it reports no devices. Open OpenRGB on the host machine, confirm at least one device shows up there, then enable this provider again.": "Chromatics가 OpenRGB SDK 서버에 연결되었지만, 서버에서 보고된 장치가 없습니다. 호스트 컴퓨터에서 OpenRGB를 열고 하나 이상의 장치가 표시되는지 확인한 다음 이 제공자를 다시 활성화하세요."
 }

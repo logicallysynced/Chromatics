@@ -920,5 +920,11 @@
   "Copied {0} dynamic layer(s) to {1}. {2} source LED(s) had no destination mapping and were skipped.": "已将 {0} 个动态图层复制到 {1}。{2} 个源 LED 没有目标映射，已被跳过。",
   "Windows Dynamic Lighting: allow control of devices already covered by another Chromatics provider.": "Windows 动态光效：允许控制已由其他 Chromatics 提供程序覆盖的设备。",
   "Dynamic Lighting: Allow control of devices already covered by another Chromatics provider.": "动态光效：允许控制已由另一个 Chromatics 提供程序覆盖的设备。",
-  "Press the button on the Hue bridge BEFORE clicking Submit.": "在点击“提交”之前，请先按下 Hue 网桥上的按钮。"
+  "Press the button on the Hue bridge BEFORE clicking Submit.": "在点击“提交”之前，请先按下 Hue 网桥上的按钮。",
+  "Enable/disable OpenRGB device library. Requires the OpenRGB SDK server to be running (OpenRGB -> Settings -> SDK Server -> Start at Application Start). Default: Disabled": "启用/禁用 OpenRGB 设备库。需要 OpenRGB SDK 服务器正在运行（OpenRGB -> 设置 -> SDK 服务器 -> 应用程序启动时启动）。默认值：禁用",
+  "No OpenRGB devices found": "未找到 OpenRGB 设备",
+  "Chromatics connected to the OpenRGB SDK server but it reports no devices. Open OpenRGB on the host machine, confirm at least one device shows up there, then enable this provider again. To target a remote server, set openRgbServerIp in settings.chromatics4 (Chromatics %AppData% folder).": "Chromatics 已连接到 OpenRGB SDK 服务器，但服务器报告没有设备。请在主机上打开 OpenRGB，确认其中至少显示一个设备，然后再次启用此提供程序。若要指定远程服务器，请在 settings.chromatics4（Chromatics 的 %AppData% 文件夹）中设置 openRgbServerIp。",
+  "OpenRGB SDK server unreachable": "无法访问 OpenRGB SDK 服务器",
+  "Chromatics couldn't reach the OpenRGB SDK server. Open OpenRGB on the host machine, go to Settings -> SDK Server, and enable 'Start at Application Start'. To target a remote server, set openRgbServerIp in settings.chromatics4 (Chromatics %AppData% folder).": "Chromatics 无法访问 OpenRGB SDK 服务器。请在主机上打开 OpenRGB，转到“设置 -> SDK 服务器”，并启用“应用程序启动时启动”。若要指定远程服务器，请在 settings.chromatics4（Chromatics 的 %AppData% 文件夹）中设置 openRgbServerIp。",
+  "Chromatics connected to the OpenRGB SDK server but it reports no devices. Open OpenRGB on the host machine, confirm at least one device shows up there, then enable this provider again.": "Chromatics 已连接到 OpenRGB SDK 服务器，但服务器报告没有设备。请在主机上打开 OpenRGB，确认其中至少显示一个设备，然后再次启用此提供程序。"
 }

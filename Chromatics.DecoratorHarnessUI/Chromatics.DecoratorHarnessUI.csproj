@@ -31,6 +31,14 @@
       <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.SteelSeries.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RGB.NET.Devices.Corsair">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Corsair.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.OpenRGB">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.OpenRGB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

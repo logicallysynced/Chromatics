@@ -132,11 +132,100 @@ namespace Chromatics.ViewModels
                 () => RGBController.UnloadDeviceProvider(NovationDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.deviceNovationEnabled = v; AppSettings.SaveSettings(cur); }));
 
-            DeviceToggles.Add(MakeDeviceToggle("OpenRGB", "Enable/disable OpenRGB device library. Default: Disabled",
+            // OpenRGB is special — it can't enumerate devices until it has
+            // connected to an SDK server. If the server isn't running the
+            // provider throws on Load; if the server is running but has no
+            // devices configured the provider loads cleanly with an empty
+            // Devices list. Both modes need user-facing feedback (a generic
+            // "toggle silently turned itself off" leaves the user staring
+            // at a dead checkbox). Mirrors the LIFX / Yeelight / QMK
+            // patterns: empty-result auto-untoggle + dialog, connection-
+            // refused catch + dialog.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "OpenRGB",
+                "Enable/disable OpenRGB device library. Requires the OpenRGB SDK server to be running (OpenRGB -> Settings -> SDK Server -> Start at Application Start). Default: Disabled",
                 s.deviceOpenRGBEnabled,
-                () => RGBController.LoadDeviceProvider(OpenRGBDeviceProvider.Instance),
-                () => RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance),
-                v => { var cur = AppSettings.GetSettings(); cur.deviceOpenRGBEnabled = v; AppSettings.SaveSettings(cur); }));
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+                    var ip = string.IsNullOrWhiteSpace(cur.openRgbServerIp)
+                        ? "127.0.0.1"
+                        : cur.openRgbServerIp.Trim();
+
+                    try
+                    {
+                        // The Setup() path in RGBController only adds the
+                        // server definition if the toggle was already on at
+                        // startup. A first-time user-driven enable needs to
+                        // add it here too. AddDeviceDefinition is idempotent
+                        // enough for the common case where the user toggles
+                        // on/off without changing the IP.
+                        OpenRGBDeviceProvider.Instance.AddDeviceDefinition(new OpenRGBServerDefinition
+                        {
+                            Port = 6742,
+                            Ip = ip,
+                            ClientName = "Chromatics",
+                        });
+
+                        Logger.WriteConsole(LoggerTypes.Devices,
+                            $"[OpenRGB] Connecting to SDK server at {ip}:6742...");
+
+                        // Load runs synchronously on the UI thread and the
+                        // OpenRGB.NET client probe is sub-second when the
+                        // server is local; no Task.Run wrap needed.
+                        RGBController.LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
+
+                        int count = OpenRGBDeviceProvider.Instance.Devices.Count();
+                        if (count == 0)
+                        {
+                            // Server reachable but reports zero devices.
+                            // Pull the provider back out and flip the toggle
+                            // off so the user gets a clear "didn't take" UX
+                            // instead of a checked toggle that paints nothing.
+                            RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance);
+                            var cc = AppSettings.GetSettings();
+                            cc.deviceOpenRGBEnabled = false;
+                            AppSettings.SaveSettings(cc);
+                            Logger.WriteConsole(LoggerTypes.Devices,
+                                $"[OpenRGB] Connected to {ip}:6742 but no devices are configured in OpenRGB. Add devices in OpenRGB before enabling this provider.");
+                            await DialogService.ShowAsync(
+                                LocalizationService.Instance["No OpenRGB devices found"],
+                                LocalizationService.Instance["Chromatics connected to the OpenRGB SDK server but it reports no devices. Open OpenRGB on the host machine, confirm at least one device shows up there, then enable this provider again."]);
+                            return false;
+                        }
+
+                        Logger.WriteConsole(LoggerTypes.Devices,
+                            $"[OpenRGB] Connected to {ip}:6742 - {count} device(s) adopted");
+                        var c = AppSettings.GetSettings();
+                        c.deviceOpenRGBEnabled = true;
+                        AppSettings.SaveSettings(c);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Connection refused / timeout / DNS failure / etc.
+                        // Log the full error to console for diagnosis and
+                        // show a short user-facing dialog with the prereq.
+                        Logger.WriteConsole(LoggerTypes.Error,
+                            $"[OpenRGB] Connection to {ip}:6742 failed: {ex.Message}");
+                        try { RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance); } catch { /* best-effort */ }
+                        var c = AppSettings.GetSettings();
+                        c.deviceOpenRGBEnabled = false;
+                        AppSettings.SaveSettings(c);
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["OpenRGB SDK server unreachable"],
+                            LocalizationService.Instance["Chromatics couldn't reach the OpenRGB SDK server. Open OpenRGB on the host machine, go to Settings -> SDK Server, and enable 'Start at Application Start'. To target a remote server, set openRgbServerIp in settings.chromatics4 (Chromatics %AppData% folder)."]);
+                        return false;
+                    }
+                },
+                () =>
+                {
+                    RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance);
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceOpenRGBEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                    Logger.WriteConsole(LoggerTypes.Devices, "[OpenRGB] Provider disabled");
+                }));
 
             DeviceToggles.Add(MakeDeviceToggle("PlayStation", "Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
                 s.devicePlayStationEnabled,

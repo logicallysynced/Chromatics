@@ -183,19 +183,25 @@ namespace Chromatics.Core
 
                 if (appSettings.deviceOpenRGBEnabled)
                 {
+                    // IP comes from settings.chromatics4 (hidden field — not
+                    // exposed in the UI). Defaults to 127.0.0.1 for the
+                    // local-SDK-server case; users on a multi-machine setup
+                    // can point Chromatics at a remote server by editing
+                    // openRgbServerIp directly.
+                    var ip = string.IsNullOrWhiteSpace(appSettings.openRgbServerIp)
+                        ? "127.0.0.1"
+                        : appSettings.openRgbServerIp.Trim();
                     var openrgb = new OpenRGBServerDefinition
                     {
                         Port = 6742,
-                        Ip = "127.0.0.1",
+                        Ip = ip,
                         ClientName = "Chromatics"
                     };
 
                     OpenRGBDeviceProvider.Instance.AddDeviceDefinition(openrgb);
                     LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
 
-
-
-                }   
+                }
 
                 if (appSettings.deviceHueEnabled)
                 {
@@ -1123,7 +1129,13 @@ namespace Chromatics.Core
             }
             catch (Exception ex)
             {
-                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault().DeviceInfo.DeviceName}] LoadDeviceProvider Error: {ex.Message}");
+                // Asynchronous providers (Hue, LIFX, OpenRGB) fail before
+                // populating Devices, so the old `provider.Devices.FirstOrDefault().DeviceInfo.DeviceName`
+                // log line NRE'd inside the catch and masked the real error.
+                // Provider type name is always available and more useful for
+                // diagnosis anyway (which provider failed, not which device).
+                var label = provider?.GetType().Name ?? "Unknown";
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{label}] LoadDeviceProvider Error: {ex.Message}");
                 return false;
             }
 

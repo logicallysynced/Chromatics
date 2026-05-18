@@ -45,7 +45,41 @@ namespace Chromatics.Core
                 SaveSettings(_settings);
             }
 
+            // Any user-editable IP-shaped string fields in settings.chromatics4
+            // get validated here so a typo in the JSON doesn't blow up later
+            // inside a provider's connection logic with a less-helpful error.
+            // Validation runs against the in-memory _settings only - we don't
+            // overwrite the file, so the user still sees the same warning on
+            // every startup until they fix or remove the bad value.
+            ValidateIpFields(_settings);
+
             Chromatics.Extensions.RGB.NET.ColorCorrections.GlobalBrightnessCorrection.Instance.BrightnessPercent = _settings.globalbrightness;
+        }
+
+        // settings.chromatics4 fields that hold an IP address. Anything the
+        // user might hand-edit goes here; auto-populated nested lists (LIFX
+        // adopted devices etc.) are validated by their owning providers when
+        // the device gets re-attached, so they aren't in this list.
+        private static void ValidateIpFields(SettingsModel settings)
+        {
+            ValidateIp(nameof(settings.openRgbServerIp), settings.openRgbServerIp, "127.0.0.1",
+                v => settings.openRgbServerIp = v);
+            ValidateIp(nameof(settings.deviceHueBridgeIP), settings.deviceHueBridgeIP, "127.0.0.1",
+                v => settings.deviceHueBridgeIP = v);
+        }
+
+        // Logs + falls back when an IP-shaped settings field doesn't parse.
+        // Empty / whitespace is treated as "unset" and left alone - that's
+        // the legitimate state for fields like deviceHueBridgeIP before the
+        // user has paired a bridge. Only a non-empty value that fails
+        // IPAddress.TryParse triggers the warning.
+        private static void ValidateIp(string fieldName, string current, string defaultValue, Action<string> setter)
+        {
+            if (string.IsNullOrWhiteSpace(current)) return;
+            if (System.Net.IPAddress.TryParse(current.Trim(), out _)) return;
+            Logger.WriteConsole(LoggerTypes.Error,
+                $"[Settings] Invalid IP address in settings.chromatics4 for {fieldName}: '{current}'. Falling back to default '{defaultValue}' for this session. Edit the file to fix the value.");
+            setter(defaultValue);
         }
 
         public static SettingsModel GetSettings()

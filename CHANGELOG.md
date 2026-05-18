@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.19
+## 4.2.20
 
 - **New:** Windows Dynamic Lighting (Beta).
 - **New:** Yeelight device support (Beta).
