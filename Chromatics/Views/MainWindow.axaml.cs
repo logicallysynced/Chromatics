@@ -128,6 +128,13 @@ namespace Chromatics.Views
             // AND silent crash-event drops. SentryService.Shutdown does a sync
             // 3-second flush first so any pending events leave the wire before
             // we kill the process.
+            //
+            // Flush the OLE clipboard first so anything the user copied via
+            // Ctrl+C in the Console (or the Copy All button) materialises
+            // into the system clipboard and survives Process.Kill. Avalonia
+            // uses OLE delayed rendering for its clipboard writes; without
+            // this, paste-after-close returns empty.
+            try { Chromatics.Helpers.ClipboardHelper.FlushOleClipboard(); } catch { }
             try { Chromatics.Core.SentryService.Shutdown(); } catch { }
             try { Process.GetCurrentProcess().Kill(); } catch { }
         }

@@ -88,6 +88,22 @@ namespace Chromatics.Core
 
         private static EventHandler<ExceptionEventArgs> deviceExceptionEventHandler;
 
+        // Detects "Failed to initialize Logitech-SDK." (the exact phrase
+        // RGB.NET.Devices.Logitech surfaces when LogiLedInit returns false)
+        // and appends a follow-up console line pointing the user at G HUB.
+        // Called from every place a Logitech load failure can surface:
+        // the surface.Exception event, the provider.Exception event, and
+        // the synchronous catch inside LoadDeviceProvider. The Logitech SDK
+        // failure can route through any of those depending on whether the
+        // provider raises sync or async, so this helper covers all three.
+        private static void LogLogitechSdkHintIfNeeded(Exception ex)
+        {
+            if (ex == null) return;
+            if (!ex.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase)) return;
+            Logger.WriteConsole(Enums.LoggerTypes.Devices,
+                "[Logitech] The Logitech LightSync SDK didn't load. The SDK only loads while Logitech G HUB is running. Open G HUB on this machine, then re-enable the Logitech provider. If G HUB is already open, try restarting it.");
+        }
+
         private static TimerUpdateTrigger _timerUpdateTrigger;
 
         private const double IdleUpdateFrequency = 0.05; // 20 Hz
@@ -110,8 +126,22 @@ namespace Chromatics.Core
                 var appSettings = AppSettings.GetSettings();
 
                 //Setup Exception Events
-                surfaceExceptionEventHandler = args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}", forwardToSentry: false);
-                deviceExceptionEventHandler = (sender, e) => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {e.Exception.Message}", forwardToSentry: false);
+                // RGB.NET surfaces provider initialisation failures through
+                // either the surface.Exception event or the provider's
+                // Exception event (depends on the provider; Logitech goes
+                // through the surface). Both handlers append the same
+                // Logitech-SDK hint when the message matches, so the user
+                // sees the G HUB tip regardless of which channel fires.
+                surfaceExceptionEventHandler = args_ =>
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}", forwardToSentry: false);
+                    LogLogitechSdkHintIfNeeded(args_.Exception);
+                };
+                deviceExceptionEventHandler = (sender, e) =>
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {e.Exception.Message}", forwardToSentry: false);
+                    LogLogitechSdkHintIfNeeded(e.Exception);
+                };
 
                 surface.Exception += surfaceExceptionEventHandler;
 
@@ -1147,16 +1177,11 @@ namespace Chromatics.Core
                 var label = provider?.GetType().Name ?? "Unknown";
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{label}] LoadDeviceProvider Error: {ex.Message}");
 
-                // Logitech-SDK initialise failure is almost always "G HUB
-                // isn't running". RGB.NET surfaces it with this exact phrase;
-                // tack on a follow-up console line pointing the user at the
-                // real fix so they don't have to guess from the raw error.
-                if (provider is LogitechDeviceProvider
-                    && ex.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase))
-                {
-                    Logger.WriteConsole(Enums.LoggerTypes.System,
-                        "[Logitech] The Logitech LightSync SDK didn't load. The SDK only loads while Logitech G HUB is running. Open G HUB on this machine, then re-enable the Logitech provider. If G HUB is already open, try restarting it.");
-                }
+                // Logitech-SDK init failure can route through the catch
+                // (synchronous throw) AND/OR through the surface.Exception
+                // event handler (async). Dispatch to the shared helper so
+                // every channel produces the same G HUB tip.
+                LogLogitechSdkHintIfNeeded(ex);
 
                 loadError = ex;
                 return false;

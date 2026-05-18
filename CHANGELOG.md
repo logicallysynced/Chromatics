@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.21
+## 4.2.22
 
 - **New:** Windows Dynamic Lighting (Beta).
 - **New:** Yeelight device support (Beta).
@@ -22,6 +22,7 @@ All notable changes to Chromatics are documented here.
 - Mapping tab: when a device disappears because its provider was disabled, the device picker falls back to the first remaining device instead of showing a blank selection.
 - Fixed an issue which prevented vegas mode from starting in The Gold Saucer.
 - Fixed an issue which sometimes caused the title screen animation to play when loading between zones.
+- Fixed an issue which prevented console lines copied to the clipboard from persisting if the application closed.
 
 ## 4.1.44
 

@@ -171,6 +171,16 @@ namespace Chromatics
         // indefinitely on a slow network.
         private static void ForceTerminate(int exitCode)
         {
+            // Materialise any clipboard data the user has copied during the
+            // session so it survives this process dying. Avalonia's clipboard
+            // uses OLE delayed rendering on Windows, which means a Ctrl+C
+            // inside the Console TextBox (or any Avalonia text control) only
+            // leaves a "ask Chromatics for the bytes" pointer in Windows'
+            // clipboard chain; once Process.Kill fires the pointer is dead
+            // and the user's clipboard goes empty. OleFlushClipboard walks
+            // the pending OLE formats and serialises them into the system
+            // clipboard before we tear the process down.
+            try { Helpers.ClipboardHelper.FlushOleClipboard(); } catch { }
             try { SentryService.Shutdown(); } catch { }
             try { Process.GetCurrentProcess().Kill(); } catch { }
             // Should never reach here — Kill terminates synchronously.
