@@ -2,12 +2,14 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.18
+## 4.2.19
 
 - **New:** Windows Dynamic Lighting (Beta).
 - **New:** Yeelight device support (Beta).
 - **New:** Alienware LightFX device support (Beta).
 - **New:** Copy layers between devices. A small copy icon next to the device brightness button on the Mappings tab opens a dialog that duplicates every layer from one device onto another.
+- Multi-zone keyboards now display assignable individual keys for each zone instead of the full keyboard grid used for per-key led layouts.
+- Updated RGB.NET device providers for Razer, Logitech, SteelSeries, Corsair and OpenRGB.
 - Hue, LIFX and Yeelight tiles added to the first-run wizard, each with their own discovery flow.
 - PlayStation, Hue & LIFX devices are no longer classed as Beta.
 - Minor fixes to Logitech implementation.

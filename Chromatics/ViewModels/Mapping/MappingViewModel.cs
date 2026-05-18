@@ -565,13 +565,27 @@ namespace Chromatics.ViewModels.Mapping
             }
         }
 
+        // Below this LED count, a "keyboard" is almost certainly a zone-lit
+        // board (1-5 zone Razer / Logitech / Corsair models) rather than a
+        // per-key board. Drawing the full QWERTY layout for those gives the
+        // user 104 mappable keycaps with only a handful that actually paint
+        // - confusing, and most user mappings silently no-op. Below the
+        // threshold we drop to the same flat-grid renderer that mice,
+        // headsets, Hue and LIFX use. 20 is above any reasonable zone count
+        // (the densest zone keyboards top out around 12) and well below the
+        // ~40 minimum a real per-key keyboard exposes (alphabet alone is 26).
+        private const int ZoneKeyboardLedThreshold = 20;
+
         private VirtualDeviceViewModel BuildVirtualDevice(Guid deviceId, IRGBDevice device)
         {
             var available = new HashSet<LedId>(device.Select(l => l.Id));
             var layout = AppSettings.GetSettings().keyboardLayout;
 
+            bool isKeyboard = device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard;
+            bool isPerKeyKeyboard = isKeyboard && available.Count >= ZoneKeyboardLedThreshold;
+
             VirtualDeviceViewModel vdvm;
-            if (device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
+            if (isPerKeyKeyboard)
             {
                 vdvm = VirtualDeviceViewModel.BuildForKeyboard(deviceId, device.DeviceInfo.DeviceName, layout, available);
             }
@@ -580,12 +594,25 @@ namespace Chromatics.ViewModels.Mapping
                 // HashSet<LedId> enumerates in hash order — that's why users saw
                 // "Mouse 20, Mouse 5, Mouse 17" instead of Mouse 1..n. Sort by the
                 // LedId enum value so per-device key groups (Mouse1..MouseN,
-                // Custom1..CustomN) render in natural ascending order.
+                // Custom1..CustomN) render in natural ascending order. Zone-lit
+                // keyboards fall through here too: their LedIds (Keyboard_Custom1..N
+                // or a handful of named keys) get the same flat grid render as
+                // any non-keyboard device.
                 var keys = available
                     .OrderBy(id => (int)id)
                     .Select(id => new KeyboardKey(id.ToString(), id))
                     .ToList();
-                vdvm = VirtualDeviceViewModel.BuildFromKeys(deviceId, device.DeviceInfo.DeviceName, device.DeviceInfo.DeviceType, keys, available);
+                // For zone-lit keyboards, report LedMatrix as the VM's device
+                // type so VirtualDeviceViewModel.Build()'s internal routing
+                // chooses BuildNonKeyboardLayout (flat grid) instead of
+                // BuildKeyboardLayout (full QWERTY), and so SupportsDragReposition
+                // / RefreshVirtualDevicePositions treat the tiles as user-
+                // repositionable like any other non-keyboard device. The
+                // underlying RGB.NET device.DeviceInfo.DeviceType remains
+                // Keyboard for everyone else (RGBController, MappingLayers,
+                // LayerCopier, raid-effect device-type gates).
+                var vmDeviceType = isKeyboard ? RGBDeviceType.LedMatrix : device.DeviceInfo.DeviceType;
+                vdvm = VirtualDeviceViewModel.BuildFromKeys(deviceId, device.DeviceInfo.DeviceName, vmDeviceType, keys, available);
             }
 
             vdvm.SetPickKeyCallback(PickKey);

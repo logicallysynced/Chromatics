@@ -23,6 +23,14 @@
       <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Logitech.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RGB.NET.Devices.Razer">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Razer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.SteelSeries">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.SteelSeries.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
