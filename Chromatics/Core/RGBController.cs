@@ -1021,7 +1021,17 @@ namespace Chromatics.Core
         }
 
         public static bool LoadDeviceProvider(IRGBDeviceProvider provider)
+            => LoadDeviceProvider(provider, out _);
+
+        // Overload that surfaces the caught exception to the caller so toggle
+        // / first-run handlers can react to specific failure shapes (e.g.
+        // Logitech's "Failed to initialize Logitech-SDK." when G HUB isn't
+        // running) without re-parsing the console log. Returns null in
+        // loadError when the call succeeds or is a no-op (provider already
+        // loaded).
+        public static bool LoadDeviceProvider(IRGBDeviceProvider provider, out Exception loadError)
         {
+            loadError = null;
             try
             {
                 if (provider == null) return false;
@@ -1136,6 +1146,19 @@ namespace Chromatics.Core
                 // diagnosis anyway (which provider failed, not which device).
                 var label = provider?.GetType().Name ?? "Unknown";
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{label}] LoadDeviceProvider Error: {ex.Message}");
+
+                // Logitech-SDK initialise failure is almost always "G HUB
+                // isn't running". RGB.NET surfaces it with this exact phrase;
+                // tack on a follow-up console line pointing the user at the
+                // real fix so they don't have to guess from the raw error.
+                if (provider is LogitechDeviceProvider
+                    && ex.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase))
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.System,
+                        "[Logitech] The Logitech LightSync SDK didn't load. The SDK only loads while Logitech G HUB is running. Open G HUB on this machine, then re-enable the Logitech provider. If G HUB is already open, try restarting it.");
+                }
+
+                loadError = ex;
                 return false;
             }
 

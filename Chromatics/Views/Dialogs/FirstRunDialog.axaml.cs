@@ -9,6 +9,7 @@ using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using Chromatics.Localization;
+using RGB.NET.Devices.Logitech;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -250,8 +251,31 @@ namespace Chromatics.Views.Dialogs
             HintText.IsVisible = !anySelected;
         }
 
-        private void OnContinue(object? sender, RoutedEventArgs e)
+        private async void OnContinue(object? sender, RoutedEventArgs e)
         {
+            // Logitech probe: if the user ticked Logitech, try loading the
+            // provider now so we can catch the "G HUB not running" failure
+            // before persisting the setting and closing the wizard. The
+            // SDK only loads while G HUB is running, and surfacing that on
+            // every subsequent startup would be confusing. Other providers
+            // tolerate being enabled without their backend running (they
+            // just produce zero devices), so this probe is Logitech-only.
+            if (TileLogitech.IsChecked == true)
+            {
+                RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance, out var loadError);
+                if (loadError != null
+                    && loadError.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase))
+                {
+                    try { RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance); } catch { /* best-effort */ }
+                    TileLogitech.IsChecked = false;
+                    UpdateContinueState();
+                    await Views.Dialogs.DialogService.ShowAsync(
+                        LocalizationService.Instance["Logitech G HUB not detected"],
+                        LocalizationService.Instance["Chromatics couldn't load the Logitech LightSync SDK. The SDK only loads while Logitech G HUB is running. Open G HUB on this machine, then re-enable the Logitech provider. If G HUB is already open, try restarting it."]);
+                    return;
+                }
+            }
+
             var s = AppSettings.GetSettings();
 
             s.deviceRazerEnabled        = TileRazer.IsChecked        ?? false;

@@ -84,11 +84,45 @@ namespace Chromatics.ViewModels
                 () => RGBController.UnloadDeviceProvider(RazerDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.deviceRazerEnabled = v; AppSettings.SaveSettings(cur); }));
 
-            DeviceToggles.Add(MakeDeviceToggle("Logitech", "Enable/disable Logitech device library. Default: Enabled",
+            // Logitech is special - the LightSync SDK only loads while
+            // Logitech G HUB is running, and RGB.NET surfaces that failure
+            // with "Failed to initialize Logitech-SDK." Catch that path,
+            // flip the toggle back off, and prompt the user to start G HUB.
+            // Other Logitech failures (driver missing, permission, etc.)
+            // fall through to the generic error log and the toggle stays on
+            // so the user can re-toggle once they've fixed the underlying
+            // issue.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Logitech",
+                "Enable/disable Logitech device library. Requires Logitech G HUB to be running. Default: Enabled",
                 s.deviceLogitechEnabled,
-                () => RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance),
-                () => RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance),
-                v => { var cur = AppSettings.GetSettings(); cur.deviceLogitechEnabled = v; AppSettings.SaveSettings(cur); }));
+                async () =>
+                {
+                    RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance, out var loadError);
+                    if (loadError != null
+                        && loadError.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase))
+                    {
+                        try { RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance); } catch { /* best-effort */ }
+                        var c = AppSettings.GetSettings();
+                        c.deviceLogitechEnabled = false;
+                        AppSettings.SaveSettings(c);
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["Logitech G HUB not detected"],
+                            LocalizationService.Instance["Chromatics couldn't load the Logitech LightSync SDK. The SDK only loads while Logitech G HUB is running. Open G HUB on this machine, then re-enable the Logitech provider. If G HUB is already open, try restarting it."]);
+                        return false;
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceLogitechEnabled = true;
+                    AppSettings.SaveSettings(cur);
+                    return true;
+                },
+                () =>
+                {
+                    RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance);
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceLogitechEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
 
             DeviceToggles.Add(MakeDeviceToggle("Corsair", "Enable/disable Corsair device library. Default: Enabled",
                 s.deviceCorsairEnabled,
