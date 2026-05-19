@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Portable-build sparse package manifest for Chromatics.
+
+  Identical to AppxManifest.xml except for the package identity (Name
+  uses the ".Portable" suffix) and display strings (suffixed " (Portable)"
+  so the user can tell the two registrations apart in Settings →
+  Personalization → Dynamic Lighting → Background light control).
+
+  Having two distinct package identities lets the installer and the
+  portable coexist on the same machine — each registers its own sparse
+  package against its own ExternalLocationUri without trampling the
+  other. Without this, the Win32 fusion-identity loader rejects
+  whichever install isn't the currently-registered one with
+  "The process has no package identity" because there can only be one
+  package family for a given Name + Publisher pair.
+
+  Built by publish.py when PortableBuild=true; pairs with
+  app.fusion.portable.manifest (which carries the matching packageName
+  in the exe's embedded fusion identity).
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  IgnorableNamespaces="uap rescap uap3 uap10">
+
+  <Identity
+    Name="com.logicallysynced.Chromatics.Portable"
+    ProcessorArchitecture="x64"
+    Publisher="CN=Chromatics Maintainer, O=Chromatics Maintainer, L=Earth, S=Earth, C=AU"
+    Version="{{VERSION}}" />
+
+  <Properties>
+    <DisplayName>Chromatics (Portable)</DisplayName>
+    <PublisherDisplayName>logicallysynced</PublisherDisplayName>
+    <Logo>Square150x150Logo.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.22621.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Applications>
+    <Application Id="Chromatics"
+                 Executable="current\Chromatics.exe"
+                 EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="Chromatics (Portable)"
+        Description="FFXIV RGB lighting app (Portable)"
+        BackgroundColor="transparent"
+        Square150x150Logo="Square150x150Logo.png"
+        Square44x44Logo="Square44x44Logo.png" />
+      <Extensions>
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension
+            Name="com.microsoft.windows.lighting"
+            Id="ChromaticsPortableLighting"
+            PublicFolder="Public"
+            DisplayName="Chromatics (Portable)" />
+        </uap3:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
+  </Capabilities>
+</Package>

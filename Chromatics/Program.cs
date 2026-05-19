@@ -55,8 +55,21 @@ namespace Chromatics
             // package registration before Velopack kills the process, so the
             // app stops appearing in Settings → Personalization → Dynamic
             // Lighting → Background light control after uninstall.
+            //
+            // OnBeforeUpdateFastCallback runs the same Deregister against the
+            // OUTGOING build before Velopack swaps the current\ tree. Without
+            // it the OS keeps file handles on current\Chromatics.exe (because
+            // the sparse package is registered with ExternalLocationUri
+            // pointing there) and Velopack fails with "Failed to remove
+            // existing application directory". The incoming version
+            // re-registers itself on next launch via EnsureRegistered.
             VelopackApp.Build()
                 .OnBeforeUninstallFastCallback(_ =>
+                {
+                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                        SparsePackageRegistrar.Deregister();
+                })
+                .OnBeforeUpdateFastCallback(_ =>
                 {
                     if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
                         SparsePackageRegistrar.Deregister();
@@ -137,21 +150,29 @@ namespace Chromatics
             {
                 SparsePackageRegistrar.EnsureRegistered();
 
-                // The OS loader binds fusion-manifest identity at CreateProcess
-                // time — meaning the process that performs the FIRST registration
-                // is forever without identity, because it started before the
-                // package existed in the registry. Relaunch once (sentinel arg
-                // prevents loops) so the new process picks up the binding and
-                // background Dynamic Lighting works without the user having to
-                // close-and-reopen Chromatics by hand.
-                if (!args.Contains(PostRegisterRestartArg) && !SparsePackageRegistrar.HasPackageIdentity())
+                // Gate the identity check + relaunch path on a bundled
+                // Chromatics.appx. Debug builds and IDE F5 runs don't ship
+                // the .appx, so EnsureRegistered already short-circuited;
+                // running the Package.Current probe and the relaunch on
+                // top of that would (a) raise a first-chance
+                // InvalidOperationException every debug session, and
+                // (b) detach the VS debugger via RestartForPackageIdentity.
+                // Packaged builds keep the full flow: the OS loader binds
+                // fusion-manifest identity at CreateProcess time, so the
+                // process that performed the first registration is forever
+                // without identity; the sentinel-armed relaunch picks up
+                // the binding without the user having to close-and-reopen.
+                if (SparsePackageRegistrar.HasBundledAppx())
                 {
-                    Logger.WriteVerbose("[SparsePackage] Process started before package was registered; relaunching once to bind identity");
-                    RestartForPackageIdentity(args);
-                    return;
-                }
+                    if (!args.Contains(PostRegisterRestartArg) && !SparsePackageRegistrar.HasPackageIdentity())
+                    {
+                        Logger.WriteVerbose("[SparsePackage] Process started before package was registered; relaunching once to bind identity");
+                        RestartForPackageIdentity(args);
+                        return;
+                    }
 
-                SparsePackageRegistrar.LogPackageIdentity();
+                    SparsePackageRegistrar.LogPackageIdentity();
+                }
             }
 
             try

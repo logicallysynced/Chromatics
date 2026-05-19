@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using Chromatics.Core;
 using Chromatics.Enums;
@@ -20,10 +21,33 @@ namespace Chromatics.Views
         public MainWindow()
         {
             InitializeComponent();
+            EnsureTaskbarIconLoaded();
             DataContext = new MainWindowViewModel();
             Opened += OnOpened;
             Closed += OnClosed;
             Closing += OnClosing;
+        }
+
+        // Defensive re-load of the window icon. The Icon="avares://..."
+        // attribute on the AXAML root is resolved through Avalonia's asset
+        // pipeline at parse time; if that resolution races (notably after
+        // FirstRunDialog tear-down, or when the styled-element graph is
+        // still warming up on cold start) it lands as null and Windows
+        // shows the default blank taskbar entry instead of our icon.
+        // Re-opening the asset stream and assigning a fresh WindowIcon
+        // after InitializeComponent() bypasses whatever the parser saw
+        // and lets the window register the real icon before Show() runs.
+        private void EnsureTaskbarIconLoaded()
+        {
+            try
+            {
+                using var stream = AssetLoader.Open(new Uri("avares://Chromatics/Resources/Chromatics_icon_128x128.png"));
+                Icon = new WindowIcon(stream);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[MainWindow] Could not re-load taskbar icon: {ex.GetType().Name} — {ex.Message}");
+            }
         }
 
         private async void OnOpened(object sender, EventArgs e)

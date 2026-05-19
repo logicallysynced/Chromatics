@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <assemblyIdentity version="1.0.0.0" name="Chromatics"/>
+
+  <!--
+    Portable-build fusion-identity manifest. Embedded by publish.py when
+    PortableBuild=true. Same shape as app.fusion.manifest, but the msix
+    packageName points at the portable sparse-package identity so the
+    Win32 fusion-identity loader binds the portable's exe to the portable
+    sparse package (com.logicallysynced.Chromatics.Portable), not the
+    installer's package (com.logicallysynced.Chromatics).
+
+    Having distinct fusion references per build is what lets installer
+    and portable coexist on the same machine — each carries its own
+    package family in the embedded manifest, so the OS treats them as
+    unrelated apps for identity-binding purposes.
+
+    The three msix attributes MUST exactly match the corresponding
+    fields in Resources/SparsePackage/AppxManifest.Portable.xml.
+    Keep the trustInfo / compatibility blocks below in sync with
+    app.manifest + app.fusion.manifest; only the msix packageName
+    differs between the two fusion variants.
+  -->
+  <msix xmlns="urn:schemas-microsoft-com:msix.v1"
+        publisher="CN=Chromatics Maintainer, O=Chromatics Maintainer, L=Earth, S=Earth, C=AU"
+        packageName="com.logicallysynced.Chromatics.Portable"
+        applicationId="Chromatics" />
+
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+    <security>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 / 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+    </application>
+  </compatibility>
+
+</assembly>

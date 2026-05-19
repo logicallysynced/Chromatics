@@ -54,6 +54,19 @@ namespace Chromatics.Helpers
         // (dev/IDE launches never see a spurious update prompt).
         public static async Task<UpdateResult?> CheckAsync(bool includeBeta)
         {
+#if PORTABLE_BUILD
+            // Portable builds carry the com.logicallysynced.Chromatics.Portable
+            // fusion identity, while the update feed serves nupkgs built with
+            // the installer's com.logicallysynced.Chromatics identity.
+            // Applying one of those nupkgs in-place would replace the portable's
+            // Chromatics.exe with one whose fusion manifest points at the
+            // installer's sparse package, leaving the portable unable to start
+            // (Windows would reject it with "The process has no package
+            // identity"). Portable users update by downloading a fresh
+            // Chromatics-win-Portable-X.Y.Z.zip from the website.
+            Logger.WriteVerbose("[Update] Portable build — in-app update check skipped.");
+            return null;
+#else
             var probeMgr = new UpdateManager(new SimpleWebSource(StableFeedUrl));
             if (!probeMgr.IsInstalled)
                 return null;
@@ -72,6 +85,7 @@ namespace Chromatics.Helpers
             }
 
             return stableResult ?? betaResult;
+#endif
         }
 
         // Fetches one feed and returns null (silently) when the feed is unreachable

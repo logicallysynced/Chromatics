@@ -1,3 +1,4 @@
+using Chromatics.Enums;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -26,9 +27,19 @@ namespace Chromatics.Core
     [SupportedOSPlatform("windows10.0.19041.0")]
     public static class SparsePackageRegistrar
     {
-        // Must match Identity.Name + Publisher in Resources/SparsePackage/AppxManifest.xml.
-        // Windows looks the registered package up by these two fields below.
+        // PackageName must match Identity.Name + Publisher in the bundled
+        // AppxManifest.xml (or AppxManifest.Portable.xml for the portable
+        // build). publish.py sets -p:PortableBuild=true on the portable's
+        // dotnet publish pass, which defines PORTABLE_BUILD and embeds
+        // app.fusion.portable.manifest in the exe — so the installer's
+        // and portable's SparsePackageRegistrar each register their own
+        // distinct package family and the two installs don't trample each
+        // other's fusion-identity binding on the same machine.
+#if PORTABLE_BUILD
+        private const string PackageName      = "com.logicallysynced.Chromatics.Portable";
+#else
         private const string PackageName      = "com.logicallysynced.Chromatics";
+#endif
         private const string PackagePublisher = "CN=Chromatics Maintainer, O=Chromatics Maintainer, L=Earth, S=Earth, C=AU";
         private const string AppxFileName     = "Chromatics.appx";
 
@@ -88,11 +99,73 @@ namespace Chromatics.Core
             {
                 Logger.WriteVerbose("[SparsePackage] Process has NO package identity — background Dynamic Lighting will not work (foreground only)");
                 LogEmbeddedManifestCheck();
+
+                // Only surface a user-visible hint on Console when this install
+                // *expected* to be packaged — i.e. when the bundled Chromatics
+                // .appx exists alongside the exe. Debug/unsigned builds skip
+                // the registrar entirely (no .appx), so there's no value in
+                // telling those users that DL background access is missing —
+                // it was never intended to work for that build.
+                if (HasBundledAppx())
+                {
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[DynamicLighting] Background access is unavailable — Chromatics will only paint Dynamic Lighting devices while it has foreground focus. " +
+                        "Try Settings → Advanced → Reset Chromatics to re-register the sparse package, then relaunch.");
+                }
             }
             catch (Exception ex)
             {
                 Logger.WriteVerbose($"[SparsePackage] Identity check failed: {ex.GetType().Name} — {ex.Message}");
             }
+        }
+
+        // True when Chromatics.appx ships alongside Chromatics.exe — i.e.
+        // when this is a release / portable / installer build that
+        // *expects* to be packaged. Debug builds and IDE F5 runs ship
+        // without the .appx, so package identity will never bind for
+        // them no matter what; the identity check + relaunch flow in
+        // Program.cs gates on this to avoid (a) the noisy first-chance
+        // InvalidOperationException from Package.Current, and (b) the
+        // automatic relaunch that detaches the VS debugger.
+        public static bool HasBundledAppx()
+        {
+            try
+            {
+                var exeDir = Path.GetDirectoryName(Environment.ProcessPath);
+                return !string.IsNullOrEmpty(exeDir) && File.Exists(Path.Combine(exeDir, AppxFileName));
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Compares the package's registered external path against the directory
+        // the current exe expects to register under. Returns false on mismatch
+        // (forces re-registration). Treats unreadable EffectiveExternalPath as
+        // a mismatch so old packages registered without an external location
+        // get refreshed too. Path comparison is case-insensitive and normalises
+        // trailing slashes via Path.GetFullPath.
+        private static bool ExternalPathMatches(Windows.ApplicationModel.Package pkg, string expectedDir)
+        {
+            string registered = SafeExternalPath(pkg);
+            if (string.IsNullOrEmpty(registered)) return false;
+            try
+            {
+                var normRegistered = Path.GetFullPath(registered).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                var normExpected   = Path.GetFullPath(expectedDir).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                return string.Equals(normRegistered, normExpected, StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static string SafeExternalPath(Windows.ApplicationModel.Package pkg)
+        {
+            try { return pkg.EffectiveExternalPath ?? string.Empty; }
+            catch { return string.Empty; }
         }
 
         // Byte-searches the running .exe for the fusion-manifest msix namespace
@@ -115,7 +188,7 @@ namespace Chromatics.Core
                 var marker = System.Text.Encoding.UTF8.GetBytes("urn:schemas-microsoft-com:msix.v1");
                 bool nsFound = ContainsBytes(bytes, marker);
 
-                var pkgMarker = System.Text.Encoding.UTF8.GetBytes("com.logicallysynced.Chromatics");
+                var pkgMarker = System.Text.Encoding.UTF8.GetBytes(PackageName);
                 bool pkgNameFound = ContainsBytes(bytes, pkgMarker);
 
                 Logger.WriteVerbose($"[SparsePackage] Embedded manifest check on {exePath}: msix-namespace={nsFound}, packageName={pkgNameFound}");
@@ -173,21 +246,6 @@ namespace Chromatics.Core
                     return;
                 }
 
-                // Already registered at the same version? No-op.
-                // FindPackagesForUser("") = current user. Filtering by name + publisher
-                // sidesteps having to compute the publisher hash for the family name.
-                var existing = pm.FindPackagesForUser(string.Empty, PackageName, PackagePublisher);
-                foreach (var pkg in existing)
-                {
-                    var v = pkg.Id.Version;
-                    var installed = new Version(v.Major, v.Minor, v.Build, v.Revision);
-                    if (installed == currentAppVersion)
-                    {
-                        Logger.WriteVerbose($"[SparsePackage] Already registered at {installed}; no action needed");
-                        return;
-                    }
-                }
-
                 // External location must cover Velopack's full launch chain.
                 // The portable / installed layout puts Chromatics.exe
                 // (ExecutionStub) at the parent folder and current\Chromatics.exe
@@ -206,6 +264,35 @@ namespace Chromatics.Core
                     var parent = Path.GetDirectoryName(exeDir);
                     if (!string.IsNullOrEmpty(parent))
                         externalLocationDir = parent;
+                }
+
+                // Already registered at the same version AND for this exe's path?
+                // No-op. The path check matters when the user has both the
+                // installer build and the portable build on the same machine —
+                // sparse-package identity is bound to ExternalLocationUri, so
+                // a package registered for path A won't grant identity to a
+                // process started from path B. Without this, switching between
+                // builds leaves background DL silently broken until the user
+                // hits Reset Chromatics. FindPackagesForUser("") = current
+                // user; filtering by name + publisher sidesteps having to
+                // compute the publisher hash for the family name.
+                var existing = pm.FindPackagesForUser(string.Empty, PackageName, PackagePublisher);
+                foreach (var pkg in existing)
+                {
+                    var v = pkg.Id.Version;
+                    var installed = new Version(v.Major, v.Minor, v.Build, v.Revision);
+                    bool versionMatch = installed == currentAppVersion;
+                    bool pathMatch = ExternalPathMatches(pkg, externalLocationDir);
+                    if (versionMatch && pathMatch)
+                    {
+                        Logger.WriteVerbose($"[SparsePackage] Already registered at {installed} for {externalLocationDir}; no action needed");
+                        return;
+                    }
+                    if (!versionMatch)
+                        Logger.WriteVerbose($"[SparsePackage] Re-registering: installed version {installed} differs from app {currentAppVersion}");
+                    if (!pathMatch)
+                        Logger.WriteVerbose($"[SparsePackage] Re-registering: registered external path '{SafeExternalPath(pkg)}' differs from current exe location '{externalLocationDir}'");
+                    break;
                 }
 
                 Logger.WriteVerbose($"[SparsePackage] Registering {currentAppVersion} from {appxPath} (external location {externalLocationDir})");

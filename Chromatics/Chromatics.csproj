@@ -10,15 +10,24 @@
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.2.48.0</Version>
+    <Version>4.2.50.0</Version>
     <Authors>Danielle Thompson</Authors>
     <!-- ApplicationManifest is conditional: local Debug + Release builds embed
          app.manifest (no fusion-identity <msix> element) so VS debug runs and
          dev `dotnet build` invocations launch without a registered sparse
          package on the box. publish.py sets -p:IncludeFusionIdentity=true to
-         swap in app.fusion.manifest for the signed release build. -->
+         swap in app.fusion.manifest for the signed release build.
+
+         publish.py additionally sets -p:PortableBuild=true for the portable
+         pass; that swaps in app.fusion.portable.manifest (which references
+         the com.logicallysynced.Chromatics.Portable package) and defines the
+         PORTABLE_BUILD compile constant so SparsePackageRegistrar registers
+         against the portable sparse-package identity. The two fusion
+         variants let installer + portable coexist on the same machine. -->
     <ApplicationManifest Condition="'$(IncludeFusionIdentity)' != 'true'">app.manifest</ApplicationManifest>
-    <ApplicationManifest Condition="'$(IncludeFusionIdentity)' == 'true'">app.fusion.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(IncludeFusionIdentity)' == 'true' And '$(PortableBuild)' != 'true'">app.fusion.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(IncludeFusionIdentity)' == 'true' And '$(PortableBuild)' == 'true'">app.fusion.portable.manifest</ApplicationManifest>
+    <DefineConstants Condition="'$(PortableBuild)' == 'true'">$(DefineConstants);PORTABLE_BUILD</DefineConstants>
     <Copyright>logicallysynced 2026</Copyright>
     <PackageProjectUrl>https://chromaticsffxiv.com</PackageProjectUrl>
     <NeutralLanguage>en-AU</NeutralLanguage>

@@ -2,24 +2,22 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.48
+## 4.2.50
 
-- **New:** Windows Dynamic Lighting (Beta).
-- **New:** Yeelight device support (Beta).
-- **New:** Alienware LightFX device support (Beta).
-- **New:** Copy layers between devices. A small copy icon next to the device brightness button on the Mappings tab opens a dialog that duplicates every layer from one device onto another.
-- Multi-zone keyboards now display assignable individual keys for each zone instead of the full keyboard grid used for per-key led layouts.
+- **New:** Windows Dynamic Lighting support. This is currently in beta.
+- **New:** Yeelight device support. This is currently in beta.
+- **New:** Alienware LightFX device support. This is currently in beta.
+- **New:** Layers can now be copied between devices. A new copy icon next to the device brightness button on the **Mappings** tab opens a dialog that duplicates every layer from one device onto another.
+- Hue, LIFX and Yeelight have been added to the first-run wizard, each with their own discovery flow.
+- PlayStation, Hue and LIFX devices are no longer classed as beta.
+- Multi-zone keyboards now show assignable keys for each zone instead of using the full keyboard grid intended for per-key LED layouts.
 - Updated RGB.NET device providers for Razer, Logitech, SteelSeries, Corsair and OpenRGB.
-- Hue, LIFX and Yeelight tiles added to the first-run wizard, each with their own discovery flow.
-- PlayStation, Hue & LIFX devices are no longer classed as Beta.
-- Minor fixes to Logitech implementation.
-- Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
-- Bumped the project's minimum Windows target to Windows 10 1809 (build 17763).
-- Chromatics installer is now officially signed for extra security.
-- Fixed an issue which prevented vegas mode from starting in The Gold Saucer.
-- Fixed an issue which sometimes caused the title screen animation to play when loading between zones.
-- Fixed an issue which prevented console lines copied to the clipboard from persisting if the application closed.
-- Minor fixes and improvements
+- Chromatics is now officially code-signed for additional installer security.
+- Increased the minimum Windows target to Windows 10 version 1809, build 17763.
+- Fixed an issue that prevented Vegas Mode from starting in The Gold Saucer.
+- Fixed an issue that could cause the title screen animation to play when loading between zones.
+- Fixed an issue where console lines copied to the clipboard could be lost when Chromatics closed.
+- Minor fixes and improvements.
 
 ## 4.1.44
 
