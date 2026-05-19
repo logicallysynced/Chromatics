@@ -56,7 +56,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
                 return results;
             }
 
-            Logger.WriteConsole(LoggerTypes.Devices,
+            Logger.WriteVerbose(
                 $"[QMK] Enumerated {all.Length} HID device(s) on the USB bus; scanning for the Raw HID interface (usage page 0x{QmkRawHidConstants.RawHidUsagePage:X4}, usage 0x{QmkRawHidConstants.RawHidUsage:X2})...");
 
             int rawHidCandidates = 0;
@@ -72,28 +72,33 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
 
                 int inLen = caps.InputReportByteLength;
                 int outLen = caps.OutputReportByteLength;
-                Logger.WriteConsole(LoggerTypes.Devices,
+                Logger.WriteVerbose(
                     $"[QMK] Candidate: VID=0x{hid.VendorID:X4} PID=0x{hid.ProductID:X4} ({SafeProductName(hid)} / {SafeManufacturer(hid)}); report sizes in={inLen}, out={outLen}");
 
                 if (!TryHandshake(hid, inLen, outLen, out var protocol, out int ledCount, out byte cols, out byte rows, out string fwName, out string failureReason))
                 {
                     openFailures++;
-                    Logger.WriteConsole(LoggerTypes.Devices,
-                        $"[QMK]   handshake skipped — {failureReason}",
-                        forwardToSentry: false);
+                    Logger.WriteVerbose($"[QMK]   handshake skipped — {failureReason}");
                     continue;
                 }
 
                 if (protocol == ProtocolSupport.None)
                 {
                     handshakeMisses++;
-                    Logger.WriteConsole(LoggerTypes.Devices,
-                        "[QMK]   neither VIA nor OpenRGB-QMK responded; firmware probably doesn't have Raw HID enabled.");
+                    string detail = string.IsNullOrEmpty(failureReason)
+                        ? "neither VIA nor OpenRGB-QMK responded; firmware probably doesn't have Raw HID enabled."
+                        : $"firmware enumerated the Raw HID interface but didn't reply to either VIA or OpenRGB-QMK ({failureReason}). "
+                          + $"This Raw HID interface advertises {inLen}-byte input / {outLen}-byte output reports. "
+                          + "The usual culprit on the firmware side is a RAW_EPSIZE mismatch — the USB descriptor and openrgb.c's raw_hid_send disagree on packet size, so the kernel drops every reply at the length check. "
+                          + "OpenRGB-QMK upstream convention is 64-byte reports; if you're rolling your own build, add OPT_DEFS += -DRAW_EPSIZE=64 to the keymap rules.mk so the 64 propagates into every translation unit, not just openrgb.c.";
+                    // Keep this on the Console tab — it's actionable troubleshooting
+                    // for a user whose Raw HID device enumerated but didn't respond.
+                    Logger.WriteConsole(LoggerTypes.Devices, $"[QMK]   {detail}");
                     continue;
                 }
 
                 bool hasKeyboardSibling = HasKeyboardInterface(all, hid.VendorID, hid.ProductID);
-                Logger.WriteConsole(LoggerTypes.Devices,
+                Logger.WriteVerbose(
                     $"[QMK]   handshake OK — protocol: {protocol}, LEDs: {ledCount}, matrix: {cols}x{rows}, keyboardSibling: {hasKeyboardSibling}");
                 results.Add(new Candidate(hid, protocol, ledCount, cols, rows, fwName, hasKeyboardSibling, inLen, outLen));
             }
@@ -105,7 +110,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
                 return a.Hid.ProductID.CompareTo(b.Hid.ProductID);
             });
 
-            Logger.WriteConsole(LoggerTypes.Devices,
+            Logger.WriteVerbose(
                 $"[QMK] Discovery done: {all.Length} HID devices total, {rawHidCandidates} with Raw HID interface, " +
                 $"{openFailures} could not be opened, {handshakeMisses} did not respond to handshake, {results.Count} usable.");
 
@@ -269,11 +274,18 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
                 // routes this to whichever handler is compiled in.
                 ClearReport(outBuf);
                 OpenRgbQmkProtocol.BuildGetProtocolVersion(new Span<byte>(outBuf, 1, payloadOut));
+                Logger.WriteVerbose(
+                    $"[QMK]   sending GetProtocolVersion probe (cmd=0x01) — {outputReportByteLength}-byte report...");
+                var sw = System.Diagnostics.Stopwatch.StartNew();
                 if (!SendAndReceive(stream, outBuf, inBuf, out int rxBytes, out string probeError))
                 {
-                    failureReason = $"protocol-version probe failed ({probeError})";
+                    sw.Stop();
+                    failureReason = $"protocol-version probe failed after {sw.ElapsedMilliseconds}ms ({probeError})";
                     return true; // not an open failure — just a non-responsive device
                 }
+                sw.Stop();
+                Logger.WriteVerbose(
+                    $"[QMK]   received {rxBytes} bytes in {sw.ElapsedMilliseconds}ms; first 4 bytes: 0x{inBuf[0]:X2} 0x{inBuf[1]:X2} 0x{(rxBytes > 2 ? inBuf[2] : 0):X2} 0x{(rxBytes > 3 ? inBuf[3] : 0):X2}, terminator at [{inputReportByteLength - 1}]: 0x{(rxBytes >= inputReportByteLength ? inBuf[inputReportByteLength - 1] : 0):X2}");
 
                 bool openRgbTerminator = rxBytes >= inputReportByteLength
                     && inBuf[inputReportByteLength - 1] == OpenRgbQmkProtocol.Response_EndOfMessage;

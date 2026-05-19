@@ -256,8 +256,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                 return list;
             }
 
-            var records = FetchAllLedRecords(stream, candidate);
-            if (records.Count == 0)
+            var raw = FetchAllLedRecords(stream, candidate);
+            if (raw.Count == 0)
             {
                 // OpenRGB-QMK responded to GetDeviceInfo but failed to return
                 // LED records — degrade to a synthetic grid sized by LedCount
@@ -266,20 +266,16 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                 return SyntheticGrid(candidate.LedCount, candidate.MatrixColumns);
             }
 
-            return QmkKeymapFetcher.BuildLayout(keymap, records);
+            return BuildLayoutFromKeycodes(raw);
         }
 
         // Pulls the firmware's per-LED records via Cmd_GetLedInfo. Each record
-        // is 7 bytes: x | y | flags | r | g | b | keycode. We re-bin the
-        // (x, y) pixel coords (QMK's rgb_matrix coordinate system, x in
-        // 0..224, y in 0..64 by convention) into the matrix-column / row
-        // space the bundled keymap.Labels are indexed by — first by scanning
-        // the records to find the actual x_max / y_max the firmware reports,
-        // then dividing by an even bin. Boards that follow the standard QMK
-        // convention land on the expected (col, row) and pick up semantic
-        // LedIds; non-standard boards fall through to Custom1+i via
-        // BuildLayout's existing fallback.
-        private static List<(int firmwareIndex, byte col, byte row)> FetchAllLedRecords(HidStream stream, QmkRawHidDiscovery.Candidate candidate)
+        // is 7 bytes: x | y | flags | r | g | b | keycode. The keycode byte
+        // is the HID usage ID for the keymap[0][row][col] entry at the
+        // matrix position this LED occupies — QmkKeycodeMap.FromKeycodeByte
+        // resolves that to LedId.Keyboard_* directly, skipping the lossy
+        // x/y → col/row binning the previous implementation used.
+        private static List<(int firmwareIndex, byte x, byte y, byte keycode)> FetchAllLedRecords(HidStream stream, QmkRawHidDiscovery.Candidate candidate)
         {
             int outLen = candidate.OutputReportByteLength > 0 ? candidate.OutputReportByteLength : 33;
             int inLen  = candidate.InputReportByteLength  > 0 ? candidate.InputReportByteLength  : 33;
@@ -292,9 +288,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             byte[] inBuf  = new byte[inLen];
 
             int totalLeds = candidate.LedCount;
-            // (firmwareIndex, x, y, keycode) — keycode currently unused but
-            // kept for future semantic-LedId mapping via QmkKeycodeMap byte
-            // lookup. x_max / y_max drive the binning step.
             var raw = new List<(int idx, byte x, byte y, byte keycode)>(totalLeds);
 
             int next = 0;
@@ -329,26 +322,103 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                 next += wantCount;
             }
 
-            if (raw.Count == 0) return new List<(int, byte, byte)>();
+            return raw;
+        }
 
-            byte xMax = 0, yMax = 0;
-            foreach (var r in raw) { if (r.x > xMax) xMax = r.x; if (r.y > yMax) yMax = r.y; }
-            // Approximate matrix dimensions — firmware reports the product
-            // (matrixSize) but not the rows/cols split. Use the candidate's
-            // best guess from discovery, falling back to a sqrt-derived split.
-            int approxCols = candidate.MatrixColumns > 0 ? candidate.MatrixColumns
-                : Math.Max(1, (int)Math.Round(Math.Sqrt(raw.Count * 17.0 / 6.0)));
-            int approxRows = candidate.MatrixRows > 0 ? candidate.MatrixRows
-                : Math.Max(1, (raw.Count + approxCols - 1) / approxCols);
+        // Maps each LED to a semantic LedId via its firmware-reported keycode.
+        // Underglow LEDs and vendor-custom keycodes (Keychron FN, brightness
+        // cycle, etc. — usually 0xA0+) return LedId.Invalid from
+        // QmkKeycodeMap.FromKeycodeByte and fall back to Custom1+i so they
+        // remain individually addressable on the Mappings tab. Position on
+        // the rendered keyboard uses the firmware's (x, y) pixel coords
+        // (QMK's rgb_matrix coordinate system, x in 0..224, y in 0..64).
+        private static IReadOnlyList<QmkLedLayoutEntry> BuildLayoutFromKeycodes(
+            IReadOnlyList<(int firmwareIndex, byte x, byte y, byte keycode)> raw)
+        {
+            const float scale = 4f; // scale 0..224 pixel coords down to a reasonable on-screen footprint
+            const float cell = 60f;
+            var entries = new List<QmkLedLayoutEntry>(raw.Count);
+            var seen = new HashSet<LedId>();
+            var diag = new System.Text.StringBuilder();
+            diag.Append("[QMK] per-LED resolution (firmwareIndex / keycode / resolved LedId):");
 
-            var records = new List<(int, byte, byte)>(raw.Count);
-            foreach (var r in raw)
+            for (int i = 0; i < raw.Count; i++)
             {
-                byte col = xMax == 0 ? (byte)0 : (byte)Math.Clamp(r.x * (approxCols - 1) / xMax, 0, approxCols - 1);
-                byte row = yMax == 0 ? (byte)0 : (byte)Math.Clamp(r.y * (approxRows - 1) / yMax, 0, approxRows - 1);
-                records.Add((r.idx, col, row));
+                var rec = raw[i];
+                LedId resolved = ResolveKeycodePositionAware(rec.keycode, rec.x, rec.y);
+                LedId finalId = resolved;
+                string suffix = string.Empty;
+                if (finalId == LedId.Invalid)
+                {
+                    finalId = (LedId)((int)LedId.Custom1 + i);
+                    suffix = " (no keycode mapping)";
+                }
+                else if (!seen.Add(finalId))
+                {
+                    finalId = (LedId)((int)LedId.Custom1 + i);
+                    suffix = $" (collision with earlier {resolved})";
+                }
+
+                diag.Append($"\n  #{rec.firmwareIndex} kc=0x{rec.keycode:X2} (x={rec.x},y={rec.y}) -> {finalId}{suffix}");
+
+                var location = new Point(rec.x * scale, rec.y * scale);
+                var size = new Size(cell, cell);
+                entries.Add(new QmkLedLayoutEntry(rec.firmwareIndex, rec.x, rec.y, finalId, location, size));
             }
-            return records;
+
+            Logger.WriteVerbose(diag.ToString());
+            return entries;
+        }
+
+        // QMK exposes only the LOW BYTE of the 16-bit keycode in GetLedInfo,
+        // so Keychron's QK_KB_0+N customs (KC_MCTRL=0x7E00 → low byte 0x00,
+        // KC_LOPTN=0x7E02 → 0x02, KC_LCMMD=0x7E04 → 0x04 collides with KC_A,
+        // etc.) can't be distinguished from standard HID usage IDs by the
+        // byte alone. The Y coordinate disambiguates: QMK's rgb_matrix
+        // coordinate system places the F-row near y=0, the bottom modifier
+        // row near y=64, and the alpha keys between roughly y=26 and y=49.
+        // We override the standard mapping for the low-byte values that
+        // Keychron's c3_pro_8k custom-keycode enum claims, but only when the
+        // LED is in the matching row range — alpha keys at y∈[26,49] keep
+        // their KC_A..KC_Z mappings.
+        private const byte FRowYMax       = 10;
+        private const byte ModRowYMin     = 60;
+
+        private static LedId ResolveKeycodePositionAware(byte keycode, byte x, byte y)
+        {
+            if (y <= FRowYMax)
+            {
+                // F-row Keychron customs + underglow control keys whose low
+                // bytes collide with real keys further down the keyboard.
+                // Returning a specific LedId (F3/F4/F5/F6/PrintScreen) gives
+                // the F-row LED a semantic slot; returning Invalid sends the
+                // LED to Custom_* and lets the real key claim its standard
+                // LedId.
+                switch (keycode)
+                {
+                    case 0x00: return LedId.Keyboard_F3;          // KC_MAC_MISSION_CONTROL
+                    case 0x01: return LedId.Keyboard_F4;          // KC_MAC_LAUCHPAD
+                    case 0x06: return LedId.Invalid;              // KC_MAC_SIRI — collides with KC_C, no LedId target
+                    case 0x09: return LedId.Keyboard_PrintScreen; // KC_MAC_SCREEN_SHOT (KC_SNAP)
+                    case 0x21: return LedId.Invalid;              // UG_NEXT — collides with KC_4
+                    case 0x27: return LedId.Keyboard_F6;          // UG_VALU at the F6 position
+                    case 0x28: return LedId.Keyboard_F5;          // UG_VALD at the F5 position
+                }
+            }
+            else if (y >= ModRowYMin)
+            {
+                // Bottom modifier-row Keychron customs. Same enum, different
+                // physical positions.
+                switch (keycode)
+                {
+                    case 0x01: return LedId.Keyboard_Application; // MO(MAC_FN) — FN_MAC at the Right App / Menu position. Low byte is the layer index (1 for MAC_FN).
+                    case 0x02: return LedId.Keyboard_LeftAlt;    // KC_LOPTN
+                    case 0x03: return LedId.Keyboard_RightAlt;   // KC_ROPTN
+                    case 0x04: return LedId.Keyboard_LeftGui;    // KC_LCMMD (overrides KC_A here)
+                    case 0x05: return LedId.Keyboard_RightGui;   // KC_RCMMD (overrides KC_B here)
+                }
+            }
+            return QmkKeycodeMap.FromKeycodeByte(keycode);
         }
 
         private static IReadOnlyList<QmkLedLayoutEntry> SyntheticGrid(int ledCount, byte hintColumns)

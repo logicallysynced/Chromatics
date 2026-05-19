@@ -14,17 +14,18 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
         public const ushort RawHidUsagePage = 0xFF60;
         public const ushort RawHidUsage     = 0x61;
 
-        // QMK Raw HID transfers are 32-byte payloads. Windows HidSharp
-        // expects an extra leading report-id byte, so the output buffer
-        // is 33 bytes total (report id 0 + 32 data bytes). Reply reports
-        // are the same shape minus the leading id on the HidSharp read
-        // side (HidStream strips the id from inputs).
-        public const int  ReportPayloadBytes  = 32;
-        public const int  OutputReportBytes   = ReportPayloadBytes + 1;
+        // The actual per-device raw HID report size is read from HIDP_CAPS
+        // at discovery time and carried on Candidate / QmkRawHidClientDefinition
+        // — stock QMK builds expose 32-byte reports, OpenRGB-QMK builds
+        // expose 64-byte reports, and a build that gets it wrong (e.g.
+        // RAW_EPSIZE redefined inside openrgb.h but not propagated globally
+        // via OPT_DEFS) silently drops every reply. The transport layer
+        // honours whatever the firmware advertises rather than hardcoding
+        // either side of that.
 
         // Default request/response wait. Most QMK Raw HID round-trips
         // complete in ~5-20ms over USB Full Speed; 250ms is generous
         // and matches OpenRGB's default for the same protocol.
-        public const int  ResponseTimeoutMs   = 250;
+        public const int  ResponseTimeoutMs = 250;
     }
 }

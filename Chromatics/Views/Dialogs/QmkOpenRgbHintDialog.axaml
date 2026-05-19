@@ -50,6 +50,11 @@
                            Opacity="0.85"
                            Text="{loc:Tr Key='Chromatics does not provide instructions, support, or pre-built firmware images for the OpenRGB-QMK firmware module. Building and flashing custom firmware is between you, the QMK keymap on the device, and the OpenRGB-QMK project. A bad flash can brick a device - only attempt this if you can recover from one.'}" />
 
+                <TextBlock TextWrapping="Wrap"
+                           FontStyle="Italic"
+                           Opacity="0.85"
+                           Text="{loc:Tr Key='If Chromatics detects the QMK Raw HID interface but the device never responds, the usual firmware-side cause is a RAW_EPSIZE mismatch: the USB descriptor and openrgb.c are compiled with different packet sizes, so the kernel drops every reply at its length check. OpenRGB-QMK upstream convention is 64-byte reports - put OPT_DEFS += -DRAW_EPSIZE=64 in the keymap rules.mk so the 64 reaches every translation unit, not just openrgb.c.'}" />
+
             </StackPanel>
         </ScrollViewer>
 

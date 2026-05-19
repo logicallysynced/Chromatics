@@ -24,6 +24,138 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             return _map.TryGetValue(key, out var id) ? id : LedId.Invalid;
         }
 
+        // HID keyboard usage IDs → RGB.NET LedId. OpenRGB-QMK's GetLedInfo
+        // returns the layer-0 keycode at byte +6 of each 7-byte record; the
+        // low byte of a QMK basic keycode is the HID usage ID, so we can
+        // map LEDs to semantic LedIds without needing matrix-coord guesses
+        // or the bundled keymap JSON. Unknown / Keychron-vendor keycodes
+        // (0xA0+ for FN, brightness, RGB cycle, etc.) return LedId.Invalid
+        // and the caller falls back to Custom1+i.
+        public static LedId FromKeycodeByte(byte hidUsage)
+        {
+            return _keycodeMap.TryGetValue(hidUsage, out var id) ? id : LedId.Invalid;
+        }
+
+        private static readonly FrozenDictionary<byte, LedId> _keycodeMap =
+            new Dictionary<byte, LedId>
+            {
+                // 0x04-0x1D = A-Z
+                [0x04] = LedId.Keyboard_A, [0x05] = LedId.Keyboard_B, [0x06] = LedId.Keyboard_C,
+                [0x07] = LedId.Keyboard_D, [0x08] = LedId.Keyboard_E, [0x09] = LedId.Keyboard_F,
+                [0x0A] = LedId.Keyboard_G, [0x0B] = LedId.Keyboard_H, [0x0C] = LedId.Keyboard_I,
+                [0x0D] = LedId.Keyboard_J, [0x0E] = LedId.Keyboard_K, [0x0F] = LedId.Keyboard_L,
+                [0x10] = LedId.Keyboard_M, [0x11] = LedId.Keyboard_N, [0x12] = LedId.Keyboard_O,
+                [0x13] = LedId.Keyboard_P, [0x14] = LedId.Keyboard_Q, [0x15] = LedId.Keyboard_R,
+                [0x16] = LedId.Keyboard_S, [0x17] = LedId.Keyboard_T, [0x18] = LedId.Keyboard_U,
+                [0x19] = LedId.Keyboard_V, [0x1A] = LedId.Keyboard_W, [0x1B] = LedId.Keyboard_X,
+                [0x1C] = LedId.Keyboard_Y, [0x1D] = LedId.Keyboard_Z,
+
+                // 0x1E-0x27 = 1, 2, 3, 4, 5, 6, 7, 8, 9, 0
+                [0x1E] = LedId.Keyboard_1, [0x1F] = LedId.Keyboard_2, [0x20] = LedId.Keyboard_3,
+                [0x21] = LedId.Keyboard_4, [0x22] = LedId.Keyboard_5, [0x23] = LedId.Keyboard_6,
+                [0x24] = LedId.Keyboard_7, [0x25] = LedId.Keyboard_8, [0x26] = LedId.Keyboard_9,
+                [0x27] = LedId.Keyboard_0,
+
+                // 0x28-0x38 = Enter, Esc, Backspace, Tab, Space, -, =, [, ], \, NUHS, ;, ', `, ,, ., /
+                [0x28] = LedId.Keyboard_Enter,
+                [0x29] = LedId.Keyboard_Escape,
+                [0x2A] = LedId.Keyboard_Backspace,
+                [0x2B] = LedId.Keyboard_Tab,
+                [0x2C] = LedId.Keyboard_Space,
+                [0x2D] = LedId.Keyboard_MinusAndUnderscore,
+                [0x2E] = LedId.Keyboard_EqualsAndPlus,
+                [0x2F] = LedId.Keyboard_BracketLeft,
+                [0x30] = LedId.Keyboard_BracketRight,
+                [0x31] = LedId.Keyboard_Backslash,
+                [0x32] = LedId.Keyboard_Backslash, // NonUsHash → closest ANSI sibling
+                [0x33] = LedId.Keyboard_SemicolonAndColon,
+                [0x34] = LedId.Keyboard_ApostropheAndDoubleQuote,
+                [0x35] = LedId.Keyboard_GraveAccentAndTilde,
+                [0x36] = LedId.Keyboard_CommaAndLessThan,
+                [0x37] = LedId.Keyboard_PeriodAndBiggerThan,
+                [0x38] = LedId.Keyboard_SlashAndQuestionMark,
+
+                // 0x39 = Caps Lock, 0x3A-0x45 = F1-F12
+                [0x39] = LedId.Keyboard_CapsLock,
+                [0x3A] = LedId.Keyboard_F1,  [0x3B] = LedId.Keyboard_F2,  [0x3C] = LedId.Keyboard_F3,
+                [0x3D] = LedId.Keyboard_F4,  [0x3E] = LedId.Keyboard_F5,  [0x3F] = LedId.Keyboard_F6,
+                [0x40] = LedId.Keyboard_F7,  [0x41] = LedId.Keyboard_F8,  [0x42] = LedId.Keyboard_F9,
+                [0x43] = LedId.Keyboard_F10, [0x44] = LedId.Keyboard_F11, [0x45] = LedId.Keyboard_F12,
+
+                // 0x46-0x4E = PrintScreen, Scroll Lock, Pause, Insert, Home, PageUp, Delete, End, PageDown
+                [0x46] = LedId.Keyboard_PrintScreen,
+                [0x47] = LedId.Keyboard_ScrollLock,
+                [0x48] = LedId.Keyboard_PauseBreak,
+                [0x49] = LedId.Keyboard_Insert,
+                [0x4A] = LedId.Keyboard_Home,
+                [0x4B] = LedId.Keyboard_PageUp,
+                [0x4C] = LedId.Keyboard_Delete,
+                [0x4D] = LedId.Keyboard_End,
+                [0x4E] = LedId.Keyboard_PageDown,
+
+                // 0x4F-0x52 = Right, Left, Down, Up arrows
+                [0x4F] = LedId.Keyboard_ArrowRight,
+                [0x50] = LedId.Keyboard_ArrowLeft,
+                [0x51] = LedId.Keyboard_ArrowDown,
+                [0x52] = LedId.Keyboard_ArrowUp,
+
+                // 0x53-0x63 = NumLock, Numpad /, *, -, +, Enter, 1-9, 0, .
+                [0x53] = LedId.Keyboard_NumLock,
+                [0x54] = LedId.Keyboard_NumSlash,
+                [0x55] = LedId.Keyboard_NumAsterisk,
+                [0x56] = LedId.Keyboard_NumMinus,
+                [0x57] = LedId.Keyboard_NumPlus,
+                [0x58] = LedId.Keyboard_NumEnter,
+                [0x59] = LedId.Keyboard_Num1, [0x5A] = LedId.Keyboard_Num2, [0x5B] = LedId.Keyboard_Num3,
+                [0x5C] = LedId.Keyboard_Num4, [0x5D] = LedId.Keyboard_Num5, [0x5E] = LedId.Keyboard_Num6,
+                [0x5F] = LedId.Keyboard_Num7, [0x60] = LedId.Keyboard_Num8, [0x61] = LedId.Keyboard_Num9,
+                [0x62] = LedId.Keyboard_Num0,
+                [0x63] = LedId.Keyboard_NumPeriodAndDelete,
+
+                // 0x64 = ISO non-US backslash, 0x65 = Application/Menu
+                [0x64] = LedId.Keyboard_NonUsBackslash,
+                [0x65] = LedId.Keyboard_Application,
+
+                // 0xE0-0xE7 = Left/Right Ctrl/Shift/Alt/GUI
+                [0xE0] = LedId.Keyboard_LeftCtrl,
+                [0xE1] = LedId.Keyboard_LeftShift,
+                [0xE2] = LedId.Keyboard_LeftAlt,
+                [0xE3] = LedId.Keyboard_LeftGui,
+                [0xE4] = LedId.Keyboard_RightCtrl,
+                [0xE5] = LedId.Keyboard_RightShift,
+                [0xE6] = LedId.Keyboard_RightAlt,
+                [0xE7] = LedId.Keyboard_RightGui,
+
+                // Note: keycodes 0x00..0x0B overlap Keychron's QK_KB custom
+                // range (KC_MAC_MISSION_CONTROL, KC_LOPTN, KC_LCMMD, etc.)
+                // whose enum order varies per board, so they're resolved
+                // position-aware in QmkRawHidRGBDeviceProvider's
+                // ResolveKeycodePositionAware rather than here. The standard
+                // map below covers HID usage IDs only.
+
+                // Consumer (Mac F-row) keycodes — Keychron Mac base layer
+                // populates F1-F12 with brightness/media keys (KC_BRID,
+                // KC_MCTRL, KC_MPRV, KC_MUTE, etc.) whose low byte falls
+                // into the 0xA8..0xC2 consumer range. The firmware exposes
+                // keymaps[0] only, so these are what GetLedInfo reports for
+                // the F-row regardless of which OS-base layer the user is
+                // on. Map them back to Keyboard_F1..F12 so Chromatics's
+                // keyboard layers paint the F-row positions. Two slots
+                // (F5/F6 = UG_VALD/UG_VALU on Keychron, low byte 0x28/0x27)
+                // collide with KC_ENTER/KC_0 and fall through to Custom_*
+                // via the dedupe step in BuildLayoutFromKeycodes.
+                [0xBE] = LedId.Keyboard_F1,   // KC_BRIGHTNESS_DOWN
+                [0xBD] = LedId.Keyboard_F2,   // KC_BRIGHTNESS_UP
+                [0xC1] = LedId.Keyboard_F3,   // KC_MISSION_CONTROL (KC_MCTRL)
+                [0xC2] = LedId.Keyboard_F4,   // KC_LAUNCHPAD (KC_LNPAD)
+                [0xAC] = LedId.Keyboard_F7,   // KC_MEDIA_PREV_TRACK (KC_MPRV)
+                [0xAE] = LedId.Keyboard_F8,   // KC_MEDIA_PLAY_PAUSE (KC_MPLY)
+                [0xAB] = LedId.Keyboard_F9,   // KC_MEDIA_NEXT_TRACK (KC_MNXT)
+                [0xA8] = LedId.Keyboard_F10,  // KC_AUDIO_MUTE (KC_MUTE)
+                [0xAA] = LedId.Keyboard_F11,  // KC_AUDIO_VOL_DOWN (KC_VOLD)
+                [0xA9] = LedId.Keyboard_F12,  // KC_AUDIO_VOL_UP (KC_VOLU)
+            }.ToFrozenDictionary();
+
         // Stored as a FrozenDictionary because lookups happen during layout
         // construction (once per device + LED count) and the table never
         // changes at runtime. Case-insensitive — covers "Esc"/"ESC"/"esc".

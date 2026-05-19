@@ -41,7 +41,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
         // The firmware encodes LED info as a 7-byte record per LED:
         //   x | y | flags | r | g | b | keycode
         public const int LedInfoRecordBytes = 7;
-        public const int MaxLedRecordsPerGetLedInfo_RawEpSize64 = (64 - 1) / LedInfoRecordBytes;
+        // Budget = payloadBytes - 1 (cmd echo at [0]) - 1 (END_OF_MESSAGE
+        // terminator at [payloadBytes-1]). The firmware writes the terminator
+        // *after* the LED records, so a record whose 7th byte (keycode)
+        // lands on [payloadBytes-1] gets clobbered — every 9th LED would
+        // come back with keycode 0x64 if we asked for 9 records per packet.
+        public const int MaxLedRecordsPerGetLedInfo_RawEpSize64 = (64 - 2) / LedInfoRecordBytes;
 
         // ── Frame builders ────────────────────────────────────────────
 
@@ -192,7 +197,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
 
         public static int MaxLedRecordsPerGetLedInfo(int payloadBytes)
         {
-            int budget = payloadBytes - 1;
+            int budget = payloadBytes - 2;
             return budget > 0 ? budget / LedInfoRecordBytes : 0;
         }
     }

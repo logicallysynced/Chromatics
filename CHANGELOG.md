@@ -2,9 +2,8 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.40
+## 4.2.48
 
-- Fixed QMK devices running the OpenRGB-QMK firmware module timing out at provider startup. The handshake was speaking an out-of-date command set and undersized HID reports; it now matches what the firmware actually expects and falls back cleanly when the device speaks VIA instead.
 - **New:** Windows Dynamic Lighting (Beta).
 - **New:** Yeelight device support (Beta).
 - **New:** Alienware LightFX device support (Beta).
