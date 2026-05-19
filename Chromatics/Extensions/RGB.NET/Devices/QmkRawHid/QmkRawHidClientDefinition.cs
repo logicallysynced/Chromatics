@@ -18,7 +18,9 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             QmkRawHidProtocolMode protocol,
             byte matrixColumns, byte matrixRows,
             string viaKeymapKey,
-            IReadOnlyList<QmkLedLayoutEntry> layout)
+            IReadOnlyList<QmkLedLayoutEntry> layout,
+            int inputReportByteLength,
+            int outputReportByteLength)
         {
             VendorId = vendorId;
             ProductId = productId;
@@ -31,6 +33,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             MatrixRows = matrixRows;
             ViaKeymapKey = viaKeymapKey ?? string.Empty;
             Layout = layout ?? System.Array.Empty<QmkLedLayoutEntry>();
+            InputReportByteLength = inputReportByteLength;
+            OutputReportByteLength = outputReportByteLength;
         }
 
         public int VendorId { get; }
@@ -43,6 +47,16 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
         public byte MatrixColumns { get; }
         public byte MatrixRows { get; }
         public string ViaKeymapKey { get; }
+
+        // Report sizes from HidP_GetCaps (Windows). These include the leading
+        // report-id byte that HidStream prepends/strips, so the actual data
+        // payload is OutputReportByteLength - 1 / InputReportByteLength - 1.
+        // VIA firmware typically reports 33 / 33 (RAW_EPSIZE=32). OpenRGB-QMK
+        // firmware reports 65 / 65 (RAW_EPSIZE=64). Earlier builds of this
+        // provider hardcoded 32-byte buffers and timed out against OpenRGB-QMK
+        // boards because the firmware's 64-byte reply never fit.
+        public int InputReportByteLength { get; }
+        public int OutputReportByteLength { get; }
 
         // One entry per RGB LED reported by the firmware, ordered by LED
         // index. For OpenRgbQmk mode this is populated from

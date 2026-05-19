@@ -16,7 +16,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
     // QMK firmware with Raw HID enabled. Talks to two protocols on the
     // same HID interface:
     //   - VIA (universal, exposes only RGB matrix mode + base hue/sat/val)
-    //   - OpenRGB-QMK plugin (per-key control via direct mode)
+    //   - OpenRGB-QMK firmware module (per-key control via direct mode)
     //
     // Protocol is decided per device at handshake. VIA-only keyboards
     // get a synthetic ANSI-104 layout built from KeyLocalization.QWERTY_Grid
@@ -169,7 +169,9 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                         matrixColumns: c.MatrixColumns,
                         matrixRows: c.MatrixRows,
                         viaKeymapKey: string.Empty,
-                        layout: layout);
+                        layout: layout,
+                        inputReportByteLength: c.InputReportByteLength,
+                        outputReportByteLength: c.OutputReportByteLength);
 
                     var trigger = (QmkRawHidUpdateTrigger)GetUpdateTrigger();
                     var queue = new QmkRawHidUpdateQueue(trigger, def, stream);
@@ -254,7 +256,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                 return list;
             }
 
-            var records = FetchAllLedRecords(stream, candidate.LedCount);
+            var records = FetchAllLedRecords(stream, candidate);
             if (records.Count == 0)
             {
                 // OpenRGB-QMK responded to GetDeviceInfo but failed to return
@@ -267,42 +269,84 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             return QmkKeymapFetcher.BuildLayout(keymap, records);
         }
 
-        private static List<(int firmwareIndex, byte col, byte row)> FetchAllLedRecords(HidStream stream, int totalLeds)
+        // Pulls the firmware's per-LED records via Cmd_GetLedInfo. Each record
+        // is 7 bytes: x | y | flags | r | g | b | keycode. We re-bin the
+        // (x, y) pixel coords (QMK's rgb_matrix coordinate system, x in
+        // 0..224, y in 0..64 by convention) into the matrix-column / row
+        // space the bundled keymap.Labels are indexed by — first by scanning
+        // the records to find the actual x_max / y_max the firmware reports,
+        // then dividing by an even bin. Boards that follow the standard QMK
+        // convention land on the expected (col, row) and pick up semantic
+        // LedIds; non-standard boards fall through to Custom1+i via
+        // BuildLayout's existing fallback.
+        private static List<(int firmwareIndex, byte col, byte row)> FetchAllLedRecords(HidStream stream, QmkRawHidDiscovery.Candidate candidate)
         {
-            var records = new List<(int, byte, byte)>(totalLeds);
-            byte[] outBuf = new byte[QmkRawHidConstants.OutputReportBytes];
-            byte[] inBuf = new byte[QmkRawHidConstants.ReportPayloadBytes + 1];
+            int outLen = candidate.OutputReportByteLength > 0 ? candidate.OutputReportByteLength : 33;
+            int inLen  = candidate.InputReportByteLength  > 0 ? candidate.InputReportByteLength  : 33;
+            int payloadOut = outLen - 1;
+
+            int recordsPerPacket = OpenRgbQmkProtocol.MaxLedRecordsPerGetLedInfo(payloadOut);
+            if (recordsPerPacket <= 0) recordsPerPacket = 1;
+
+            byte[] outBuf = new byte[outLen];
+            byte[] inBuf  = new byte[inLen];
+
+            int totalLeds = candidate.LedCount;
+            // (firmwareIndex, x, y, keycode) — keycode currently unused but
+            // kept for future semantic-LedId mapping via QmkKeycodeMap byte
+            // lookup. x_max / y_max drive the binning step.
+            var raw = new List<(int idx, byte x, byte y, byte keycode)>(totalLeds);
 
             int next = 0;
-            int safetyBudget = (totalLeds / 8) + 32; // upper bound on batch iterations
-            while (next < totalLeds && safetyBudget-- > 0)
+            while (next < totalLeds)
             {
+                int wantCount = Math.Min(recordsPerPacket, totalLeds - next);
+                Array.Clear(outBuf, 0, outBuf.Length);
                 OpenRgbQmkProtocol.BuildGetLedInfo(
-                    new Span<byte>(outBuf, 1, QmkRawHidConstants.ReportPayloadBytes),
-                    (ushort)next);
+                    new Span<byte>(outBuf, 1, payloadOut),
+                    (byte)next, (byte)wantCount);
                 try
                 {
                     stream.Write(outBuf);
                     int n = stream.Read(inBuf, 0, inBuf.Length);
-                    if (n <= 0) break;
+                    if (n <= 1) break;
                 }
                 catch { break; }
 
-                if (!OpenRgbQmkProtocol.TryParseLedInfoBatch(
-                        new ReadOnlySpan<byte>(inBuf, 1, inBuf.Length - 1),
-                        out int batchCount, out var batch))
+                var reply = new ReadOnlySpan<byte>(inBuf, 1, inBuf.Length - 1);
+                bool gotAny = false;
+                for (int i = 0; i < wantCount; i++)
                 {
-                    break;
+                    if (!OpenRgbQmkProtocol.TryParseLedInfoRecord(reply, i, out byte x, out byte y, out byte flags, out byte keycode))
+                        break;
+                    // Firmware writes OPENRGB_FAILURE (25) into the flags slot
+                    // when the LED index is out of range — bail.
+                    if (flags == OpenRgbQmkProtocol.Response_Failure) { gotAny = false; break; }
+                    raw.Add((next + i, x, y, keycode));
+                    gotAny = true;
                 }
-                if (batchCount == 0) break;
+                if (!gotAny) break;
+                next += wantCount;
+            }
 
-                for (int i = 0; i < batchCount && next < totalLeds; i++, next++)
-                {
-                    byte col = batch[i * 3];
-                    byte row = batch[i * 3 + 1];
-                    // batch[i*3+2] is the flags byte; not used here.
-                    records.Add((next, col, row));
-                }
+            if (raw.Count == 0) return new List<(int, byte, byte)>();
+
+            byte xMax = 0, yMax = 0;
+            foreach (var r in raw) { if (r.x > xMax) xMax = r.x; if (r.y > yMax) yMax = r.y; }
+            // Approximate matrix dimensions — firmware reports the product
+            // (matrixSize) but not the rows/cols split. Use the candidate's
+            // best guess from discovery, falling back to a sqrt-derived split.
+            int approxCols = candidate.MatrixColumns > 0 ? candidate.MatrixColumns
+                : Math.Max(1, (int)Math.Round(Math.Sqrt(raw.Count * 17.0 / 6.0)));
+            int approxRows = candidate.MatrixRows > 0 ? candidate.MatrixRows
+                : Math.Max(1, (raw.Count + approxCols - 1) / approxCols);
+
+            var records = new List<(int, byte, byte)>(raw.Count);
+            foreach (var r in raw)
+            {
+                byte col = xMax == 0 ? (byte)0 : (byte)Math.Clamp(r.x * (approxCols - 1) / xMax, 0, approxCols - 1);
+                byte row = yMax == 0 ? (byte)0 : (byte)Math.Clamp(r.y * (approxRows - 1) / yMax, 0, approxRows - 1);
+                records.Add((r.idx, col, row));
             }
             return records;
         }
@@ -413,7 +457,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                         c.FirmwareDeviceName, layout.Count == 0 ? 1 : layout.Count,
                         c.Protocol == QmkRawHidDiscovery.ProtocolSupport.OpenRgbQmk
                             ? QmkRawHidProtocolMode.OpenRgbQmk : QmkRawHidProtocolMode.ViaOnly,
-                        c.MatrixColumns, c.MatrixRows, string.Empty, layout);
+                        c.MatrixColumns, c.MatrixRows, string.Empty, layout,
+                        c.InputReportByteLength, c.OutputReportByteLength);
 
                     var trigger = (QmkRawHidUpdateTrigger)GetUpdateTrigger();
                     var queue = new QmkRawHidUpdateQueue(trigger, def, stream);

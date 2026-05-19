@@ -19,32 +19,27 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
         private readonly HidStream _stream;
         private readonly Lock _lock = new();
         private volatile bool _shuttingDown;
-        // Per-device disable gate — parity with LifxUpdateQueue. Toggled
-        // from RGBController.RemoveDevice / AddDevice so paint frames are
-        // dropped while the user has the keyboard disabled in the Mapping
-        // tab. Cleared on re-enable.
         private volatile bool _perDeviceDisable;
 
         private PerDeviceBrightnessCorrection _perDeviceBrightness;
 
-        // LedId → firmware LED index. Built once at construction from the
-        // client definition's Layout so per-frame lookups avoid linear scans.
         private readonly Dictionary<LedId, int> _ledIndexByLedId;
 
-        // Persistent RGB byte cache for the entire strip — same idea as
-        // LifxUpdateQueue._strip. Lets sparse decorator updates (a few LEDs
-        // changed) only resend their chunks rather than the whole strip.
-        // 3 bytes per LED (R, G, B). Null until the first frame.
         private byte[] _ledBytes;
 
-        // Single-LED VIA path coalescing: last sent hue/sat/brightness/effect
-        // tuple. Set to 0xFFFF when empty so the first frame always sends.
         private ushort _lastViaHsbHash = 0xFFFF;
 
-        // True once we've put the OpenRGB-QMK firmware into direct mode
-        // (mode 0). On enter direct mode the firmware suspends built-in
-        // RGB matrix effects so our Set commands aren't fighting them.
         private bool _openRgbDirectModeArmed;
+        private byte _openRgbDirectModeIndex;
+
+        // Buffer size derived from the device's reported OutputReportByteLength.
+        // VIA boards typically run with RAW_EPSIZE=32 → 33-byte reports; the
+        // OpenRGB-QMK plugin bumps RAW_EPSIZE to 64 → 65-byte reports. Sending
+        // a too-short report to a 64-byte endpoint leaves the firmware waiting
+        // for the rest of the packet and times out the read.
+        private readonly int _outputReportByteLength;
+        private readonly int _inputReportByteLength;
+        private readonly int _payloadOutBytes;
 
         #endregion
 
@@ -55,6 +50,9 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
         {
             _def = def;
             _stream = stream;
+            _outputReportByteLength = def.OutputReportByteLength > 0 ? def.OutputReportByteLength : 33;
+            _inputReportByteLength  = def.InputReportByteLength  > 0 ? def.InputReportByteLength  : 33;
+            _payloadOutBytes        = _outputReportByteLength - 1;
             _ledIndexByLedId = new Dictionary<LedId, int>(def.Layout.Count);
             for (int i = 0; i < def.Layout.Count; i++)
                 _ledIndexByLedId[def.Layout[i].PreferredLedId] = def.Layout[i].FirmwareIndex;
@@ -116,31 +114,25 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             Color picked = PickRepresentativeColor(dataSet);
             ToHsv255(picked, brightnessScale, out byte hue, out byte sat, out byte val);
 
-            // Pack hue/sat/val + effect index into a single 16-bit hash to
-            // cheaply detect "nothing changed since last frame" and skip
-            // the three USB writes the VIA path would otherwise burn.
-            // 7-bit hue, 5-bit sat, 4-bit val is enough resolution for
-            // change detection without ever sending a no-op.
             ushort hash = (ushort)(((hue >> 1) & 0x7F) << 9
                                 | ((sat >> 3) & 0x1F) << 4
                                 |  ((val >> 4) & 0x0F));
             if (hash == _lastViaHsbHash) return;
             _lastViaHsbHash = hash;
 
-            Span<byte> outBuf = stackalloc byte[QmkRawHidConstants.OutputReportBytes];
-            Span<byte> payload = outBuf.Slice(1, QmkRawHidConstants.ReportPayloadBytes);
+            byte[] outBuf = new byte[_outputReportByteLength];
 
-            ViaProtocol.BuildSetRgbMatrixEffect(payload, ViaProtocol.Effect_SolidColor);
+            ViaProtocol.BuildSetRgbMatrixEffect(new Span<byte>(outBuf, 1, _payloadOutBytes), ViaProtocol.Effect_SolidColor);
             WritePayload(outBuf);
 
-            ViaProtocol.BuildSetRgbMatrixColor(payload, hue, sat);
+            ViaProtocol.BuildSetRgbMatrixColor(new Span<byte>(outBuf, 1, _payloadOutBytes), hue, sat);
             WritePayload(outBuf);
 
-            ViaProtocol.BuildSetRgbMatrixBrightness(payload, val);
+            ViaProtocol.BuildSetRgbMatrixBrightness(new Span<byte>(outBuf, 1, _payloadOutBytes), val);
             WritePayload(outBuf);
         }
 
-        // ── OpenRGB-QMK path (Tier 2: per-key) ───────────────────────
+        // ── OpenRGB-QMK path (Tier 2: per-LED) ───────────────────────
 
         private void SendOpenRgbQmkFrame(ReadOnlySpan<(object key, Color color)> dataSet, double brightnessScale)
         {
@@ -149,21 +141,19 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
 
             if (_ledBytes == null) _ledBytes = new byte[total * 3];
 
-            // Arm direct mode once per session. The firmware persists the
-            // mode setting in RAM, so we don't have to re-arm every frame —
-            // but DO re-arm after a ResetCache (which clears _openRgbDirectModeArmed
-            // alongside _ledBytes, so the next Update arms again).
+            // Switch the firmware to OPENRGB_DIRECT mode once per session.
+            // SET_LEDS writes to g_openrgb_direct_mode_colors[] regardless of
+            // active mode, but those colours only reach the hardware when the
+            // active rgb_matrix effect is OPENRGB_DIRECT (the custom effect
+            // appended to the enum by the firmware module).
             if (!_openRgbDirectModeArmed)
             {
-                Span<byte> armBuf = stackalloc byte[QmkRawHidConstants.OutputReportBytes];
-                OpenRgbQmkProtocol.BuildSetMode(armBuf.Slice(1, QmkRawHidConstants.ReportPayloadBytes), modeIndex: 0);
-                WritePayload(armBuf);
+                ArmOpenRgbDirectMode();
                 _openRgbDirectModeArmed = true;
             }
 
-            // Patch dirty LEDs into _ledBytes and remember which chunks
-            // (LED indices grouped by MaxLedsPerSetRange) need re-sending.
-            int chunkSize = OpenRgbQmkProtocol.MaxLedsPerSetRange;
+            int chunkSize = OpenRgbQmkProtocol.MaxLedsPerSetLeds(_payloadOutBytes);
+            if (chunkSize <= 0) chunkSize = 1;
             int chunkCount = (total + chunkSize - 1) / chunkSize;
             Span<bool> dirty = chunkCount <= 256 ? stackalloc bool[chunkCount] : new bool[chunkCount];
 
@@ -182,10 +172,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                 dirty[idx / chunkSize] = true;
             }
 
-            // Send each dirty chunk. Inter-packet pacing keeps us within the
-            // firmware's RX queue depth on full-speed USB — 1ms is well above
-            // QMK's worst-case raw_hid_receive turnaround.
-            Span<byte> outBuf = stackalloc byte[QmkRawHidConstants.OutputReportBytes];
+            byte[] outBuf = new byte[_outputReportByteLength];
             bool first = true;
             for (int c = 0; c < chunkCount; c++)
             {
@@ -193,14 +180,61 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                 if (!first) Thread.Sleep(1);
                 first = false;
 
-                ushort start = (ushort)(c * chunkSize);
+                int start = c * chunkSize;
                 int count = Math.Min(chunkSize, total - start);
-                OpenRgbQmkProtocol.BuildSetLedRange(
-                    outBuf.Slice(1, QmkRawHidConstants.ReportPayloadBytes),
-                    start, (byte)count,
+                OpenRgbQmkProtocol.BuildDirectModeSetLeds(
+                    new Span<byte>(outBuf, 1, _payloadOutBytes),
+                    (byte)start, (byte)count,
                     new ReadOnlySpan<byte>(_ledBytes, start * 3, count * 3));
                 WritePayload(outBuf);
             }
+        }
+
+        // OPENRGB_DIRECT lives at the tail of the firmware's rgb_matrix
+        // effect enum because the RGB_MATRIX_EFFECT() macro appends custom
+        // effects after every built-in. The firmware reports the indices of
+        // its built-in enabled effects via Cmd_GetEnabledModes; OPENRGB_DIRECT
+        // is the highest valid index NOT in that list (i.e. max(enabled)+1).
+        // If the read fails or returns nothing, we fall back to mode 0 which
+        // is harmless (no effect) but won't paint either — the user can fix
+        // by selecting the OpenRGB direct mode via VIA's mode-cycling keymap.
+        private void ArmOpenRgbDirectMode()
+        {
+            byte mode = ResolveOpenRgbDirectModeIndex();
+            _openRgbDirectModeIndex = mode;
+
+            byte[] outBuf = new byte[_outputReportByteLength];
+            OpenRgbQmkProtocol.BuildSetMode(
+                new Span<byte>(outBuf, 1, _payloadOutBytes),
+                hue: 0, sat: 0, val: 255, mode: mode, speed: 0, save: false);
+            WritePayload(outBuf);
+        }
+
+        private byte ResolveOpenRgbDirectModeIndex()
+        {
+            byte[] outBuf = new byte[_outputReportByteLength];
+            byte[] inBuf  = new byte[_inputReportByteLength];
+
+            OpenRgbQmkProtocol.BuildGetEnabledModes(new Span<byte>(outBuf, 1, _payloadOutBytes));
+            try
+            {
+                _stream.Write(outBuf);
+                int n = _stream.Read(inBuf, 0, inBuf.Length);
+                if (n <= 1) return 0;
+            }
+            catch
+            {
+                return 0;
+            }
+
+            byte highest = 0;
+            for (int i = 2; i < inBuf.Length - 1; i++)
+            {
+                byte mode = inBuf[i];
+                if (mode == 0) break;
+                if (mode > highest) highest = mode;
+            }
+            return highest == 0 ? (byte)0 : (byte)(highest + 1);
         }
 
         private int TryResolveLedIndex(object key)
@@ -209,17 +243,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             return -1;
         }
 
-        // ── HID write ────────────────────────────────────────────────
-
-        private void WritePayload(ReadOnlySpan<byte> outBuf)
+        private void WritePayload(byte[] outBuf)
         {
             if (_stream == null) return;
-            try { _stream.Write(outBuf.ToArray()); }
+            try { _stream.Write(outBuf); }
             catch (System.IO.IOException ex)
             {
-                // PnP unplug between Write call and current frame. Mark
-                // shutting down so the rest of this batch becomes no-ops;
-                // the provider's hot-plug reconcile will dispose us shortly.
                 Logger.WriteConsole(LoggerTypes.Devices, $"[QMK] {_def.Product}: write failed ({ex.Message}); pausing queue.");
                 _shuttingDown = true;
             }
@@ -228,8 +257,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                 _shuttingDown = true;
             }
         }
-
-        // ── Colour helpers ───────────────────────────────────────────
 
         private static Color PickRepresentativeColor(ReadOnlySpan<(object key, Color color)> dataSet)
         {

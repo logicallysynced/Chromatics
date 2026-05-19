@@ -375,8 +375,8 @@ namespace Chromatics.Views.Dialogs
             // If the user selected QMK Keyboards, show the per-key-control
             // hint dialog. Stock QMK firmware (incl. Keychron vendor builds)
             // only exposes a single matrix base colour via VIA; per-key
-            // needs the OpenRGB-QMK plugin compiled into a custom firmware
-            // build that the user flashes themselves. Mirrors the Settings
+            // needs the OpenRGB-QMK firmware module compiled into a custom
+            // firmware build that the user flashes themselves. Mirrors the Settings
             // → Device Providers toggle path so first-run users get the
             // same expectation-setting on their first enable.
             if (s.deviceQmkRawHidEnabled && !s.qmkOpenRgbHintShown)

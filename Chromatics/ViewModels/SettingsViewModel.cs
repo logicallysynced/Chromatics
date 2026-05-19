@@ -487,8 +487,8 @@ namespace Chromatics.ViewModels
                         // colour vs OpenRGB-QMK per-key tradeoff. We never
                         // ship per-key for stock QMK firmware because the
                         // VIA protocol only exposes a single matrix base
-                        // colour; the OpenRGB-QMK plugin gives per-key, but
-                        // has to be built into a custom firmware image and
+                        // colour; the OpenRGB-QMK firmware module gives per-key,
+                        // but has to be built into a custom firmware image and
                         // flashed by the user. Surface this once so users
                         // who plug in a stock-firmware board don't think
                         // per-key support is broken in Chromatics.

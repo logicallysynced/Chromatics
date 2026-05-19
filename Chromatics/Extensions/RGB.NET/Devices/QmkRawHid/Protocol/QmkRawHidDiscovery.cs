@@ -17,38 +17,32 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
         {
             None,        // Discovered but neither VIA nor OpenRGB-QMK responded — skip.
             ViaOnly,     // Tier 1: drive base hue/sat/val via VIA's RGB matrix sub-commands.
-            OpenRgbQmk,  // Tier 2: per-key control via OpenRGB-QMK direct mode.
+            OpenRgbQmk,  // Tier 2: per-LED control via OpenRGB-QMK direct mode.
         }
 
         public readonly struct Candidate
         {
             public readonly HidDevice Hid;
             public readonly ProtocolSupport Protocol;
-            public readonly int LedCount;        // Populated when Protocol == OpenRgbQmk.
-            public readonly byte MatrixColumns;  // Optional hint from OpenRGB-QMK GetLedMatrixSize.
+            public readonly int LedCount;
+            public readonly byte MatrixColumns;
             public readonly byte MatrixRows;
             public readonly string FirmwareDeviceName;
-            // True when the same VID/PID exposes a Keyboard HID interface
-            // alongside the Raw HID one. Lets the provider distinguish a
-            // VIA-running keyboard (which gets a synthetic ANSI-104 layout
-            // so Chromatics's keyboard layers can paint it) from a VIA-
-            // running macropad / knob / specialty board (which sticks to a
-            // single Custom1 LED).
             public readonly bool HasKeyboardSibling;
+            public readonly int InputReportByteLength;
+            public readonly int OutputReportByteLength;
 
-            public Candidate(HidDevice hid, ProtocolSupport protocol, int ledCount, byte columns, byte rows, string firmwareDeviceName, bool hasKeyboardSibling)
+            public Candidate(HidDevice hid, ProtocolSupport protocol, int ledCount, byte columns, byte rows, string firmwareDeviceName, bool hasKeyboardSibling, int inputReportByteLength, int outputReportByteLength)
             {
                 Hid = hid; Protocol = protocol; LedCount = ledCount;
                 MatrixColumns = columns; MatrixRows = rows;
                 FirmwareDeviceName = firmwareDeviceName ?? string.Empty;
                 HasKeyboardSibling = hasKeyboardSibling;
+                InputReportByteLength = inputReportByteLength;
+                OutputReportByteLength = outputReportByteLength;
             }
         }
 
-        // Walks HidSharp's enumeration, filters to interfaces whose
-        // report descriptor advertises the QMK Raw HID usage, and runs
-        // the handshake on each. Output is ordered by VID:PID for
-        // stable adoption-dialog presentation across launches.
         public static IReadOnlyList<Candidate> Discover()
         {
             var results = new List<Candidate>();
@@ -71,13 +65,17 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
 
             foreach (HidDevice hid in all)
             {
-                if (!ExposesRawHidUsage(hid)) continue;
+                if (!TryGetHidCaps(hid.DevicePath, out var caps)) continue;
+                if (caps.UsagePage != QmkRawHidConstants.RawHidUsagePage) continue;
+                if (caps.Usage != QmkRawHidConstants.RawHidUsage) continue;
                 rawHidCandidates++;
 
+                int inLen = caps.InputReportByteLength;
+                int outLen = caps.OutputReportByteLength;
                 Logger.WriteConsole(LoggerTypes.Devices,
-                    $"[QMK] Candidate: VID=0x{hid.VendorID:X4} PID=0x{hid.ProductID:X4} ({SafeProductName(hid)} / {SafeManufacturer(hid)})");
+                    $"[QMK] Candidate: VID=0x{hid.VendorID:X4} PID=0x{hid.ProductID:X4} ({SafeProductName(hid)} / {SafeManufacturer(hid)}); report sizes in={inLen}, out={outLen}");
 
-                if (!TryHandshake(hid, out var protocol, out int ledCount, out byte cols, out byte rows, out string fwName, out string failureReason))
+                if (!TryHandshake(hid, inLen, outLen, out var protocol, out int ledCount, out byte cols, out byte rows, out string fwName, out string failureReason))
                 {
                     openFailures++;
                     Logger.WriteConsole(LoggerTypes.Devices,
@@ -97,7 +95,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
                 bool hasKeyboardSibling = HasKeyboardInterface(all, hid.VendorID, hid.ProductID);
                 Logger.WriteConsole(LoggerTypes.Devices,
                     $"[QMK]   handshake OK — protocol: {protocol}, LEDs: {ledCount}, matrix: {cols}x{rows}, keyboardSibling: {hasKeyboardSibling}");
-                results.Add(new Candidate(hid, protocol, ledCount, cols, rows, fwName, hasKeyboardSibling));
+                results.Add(new Candidate(hid, protocol, ledCount, cols, rows, fwName, hasKeyboardSibling, inLen, outLen));
             }
 
             results.Sort((a, b) =>
@@ -119,12 +117,6 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
         private static string SafeProductName(HidDevice hid)
         { try { return hid.GetProductName() ?? ""; } catch { return "?"; } }
 
-        // True if any HID interface on the same USB device (matched by VID/PID)
-        // declares the standard USB HID Keyboard usage (Generic Desktop page
-        // 0x01, usage 0x06). USB composite devices expose each HID interface
-        // as a separate HidDevice; QMK keyboards always expose a Keyboard
-        // interface alongside their Raw HID one, while VIA-running macropads
-        // / knob boards / one-handed boards typically don't.
         private const ushort GenericDesktopUsagePage = 0x01;
         private const ushort KeyboardUsage           = 0x06;
         private static bool HasKeyboardInterface(HidDevice[] all, int vid, int pid)
@@ -132,50 +124,22 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
             foreach (HidDevice sibling in all)
             {
                 if (sibling.VendorID != vid || sibling.ProductID != pid) continue;
-                if (TryGetTopLevelUsage(sibling.DevicePath, out ushort page, out ushort usage))
+                if (TryGetHidCaps(sibling.DevicePath, out var caps))
                 {
-                    if (page == GenericDesktopUsagePage && usage == KeyboardUsage)
+                    if (caps.UsagePage == GenericDesktopUsagePage && caps.Usage == KeyboardUsage)
                         return true;
                 }
             }
             return false;
         }
 
-        // Returns true if the HidDevice's top-level collection declares
-        // usage page 0xFF60, usage 0x61 (the QMK Raw HID identifier).
-        // Multi-interface USB devices expose each interface as a separate
-        // HidDevice, so this check naturally selects only the Raw HID
-        // interface and leaves the keyboard / consumer interfaces alone.
-        //
-        // We bypass HidSharp's GetReportDescriptor / GetRawReportDescriptor
-        // entirely on Windows. Windows doesn't expose the raw HID report
-        // descriptor bytes — HidSharp reconstructs them from
-        // HidD_GetPreparsedData + HidP_GetValueCaps + HidP_GetButtonCaps,
-        // and that reconstruction throws NotSupportedException on QMK
-        // firmwares whose descriptors include items HidSharp's parser
-        // doesn't recognise (Keychron C3 Pro 8K with current QMK
-        // confirmed). The top-level UsagePage + Usage we actually need
-        // are right there in HIDP_CAPS — querying that struct directly via
-        // P/Invoke skips the reconstruction entirely, identifies the QMK
-        // interface reliably, and avoids triggering a first-chance
-        // exception that breaks under VS debug.
-        private static bool ExposesRawHidUsage(HidDevice hid)
-        {
-            try
-            {
-                if (TryGetTopLevelUsage(hid.DevicePath, out ushort page, out ushort usage))
-                {
-                    return page == QmkRawHidConstants.RawHidUsagePage
-                        && usage == QmkRawHidConstants.RawHidUsage;
-                }
-            }
-            catch { /* discovery is best-effort */ }
-            return false;
-        }
-
-        // Win32 HIDP_CAPS layout. Only UsagePage / Usage are read; the rest
-        // of the struct must still be present for HidP_GetCaps to fill it
-        // correctly. See https://learn.microsoft.com/windows-hardware/drivers/ddi/hidpi/ns-hidpi-hidp_caps.
+        // Win32 HIDP_CAPS layout. We bypass HidSharp.GetReportDescriptor on
+        // Windows because Windows doesn't expose the raw descriptor bytes —
+        // HidSharp reconstructs them from preparsed data and throws
+        // NotSupportedException on QMK firmwares whose descriptors include
+        // items it doesn't recognise (Keychron C3 Pro 8K with OpenRGB-QMK
+        // confirmed). The top-level Usage + UsagePage and the report-size
+        // fields we need are all in HIDP_CAPS, so query that directly.
         [StructLayout(LayoutKind.Sequential)]
         private struct HIDP_CAPS
         {
@@ -225,14 +189,9 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
         private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
         private const int HIDP_STATUS_SUCCESS = 0x00110000;
 
-        // Opens the HID device with DEVICE_QUERY_ACCESS (dwDesiredAccess = 0)
-        // so the call doesn't conflict with VIA / Vial / OpenRGB holding
-        // the interface open exclusively for read/write, then pulls the
-        // top-level Usage + UsagePage out of HIDP_CAPS.
-        private static bool TryGetTopLevelUsage(string devicePath, out ushort usagePage, out ushort usage)
+        private static bool TryGetHidCaps(string devicePath, out HIDP_CAPS caps)
         {
-            usagePage = 0;
-            usage = 0;
+            caps = default;
             if (string.IsNullOrEmpty(devicePath)) return false;
 
             IntPtr handle = CreateFileW(
@@ -246,11 +205,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
                     return false;
                 try
                 {
-                    if (HidP_GetCaps(preparsed, out HIDP_CAPS caps) != HIDP_STATUS_SUCCESS)
-                        return false;
-                    usagePage = caps.UsagePage;
-                    usage = caps.Usage;
-                    return true;
+                    return HidP_GetCaps(preparsed, out caps) == HIDP_STATUS_SUCCESS;
                 }
                 finally
                 {
@@ -263,16 +218,26 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
             }
         }
 
-        // Open the candidate's HID stream and try VIA first, then
-        // OpenRGB-QMK. OpenRGB wins when both respond — it's the
-        // strictly more capable protocol. Stream is disposed before
-        // we return; the provider will reopen it for the device's
-        // permanent UpdateQueue.
-        private static bool TryHandshake(HidDevice hid, out ProtocolSupport protocol, out int ledCount, out byte cols, out byte rows, out string firmwareDeviceName, out string failureReason)
+        // Open the candidate's HID stream and probe both protocols. VIA's
+        // id_get_protocol_version and OpenRGB-QMK's GetProtocolVersion are
+        // BOTH command 0x01 — only one raw_hid_receive() handler is compiled
+        // in at a time (OpenRGB-QMK replaces VIA's when OPENRGB_ENABLE is
+        // set), so a single 0x01 probe tells us which firmware is running.
+        // We distinguish by the OpenRGB-QMK END_OF_MESSAGE terminator (0x64)
+        // the firmware writes at the last byte of every reply — VIA never
+        // sets that byte to 0x64.
+        private static bool TryHandshake(HidDevice hid, int inputReportByteLength, int outputReportByteLength,
+            out ProtocolSupport protocol, out int ledCount, out byte cols, out byte rows, out string firmwareDeviceName, out string failureReason)
         {
             protocol = ProtocolSupport.None;
             ledCount = 0; cols = 0; rows = 0; firmwareDeviceName = string.Empty;
             failureReason = string.Empty;
+
+            if (outputReportByteLength <= 1 || inputReportByteLength <= 1)
+            {
+                failureReason = $"unusable report sizes (in={inputReportByteLength}, out={outputReportByteLength})";
+                return false;
+            }
 
             HidStream stream;
             try
@@ -294,48 +259,60 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
                 stream.ReadTimeout  = QmkRawHidConstants.ResponseTimeoutMs;
                 stream.WriteTimeout = QmkRawHidConstants.ResponseTimeoutMs;
 
-                Span<byte> outBuf = stackalloc byte[QmkRawHidConstants.OutputReportBytes];
-                Span<byte> payload = outBuf.Slice(1, QmkRawHidConstants.ReportPayloadBytes);
-                byte[] inBuf = new byte[QmkRawHidConstants.ReportPayloadBytes + 1];
+                int payloadOut = outputReportByteLength - 1; // strip leading report id
+                int payloadIn  = inputReportByteLength - 1;
 
-                bool viaOk = false;
-                ViaProtocol.BuildGetProtocolVersion(payload);
-                if (SendAndReceive(stream, outBuf, inBuf))
+                byte[] outBuf = new byte[outputReportByteLength];
+                byte[] inBuf  = new byte[inputReportByteLength];
+
+                // Probe 0x01 (GetProtocolVersion in both protocols). The firmware
+                // routes this to whichever handler is compiled in.
+                ClearReport(outBuf);
+                OpenRgbQmkProtocol.BuildGetProtocolVersion(new Span<byte>(outBuf, 1, payloadOut));
+                if (!SendAndReceive(stream, outBuf, inBuf, out int rxBytes, out string probeError))
                 {
-                    if (ViaProtocol.TryParseProtocolVersion(StripReportId(inBuf)) > 0)
-                        viaOk = true;
+                    failureReason = $"protocol-version probe failed ({probeError})";
+                    return true; // not an open failure — just a non-responsive device
                 }
 
-                bool openRgbOk = false;
-                OpenRgbQmkProtocol.BuildGetProtocolVersion(payload);
-                if (SendAndReceive(stream, outBuf, inBuf))
-                {
-                    if (OpenRgbQmkProtocol.TryParseProtocolVersion(StripReportId(inBuf)) > 0)
-                        openRgbOk = true;
-                }
+                bool openRgbTerminator = rxBytes >= inputReportByteLength
+                    && inBuf[inputReportByteLength - 1] == OpenRgbQmkProtocol.Response_EndOfMessage;
 
-                if (openRgbOk)
+                ReadOnlySpan<byte> reply = StripReportId(inBuf);
+
+                if (openRgbTerminator && OpenRgbQmkProtocol.TryParseProtocolVersion(reply) > 0)
                 {
-                    OpenRgbQmkProtocol.BuildGetDeviceInfo(payload);
-                    if (SendAndReceive(stream, outBuf, inBuf) &&
+                    // Pull device info (LED count + name) while we have the stream.
+                    ClearReport(outBuf);
+                    OpenRgbQmkProtocol.BuildGetDeviceInfo(new Span<byte>(outBuf, 1, payloadOut));
+                    if (SendAndReceive(stream, outBuf, inBuf, out _, out _) &&
                         OpenRgbQmkProtocol.TryParseDeviceInfo(StripReportId(inBuf),
-                            out ushort count, out _, out _, out string name))
+                            out byte fwLedCount, out byte matrixSize, out string fwProduct, out string _))
                     {
-                        ledCount = count;
-                        firmwareDeviceName = name;
+                        ledCount = fwLedCount;
+                        firmwareDeviceName = fwProduct;
+                        // Best-effort split of matrixSize into cols/rows by
+                        // sqrt — the firmware only reports the product, not
+                        // the dimensions. Caller can override via mapping
+                        // overrides if this guess is wrong.
+                        if (matrixSize > 0)
+                        {
+                            int approx = (int)Math.Round(Math.Sqrt(matrixSize));
+                            cols = (byte)Math.Max(1, approx);
+                            rows = (byte)Math.Max(1, (matrixSize + cols - 1) / cols);
+                        }
                     }
-
-                    OpenRgbQmkProtocol.BuildGetLedMatrixSize(payload);
-                    if (SendAndReceive(stream, outBuf, inBuf))
-                    {
-                        OpenRgbQmkProtocol.TryParseLedMatrixSize(StripReportId(inBuf), out cols, out rows);
-                    }
-
                     protocol = ProtocolSupport.OpenRgbQmk;
                     return true;
                 }
 
-                if (viaOk)
+                // Treat any non-OpenRGB reply with a valid VIA protocol-version
+                // payload as VIA. ViaProtocol.TryParseProtocolVersion expects
+                // the reply layout VIA actually uses (echo at [0], version at
+                // [1..2]) — when the firmware is OpenRGB-QMK without the
+                // terminator (older builds), this still falls through to None.
+                ushort viaVersion = ViaProtocol.TryParseProtocolVersion(reply);
+                if (viaVersion > 0)
                 {
                     protocol = ProtocolSupport.ViaOnly;
                     return true;
@@ -349,20 +326,40 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol
             }
         }
 
-        private static bool SendAndReceive(HidStream stream, ReadOnlySpan<byte> outBuf, byte[] inBuf)
+        private static void ClearReport(byte[] buf) => Array.Clear(buf, 0, buf.Length);
+
+        private static bool SendAndReceive(HidStream stream, byte[] outBuf, byte[] inBuf, out int rxBytes, out string error)
         {
+            rxBytes = 0;
+            error = string.Empty;
             try
             {
-                stream.Write(outBuf.ToArray());
-                int n = stream.Read(inBuf, 0, inBuf.Length);
-                return n > 0;
+                stream.Write(outBuf);
             }
-            catch { return false; }
+            catch (Exception ex)
+            {
+                error = $"write threw: {ex.Message}";
+                return false;
+            }
+            try
+            {
+                rxBytes = stream.Read(inBuf, 0, inBuf.Length);
+                return rxBytes > 0;
+            }
+            catch (TimeoutException)
+            {
+                error = $"read timed out after {QmkRawHidConstants.ResponseTimeoutMs}ms (firmware likely doesn't recognise this command)";
+                return false;
+            }
+            catch (Exception ex)
+            {
+                error = $"read threw: {ex.Message}";
+                return false;
+            }
         }
 
-        // Strips the leading report-id byte HidSharp prepends to inputs
-        // on Windows; QMK Raw HID always uses report id 0 so the strip
-        // is unconditional.
+        // HidStream prepends a report-id byte to inputs on Windows; QMK Raw
+        // HID always uses report id 0 so we strip it unconditionally.
         private static ReadOnlySpan<byte> StripReportId(byte[] inBuf) =>
             new ReadOnlySpan<byte>(inBuf, 1, inBuf.Length - 1);
     }

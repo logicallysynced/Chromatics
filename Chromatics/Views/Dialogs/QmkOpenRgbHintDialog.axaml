@@ -37,18 +37,18 @@
                         Padding="12,10">
                     <StackPanel Spacing="6">
                         <TextBlock FontWeight="SemiBold"
-                                   Text="{loc:Tr Key='OpenRGB-QMK plugin (custom firmware)'}" />
+                                   Text="{loc:Tr Key='OpenRGB-QMK firmware module'}" />
                         <TextBlock TextWrapping="Wrap"
-                                   Text="{loc:Tr Key='Per-LED control needs the OpenRGB-QMK plugin compiled into your firmware. The plugin is a third-party add-on, not part of stock QMK. You build it into a custom QMK firmware image yourself and flash that onto your device.'}" />
+                                   Text="{loc:Tr Key='Per-LED control needs the OpenRGB-QMK firmware module compiled into your QMK build. It is a third-party add-on, not part of stock QMK - you compile it into a custom firmware image and flash that onto your device yourself.'}" />
                         <TextBlock TextWrapping="Wrap"
-                                   Text="{loc:Tr Key='Once flashed, the next launch of Chromatics detects the plugin during the QMK handshake and switches the device to per-LED direct mode automatically. No setting in Chromatics needs to change.'}" />
+                                   Text="{loc:Tr Key='Once flashed, the next Chromatics launch detects the module during the QMK handshake and switches the device to per-LED direct mode. No Chromatics setting needs to change.'}" />
                     </StackPanel>
                 </Border>
 
                 <TextBlock TextWrapping="Wrap"
                            FontStyle="Italic"
                            Opacity="0.85"
-                           Text="{loc:Tr Key='Chromatics does not provide instructions, support, or pre-built firmware images for the OpenRGB-QMK plugin. Building and flashing custom firmware is between you, your devices QMK keymap, and the OpenRGB-QMK project. A bad flash can brick a device - only attempt this if you can recover from one.'}" />
+                           Text="{loc:Tr Key='Chromatics does not provide instructions, support, or pre-built firmware images for the OpenRGB-QMK firmware module. Building and flashing custom firmware is between you, the QMK keymap on the device, and the OpenRGB-QMK project. A bad flash can brick a device - only attempt this if you can recover from one.'}" />
 
             </StackPanel>
         </ScrollViewer>
