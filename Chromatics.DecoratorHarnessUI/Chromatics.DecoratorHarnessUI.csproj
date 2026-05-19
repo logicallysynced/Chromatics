@@ -39,6 +39,10 @@
       <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.OpenRGB.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RGB.NET.Devices.PlayStation">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.PlayStation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

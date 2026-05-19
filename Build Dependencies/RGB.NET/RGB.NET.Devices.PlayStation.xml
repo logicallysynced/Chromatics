@@ -1,0 +1,238 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RGB.NET.Devices.PlayStation</name>
+    </assembly>
+    <members>
+        <member name="T:RGB.NET.Devices.PlayStation.DualSenseRGBDevice">
+            <inheritdoc cref="T:RGB.NET.Core.AbstractRGBDevice`1" />
+            <summary>
+            Represents a Sony DualSense controller (PS5 / DualSense Edge). Owns its
+            HID I/O directly — the open <see cref="T:HidSharp.HidStream"/>, the optional Win32
+            raw-write fallback, and the device path used for identity comparison
+            during hot-plug — and tears them down on <see cref="M:RGB.NET.Devices.PlayStation.DualSenseRGBDevice.Dispose"/>.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.DualSenseRGBDevice.DevicePath">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.DualSenseRGBDevice.IsKnownDisconnected">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.DualSenseRGBDevice.MarkKnownDisconnected">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.DualSenseRGBDevice.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.DualSenseUpdateQueue.SuspendWrites">
+            <summary>
+            See <see cref="M:RGB.NET.Devices.PlayStation.DualShock4UpdateQueue.SuspendWrites"/> for the contract.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.DualSenseUpdateQueue.Shutdown(System.Boolean)">
+            <summary>
+            See <see cref="M:RGB.NET.Devices.PlayStation.DualShock4UpdateQueue.Shutdown(System.Boolean)"/> for the contract.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.PlayStation.DualShock4RGBDevice">
+            <inheritdoc cref="T:RGB.NET.Core.AbstractRGBDevice`1" />
+            <summary>
+            Represents a Sony DualShock 4 controller. Owns its HID I/O directly —
+            the open <see cref="T:HidSharp.HidStream"/>, the optional Win32 raw-write fallback,
+            and the device path used for identity comparison during hot-plug — and
+            tears them down on <see cref="M:RGB.NET.Devices.PlayStation.DualShock4RGBDevice.Dispose"/>.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.DualShock4RGBDevice.DevicePath">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.DualShock4RGBDevice.IsKnownDisconnected">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.DualShock4RGBDevice.MarkKnownDisconnected">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.DualShock4RGBDevice.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.DualShock4UpdateQueue.SuspendWrites">
+            <summary>
+            Sets the queue's disposed flag so subsequent ticks short-circuit before
+            attempting any HidStream.Write. Called by the provider's immediate
+            hot-unplug handler the moment the OS reports the device is gone, so the
+            next trigger tick has nothing to write. Lighter than Shutdown — no off-
+            frame attempt, no other state mutation. Idempotent.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.DualShock4UpdateQueue.Shutdown(System.Boolean)">
+            <summary>
+            Tears down the queue. <paramref name="sendOffFrame"/> defaults to true for
+            "voluntary" teardowns (provider unloaded by the user, app exit) where the
+            controller is still connected and benefits from a clean off-state. Pass
+            false from the hot-plug-disconnect path.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.HidRawWriter.TryWrite(System.Byte[])">
+             <summary>
+             True on successful write, false on any failure (handle invalid, device
+             gone, partial write, etc.). Never throws — that's the whole point.
+             Caller checks the return value and decides whether to log, retry, or
+             self-suspend the queue.
+            
+             The first byte of <paramref name="buffer"/> must be the HID report ID,
+             matching the convention HidStream.Write uses.
+             </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.PlayStation.IPlayStationRGBDevice">
+            <summary>
+            Common contract for PlayStation controller RGB devices. Each device owns
+            its own HID I/O (HidStream + optional HidRawWriter) and DevicePath, and
+            is responsible for tearing those down on <see cref="M:System.IDisposable.Dispose"/>.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.IPlayStationRGBDevice.DevicePath">
+            <summary>The Windows / Linux HID device path the controller was opened on.</summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.IPlayStationRGBDevice.IsKnownDisconnected">
+            <summary>
+            Set by the provider's hot-plug pass when the controller has disappeared
+            from HID enumeration. Causes Dispose to skip the polite off-frame write
+            (which would just throw against the invalidated handle anyway).
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.IPlayStationRGBDevice.MarkKnownDisconnected">
+            <summary>
+            Records that the device is no longer reachable on its HID path AND
+            suspends any further writes from the update queue. Called from the
+            hot-plug callback before the debounced Reconcile fires, so the next
+            30Hz tick is a no-op rather than an exception.
+            </summary>
+        </member>
+        <member name="T:RGB.NET.Devices.PlayStation.PlayStationControllerType">
+            <summary>
+            Identifies the family of PlayStation controller exposed by the provider.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.PlayStation.PlayStationControllerType.DualShock4">
+            <summary>The PlayStation 4 DualShock 4 controller (v1 and v2).</summary>
+        </member>
+        <member name="F:RGB.NET.Devices.PlayStation.PlayStationControllerType.DualSense">
+            <summary>The PlayStation 5 DualSense controller.</summary>
+        </member>
+        <member name="F:RGB.NET.Devices.PlayStation.PlayStationControllerType.DualSenseEdge">
+            <summary>The PlayStation 5 DualSense Edge controller.</summary>
+        </member>
+        <member name="T:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo">
+            <inheritdoc />
+            <summary>
+            Represents a generic device-info for a PlayStation controller.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo.ControllerType">
+            <summary>Gets the controller family (DualShock 4 / DualSense / DualSense Edge).</summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo.Transport">
+            <summary>Gets the transport the controller is connected by.</summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo.SerialNumber">
+            <summary>
+            Gets a stable per-controller identifier derived from the OS device path. Used
+            to disambiguate two same-model controllers connected at the same time.
+            </summary>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo.DeviceType">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo.DeviceName">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo.Manufacturer">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo.Model">
+            <inheritdoc />
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceInfo.LayoutMetadata">
+            <inheritdoc />
+        </member>
+        <member name="T:RGB.NET.Devices.PlayStation.PlayStationTransport">
+            <summary>
+            Identifies the physical transport over which a PlayStation controller is connected.
+            </summary>
+        </member>
+        <member name="F:RGB.NET.Devices.PlayStation.PlayStationTransport.Usb">
+            <summary>USB (wired) connection.</summary>
+        </member>
+        <member name="F:RGB.NET.Devices.PlayStation.PlayStationTransport.Bluetooth">
+            <summary>Bluetooth (wireless) connection.</summary>
+        </member>
+        <member name="T:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider">
+             <inheritdoc />
+             <summary>
+             Represents a device provider responsible for Sony PlayStation controllers —
+             DualShock 4 (PS4) and DualSense / DualSense Edge (PS5).
+             </summary>
+             <remarks>
+             Talks raw HID via HidSharp; no third-party drivers (no DS4Windows, no SignalRGB,
+             no HidHide). Both USB and Bluetooth transports are supported.
+            
+             Lighting only — input reports continue to flow through the OS HID stack to games
+             normally. Sony's HID gamepads accept *shared* output writes by default, so
+             coexisting with Steam or a game's native lighting integration is the expected
+             case. Last-writer-wins per output report period; at the 30Hz cadence this
+             provider comfortably overrides most intermittent setters (Steam profile changes,
+             game state events).
+            
+             Hot-plug: <see cref="T:HidSharp.DeviceList"/>'s Changed event fires on PnP events
+             (USB connect/disconnect, BT pair/unpair). Reconcile is debounced, then
+             the open set is diffed against the current HID enumeration — new
+             controllers get opened + AddDevice'd, removed ones are disposed and
+             RemoveDevice'd.
+            
+             Known collisions:
+             <list type="bullet">
+               <item>DS4Windows / reWASD with "Exclusive Mode" enabled — they hold the HID
+                     handle exclusive, so opens fail with UnauthorizedAccessException /
+                     IOException.</item>
+               <item>HidHide hiding the controller from non-allow-listed apps — the device
+                     never appears in HidSharp enumeration.</item>
+             </list>
+             </remarks>
+        </member>
+        <member name="P:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider.Instance">
+            <summary>Gets the singleton <see cref="T:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider"/> instance.</summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider"/> class.</summary>
+            <exception cref="T:System.InvalidOperationException">Thrown if a second instance is constructed.</exception>
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider.InitializeSDK">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider.CreateUpdateTrigger(System.Int32,System.Double)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider.LoadDevices">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider.IsDevicePathAlive(System.String)">
+            <summary>
+            Per-frame pre-check used by the update queues. Queries HidSharp's device
+            list LIVE — HidSharp invalidates its internal device-keys cache
+            synchronously on WM_DEVICECHANGE inside DeviceMonitorWindowProc on the
+            message-pump thread, BEFORE pulsing the notify thread that eventually
+            fires the <see cref="T:HidSharp.DeviceList"/> Changed event. So a live
+            GetHidDevices call sees the unplug ahead of any subscriber, which is
+            the race that would otherwise leave the snapshot stale through the
+            first post-unplug 30Hz tick.
+            </summary>
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider.RemoveDevice(RGB.NET.Core.IRGBDevice)">
+            <inheritdoc />
+        </member>
+        <member name="M:RGB.NET.Devices.PlayStation.PlayStationDeviceProvider.Dispose(System.Boolean)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

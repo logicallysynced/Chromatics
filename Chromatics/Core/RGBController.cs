@@ -3,6 +3,7 @@ using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
+using RGB.NET.Devices.PlayStation;
 using Chromatics.Extensions.RGB.NET.Devices.Alienware;
 using Chromatics.Extensions.RGB.NET.Devices.DynamicLighting;
 using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
@@ -311,7 +312,9 @@ namespace Chromatics.Core
 
                 if (appSettings.devicePlayStationEnabled)
                 {
-                    LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance);
+                    PlayStationProviderHooks.EnsureInstalled();
+                    LoadDeviceProvider(PlayStationDeviceProvider.Instance);
+                    PlayStationProviderHooks.EmitPostLoadHints();
                 }
 
                 if (appSettings.deviceLifxEnabled)
