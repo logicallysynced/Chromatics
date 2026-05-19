@@ -40,6 +40,10 @@ namespace Chromatics.Core
 #else
         private const string PackageName      = "com.logicallysynced.Chromatics";
 #endif
+        // Placeholder. publish.py substitutes the real signing cert subject
+        // before dotnet publish; the placeholder value is harmless on debug
+        // builds because EnsureRegistered() short-circuits on missing .appx
+        // and never invokes FindPackagesForUser with this string.
         private const string PackagePublisher = "CN=Chromatics Maintainer, O=Chromatics Maintainer, L=Earth, S=Earth, C=AU";
         private const string AppxFileName     = "Chromatics.appx";
 

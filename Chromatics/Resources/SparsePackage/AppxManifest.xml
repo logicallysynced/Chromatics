@@ -17,10 +17,9 @@
   Publisher MUST exactly match the cert Subject of the signing cert in
   AppX canonical order (CN first, C last, S= for state — not ST=) or
   Windows rejects the registration with ERROR_INSTALL_OPEN_PACKAGE_FAILED
-  (0x80073CF0). Current cert (GoGetSSL G4 CS RSA4096 SHA256 2022 CA-1,
-  issued 2026-05-19) subject is:
-    C=AU, ST=Earth, L=Earth, O=Chromatics Maintainer, CN=Chromatics Maintainer
-  Translated to AppX canonical form below.
+  (0x80073CF0). The Publisher attribute below is a placeholder; publish.py
+  rewrites it (along with {{VERSION}}) at pack time using the signing
+  cert's actual canonical subject before makeappx + signtool run.
 
   Version is rewritten at pack time by publish.py from Chromatics.csproj.
 -->
