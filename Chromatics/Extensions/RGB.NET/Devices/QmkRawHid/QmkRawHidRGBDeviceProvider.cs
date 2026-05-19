@@ -1,6 +1,7 @@
 using Chromatics.Core;
 using Chromatics.Enums;
 using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol;
+using Chromatics.Localization;
 using HidSharp;
 using RGB.NET.Core;
 using System;
@@ -18,10 +19,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
     //   - OpenRGB-QMK plugin (per-key control via direct mode)
     //
     // Protocol is decided per device at handshake. VIA-only keyboards
-    // become a single-LED device that drives the firmware's RGB matrix
-    // base colour; OpenRGB-QMK keyboards become a full per-key keyboard
-    // with semantic LedId.Keyboard_* IDs when a VIA keymap is fetchable
-    // from www.caniusevia.com (Custom1..N fallback otherwise).
+    // get a synthetic ANSI-104 layout built from KeyLocalization.QWERTY_Grid
+    // — every LedId.Keyboard_* maps to firmware index 0 because VIA can't
+    // address individual keys. Chromatics keyboard layers paint the keys
+    // normally; the UpdateQueue picks one representative colour per frame
+    // and sends it as the RGB matrix base colour. OpenRGB-QMK keyboards
+    // get a full per-key keyboard with semantic LedId.Keyboard_* IDs when
+    // a VIA keymap is fetchable from www.caniusevia.com (Custom1..N
+    // fallback otherwise).
     //
     // Hot-plug parity with PlayStationControllerRGBDeviceProvider —
     // DeviceList.Local.Changed reconciles the open set on USB connect /
@@ -186,10 +191,26 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             return devices;
         }
 
-        // For VIA-only: a single Custom1 LED.
+        // For VIA-only:
+        //   - Keyboards (HasKeyboardSibling): synthetic ANSI-104 layout
+        //     from KeyLocalization.QWERTY_Grid. VIA's protocol only
+        //     exposes a single RGB-matrix base colour + effect mode (not
+        //     per-key addressing), but Chromatics's keyboard layers paint
+        //     individual LedId.Keyboard_* LEDs — and a device that only
+        //     owns Custom1 never receives those paints, so the firmware
+        //     would never see a frame. Exposing the full key set lets
+        //     keyboard processors paint normally; the UpdateQueue picks
+        //     one representative colour from the dataset and sends it as
+        //     the matrix colour. Every entry maps to firmware index 0.
+        //   - Non-keyboards (macropads, knob boards, etc.): single Custom1
+        //     entry. Keyboard layers would paint nonsense onto these so
+        //     we don't expose phantom keyboard keys.
+        //   Both paths include a Custom1 slot so saved layer configs from
+        //   pre-4.2.34 builds (when every VIA-only device was a single
+        //   Custom1 LED) keep painting after upgrade.
         // For OpenRGB-QMK: enumerate the firmware's LED records (paged via
-        // Cmd_GetLedInfo), then merge against the optional VIA keymap to
-        // produce the semantic LedId list.
+        //   Cmd_GetLedInfo), then merge against the optional VIA keymap to
+        //   produce the semantic LedId list.
         private static IReadOnlyList<QmkLedLayoutEntry> BuildLayoutForCandidate(
             HidStream stream,
             QmkRawHidDiscovery.Candidate candidate,
@@ -197,10 +218,40 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
         {
             if (candidate.Protocol == QmkRawHidDiscovery.ProtocolSupport.ViaOnly)
             {
-                return new[]
+                if (!candidate.HasKeyboardSibling)
                 {
-                    new QmkLedLayoutEntry(0, 0, 0, LedId.Custom1, new Point(0, 0), new Size(60, 60)),
-                };
+                    return new[]
+                    {
+                        new QmkLedLayoutEntry(0, 0, 0, LedId.Custom1, new Point(0, 0), new Size(60, 60)),
+                    };
+                }
+
+                const float Cell = 19f;
+                var grid = KeyLocalization.QWERTY_Grid;
+                var list = new List<QmkLedLayoutEntry>(grid.Count + 1);
+                foreach (var (ledId, rowCol) in grid)
+                {
+                    int row = rowCol[0];
+                    int col = rowCol[1];
+                    list.Add(new QmkLedLayoutEntry(
+                        firmwareIndex: 0,
+                        matrixCol: (byte)col,
+                        matrixRow: (byte)row,
+                        preferredLedId: ledId,
+                        location: new Point(col * Cell, row * Cell),
+                        size: new Size(Cell, Cell)));
+                }
+                // Backward-compat Custom1 slot: layers.chromatics4 entries
+                // generated against the original single-Custom1 layout keep
+                // painting after upgrade. Off-grid position so it doesn't
+                // show up alongside the keyboard layout in the Mappings tab.
+                list.Add(new QmkLedLayoutEntry(
+                    firmwareIndex: 0,
+                    matrixCol: 0, matrixRow: 0,
+                    preferredLedId: LedId.Custom1,
+                    location: new Point(-1000, -1000),
+                    size: new Size(0, 0)));
+                return list;
             }
 
             var records = FetchAllLedRecords(stream, candidate.LedCount);

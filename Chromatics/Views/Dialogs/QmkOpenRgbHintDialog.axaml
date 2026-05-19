@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        x:Class="Chromatics.Views.Dialogs.QmkOpenRgbHintDialog"
+        Title="{loc:Tr Key='Per-LED control on QMK devices'}"
+        Width="640" Height="460"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+
+        <TextBlock Grid.Row="0"
+                   Text="{loc:Tr Key='Per-LED control on QMK devices'}"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,12" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+
+                <TextBlock TextWrapping="Wrap"
+                           Text="{loc:Tr Key='Chromatics drives QMK devices through two protocols, chosen automatically based on what the device firmware supports.'}" />
+
+                <Border Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                        CornerRadius="4"
+                        Padding="12,10">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{loc:Tr Key='VIA (stock QMK firmware)'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='Your device acts as a single zone. VIA only exposes one RGB matrix base colour for the whole device, so it glows one colour at a time even when your Chromatics layers paint per-LED. Most stock firmware lands here, including Keychron vendor builds.'}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                        CornerRadius="4"
+                        Padding="12,10">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{loc:Tr Key='OpenRGB-QMK plugin (custom firmware)'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='Per-LED control needs the OpenRGB-QMK plugin compiled into your firmware. The plugin is a third-party add-on, not part of stock QMK. You build it into a custom QMK firmware image yourself and flash that onto your device.'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='Once flashed, the next launch of Chromatics detects the plugin during the QMK handshake and switches the device to per-LED direct mode automatically. No setting in Chromatics needs to change.'}" />
+                    </StackPanel>
+                </Border>
+
+                <TextBlock TextWrapping="Wrap"
+                           FontStyle="Italic"
+                           Opacity="0.85"
+                           Text="{loc:Tr Key='Chromatics does not provide instructions, support, or pre-built firmware images for the OpenRGB-QMK plugin. Building and flashing custom firmware is between you, your devices QMK keymap, and the OpenRGB-QMK project. A bad flash can brick a device - only attempt this if you can recover from one.'}" />
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button Name="GotItButton"
+                    Content="{loc:Tr Key='Got it'}"
+                    Click="OnGotIt"
+                    Classes="accent"
+                    MinWidth="120" />
+        </StackPanel>
+    </Grid>
+</Window>

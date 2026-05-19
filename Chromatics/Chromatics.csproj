@@ -10,9 +10,15 @@
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.2.29.0</Version>
+    <Version>4.2.38.0</Version>
     <Authors>Danielle Thompson</Authors>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- ApplicationManifest is conditional: local Debug + Release builds embed
+         app.manifest (no fusion-identity <msix> element) so VS debug runs and
+         dev `dotnet build` invocations launch without a registered sparse
+         package on the box. publish.py sets -p:IncludeFusionIdentity=true to
+         swap in app.fusion.manifest for the signed release build. -->
+    <ApplicationManifest Condition="'$(IncludeFusionIdentity)' != 'true'">app.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(IncludeFusionIdentity)' == 'true'">app.fusion.manifest</ApplicationManifest>
     <Copyright>logicallysynced 2026</Copyright>
     <PackageProjectUrl>https://chromaticsffxiv.com</PackageProjectUrl>
     <NeutralLanguage>en-AU</NeutralLanguage>
@@ -36,6 +42,7 @@
 
   <ItemGroup>
     <None Remove="app.manifest" />
+    <None Remove="app.fusion.manifest" />
   </ItemGroup>
 
   <ItemGroup>

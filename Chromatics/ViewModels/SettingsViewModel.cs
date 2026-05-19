@@ -481,6 +481,30 @@ namespace Chromatics.ViewModels
                             LocalizationService.Instance["No QMK Keyboards Found"],
                             LocalizationService.Instance["Chromatics didn't detect any QMK keyboards. Make sure your keyboard is plugged in over USB and that its firmware has Raw HID enabled (the default for any VIA-compatible build). If VIA, Vial, or OpenRGB is running, close it before enabling this provider - they hold the Raw HID interface exclusively. See the console for the full list of detected HID devices."]);
                     }
+                    else
+                    {
+                        // First-time hint dialog explaining the VIA single-
+                        // colour vs OpenRGB-QMK per-key tradeoff. We never
+                        // ship per-key for stock QMK firmware because the
+                        // VIA protocol only exposes a single matrix base
+                        // colour; the OpenRGB-QMK plugin gives per-key, but
+                        // has to be built into a custom firmware image and
+                        // flashed by the user. Surface this once so users
+                        // who plug in a stock-firmware board don't think
+                        // per-key support is broken in Chromatics.
+                        var post = AppSettings.GetSettings();
+                        if (!post.qmkOpenRgbHintShown)
+                        {
+                            try
+                            {
+                                var owner = GetMainWindow();
+                                var hintDlg = new QmkOpenRgbHintDialog();
+                                if (owner != null) await hintDlg.ShowDialog(owner).ConfigureAwait(true);
+                                else hintDlg.Show();
+                            }
+                            catch { /* dialog failure shouldn't block enable */ }
+                        }
+                    }
 
                     return result;
                 },

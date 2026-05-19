@@ -62,6 +62,12 @@ namespace Chromatics.Models
         public List<HueAdoptedDevice> deviceHueAdoptedDevices { get; set; } = new();
         public bool deviceQmkRawHidEnabled { get; set; } = false;
         public List<QmkRawHidAdoptedDevice> deviceQmkRawHidAdoptedDevices { get; set; } = new();
+        // True once we've shown the QmkOpenRgbHintDialog on the user's
+        // first QMK enable. The dialog explains that stock QMK firmware
+        // limits us to whole-board solid colour via VIA; per-key control
+        // needs a custom QMK build with the OpenRGB-QMK plugin compiled
+        // in. One-shot to avoid nagging on every Settings toggle.
+        public bool qmkOpenRgbHintShown { get; set; } = false;
         public bool deviceYeelightEnabled { get; set; } = false;
         public List<YeelightAdoptedDevice> deviceYeelightAdoptedDevices { get; set; } = new();
         public bool deviceAlienwareEnabled { get; set; } = false;

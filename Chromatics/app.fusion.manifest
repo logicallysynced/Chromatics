@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <assemblyIdentity version="1.0.0.0" name="Chromatics"/>
+
+  <!--
+    Fusion-identity-bound manifest variant, embedded by publish.py only
+    (via -p:IncludeFusionIdentity=true on dotnet publish). The default
+    Debug + local Release build uses app.manifest with no <msix> element
+    so unsigned dev runs launch without identity binding; this file is
+    what ships in the signed release.
+
+    The running Chromatics.exe carries package identity at CreateProcess
+    time, which is what AmbientLightingServer checks before granting
+    background LampArray writes. The three msix attributes MUST exactly
+    match the corresponding fields in Resources/SparsePackage/AppxManifest.xml.
+    See https://learn.microsoft.com/windows/apps/desktop/modernize/grant-identity-to-nonpackaged-apps.
+
+    Known caveats with this binding on Win11 24H2 (4.2.24 baseline):
+      - User must enable "Use Dynamic Lighting on my Devices" globally in
+        Settings → Personalization → Dynamic Lighting for background writes
+        to activate. The per-device toggle alone doesn't suffice.
+      - First-run after a fresh install needs one auto-relaunch
+        (handled in Program.cs) so the process started AFTER the sparse
+        package registration picks up identity.
+      - If accumulated stale state in HKCU\Software\Microsoft\Lighting\
+        Providers or the AppRepository contradicts the fusion reference,
+        Windows refuses to launch with "The process has no package
+        identity". Clean state via Remove-AppxPackage + manual prune +
+        reboot if this happens.
+
+    Keep the trustInfo / compatibility blocks below in sync with
+    app.manifest; only the <msix> element should differ between the
+    two files.
+  -->
+  <msix xmlns="urn:schemas-microsoft-com:msix.v1"
+        publisher="CN=Chromatics Maintainer, O=Chromatics Maintainer, L=Earth, S=Earth, C=AU"
+        packageName="com.logicallysynced.Chromatics"
+        applicationId="Chromatics" />
+
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
+    <security>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 / 11 -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+    </application>
+  </compatibility>
+
+</assembly>

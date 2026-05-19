@@ -3,30 +3,19 @@
   <assemblyIdentity version="1.0.0.0" name="Chromatics"/>
 
   <!--
-    Fusion-identity binding for the sparse-packaged build. Required so the
-    running Chromatics.exe carries package identity at CreateProcess time,
-    which is what the AmbientLightingServer checks before granting
-    background LampArray writes. The three msix attributes MUST exactly
-    match the corresponding fields in Resources/SparsePackage/AppxManifest.xml.
-    See https://learn.microsoft.com/windows/apps/desktop/modernize/grant-identity-to-nonpackaged-apps.
+    Default manifest used by Debug + local Release builds (anything not
+    invoked via publish.py). No <msix> fusion-identity element on purpose:
+    without a registered sparse package on the box, the OS loader throws
+    "The process has no package identity" at CreateProcess time and
+    Windows refuses to start the process, which would block VS-debug runs
+    of unsigned local builds.
 
-    Known caveats with this binding on Win11 24H2 (4.2.24 baseline):
-      - User must enable "Use Dynamic Lighting on my Devices" globally in
-        Settings → Personalization → Dynamic Lighting for background writes
-        to activate. The per-device toggle alone doesn't suffice.
-      - First-run after a fresh install needs one auto-relaunch
-        (handled in Program.cs) so the process started AFTER the sparse
-        package registration picks up identity.
-      - If accumulated stale state in HKCU\Software\Microsoft\Lighting\
-        Providers or the AppRepository contradicts the fusion reference,
-        Windows refuses to launch with "The process has no package
-        identity". Clean state via Remove-AppxPackage + manual prune +
-        reboot if this happens.
+    Published builds get the fusion variant via publish.py's
+    -p:IncludeFusionIdentity=true on dotnet publish, which swaps in
+    app.fusion.manifest. Keep this file and app.fusion.manifest in sync
+    on the trustInfo / compatibility blocks below; only the <msix>
+    element differs.
   -->
-  <msix xmlns="urn:schemas-microsoft-com:msix.v1"
-        publisher="CN=Chromatics Maintainer, O=Chromatics Maintainer, L=Earth, S=Earth, C=AU"
-        packageName="com.logicallysynced.Chromatics"
-        applicationId="Chromatics" />
 
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
