@@ -25,9 +25,20 @@ namespace Chromatics.Views
 
         private async void OnResetClick(object sender, RoutedEventArgs e)
         {
-            var ok = await DialogService.ConfirmAsync(
-                "Reset Chromatics?",
-                "Are you sure you wish to reset Chromatics? All settings, color palettes and layers will be reset.");
+            var message = "Are you sure you wish to reset Chromatics? All settings, color palettes and layers will be reset.";
+
+            // If Windows Dynamic Lighting is currently enabled, warn the user
+            // that background control needs the sparse package re-registered
+            // — and that registration only takes effect on the next launch,
+            // so the first launch after Reset is foreground-only and a second
+            // launch is required for background lighting to come back.
+            var settings = AppSettings.GetSettings();
+            if (settings.deviceDynamicLightingEnabled && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+            {
+                message += "\n\nWindows Dynamic Lighting is currently enabled. Reset will deregister Chromatics from Windows, so background lighting needs two launches to come back: the first launch re-registers Chromatics, the second picks up the new identity. Foreground lighting works on both launches.";
+            }
+
+            var ok = await DialogService.ConfirmAsync("Reset Chromatics?", message);
 
             if (!ok) return;
 

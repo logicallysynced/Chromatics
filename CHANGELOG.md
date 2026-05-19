@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.22
+## 4.2.29
 
 - **New:** Windows Dynamic Lighting (Beta).
 - **New:** Yeelight device support (Beta).
@@ -16,13 +16,10 @@ All notable changes to Chromatics are documented here.
 - Some keyboards and headsets used to show up in Chromatics without any usable LEDs. They now get a default key grid filled in automatically, so layers can paint them just like any other device.
 - Bumped the project's minimum Windows target to Windows 10 1809 (build 17763).
 - Chromatics installer is now officially signed for extra security.
-- Cut down background telemetry frequency. Performance heartbeats now fire every 5 minutes (was every minute) and the first one lands 1 minute into a session (was 15 seconds).
-- Shortened the Dynamic Lighting conflict-bypass label in Settings → Advanced.
-- Dynamic Lighting device adoption log now says "LEDs" instead of "lamps".
-- Mapping tab: when a device disappears because its provider was disabled, the device picker falls back to the first remaining device instead of showing a blank selection.
 - Fixed an issue which prevented vegas mode from starting in The Gold Saucer.
 - Fixed an issue which sometimes caused the title screen animation to play when loading between zones.
 - Fixed an issue which prevented console lines copied to the clipboard from persisting if the application closed.
+- Minor fixes and improvements
 
 ## 4.1.44
 

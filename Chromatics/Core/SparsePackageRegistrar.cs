@@ -29,7 +29,7 @@ namespace Chromatics.Core
         // Must match Identity.Name + Publisher in Resources/SparsePackage/AppxManifest.xml.
         // Windows looks the registered package up by these two fields below.
         private const string PackageName      = "com.logicallysynced.Chromatics";
-        private const string PackagePublisher = "CN=Danielle Thompson";
+        private const string PackagePublisher = "CN=Chromatics Maintainer, O=Chromatics Maintainer, L=Earth, S=Earth, C=AU";
         private const string AppxFileName     = "Chromatics.appx";
 
         // Synchronous wrapper safe to call from STAThread Main. Wraps the async
@@ -46,6 +46,99 @@ namespace Chromatics.Core
                 Logger.WriteVerbose($"[SparsePackage] EnsureRegistered failed at top level: {ex.GetType().Name} — {ex.Message}");
                 Debug.WriteLine(ex);
             }
+        }
+
+        // Reports whether the running process has been granted package
+        // identity (i.e. whether Windows.ApplicationModel.Package.Current is
+        // available). Bound at CreateProcess time by the OS loader scanning
+        // the embedded fusion manifest — never changes during the lifetime
+        // of a process. Program.cs uses this on startup to decide whether
+        // to relaunch after a fresh sparse-package registration: the process
+        // that performs the registration started BEFORE the package existed,
+        // so its identity is forever absent; a relaunched copy of the same
+        // exe will pick up the binding.
+        public static bool HasPackageIdentity()
+        {
+            try
+            {
+                _ = Windows.ApplicationModel.Package.Current;
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        // Logs whether the current process has package identity. The fusion
+        // manifest embedded in Chromatics.exe (see app.manifest <msix> element)
+        // is what wires the running process to the registered sparse package;
+        // if it's missing or malformed, this returns null and background
+        // Dynamic Lighting won't work no matter what's registered in Settings.
+        // Logged once at startup as a diagnostic — visible in the Console tab
+        // so users can verify the identity binding without digging into logs.
+        public static void LogPackageIdentity()
+        {
+            try
+            {
+                var pkg = Windows.ApplicationModel.Package.Current;
+                Logger.WriteVerbose($"[SparsePackage] Process has package identity: {pkg.Id.FullName}");
+            }
+            catch (InvalidOperationException)
+            {
+                Logger.WriteVerbose("[SparsePackage] Process has NO package identity — background Dynamic Lighting will not work (foreground only)");
+                LogEmbeddedManifestCheck();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[SparsePackage] Identity check failed: {ex.GetType().Name} — {ex.Message}");
+            }
+        }
+
+        // Byte-searches the running .exe for the fusion-manifest msix namespace
+        // string. Distinguishes "build embedded the manifest correctly but the
+        // loader still didn't bind identity" (namespace present) from "build
+        // stripped the <msix> element so the loader never had a chance"
+        // (namespace absent). Only called when Package.Current already failed.
+        private static void LogEmbeddedManifestCheck()
+        {
+            try
+            {
+                var exePath = Environment.ProcessPath;
+                if (string.IsNullOrEmpty(exePath) || !File.Exists(exePath))
+                {
+                    Logger.WriteVerbose("[SparsePackage] Cannot inspect manifest: ProcessPath empty or missing");
+                    return;
+                }
+
+                var bytes = File.ReadAllBytes(exePath);
+                var marker = System.Text.Encoding.UTF8.GetBytes("urn:schemas-microsoft-com:msix.v1");
+                bool nsFound = ContainsBytes(bytes, marker);
+
+                var pkgMarker = System.Text.Encoding.UTF8.GetBytes("com.logicallysynced.Chromatics");
+                bool pkgNameFound = ContainsBytes(bytes, pkgMarker);
+
+                Logger.WriteVerbose($"[SparsePackage] Embedded manifest check on {exePath}: msix-namespace={nsFound}, packageName={pkgNameFound}");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[SparsePackage] Manifest content check failed: {ex.GetType().Name} — {ex.Message}");
+            }
+        }
+
+        private static bool ContainsBytes(byte[] haystack, byte[] needle)
+        {
+            if (needle.Length == 0 || haystack.Length < needle.Length) return false;
+            for (int i = 0; i <= haystack.Length - needle.Length; i++)
+            {
+                bool match = true;
+                for (int j = 0; j < needle.Length; j++)
+                {
+                    if (haystack[i + j] != needle[j]) { match = false; break; }
+                }
+                if (match) return true;
+            }
+            return false;
         }
 
         public static async Task EnsureRegisteredAsync()
@@ -95,13 +188,31 @@ namespace Chromatics.Core
                     }
                 }
 
-                Logger.WriteVerbose($"[SparsePackage] Registering {currentAppVersion} from {appxPath} (external location {exeDir})");
+                // External location must cover Velopack's full launch chain.
+                // The portable / installed layout puts Chromatics.exe
+                // (ExecutionStub) at the parent folder and current\Chromatics.exe
+                // (the real app) one level down. When the stub launches the
+                // inner from OUTSIDE the external location, the OS won't bind
+                // identity to the child and Windows escalates to a hard
+                // launch failure after a few attempts. Walking up to the
+                // parent when we're inside a current\ folder puts both the
+                // stub and the inner inside the external location, so
+                // identity binding propagates correctly through stub-mediated
+                // launches. Dev builds (no current\ folder) use exeDir
+                // directly.
+                var externalLocationDir = exeDir;
+                if (string.Equals(Path.GetFileName(exeDir), "current", StringComparison.OrdinalIgnoreCase))
+                {
+                    var parent = Path.GetDirectoryName(exeDir);
+                    if (!string.IsNullOrEmpty(parent))
+                        externalLocationDir = parent;
+                }
+
+                Logger.WriteVerbose($"[SparsePackage] Registering {currentAppVersion} from {appxPath} (external location {externalLocationDir})");
 
                 var options = new AddPackageOptions
                 {
-                    // file:/// URI of the directory containing Chromatics.exe — Windows
-                    // resolves the unpackaged binaries referenced by the manifest from here.
-                    ExternalLocationUri = new Uri(exeDir),
+                    ExternalLocationUri = new Uri(externalLocationDir),
                     // Allows registering 4.2.14 over a previously-installed 4.2.13 without
                     // the caller having to compare versions first.
                     ForceUpdateFromAnyVersion = true,
@@ -111,9 +222,7 @@ namespace Chromatics.Core
                 var result = await op.AsTask().ConfigureAwait(false);
                 if (result.ExtendedErrorCode != null)
                 {
-                    Logger.WriteVerbose(
-                        $"[SparsePackage] Registration failed: {result.ErrorText} " +
-                        $"(HRESULT 0x{result.ExtendedErrorCode.HResult:X8})");
+                    Logger.WriteVerbose($"[SparsePackage] Registration failed: {result.ErrorText} (HRESULT 0x{result.ExtendedErrorCode.HResult:X8})");
                     return;
                 }
                 Logger.WriteVerbose("[SparsePackage] Registered successfully");
@@ -169,9 +278,7 @@ namespace Chromatics.Core
                     var result = await op.AsTask().ConfigureAwait(false);
                     if (result.ExtendedErrorCode != null)
                     {
-                        Logger.WriteVerbose(
-                            $"[SparsePackage] Remove failed: {result.ErrorText} " +
-                            $"(HRESULT 0x{result.ExtendedErrorCode.HResult:X8})");
+                        Logger.WriteVerbose($"[SparsePackage] Remove failed: {result.ErrorText} (HRESULT 0x{result.ExtendedErrorCode.HResult:X8})");
                     }
                 }
             }

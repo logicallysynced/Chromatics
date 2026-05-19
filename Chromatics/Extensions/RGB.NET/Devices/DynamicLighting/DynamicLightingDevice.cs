@@ -28,7 +28,36 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
 
         public DynamicLightingClientDefinition Definition => _def;
 
-        public void BeginShutdown() => _updateQueue.BeginShutdown();
+        public void BeginShutdown()
+        {
+            // Paint every lamp to black before tearing down so the device
+            // doesn't keep showing whatever colors we wrote on the last
+            // frame. We tried LampArray.IsEnabled = false in 4.2.24 — most
+            // hardware ignored it (the device just held the last frame
+            // anyway) and on some devices the false state stuck on the
+            // COM proxy across LampArray.FromIdAsync calls, breaking
+            // re-enable in the same session. Writing an explicit black
+            // frame is the most reliable way to leave the device in a
+            // visibly-released state.
+            try
+            {
+                var la = _def.LampArray;
+                if (la != null && la.LampCount > 0)
+                {
+                    int count = la.LampCount;
+                    var black = new WinColor[count];
+                    var indices = new int[count];
+                    for (int i = 0; i < count; i++)
+                    {
+                        black[i] = WinColor.FromArgb(255, 0, 0, 0);
+                        indices[i] = i;
+                    }
+                    la.SetColorsForIndices(black, indices);
+                }
+            }
+            catch { /* best-effort release; UpdateQueue stops sending below regardless */ }
+            _updateQueue.BeginShutdown();
+        }
         public void SetPerDeviceDisabled(bool disabled) => _updateQueue.SetPerDeviceDisabled(disabled);
         public void ResetCache() => _updateQueue.ResetCache();
 

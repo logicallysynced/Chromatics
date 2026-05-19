@@ -30,7 +30,7 @@
                         <TextBlock TextWrapping="Wrap"
                                    Text="{loc:Tr Key='1. Open Settings → Personalization → Dynamic Lighting, or click Open Windows Settings below.'}" />
                         <TextBlock TextWrapping="Wrap"
-                                   Text="{loc:Tr Key='2. Confirm Use Dynamic Lighting on my devices is on.'}" />
+                                   Text="{loc:Tr Key='2. Turn on Use Dynamic Lighting on my devices at the top of the page. Background lighting will not work without this master switch, even with Chromatics in the controllers list below.'}" />
                         <TextBlock TextWrapping="Wrap"
                                    Text="{loc:Tr Key='3. Turn off Compatible apps in the foreground always control lighting so other apps cannot block Chromatics during gameplay.'}" />
                         <TextBlock TextWrapping="Wrap"

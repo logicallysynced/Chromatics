@@ -91,6 +91,18 @@
         <Style Selector="ToggleButton.tile:pressed /template/ ContentPresenter#PART_ContentPresenter">
             <Setter Property="RenderTransform" Value="scale(0.97)" />
         </Style>
+        <!--
+          Wrap multi-word tile labels (e.g. "Windows Dynamic Lighting (Beta)")
+          so they don't visibly overflow the 150x80 first-run tiles. Targets
+          any TextBlock inside a tile - covers both the explicit TextBlocks
+          used in Settings -> Device Providers and the implicit TextBlock that
+          a ToggleButton's string Content gets wrapped in by the
+          ContentPresenter on first-run.
+        -->
+        <Style Selector="ToggleButton.tile TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextAlignment" Value="Center" />
+        </Style>
 
         <!-- Help button: outlined circle, accent-colored, fills on hover -->
         <Style Selector="Button.helpBtn">

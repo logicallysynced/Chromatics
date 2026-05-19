@@ -649,23 +649,44 @@ namespace Chromatics.ViewModels
                     AppSettings.SaveSettings(cur);
                 }));
 
-            // Windows Dynamic Lighting (LampArray). Discovery is handled
-            // by the Windows DeviceWatcher inside the provider so there's
-            // no per-device adoption picker — every Dynamic-Lighting-
-            // capable device the OS exposes shows up automatically.
-            // Background lighting (during FFXIV gameplay) is gated by the
-            // sparse package registered via SparsePackageRegistrar — we
-            // register on enable and deregister on disable so Chromatics
-            // only appears in Settings → Personalization → Dynamic Lighting
-            // → Background light control when the user actually wants it on.
+            // Windows Dynamic Lighting (LampArray). Discovery is handled by
+            // the Windows DeviceWatcher inside the provider so there's no
+            // per-device adoption picker — every Dynamic-Lighting-capable
+            // device the OS exposes shows up automatically.
+            //
+            // The sparse package registration is intentionally NOT torn down
+            // when the user toggles this off. Identity is bound to the
+            // process by the OS loader at CreateProcess time; if we
+            // deregistered on disable, a subsequent re-enable in the same
+            // process would not re-acquire identity and background lighting
+            // would silently fall back to foreground-only until the user
+            // restarted Chromatics. Settings → Reset (and the Velopack
+            // uninstall callback) are the two paths that explicitly remove
+            // the registration when the user actually wants it gone.
+            //
+            // Background lighting on Windows 10 isn't supported by the OS
+            // (LampArray is a Windows 11 API), so the toggle is greyed out
+            // there via isAvailable; the tooltip explains the requirement.
+            bool isWin11OrLater = OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000);
             DeviceToggles.Add(new DeviceToggleItem(
-                "Dynamic Lighting (Beta)",
-                "[BETA] Enable/disable the Windows Dynamic Lighting provider. Picks up any device Windows lists in Settings -> Personalization -> Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Default: Disabled",
+                "Windows Dynamic Lighting (Beta)",
+                "[BETA] Enable/disable the Windows Dynamic Lighting provider. Requires Windows 11. Picks up any device Windows lists in Settings -> Personalization -> Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Default: Disabled",
                 s.deviceDynamicLightingEnabled,
                 async () =>
                 {
                     // Conflict popup (vendor providers already enabled).
-                    await ShowDynamicLightingOverlapPopupIfNeededAsync("Dynamic Lighting (Beta)").ConfigureAwait(true);
+                    await ShowDynamicLightingOverlapPopupIfNeededAsync("Windows Dynamic Lighting (Beta)").ConfigureAwait(true);
+
+                    // Register BEFORE loading the device provider so the
+                    // package exists for AmbientLightingServer-side checks
+                    // when the provider starts adopting devices. (Identity
+                    // binding to the CURRENT process can only happen at
+                    // process start, so the user may still need to restart
+                    // for background to kick in on their very first enable —
+                    // Program.cs handles that auto-restart for subsequent
+                    // launches.)
+                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                        await SparsePackageRegistrar.EnsureRegisteredAsync().ConfigureAwait(true);
 
                     // First-time hint dialog walking the user through the
                     // Settings → Personalization → Dynamic Lighting steps,
@@ -696,11 +717,6 @@ namespace Chromatics.ViewModels
                         var cc = AppSettings.GetSettings();
                         cc.deviceDynamicLightingEnabled = false;
                         AppSettings.SaveSettings(cc);
-                        // Auto-disable path also deregisters the sparse package
-                        // so a failed enable doesn't leave Chromatics in the
-                        // Windows DL list with no devices to control.
-                        if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
-                            await SparsePackageRegistrar.DeregisterAsync().ConfigureAwait(true);
                         await DialogService.ShowAsync(
                             LocalizationService.Instance["No Dynamic Lighting devices found"],
                             LocalizationService.Instance["Chromatics didn't detect any Dynamic Lighting devices on this PC. Open Settings -> Personalization -> Dynamic Lighting in Windows and check that at least one compatible device is listed there. If your hardware is listed but Chromatics still doesn't see it, it may be hidden by an enabled vendor provider conflict; Settings -> Advanced has a toggle to control that."]);
@@ -710,11 +726,6 @@ namespace Chromatics.ViewModels
                     var c = AppSettings.GetSettings();
                     c.deviceDynamicLightingEnabled = true;
                     AppSettings.SaveSettings(c);
-                    // Register the sparse package so Chromatics gets package
-                    // identity for AmbientLightingServer (Background light
-                    // control list). Idempotent. Requires Win10 2004+.
-                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
-                        await SparsePackageRegistrar.EnsureRegisteredAsync().ConfigureAwait(true);
                     return true;
                 },
                 () =>
@@ -723,12 +734,11 @@ namespace Chromatics.ViewModels
                     var c = AppSettings.GetSettings();
                     c.deviceDynamicLightingEnabled = false;
                     AppSettings.SaveSettings(c);
-                    // Fire-and-forget deregister: don't block the UI on the
-                    // ~1s RemovePackageAsync call. DeregisterAsync swallows
-                    // its own errors into the verbose log. Requires Win10 2004+.
-                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
-                        _ = SparsePackageRegistrar.DeregisterAsync();
-                }));
+                    // Intentionally NO DeregisterAsync — see block comment
+                    // above. Keeping the registration keeps process identity
+                    // valid for subsequent re-enables in the same session.
+                },
+                isAvailable: isWin11OrLater));
         }
 
         private static Avalonia.Controls.Window GetMainWindow()
@@ -777,13 +787,16 @@ namespace Chromatics.ViewModels
         // overlap with Dynamic Lighting (Corsair, Wooting, Coolermaster,
         // Novation, OpenRGB, etc.) so the helper is safe to call
         // unconditionally from MakeDeviceToggle.
-        private static async Task ShowDynamicLightingOverlapPopupIfNeededAsync(string enablingProviderLabel)
+        internal static async Task ShowDynamicLightingOverlapPopupIfNeededAsync(string enablingProviderLabel)
         {
             try
             {
                 var settings = AppSettings.GetSettings();
 
-                bool isDl = enablingProviderLabel.StartsWith("Dynamic Lighting", StringComparison.OrdinalIgnoreCase);
+                // Match both legacy "Dynamic Lighting (Beta)" and current
+                // "Windows Dynamic Lighting (Beta)" labels — the rename to
+                // include "Windows" broke a plain StartsWith check.
+                bool isDl = enablingProviderLabel.Contains("Dynamic Lighting", StringComparison.OrdinalIgnoreCase);
                 IReadOnlyList<string> conflicts;
                 if (isDl)
                 {
@@ -1057,6 +1070,16 @@ namespace Chromatics.ViewModels
             {
                 Logger.WriteConsole(LoggerTypes.Error, $"Unable to reset Chromatics: {ex.Message}");
             }
+
+            // Reset is the user's "nuke everything Chromatics-related" path, so
+            // also tear down the Dynamic Lighting sparse package registration —
+            // otherwise Chromatics would keep appearing in Settings →
+            // Personalization → Dynamic Lighting → Background light control
+            // even after the user wiped local state. Fire-and-forget so the
+            // ~1s RemovePackageAsync call doesn't block the UI; the OS
+            // completes the removal even if we exit before it finishes.
+            if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                _ = SparsePackageRegistrar.DeregisterAsync();
         }
 
         public sealed class ThemeOption

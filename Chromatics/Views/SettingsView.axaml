@@ -83,6 +83,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="vm:DeviceToggleItem">
                             <ToggleButton Classes="tile"
+                                          IsEnabled="{Binding IsAvailable}"
                                           IsChecked="{Binding IsEnabled, Mode=TwoWay}"
                                           Width="160" Height="90"
                                           ToolTip.Tip="{Binding Tooltip}">

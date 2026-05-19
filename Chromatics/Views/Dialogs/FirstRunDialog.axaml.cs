@@ -54,6 +54,20 @@ namespace Chromatics.Views.Dialogs
             TileAlienware.IsCheckedChanged += OnTileChanged;
             TileDynamicLighting.IsCheckedChanged += OnTileChanged;
 
+            // Windows Dynamic Lighting needs the Windows 11 LampArray API
+            // (build 22000+). On Windows 10 there's no point letting users
+            // turn the toggle on — the provider would adopt zero devices.
+            // Grey the tile out and bolt a Windows-11-required tooltip on top
+            // of the existing description so users understand why it's
+            // unavailable rather than thinking the tile is broken.
+            if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+            {
+                TileDynamicLighting.IsEnabled = false;
+                TileDynamicLighting.IsChecked = false;
+                ToolTip.SetTip(TileDynamicLighting,
+                    LocalizationService.Instance["Windows Dynamic Lighting requires Windows 11."]);
+            }
+
             // Populate the language picker from the Language enum so it stays
             // in lock-step with the Settings → Language dropdown. Suppress the
             // SelectionChanged write-back during initial selection so we don't
@@ -316,6 +330,47 @@ namespace Chromatics.Views.Dialogs
 
             s.firstrun = false;
             AppSettings.SaveSettings(s);
+
+            // If the user selected Windows Dynamic Lighting, show the same
+            // setup hint the Settings → Device Providers toggle path shows
+            // on first enable, then eagerly register the sparse package.
+            // Identity binding for THIS process can only happen at
+            // CreateProcess time (loader scans the embedded fusion manifest
+            // before any user code runs), so this process keeps running
+            // without identity — but Program.cs's auto-restart on the next
+            // launch picks it up. Net effect: foreground lighting works
+            // for the rest of this session, background lighting kicks in
+            // after the user next closes and reopens Chromatics.
+            if (s.deviceDynamicLightingEnabled && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000))
+            {
+                // Warn if the user also enabled a vendor provider that
+                // overlaps Dynamic Lighting on shared hardware (Razer +
+                // Logitech G LIGHTSYNC + ASUS ROG etc.) so they understand
+                // the dedup behaviour. Mirrors the popup the Settings toggle
+                // path shows on first enable.
+                try
+                {
+                    await ViewModels.SettingsViewModel.ShowDynamicLightingOverlapPopupIfNeededAsync(
+                        "Windows Dynamic Lighting (Beta)");
+                }
+                catch { /* advisory popup; never block first-run completion */ }
+
+                if (!s.dynamicLightingHintShown)
+                {
+                    try
+                    {
+                        var hintDlg = new DynamicLightingHintDialog();
+                        await hintDlg.ShowDialog(this);
+                    }
+                    catch { /* dialog failure shouldn't block continue */ }
+                }
+
+                if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                {
+                    try { await SparsePackageRegistrar.EnsureRegisteredAsync(); }
+                    catch { /* registration is best-effort here; Program.cs will retry on next launch */ }
+                }
+            }
 
             Close();
         }

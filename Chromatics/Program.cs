@@ -1,5 +1,6 @@
 using Avalonia;
 using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Models;
 using Chromatics.Views;
@@ -34,6 +35,11 @@ namespace Chromatics
         // ones (and vice versa) without admin rights to enumerate.
         private const string SingleInstanceMutexName = "Chromatics-SingleInstance-{6E5F8A4D-2B4C-4F7E-9D1A-3E8B5C2F1A0D}";
         private static Mutex _singleInstanceMutex;
+
+        // Sentinel argv flag set by RestartForPackageIdentity. Present on the
+        // second-pass invocation so we don't re-enter the restart logic and
+        // loop forever if identity still fails to bind.
+        private const string PostRegisterRestartArg = "--chromatics-post-register-restart";
 
         [STAThread]
         static void Main(string[] args)
@@ -128,7 +134,25 @@ namespace Chromatics
             // toggle (see SettingsViewModel); this is just the keep-in-sync
             // pass on subsequent launches.
             if (appSettings.deviceDynamicLightingEnabled && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+            {
                 SparsePackageRegistrar.EnsureRegistered();
+
+                // The OS loader binds fusion-manifest identity at CreateProcess
+                // time — meaning the process that performs the FIRST registration
+                // is forever without identity, because it started before the
+                // package existed in the registry. Relaunch once (sentinel arg
+                // prevents loops) so the new process picks up the binding and
+                // background Dynamic Lighting works without the user having to
+                // close-and-reopen Chromatics by hand.
+                if (!args.Contains(PostRegisterRestartArg) && !SparsePackageRegistrar.HasPackageIdentity())
+                {
+                    Logger.WriteVerbose("[SparsePackage] Process started before package was registered; relaunching once to bind identity");
+                    RestartForPackageIdentity(args);
+                    return;
+                }
+
+                SparsePackageRegistrar.LogPackageIdentity();
+            }
 
             try
             {
@@ -161,6 +185,45 @@ namespace Chromatics
             // lock, which manifests as both "Already running" prompts on the
             // next launch AND no events ever leaving subsequent Sentry inits.
             ForceTerminate(0);
+        }
+
+        // Relaunches the current Chromatics.exe with a sentinel argv flag so the
+        // new process picks up package identity bound by the sparse-package
+        // registration that just completed. The current process started before
+        // the package existed, so its identity is forever absent — only a fresh
+        // CreateProcess can pick up the new binding. Releases the single-instance
+        // mutex first so the new process doesn't have to wait through the
+        // ThereCanOnlyBeOne 3-second grace window before claiming it.
+        private static void RestartForPackageIdentity(string[] originalArgs)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = Environment.ProcessPath,
+                UseShellExecute = false,
+            };
+            foreach (var arg in originalArgs) psi.ArgumentList.Add(arg);
+            psi.ArgumentList.Add(PostRegisterRestartArg);
+
+            try { _singleInstanceMutex?.ReleaseMutex(); } catch { }
+            try { _singleInstanceMutex?.Dispose();   } catch { }
+            _singleInstanceMutex = null;
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[SparsePackage] Relaunch failed: {ex.GetType().Name} — {ex.Message}. Continuing without identity (foreground DL only).");
+                // Re-acquire the mutex so this surviving process still passes
+                // single-instance checks downstream. Best-effort; if it fails
+                // we soldier on rather than killing the surviving instance.
+                try { _singleInstanceMutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out _); } catch { }
+                return;
+            }
+
+            try { SentryService.Shutdown(); } catch { }
+            Environment.Exit(0);
         }
 
         // Hard process termination via OS TerminateProcess. SentryService.Shutdown

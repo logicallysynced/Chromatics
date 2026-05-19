@@ -14,9 +14,13 @@
   appear in Settings → Personalization → Dynamic Lighting → Background light
   control on Win11 22H2+.
 
-  Publisher MUST exactly match the cert Subject of the signing cert
-  ("CN=Danielle Thompson") or Windows rejects the registration with
-  ERROR_INSTALL_OPEN_PACKAGE_FAILED (0x80073CF0).
+  Publisher MUST exactly match the cert Subject of the signing cert in
+  AppX canonical order (CN first, C last, S= for state — not ST=) or
+  Windows rejects the registration with ERROR_INSTALL_OPEN_PACKAGE_FAILED
+  (0x80073CF0). Current cert (GoGetSSL G4 CS RSA4096 SHA256 2022 CA-1,
+  issued 2026-05-19) subject is:
+    C=AU, ST=Earth, L=Earth, O=Chromatics Maintainer, CN=Chromatics Maintainer
+  Translated to AppX canonical form below.
 
   Version is rewritten at pack time by publish.py from Chromatics.csproj.
 -->
@@ -25,17 +29,26 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   xmlns:uap3="http://schemas.microsoft.com/appx/manifest/uap/windows10/3"
-  IgnorableNamespaces="uap rescap uap3">
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  IgnorableNamespaces="uap rescap uap3 uap10">
 
   <Identity
     Name="com.logicallysynced.Chromatics"
-    Publisher="CN=Danielle Thompson"
+    ProcessorArchitecture="x64"
+    Publisher="CN=Chromatics Maintainer, O=Chromatics Maintainer, L=Earth, S=Earth, C=AU"
     Version="{{VERSION}}" />
 
   <Properties>
     <DisplayName>Chromatics</DisplayName>
     <PublisherDisplayName>logicallysynced</PublisherDisplayName>
     <Logo>Square150x150Logo.png</Logo>
+    <!-- Required for sparse packages registered via
+         PackageManager.AddPackageByUriAsync with ExternalLocationUri. Without
+         this flag Windows rejects the registration with HRESULT 0x80073D2E
+         (ERROR_INSTALL_PACKAGE_EXTERNAL_LOCATION_NOT_ALLOWED) - "The package
+         deployment failed because it must allow external content to be
+         deployed with an external location." -->
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
   </Properties>
 
   <Dependencies>
@@ -47,8 +60,22 @@
   </Resources>
 
   <Applications>
+    <!--
+      Executable="current\Chromatics.exe" with ExternalLocationUri at the
+      install root (parent of current/) is the 4.2.24 topology — it puts
+      both the Velopack ExecutionStub at the root and the inner exe at
+      current/ inside the package's external location, so stub-launched
+      identity binding works without an auto-relaunch. The alternative
+      topology (Executable="Chromatics.exe", ExternalLocationUri pointed
+      at current/) avoids the Windows global-DL-toggle requirement but
+      can't bind identity through the stub at all — Windows escalates
+      to "process has no package identity" hard-fail after a few
+      attempts. The current topology is the lesser evil: foreground DL
+      is unconditional, background DL needs the user to flip the global
+      toggle in Windows Settings once.
+    -->
     <Application Id="Chromatics"
-                 Executable="Chromatics.exe"
+                 Executable="current\Chromatics.exe"
                  EntryPoint="Windows.FullTrustApplication">
       <uap:VisualElements
         DisplayName="Chromatics"
@@ -70,5 +97,6 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
+    <rescap:Capability Name="unvirtualizedResources" />
   </Capabilities>
 </Package>
