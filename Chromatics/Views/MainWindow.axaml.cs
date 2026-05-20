@@ -12,6 +12,7 @@ using Chromatics.Views.Dialogs;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Chromatics.Views
@@ -50,8 +51,210 @@ namespace Chromatics.Views
             }
         }
 
+        // Three-stage taskbar icon fix.
+        //
+        // STAGE 1 — PKEY_AppUserModel_ID. Velopack hard-codes the process-level
+        // AUMID to "velopack.Chromatics" early in startup. The Win11 taskbar
+        // keys its icon off the AUMID, looking for a Start Menu shortcut whose
+        // target AUMID matches. Portable extractions have no such shortcut, so
+        // the taskbar caches a blank entry and never falls back to the window
+        // HICON. Setting PKEY_AppUserModel_ID on this window's property store
+        // overrides the process AUMID for THIS window with one the shell has
+        // never seen — no cached entry, no broken shortcut binding, so the
+        // taskbar falls through to Stage 2 + 3 cleanly.
+        //
+        // STAGE 2 — PKEY_AppUserModel_RelaunchIconResource. Points the shell at
+        // "<exe>,0" (first icon resource in Chromatics.exe) for this window's
+        // taskbar entry and jump-list relaunch icon.
+        //
+        // STAGE 3 — WM_SETICON. Sets the window's own HICON pair from the EXE's
+        // embedded application icon. Title bar and Alt-Tab thumbnail read this
+        // directly; the Win11 taskbar uses it as the final fallback once the
+        // AUMID lookup chain (Stages 1 + 2) lands somewhere with no shortcut.
+        //
+        // All three stages run from OnOpened so the HWND exists and is
+        // registered with the shell before we touch any icon path.
+        private void ForceTaskbarIcon()
+        {
+            var platformHandle = TryGetPlatformHandle();
+            if (platformHandle == null || platformHandle.Handle == IntPtr.Zero)
+            {
+                Logger.WriteVerbose("[MainWindow] ForceTaskbarIcon: no platform handle yet, skipping");
+                return;
+            }
+            var hwnd = platformHandle.Handle;
+            var exe = Environment.ProcessPath;
+
+            // Stages 1 + 2: AUMID override + RelaunchIconResource on this
+            // window's property store. Both writes share one IPropertyStore.
+            try
+            {
+                var iid = NativeRelaunch.IID_IPropertyStore;
+                int hr = NativeRelaunch.SHGetPropertyStoreForWindow(hwnd, ref iid, out var propStore);
+                if (hr != 0 || propStore == null)
+                {
+                    Logger.WriteVerbose($"[MainWindow] SHGetPropertyStoreForWindow returned HRESULT 0x{hr:X8}, skipping AUMID + relaunch-icon stages");
+                }
+                else
+                {
+                    try
+                    {
+                        // Fresh AUMID the shell has no cached binding for. Distinct
+                        // from Velopack's "velopack.Chromatics" so we get a brand-new
+                        // taskbar identity. Portable + installer split so they don't
+                        // collide if both are launched on the same machine.
+                        const string aumid =
+#if PORTABLE_BUILD
+                            "com.logicallysynced.Chromatics.Portable.MainWindow";
+#else
+                            "com.logicallysynced.Chromatics.MainWindow";
+#endif
+                        SetStringProperty(propStore, NativeRelaunch.PKEY_AppUserModel_ID, aumid, "PKEY_AppUserModel_ID");
+
+                        if (!string.IsNullOrEmpty(exe))
+                        {
+                            var iconResource = $"{exe},0";
+                            SetStringProperty(propStore, NativeRelaunch.PKEY_AppUserModel_RelaunchIconResource, iconResource, "PKEY_AppUserModel_RelaunchIconResource");
+                        }
+
+                        int commitHr = propStore.Commit();
+                        Logger.WriteVerbose($"[MainWindow] IPropertyStore.Commit returned 0x{commitHr:X8}");
+                    }
+                    finally
+                    {
+                        Marshal.ReleaseComObject(propStore);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[MainWindow] Property-store path failed: {ex.GetType().Name} — {ex.Message}");
+            }
+
+            // Stage 3: WM_SETICON from EXE's embedded application icon.
+            try
+            {
+                if (!string.IsNullOrEmpty(exe))
+                {
+                    var extracted = NativeIcon.ExtractIconEx(exe, 0, out var bigIcon, out var smallIcon, 1);
+                    Logger.WriteVerbose($"[MainWindow] ExtractIconEx returned {extracted}, small=0x{smallIcon.ToInt64():X}, big=0x{bigIcon.ToInt64():X}");
+                    try
+                    {
+                        if (smallIcon != IntPtr.Zero)
+                            NativeIcon.SendMessage(hwnd, NativeIcon.WM_SETICON, (IntPtr)NativeIcon.ICON_SMALL, smallIcon);
+                        if (bigIcon != IntPtr.Zero)
+                            NativeIcon.SendMessage(hwnd, NativeIcon.WM_SETICON, (IntPtr)NativeIcon.ICON_BIG, bigIcon);
+                    }
+                    finally
+                    {
+                        // WM_SETICON copies the HICON internally, so the originals
+                        // can be released right after.
+                        if (smallIcon != IntPtr.Zero) NativeIcon.DestroyIcon(smallIcon);
+                        if (bigIcon   != IntPtr.Zero) NativeIcon.DestroyIcon(bigIcon);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[MainWindow] WM_SETICON path failed: {ex.GetType().Name} — {ex.Message}");
+            }
+        }
+
+        private static void SetStringProperty(NativeRelaunch.IPropertyStore propStore, NativeRelaunch.PROPERTYKEY pkey, string value, string label)
+        {
+            var pwsz = Marshal.StringToCoTaskMemUni(value);
+            try
+            {
+                var pv = new NativeRelaunch.PROPVARIANT { vt = NativeRelaunch.VT_LPWSTR, valuePtr = pwsz };
+                var keyLocal = pkey;
+                int setHr = propStore.SetValue(ref keyLocal, ref pv);
+                Logger.WriteVerbose($"[MainWindow] {label} = '{value}' (SetValue=0x{setHr:X8})");
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(pwsz);
+            }
+        }
+
+        private static class NativeIcon
+        {
+            public const uint WM_SETICON = 0x0080;
+            public const int  ICON_SMALL = 0;
+            public const int  ICON_BIG   = 1;
+
+            [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+            public static extern uint ExtractIconEx(string lpszFile, int nIconIndex, out IntPtr phiconLarge, out IntPtr phiconSmall, uint nIcons);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+            [DllImport("user32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool DestroyIcon(IntPtr hIcon);
+        }
+
+        private static class NativeRelaunch
+        {
+            public const ushort VT_LPWSTR = 31;
+
+            public static readonly Guid IID_IPropertyStore = new Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99");
+
+            // PKEY_AppUserModel_RelaunchIconResource — see
+            // https://learn.microsoft.com/windows/win32/properties/props-system-appusermodel-relauniconresource
+            public static readonly PROPERTYKEY PKEY_AppUserModel_RelaunchIconResource = new PROPERTYKEY
+            {
+                fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
+                pid = 3,
+            };
+
+            // PKEY_AppUserModel_ID — see
+            // https://learn.microsoft.com/windows/win32/properties/props-system-appusermodel-id
+            public static readonly PROPERTYKEY PKEY_AppUserModel_ID = new PROPERTYKEY
+            {
+                fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
+                pid = 5,
+            };
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROPERTYKEY
+            {
+                public Guid fmtid;
+                public uint pid;
+            }
+
+            // PROPVARIANT in C is a 24-byte struct on x64 (2-byte vt + 6 bytes
+            // of reserved padding + 16-byte union). We only need the VT_LPWSTR
+            // case here, which stores a pointer at union offset 0.
+            [StructLayout(LayoutKind.Explicit, Size = 24)]
+            public struct PROPVARIANT
+            {
+                [FieldOffset(0)] public ushort vt;
+                [FieldOffset(2)] public ushort wReserved1;
+                [FieldOffset(4)] public ushort wReserved2;
+                [FieldOffset(6)] public ushort wReserved3;
+                [FieldOffset(8)] public IntPtr valuePtr;
+            }
+
+            [ComImport]
+            [Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99")]
+            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+            public interface IPropertyStore
+            {
+                [PreserveSig] int GetCount(out uint cProps);
+                [PreserveSig] int GetAt(uint iProp, out PROPERTYKEY pkey);
+                [PreserveSig] int GetValue(ref PROPERTYKEY key, out PROPVARIANT pv);
+                [PreserveSig] int SetValue(ref PROPERTYKEY key, ref PROPVARIANT pv);
+                [PreserveSig] int Commit();
+            }
+
+            [DllImport("shell32.dll")]
+            public static extern int SHGetPropertyStoreForWindow(IntPtr hwnd, ref Guid iid, [MarshalAs(UnmanagedType.Interface)] out IPropertyStore propStore);
+        }
+
         private async void OnOpened(object sender, EventArgs e)
         {
+            ForceTaskbarIcon();
+
             // Match Fm_MainWindow's bring-up order so backend subsystems initialize
             // exactly as they did under WinForms. Settings are already loaded by
             // Program.Main. Offload BOTH RGBController.Setup (device enumeration)
