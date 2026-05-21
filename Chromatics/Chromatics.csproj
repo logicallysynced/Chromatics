@@ -96,10 +96,18 @@
     <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="6.1.3" />
-    <!-- RGB.NET.Core swapped to a local DLL to carry the CHROMATICS-15 fix
-         (disposed-singleton race in AbstractRGBDeviceProvider — see Build
-         Dependencies/RGB.NET/). -->
-    <!--<PackageReference Include="RGB.NET.Core" Version="3.2.0" />-->
+    <!-- RGB.NET.Core comes from a local DLL (Build Dependencies/RGB.NET/)
+         that carries the CHROMATICS-15 disposed-singleton fix. The
+         PackageReference stays so transitive references from the other
+         RGB.NET.Devices.* NuGet packages below don't pull NuGet's
+         RGB.NET.Core 3.2.0 in ahead of the local DLL. ExcludeAssets='all'
+         + PrivateAssets='all' suppress the package's compile + runtime
+         + build assets, leaving the local <Reference Include='RGB.NET.Core'>
+         in the ItemGroup below as the only assembly source. -->
+    <PackageReference Include="RGB.NET.Core" Version="3.2.0">
+      <ExcludeAssets>all</ExcludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="RGB.NET.Devices.Asus" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="3.2.0" />
     <!-- RGB.NET.Devices.Corsair swapped to a local DLL for ad-hoc debugging
