@@ -110,9 +110,7 @@
     </PackageReference>
     <PackageReference Include="RGB.NET.Devices.Asus" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="3.2.0" />
-    <!-- RGB.NET.Devices.Corsair swapped to a local DLL for ad-hoc debugging
-         (see Build Dependencies/RGB.NET/). -->
-    <!--<PackageReference Include="RGB.NET.Devices.Corsair" Version="3.2.0" />-->
+    <PackageReference Include="RGB.NET.Devices.Corsair" Version="3.2.0" />
     <!-- RGB.NET.Devices.Logitech swapped to a local DLL for ad-hoc debugging
          (see Build Dependencies/RGB.NET/). Revert to PackageReference before
          committing. -->
@@ -159,10 +157,6 @@
     </Reference>
     <Reference Include="RGB.NET.Devices.SteelSeries">
       <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.SteelSeries.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Corsair">
-      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Corsair.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RGB.NET.Devices.OpenRGB">
