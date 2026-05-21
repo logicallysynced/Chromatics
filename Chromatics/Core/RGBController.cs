@@ -1178,7 +1178,16 @@ namespace Chromatics.Core
                 // Provider type name is always available and more useful for
                 // diagnosis anyway (which provider failed, not which device).
                 var label = provider?.GetType().Name ?? "Unknown";
-                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{label}] LoadDeviceProvider Error: {ex.Message}");
+
+                // RGB.NET singletons (Corsair in particular) can throw
+                // ObjectDisposedException when Load is called after the
+                // provider's own teardown path disposed Instance. The user
+                // still sees the load failure in console, but Sentry doesn't
+                // get spammed — the root cause is upstream and a single
+                // failed load is non-fatal (Chromatics carries on with the
+                // remaining providers).
+                bool benign = ex is ObjectDisposedException;
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{label}] LoadDeviceProvider Error: {ex.Message}", forwardToSentry: !benign);
 
                 // Logitech-SDK init failure can route through the catch
                 // (synchronous throw) AND/OR through the surface.Exception

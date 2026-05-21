@@ -566,6 +566,14 @@ namespace Chromatics.Core
                 System.IO.IOException io => io.InnerException is System.Net.Sockets.SocketException ise && IsBenignSocketError(ise.SocketErrorCode),
                 ObjectDisposedException => true,
                 OperationCanceledException => true,
+                // Avalonia's WndProc raises ShutdownRequested a second time
+                // (e.g. system logoff / WM_CLOSE on a transient window) after
+                // our OnClosed already called desktop.Shutdown(). DoShutdown
+                // throws because _isShuttingDown is already true. We Process.Kill
+                // immediately after, so the throw never affects the user — but
+                // Sentry's UnhandledException integration still captures it as
+                // handled noise. Filter at source.
+                InvalidOperationException ioe when ioe.Message.StartsWith("Application is already shutting down", StringComparison.Ordinal) => true,
                 _ => false,
             };
         }

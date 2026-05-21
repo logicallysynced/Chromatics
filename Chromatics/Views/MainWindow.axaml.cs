@@ -306,15 +306,33 @@ namespace Chromatics.Views
 
         private async Task CheckForUpdateAsync()
         {
-            var includeBeta = AppSettings.GetSettings().betaChannel;
-            var result = await UpdateService.CheckAsync(includeBeta);
-            if (result == null) return;
-
-            await Dispatcher.UIThread.InvokeAsync(async () =>
+            // Fire-and-forget at the call site (`_ = CheckForUpdateAsync()`), so
+            // any exception that escapes here lands in the UnobservedTaskException
+            // path and Sentry captures it as an unhandled crash. Wrap the whole
+            // body so the worst case is a verbose-log line, not a beta-channel
+            // Sentry event.
+            try
             {
-                var dialog = new UpdateDialog(result);
-                await dialog.ShowDialog(this);
-            });
+                var includeBeta = AppSettings.GetSettings().betaChannel;
+                var result = await UpdateService.CheckAsync(includeBeta);
+                if (result == null) return;
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    // If the user hid the window to the tray between the check
+                    // kickoff and the result landing, ShowDialog throws "Cannot
+                    // show window with non-visible owner". The next launch will
+                    // re-detect the same update, so skip silently this run.
+                    if (!IsVisible) return;
+
+                    var dialog = new UpdateDialog(result);
+                    await dialog.ShowDialog(this);
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[MainWindow] CheckForUpdateAsync skipped: {ex.GetType().Name} — {ex.Message}");
+            }
         }
 
         private void OnClosing(object sender, WindowClosingEventArgs e)

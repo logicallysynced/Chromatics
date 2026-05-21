@@ -2,6 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.54
+
+- Fixed an error that could appear when Chromatics auto-checked for updates while minimized to the tray.
+- Minor fixes and improvements.
+
 ## 4.2.50
 
 - **New:** Windows Dynamic Lighting support. This is currently in beta.
