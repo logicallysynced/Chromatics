@@ -4,6 +4,7 @@ All notable changes to Chromatics are documented here.
 
 ## 4.2.54
 
+- Fixed an issue which prevented Corsair and OpenRGB RGB.NET device providers from starting.
 - Fixed an error that could appear when Chromatics auto-checked for updates while minimized to the tray.
 - Minor fixes and improvements.
 
