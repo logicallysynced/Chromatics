@@ -16,9 +16,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Mirror the main Chromatics csproj's local Logitech swap so the
-         harness builds against the same DLL. Revert alongside the main
-         csproj before committing. -->
+    <!-- Mirror the main Chromatics csproj's local RGB.NET swaps. RGB.NET.Core
+         must be referenced directly here because the main csproj suppresses
+         its NuGet PackageReference with PrivateAssets='all' (so the local
+         DLL wins over the transitive copy), and <Reference> items don't flow
+         transitively through <ProjectReference>. Without this direct Core
+         reference, the harness can't see RGBSurface / IRGBDeviceProvider /
+         ListLedGroup / LedId / etc. at compile time. -->
+    <Reference Include="RGB.NET.Core">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RGB.NET.Devices.Logitech">
       <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Logitech.dll</HintPath>
       <Private>True</Private>
@@ -29,10 +37,6 @@
     </Reference>
     <Reference Include="RGB.NET.Devices.SteelSeries">
       <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.SteelSeries.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="RGB.NET.Devices.Corsair">
-      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Corsair.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RGB.NET.Devices.OpenRGB">

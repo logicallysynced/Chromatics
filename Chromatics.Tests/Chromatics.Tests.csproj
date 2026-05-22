@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="10.0.0" />
+    <PackageReference Include="coverlet.collector" Version="10.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
@@ -23,6 +23,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Chromatics\Chromatics.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The main Chromatics csproj suppresses the RGB.NET.Core PackageReference
+         with PrivateAssets='all' so the local DLL (with the CHROMATICS-15 fix)
+         wins over the transitive NuGet copy. <Reference> items don't flow
+         transitively through <ProjectReference>, so the test project needs
+         its own direct reference to see LedId / RGBSurface / etc. -->
+    <Reference Include="RGB.NET.Core">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
