@@ -1,34 +1,53 @@
+using Chromatics.Core;
+using Chromatics.Enums;
 using HidSharp;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Chromatics.Extensions.RGB.NET.Devices.Redragon.Protocol
 {
     // HidSharp-based discovery for Redragon mice on the shared OpenRGB
     // protocol family. Walks the local HID device list, filters by
-    // Redragon's USB vendor id (0x04D9), and matches PID against the
-    // RedragonMouseModel enum.
+    // Redragon's USB vendor id (0x04D9), the known PID table, USB
+    // interface 2, and HID usage page 0xFFA0 — the same combination
+    // OpenRGB's RedragonControllerDetect.cpp uses to single out the
+    // control interface.
     //
-    // Mirrors the Alienware pattern: returns a flat candidate list. The
-    // provider's LoadDevices walks the result, opens each HidDevice, and
-    // builds one RedragonDevice per detected hardware. The Mapping tab is
-    // the user's per-device toggle once the provider is enabled.
+    // The interface filter is load-bearing on multi-interface mice like
+    // the M908 Impact. Without it we'd accept every HidDevice that
+    // happens to expose usage page 0xFFA0 (the OEM uses 0xFFA0 broadly,
+    // so input + mouse-extra interfaces frequently share it). Opening
+    // two HidDevice handles against the same physical mouse means the
+    // provider creates two RedragonDevice instances, and two update
+    // queues at 30Hz each = 60 feature reports per second hammering the
+    // same USB endpoint. That race is what manifests as the M908's
+    // constant LED flicker on rapid colour changes.
     //
     // PIDs outside the curated table are intentionally skipped. Redragon
     // ships many non-mouse products on the same VID (keyboards, headsets,
     // gamepads) — none of which speak this protocol. Wandering off-list
-    // would brick devices that share the VID with a different firmware.
+    // could brick devices that share the VID with a different firmware.
     internal static class RedragonDiscovery
     {
         public const int VidRedragon = 0x04D9;
 
-        // Redragon mouse interface descriptors: USB interface 2, HID usage
-        // page 0xFFA0 (vendor-defined). HidSharp surfaces the HID interface
-        // as a single HidDevice per interface, so we want only the one
-        // whose usage page is 0xFFA0 — that's the HID interface OpenRGB
-        // writes feature reports to. The other interfaces on the same VID
-        // are the mouse-input interfaces and don't accept these reports.
+        // Vendor-defined usage page. OpenRGB calls this REDRAGON_MOUSE_USAGE_PAGE.
         public const ushort RedragonUsagePage = 0xFFA0;
+
+        // USB interface number for the lighting control interface on every
+        // Redragon mouse OpenRGB drives. The other interfaces are for HID
+        // input (buttons + movement) and don't accept feature-report writes.
+        public const int ControlInterfaceNumber = 2;
+
+        // Matches "&MI_XX" or "&Mi_XX" anywhere in a Windows HID device
+        // path. Case-insensitive because some firmware revisions report
+        // the path in mixed case. The hex digits are the USB interface
+        // number — Windows formats it as exactly two hex digits per
+        // USB descriptor convention.
+        private static readonly Regex _miPattern = new(
+            @"[&#]mi_([0-9a-f]{2})",
+            RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public sealed class Candidate
         {
@@ -46,6 +65,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon.Protocol
             try { hidDevices = DeviceList.Local.GetHidDevices(); }
             catch { return results; }
 
+            // First pass: collect every candidate that matches VID + PID +
+            // interface number, grouped by (PID, parent-path) so we can
+            // dedupe collisions where the same physical interface shows up
+            // as multiple HidDevices (one per HID collection).
+            var byKey = new Dictionary<string, Candidate>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var hid in hidDevices)
             {
                 int vid, pid;
@@ -56,37 +81,94 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon.Protocol
                 var model = (RedragonMouseModel)pid;
                 if (model == RedragonMouseModel.Unknown) continue;
 
-                // Filter to the vendor-defined HID interface. Without this
-                // check we pick up the mouse-input interface too and the
-                // feature-report writes silently fail (or worse, get
-                // re-interpreted as a button event). HidSharp's
-                // ReportDescriptor.DeviceItems / Usages chain is the only
-                // way to read the usage page without opening the device,
-                // and even that throws on a couple of older Redragon
-                // firmwares. Fall back to "trust the PID and open it" if
-                // the descriptor read fails — the apply command we send
-                // first is a no-op on the input interface, so the worst
-                // case is a wasted handle until the next reconcile.
-                if (!IsRedragonControlInterface(hid))
+                string path;
+                try { path = hid.DevicePath ?? string.Empty; } catch { continue; }
+
+                int? iface = ExtractInterfaceNumber(path);
+                if (iface.HasValue && iface.Value != ControlInterfaceNumber)
                     continue;
 
-                string mfg = "", prod = "";
-                try { mfg  = hid.GetManufacturer() ?? ""; } catch { /* ignore */ }
-                try { prod = hid.GetProductName() ?? ""; } catch { /* ignore */ }
+                if (!HasRedragonUsagePage(hid))
+                    continue;
 
-                results.Add(new Candidate
+                // Dedupe key collapses every HID collection that belongs to
+                // the same physical (VID, PID, MI_02) interface onto one
+                // candidate. Picking by max feature-report length favours
+                // the collection that carries the 16-byte control reports
+                // over any sibling collection on the same interface.
+                string key = $"{pid:X4}|{StripCollectionSuffix(path)}";
+                if (byKey.TryGetValue(key, out var existing))
                 {
-                    Hid = hid,
-                    Model = model,
-                    Manufacturer = mfg,
-                    Product = prod,
-                });
+                    if (GetFeatureReportLength(hid) > GetFeatureReportLength(existing.Hid))
+                    {
+                        byKey[key] = MakeCandidate(hid, model);
+                    }
+                    continue;
+                }
+
+                byKey[key] = MakeCandidate(hid, model);
+            }
+
+            results.AddRange(byKey.Values);
+
+            if (results.Count > 0)
+            {
+                var sb = new System.Text.StringBuilder();
+                sb.Append("[Redragon] Discovery resolved ").Append(results.Count).Append(" candidate(s):");
+                foreach (var c in results)
+                    sb.Append("\n  ").Append(c.Model.DisplayName(c.Hid.ProductID))
+                      .Append(" (").AppendFormat("{0:X4}:{1:X4}", c.Hid.VendorID, c.Hid.ProductID).Append(") path=").Append(c.Hid.DevicePath);
+                Logger.WriteVerbose(sb.ToString());
             }
 
             return results;
         }
 
-        private static bool IsRedragonControlInterface(HidDevice hid)
+        private static Candidate MakeCandidate(HidDevice hid, RedragonMouseModel model)
+        {
+            string mfg = "", prod = "";
+            try { mfg  = hid.GetManufacturer() ?? ""; } catch { /* ignore */ }
+            try { prod = hid.GetProductName() ?? ""; } catch { /* ignore */ }
+
+            return new Candidate
+            {
+                Hid = hid,
+                Model = model,
+                Manufacturer = mfg,
+                Product = prod,
+            };
+        }
+
+        // Extract the USB interface number from a HID device path.
+        // Returns null when no MI_XX segment is present — single-interface
+        // devices (and non-Windows paths) end up here. In that case the
+        // caller proceeds with the descriptor probe, since a single-
+        // interface mouse can't pick the wrong interface anyway.
+        private static int? ExtractInterfaceNumber(string devicePath)
+        {
+            if (string.IsNullOrEmpty(devicePath)) return null;
+            var m = _miPattern.Match(devicePath);
+            if (!m.Success) return null;
+            return int.Parse(m.Groups[1].Value, System.Globalization.NumberStyles.HexNumber);
+        }
+
+        // Strip the "&Col_XX" or "&col_XX" segment that distinguishes HID
+        // collections within the same USB interface. Two paths that
+        // differ only in collection should dedupe to one candidate.
+        private static string StripCollectionSuffix(string devicePath)
+        {
+            if (string.IsNullOrEmpty(devicePath)) return string.Empty;
+            int idx = devicePath.IndexOf("&Col", StringComparison.OrdinalIgnoreCase);
+            return idx >= 0 ? devicePath.Substring(0, idx) : devicePath;
+        }
+
+        private static int GetFeatureReportLength(HidDevice hid)
+        {
+            try { return hid.GetMaxFeatureReportLength(); }
+            catch { return 0; }
+        }
+
+        private static bool HasRedragonUsagePage(HidDevice hid)
         {
             try
             {
@@ -96,7 +178,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon.Protocol
                     foreach (var usage in item.Usages.GetAllValues())
                     {
                         // Usage value is (page << 16) | id. We only care about
-                        // the page byte (high 16 bits).
+                        // the page (high 16 bits).
                         ushort page = (ushort)(usage >> 16);
                         if (page == RedragonUsagePage) return true;
                     }
@@ -107,8 +189,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon.Protocol
             {
                 // Descriptor read failed — keep this candidate so we don't
                 // silently lose the device on the firmware versions where
-                // descriptor parsing fails. The protocol's apply command is
-                // benign on wrong interfaces.
+                // descriptor parsing fails. The interface-number filter
+                // upstream still rules out the input interfaces.
                 return true;
             }
         }
