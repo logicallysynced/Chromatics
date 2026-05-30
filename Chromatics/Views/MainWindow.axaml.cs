@@ -51,29 +51,31 @@ namespace Chromatics.Views
             }
         }
 
-        // Three-stage taskbar icon fix.
+        // Two-stage taskbar icon fix.
         //
-        // STAGE 1 — PKEY_AppUserModel_ID. Velopack hard-codes the process-level
-        // AUMID to "velopack.Chromatics" early in startup. The Win11 taskbar
-        // keys its icon off the AUMID, looking for a Start Menu shortcut whose
-        // target AUMID matches. Portable extractions have no such shortcut, so
-        // the taskbar caches a blank entry and never falls back to the window
-        // HICON. Setting PKEY_AppUserModel_ID on this window's property store
-        // overrides the process AUMID for THIS window with one the shell has
-        // never seen — no cached entry, no broken shortcut binding, so the
-        // taskbar falls through to Stage 2 + 3 cleanly.
+        // STAGE 1 — PKEY_AppUserModel_RelaunchIconResource. Points the shell
+        // at "<exe>,0" (first icon resource in Chromatics.exe) for this
+        // window's taskbar entry and jump-list relaunch icon. Mostly cosmetic
+        // jump-list polish for installer builds (the Start Menu shortcut
+        // already binds the right icon) but load-bearing for portable
+        // extractions where no shortcut exists, so the shell falls through
+        // to this property when resolving the AUMID's icon.
         //
-        // STAGE 2 — PKEY_AppUserModel_RelaunchIconResource. Points the shell at
-        // "<exe>,0" (first icon resource in Chromatics.exe) for this window's
-        // taskbar entry and jump-list relaunch icon.
+        // STAGE 2 — WM_SETICON. Sets the window's own HICON pair from the
+        // EXE's embedded application icon. Title bar and Alt-Tab thumbnail
+        // read this directly; the Win11 taskbar uses it as the final
+        // fallback if the AUMID + RelaunchIconResource chain still lands
+        // somewhere blank.
         //
-        // STAGE 3 — WM_SETICON. Sets the window's own HICON pair from the EXE's
-        // embedded application icon. Title bar and Alt-Tab thumbnail read this
-        // directly; the Win11 taskbar uses it as the final fallback once the
-        // AUMID lookup chain (Stages 1 + 2) lands somewhere with no shortcut.
-        //
-        // All three stages run from OnOpened so the HWND exists and is
+        // Both stages run from OnOpened so the HWND exists and is
         // registered with the shell before we touch any icon path.
+        //
+        // Pre-Velopack-1.0 this method also overrode PKEY_AppUserModel_ID
+        // per-window to escape Velopack's hard-coded "velopack.Chromatics"
+        // AUMID. Velopack 1.0+ accepts --aumid at pack time (publish.py
+        // passes AUMID_INSTALLER / AUMID_PORTABLE), so the process-level
+        // AUMID already matches the sparse-package identity and the
+        // per-window override is gone.
         private void ForceTaskbarIcon()
         {
             var platformHandle = TryGetPlatformHandle();
@@ -85,53 +87,39 @@ namespace Chromatics.Views
             var hwnd = platformHandle.Handle;
             var exe = Environment.ProcessPath;
 
-            // Stages 1 + 2: AUMID override + RelaunchIconResource on this
-            // window's property store. Both writes share one IPropertyStore.
-            try
+            // Stage 1: RelaunchIconResource on this window's property store.
+            if (!string.IsNullOrEmpty(exe))
             {
-                var iid = NativeRelaunch.IID_IPropertyStore;
-                int hr = NativeRelaunch.SHGetPropertyStoreForWindow(hwnd, ref iid, out var propStore);
-                if (hr != 0 || propStore == null)
+                try
                 {
-                    Logger.WriteVerbose($"[MainWindow] SHGetPropertyStoreForWindow returned HRESULT 0x{hr:X8}, skipping AUMID + relaunch-icon stages");
-                }
-                else
-                {
-                    try
+                    var iid = NativeRelaunch.IID_IPropertyStore;
+                    int hr = NativeRelaunch.SHGetPropertyStoreForWindow(hwnd, ref iid, out var propStore);
+                    if (hr != 0 || propStore == null)
                     {
-                        // Fresh AUMID the shell has no cached binding for. Distinct
-                        // from Velopack's "velopack.Chromatics" so we get a brand-new
-                        // taskbar identity. Portable + installer split so they don't
-                        // collide if both are launched on the same machine.
-                        const string aumid =
-#if PORTABLE_BUILD
-                            "com.logicallysynced.Chromatics.Portable.MainWindow";
-#else
-                            "com.logicallysynced.Chromatics.MainWindow";
-#endif
-                        SetStringProperty(propStore, NativeRelaunch.PKEY_AppUserModel_ID, aumid, "PKEY_AppUserModel_ID");
-
-                        if (!string.IsNullOrEmpty(exe))
+                        Logger.WriteVerbose($"[MainWindow] SHGetPropertyStoreForWindow returned HRESULT 0x{hr:X8}, skipping relaunch-icon stage");
+                    }
+                    else
+                    {
+                        try
                         {
                             var iconResource = $"{exe},0";
                             SetStringProperty(propStore, NativeRelaunch.PKEY_AppUserModel_RelaunchIconResource, iconResource, "PKEY_AppUserModel_RelaunchIconResource");
+                            int commitHr = propStore.Commit();
+                            Logger.WriteVerbose($"[MainWindow] IPropertyStore.Commit returned 0x{commitHr:X8}");
                         }
-
-                        int commitHr = propStore.Commit();
-                        Logger.WriteVerbose($"[MainWindow] IPropertyStore.Commit returned 0x{commitHr:X8}");
-                    }
-                    finally
-                    {
-                        Marshal.ReleaseComObject(propStore);
+                        finally
+                        {
+                            Marshal.ReleaseComObject(propStore);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteVerbose($"[MainWindow] Property-store path failed: {ex.GetType().Name} — {ex.Message}");
+                catch (Exception ex)
+                {
+                    Logger.WriteVerbose($"[MainWindow] Property-store path failed: {ex.GetType().Name} — {ex.Message}");
+                }
             }
 
-            // Stage 3: WM_SETICON from EXE's embedded application icon.
+            // Stage 2: WM_SETICON from EXE's embedded application icon.
             try
             {
                 if (!string.IsNullOrEmpty(exe))
@@ -205,14 +193,6 @@ namespace Chromatics.Views
             {
                 fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
                 pid = 3,
-            };
-
-            // PKEY_AppUserModel_ID — see
-            // https://learn.microsoft.com/windows/win32/properties/props-system-appusermodel-id
-            public static readonly PROPERTYKEY PKEY_AppUserModel_ID = new PROPERTYKEY
-            {
-                fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
-                pid = 5,
             };
 
             [StructLayout(LayoutKind.Sequential)]
