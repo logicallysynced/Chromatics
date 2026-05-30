@@ -2,16 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.56
+## 4.2.57
 
-- **New:** Redragon mouse support (Beta). Covers 13 Redragon RGB mice that speak the OpenRGB HID protocol family - M711 Cobra, M715 Dagger, M716 Inquisitor, M602 Griffin, M801 Sniper, M808 Storm, M810 Taipan, M908 Impact, M987 Reaping, M719 Invader, M990 Legend, M709 Tiger, and M721-Pro Lonewolf 2. No OpenRGB server, Redragon software, or extra drivers needed - plug in your mouse and enable Redragon under Settings → Device Providers. Auto-detect on connect and hot-plug. Each mouse paints as a single zone (the firmware exposes one addressable colour register that covers the logo and DPI underglow together).
-
-## 4.2.55
-
+- **New:** Redragon mouse support (Beta). Covers 13 Redragon RGB mice that speak the OpenRGB HID protocol family - M711 Cobra, M715 Dagger, M716 Inquisitor, M602 Griffin, M801 Sniper, M808 Storm, M810 Taipan, M908 Impact, M987 Reaping, M719 Invader, M990 Legend, M709 Tiger, and M721-Pro Lonewolf 2.
 - Fixed an issue which prevented Corsair and OpenRGB RGB.NET device providers from starting.
-
-## 4.2.54
-
 - Fixed an error that could appear when Chromatics auto-checked for updates while minimized to the tray.
 - Minor fixes and improvements.
 

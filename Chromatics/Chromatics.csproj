@@ -10,7 +10,7 @@
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.2.56.0</Version>
+    <Version>4.2.57.0</Version>
     <Authors>Danielle Thompson</Authors>
     <!-- ApplicationManifest is conditional: local Debug + Release builds embed
          app.manifest (no fusion-identity <msix> element) so VS debug runs and
@@ -74,17 +74,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.3" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.3" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.3" />
+    <PackageReference Include="Avalonia" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.4" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
-    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.3" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.4" />
     <PackageReference Include="Markdown.Avalonia.Tight" Version="12.0.0-a3" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageReference Include="Velopack" Version="1.0.1" />
-    <PackageReference Include="Sentry" Version="6.5.0" />
-    <PackageReference Include="Sentry.Profiling" Version="6.5.0" />
+    <PackageReference Include="Sentry" Version="6.6.0" />
+    <PackageReference Include="Sentry.Profiling" Version="6.6.0" />
   </ItemGroup>
 
   <ItemGroup>
