@@ -52,19 +52,35 @@ namespace Chromatics.Views
 
         private async void OnCheckUpdatesClick(object sender, RoutedEventArgs e)
         {
-            var s = AppSettings.GetSettings();
-            var result = await Task.Run(() => UpdateService.CheckAsync(s.betaChannel));
-
-            if (result == null)
+            // async void event handler — any escaping exception lands on the
+            // UnobservedTaskException path (CHROMATICS-16). Wrap the whole
+            // body so the worst case is a verbose-log line instead of a
+            // Sentry-captured crash.
+            try
             {
-                await DialogService.ShowAsync("Up to Date", "Chromatics is up to date.");
-                return;
-            }
+                var s = AppSettings.GetSettings();
+                var result = await Task.Run(() => UpdateService.CheckAsync(s.betaChannel));
 
-            var owner = this.FindAncestorOfType<Window>();
-            if (owner == null) return;
-            var dialog = new UpdateDialog(result);
-            await dialog.ShowDialog(owner);
+                if (result == null)
+                {
+                    await DialogService.ShowAsync("Up to Date", "Chromatics is up to date.");
+                    return;
+                }
+
+                // ShowDialog throws "Cannot show window with non-visible
+                // owner" when the parent window was hidden to tray while we
+                // were awaiting the update check. The user explicitly
+                // clicked Check for Updates, so route through the shared
+                // optional-owner helper which falls back to a stand-alone
+                // Show() rather than silently dropping the dialog.
+                var owner = this.FindAncestorOfType<Window>();
+                var dialog = new UpdateDialog(result);
+                await DialogService.ShowWithOptionalOwnerAsync(dialog, owner);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[SettingsView] OnCheckUpdatesClick failed: {ex.GetType().Name} — {ex.Message}");
+            }
         }
 
         private async void OnCollectLogsClick(object sender, RoutedEventArgs e)
