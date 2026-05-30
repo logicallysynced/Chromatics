@@ -571,6 +571,24 @@ namespace Chromatics.Core
                     }
                 }
 
+                if (appSettings.deviceRedragonEnabled)
+                {
+                    try
+                    {
+                        // Redragon mice on the OpenRGB protocol family.
+                        // RedragonDiscovery inside LoadDevices walks USB and
+                        // auto-adopts everything matching the curated VID/PID
+                        // table — there's no per-device persisted adoption
+                        // list, so users disable individual devices on the
+                        // Mapping tab instead.
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.Redragon.RedragonRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[RedragonDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 
                 _timerUpdateTrigger = new TimerUpdateTrigger();

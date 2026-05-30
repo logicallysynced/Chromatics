@@ -72,6 +72,7 @@ namespace Chromatics.Models
         public List<YeelightAdoptedDevice> deviceYeelightAdoptedDevices { get; set; } = new();
         public bool deviceAlienwareEnabled { get; set; } = false;
         public List<AlienwareAdoptedDevice> deviceAlienwareAdoptedDevices { get; set; } = new();
+        public bool deviceRedragonEnabled { get; set; } = false;
         public bool deviceDynamicLightingEnabled { get; set; } = false;
         public bool dynamicLightingHintShown { get; set; } = false;
         // Default: false (bypass off, conservative dedup is on).

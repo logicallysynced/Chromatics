@@ -674,6 +674,55 @@ namespace Chromatics.ViewModels
                     AppSettings.SaveSettings(cur);
                 }));
 
+            // Redragon mice on the shared OpenRGB HID protocol family.
+            // Pure managed HidSharp; no OpenRGB server required. Auto-adopts
+            // every Redragon mouse on the curated VID/PID table at load
+            // time, hot-plug picks up new ones live. Mapping tab handles
+            // per-device disable.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Redragon (Beta)",
+                "[BETA] Enable/disable Redragon mouse device support. Drives Redragon mice that speak the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and 10 others) directly over HID — no OpenRGB server or Redragon software required. Default: Disabled",
+                s.deviceRedragonEnabled,
+                async () =>
+                {
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[Redragon] Scanning for Redragon mice on the HID bus...");
+
+                    bool result = await Task.Run(() =>
+                    {
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.Redragon.Protocol.RedragonDiscovery.Discover();
+                        if (discovered.Count == 0) return false;
+
+                        var cur2 = AppSettings.GetSettings();
+                        cur2.deviceRedragonEnabled = true;
+                        AppSettings.SaveSettings(cur2);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.Redragon.RedragonRGBDeviceProvider.Instance);
+                        return true;
+                    });
+
+                    if (!result)
+                    {
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No Redragon Devices Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any Redragon mice on this PC. Make sure your mouse is plugged in directly (not through a hub that strips vendor-defined HID interfaces) and that no other lighting app (OpenRGB, Razer Synapse, the Redragon utility) is holding the HID interface exclusively."]);
+                    }
+                    return result;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.Redragon.RedragonRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceRedragonEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
             // Windows Dynamic Lighting (LampArray). Discovery is handled by
             // the Windows DeviceWatcher inside the provider so there's no
             // per-device adoption picker — every Dynamic-Lighting-capable
