@@ -681,7 +681,7 @@ namespace Chromatics.ViewModels
             // per-device disable.
             DeviceToggles.Add(new DeviceToggleItem(
                 "Redragon (Beta)",
-                "[BETA] Enable/disable Redragon mouse device support. Drives Redragon mice that speak the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and 10 others) directly over HID — no OpenRGB server or Redragon software required. Default: Disabled",
+                "[BETA] Enable/disable Redragon mouse device support.",
                 s.deviceRedragonEnabled,
                 async () =>
                 {

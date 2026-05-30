@@ -962,5 +962,6 @@
   "No Redragon Devices Found": "未找到 Redragon 设备",
   "Chromatics didn't detect any Redragon mice on this PC. Make sure your mouse is plugged in directly (not through a hub that strips vendor-defined HID interfaces) and that no other lighting app (OpenRGB, Razer Synapse, the Redragon utility) is holding the HID interface exclusively.": "Chromatics 未在此电脑上检测到任何 Redragon 鼠标。请确保鼠标直接连接到电脑（不要通过会剥离厂商定义 HID 接口的集线器连接），并且没有其他灯效应用（OpenRGB、Razer Synapse、Redragon 工具）独占 HID 接口。",
   "[BETA] Enable/disable Redragon mouse device support. Drives Redragon mice that speak the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and 10 others) directly over HID — no OpenRGB server or Redragon software required. Default: Disabled": "【测试版】启用/禁用 Redragon 鼠标设备支持。通过 HID 直接驱动使用 OpenRGB HID 协议族的 Redragon 鼠标（M711 Cobra、M715 Dagger、M908 Impact 以及另外 10 款）——无需 OpenRGB 服务器或 Redragon 软件。默认：禁用",
-  "Redragon mice on the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and others). No OpenRGB server or Redragon software required.": "支持 OpenRGB HID 协议族的 Redragon 鼠标（M711 Cobra、M715 Dagger、M908 Impact 等）。无需 OpenRGB 服务器或 Redragon 软件。"
+  "Redragon mice on the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and others). No OpenRGB server or Redragon software required.": "支持 OpenRGB HID 协议族的 Redragon 鼠标（M711 Cobra、M715 Dagger、M908 Impact 等）。无需 OpenRGB 服务器或 Redragon 软件。",
+  "[BETA] Enable/disable Redragon mouse device support.": "[BETA] 启用/禁用 Redragon 鼠标设备支持。"
 }
