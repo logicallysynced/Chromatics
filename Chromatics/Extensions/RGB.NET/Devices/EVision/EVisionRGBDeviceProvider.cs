@@ -47,14 +47,28 @@ namespace Chromatics.Extensions.RGB.NET.Devices.EVision
         private bool _hotplugSubscribed;
         private int _hotplugScheduleSeq;
 
-        // 10Hz. Lower than the standard 30Hz to cut flash wear from
-        // the V1 protocol's write-per-frame behaviour. The EVision
-        // firmware also synchronously ACKs every one of the nine HID
-        // reports that make up a frame, so 30Hz would put the device
-        // close to its USB EP throughput ceiling regardless.
-        private const double UpdateFrequencySeconds = 1.0 / 10.0;
+        // Update rate ceiling and floor. 30Hz is what every other provider
+        // uses; 1Hz is the minimum that still feels responsive when the
+        // user is dragging the brightness slider. The default 10Hz cuts
+        // flash wear from the V1 protocol's write-per-frame behaviour
+        // against the 30Hz baseline. Power users override via
+        // SettingsModel.eVisionUpdateRateHz - hidden field, not exposed
+        // in the UI.
+        private const double MinUpdateRateHz = 1.0;
+        private const double MaxUpdateRateHz = 30.0;
+        private const double DefaultUpdateRateHz = 10.0;
 
         private const int HotplugDebounceMs = 1500;
+
+        private static double GetConfiguredUpdateRateSeconds()
+        {
+            double hz;
+            try { hz = AppSettings.GetSettings()?.eVisionUpdateRateHz ?? DefaultUpdateRateHz; }
+            catch { hz = DefaultUpdateRateHz; }
+            if (double.IsNaN(hz) || hz <= 0) hz = DefaultUpdateRateHz;
+            hz = Math.Clamp(hz, MinUpdateRateHz, MaxUpdateRateHz);
+            return 1.0 / hz;
+        }
 
         protected override void InitializeSDK()
         {
@@ -66,7 +80,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.EVision
         }
 
         protected override IDeviceUpdateTrigger CreateUpdateTrigger(int id, double updateRateHardLimit)
-            => new EVisionUpdateTrigger(UpdateFrequencySeconds);
+            => new EVisionUpdateTrigger(GetConfiguredUpdateRateSeconds());
 
         protected override IEnumerable<IRGBDevice> LoadDevices()
         {

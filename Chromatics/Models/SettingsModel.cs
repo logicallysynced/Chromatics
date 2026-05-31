@@ -80,6 +80,14 @@ namespace Chromatics.Models
         // continuous dynamic effects may wear the storage chip over
         // years. Shown once on the first successful enable.
         public bool eVisionFlashHintShown { get; set; } = false;
+        // Update rate (frames per second) for the EVision provider's
+        // per-keyboard send loop. Hidden setting - not exposed in the UI
+        // - so power users can trade firmware-flash wear against
+        // smoothness by editing settings.chromatics4 directly. Default
+        // 10Hz is a compromise; lower values reduce flash writes,
+        // higher values look smoother on dynamic effects. Clamped to
+        // [1, 30] at provider start.
+        public double eVisionUpdateRateHz { get; set; } = 10.0;
         public bool deviceDynamicLightingEnabled { get; set; } = false;
         public bool dynamicLightingHintShown { get; set; } = false;
         // Default: false (bypass off, conservative dedup is on).

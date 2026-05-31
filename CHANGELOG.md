@@ -2,9 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.57
+## 4.2.62
 
-- **New:** Redragon mouse support (Beta). Covers 13 Redragon RGB mice that speak the OpenRGB HID protocol family - M711 Cobra, M715 Dagger, M716 Inquisitor, M602 Griffin, M801 Sniper, M808 Storm, M810 Taipan, M908 Impact, M987 Reaping, M719 Invader, M990 Legend, M709 Tiger, and M721-Pro Lonewolf 2.
+- **New:** EVision keyboard support (Beta). Covers 13 keyboards that share the Sonix VS11K28A firmware - Glorious GMMK TKL, Redragon K550 / K552 / K552-2 / K556, Tecware Phantom Elite, Womier K66 / K87, Mars Gaming MKMini, Skillkorp K5, DEXP Blaze, Warrior Kane TC235, and Gamepower Ogre RGB. The update rate is 10 frames per second by default; power users can change it via the hidden `eVisionUpdateRateHz` setting in `settings.chromatics4` (clamped to 1-30).
+- **New:** Redragon support (Beta). Covers 13 Redragon RGB mice that speak the OpenRGB HID protocol family - M711 Cobra, M715 Dagger, M716 Inquisitor, M602 Griffin, M801 Sniper, M808 Storm, M810 Taipan, M908 Impact, M987 Reaping, M719 Invader, M990 Legend, M709 Tiger, and M721-Pro Lonewolf 2.
 - Fixed an issue which prevented Corsair and OpenRGB RGB.NET device providers from starting.
 - Fixed an error that could appear when Chromatics auto-checked for updates while minimized to the tray.
 - Minor fixes and improvements.
