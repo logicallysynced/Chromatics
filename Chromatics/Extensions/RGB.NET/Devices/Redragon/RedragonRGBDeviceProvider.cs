@@ -46,17 +46,39 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon
         private bool _hotplugSubscribed;
         private int _hotplugScheduleSeq;
 
-        // 30Hz cap. Redragon firmware accepts the address-write + apply
-        // pair at sustained 30Hz without dropping; going faster risks the
-        // firmware falling back to a stored mode mid-session per OpenRGB
-        // testing notes.
-        private const double UpdateFrequencySeconds = 1.0 / 30.0;
+        // Update rate ceiling, floor, and default. Each frame is two HID
+        // feature reports (colour write to 0x0449 + apply commit 0xF1), and
+        // the firmware briefly dips PWM output on every commit. At 30Hz
+        // those dips manifest as visible flicker - the M908 Impact is the
+        // most affected board the OpenRGB driver covers. 10Hz puts the
+        // dips below perception while keeping cycling effects smooth.
+        // OpenRGB's effects engine pulses Direct mode at the effect's own
+        // cadence (typically 5-15Hz), which is why OpenRGB users don't
+        // see the same flicker we did at 30Hz.
+        //
+        // Power users override via SettingsModel.redragonUpdateRateHz -
+        // hidden field, not exposed in the UI - clamped to [1, 30] at
+        // provider startup so an out-of-range value can't break the
+        // trigger.
+        private const double MinUpdateRateHz = 1.0;
+        private const double MaxUpdateRateHz = 30.0;
+        private const double DefaultUpdateRateHz = 10.0;
 
         // Windows fires several PnP events for one logical USB connect; we
         // wait long enough for the device tree to settle before
         // re-enumerating, otherwise TryOpen wins a partially-enumerated
         // handle and the first feature-report write fails.
         private const int HotplugDebounceMs = 1500;
+
+        private static double GetConfiguredUpdateRateSeconds()
+        {
+            double hz;
+            try { hz = AppSettings.GetSettings()?.redragonUpdateRateHz ?? DefaultUpdateRateHz; }
+            catch { hz = DefaultUpdateRateHz; }
+            if (double.IsNaN(hz) || hz <= 0) hz = DefaultUpdateRateHz;
+            hz = Math.Clamp(hz, MinUpdateRateHz, MaxUpdateRateHz);
+            return 1.0 / hz;
+        }
 
         protected override void InitializeSDK()
         {
@@ -68,7 +90,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon
         }
 
         protected override IDeviceUpdateTrigger CreateUpdateTrigger(int id, double updateRateHardLimit)
-            => new RedragonUpdateTrigger(UpdateFrequencySeconds);
+            => new RedragonUpdateTrigger(GetConfiguredUpdateRateSeconds());
 
         protected override IEnumerable<IRGBDevice> LoadDevices()
         {
