@@ -839,7 +839,6 @@
   "No lights found on this bridge.": "이 브리지에서 조명을 찾을 수 없습니다.",
   "{0} Hue light(s) on this bridge.": "이 브리지에 Hue 조명 {0}개가 있습니다.",
   "Couldn't read lights from the bridge: {0}": "브리지에서 조명을 읽을 수 없습니다: {0}",
-  "QMK Keyboards (Beta)": "QMK 키보드(베타)",
   "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.": "Raw HID를 통한 QMK 키보드입니다. NovelKeys, KBDFans, Drop, GMMK, Glorious 및 Raw HID가 활성화된 QMK를 실행하는 기타 모든 커스텀 키보드를 지원합니다.",
   "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled": "[베타] QMK Raw HID 키보드 지원을 활성화/비활성화합니다. Raw HID가 활성화된 모든 QMK 호환 키보드를 자동으로 채택합니다(NovelKeys, KBDFans, Drop, GMMK, Glorious 및 기타 커스텀 QMK 보드 포함). 기본값: 비활성화",
   "No QMK Keyboards Found": "QMK 키보드를 찾을 수 없음",
@@ -965,7 +964,6 @@
   "[BETA] Enable/disable Redragon mouse device support. Drives Redragon mice that speak the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and 10 others) directly over HID — no OpenRGB server or Redragon software required. Default: Disabled": "[베타] Redragon 마우스 장치 지원을 활성화/비활성화합니다. OpenRGB HID 프로토콜 계열(M711 Cobra, M715 Dagger, M908 Impact 및 기타 10종)을 사용하는 Redragon 마우스를 HID를 통해 직접 구동합니다 — OpenRGB 서버나 Redragon 소프트웨어가 필요하지 않습니다. 기본값: 비활성화",
   "Redragon mice on the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and others). No OpenRGB server or Redragon software required.": "OpenRGB HID 프로토콜 계열(M711 Cobra, M715 Dagger, M908 Impact 등)의 Redragon 마우스입니다. OpenRGB 서버나 Redragon 소프트웨어가 필요하지 않습니다.",
   "[BETA] Enable/disable Redragon mouse device support.": "[BETA] Redragon 마우스 장치 지원을 활성화/비활성화합니다.",
-  "EVision Keyboards (Beta)": "EVision 키보드(베타)",
   "[BETA] Enable/disable support for Glorious, Redragon, and other EVision-family keyboards.": "[베타] Glorious, Redragon 및 기타 EVision 계열 키보드 지원을 활성화/비활성화합니다.",
   "No EVision Keyboards Found": "EVision 키보드를 찾을 수 없음",
   "Chromatics didn't detect any EVision-family keyboards on this PC. Plug the keyboard in directly (not through a hub that strips vendor-defined HID interfaces) and close any other lighting app holding the HID interface (OpenRGB, the vendor utility).": "Chromatics가 이 PC에서 EVision 계열 키보드를 감지하지 못했습니다. 키보드를 직접 연결하고(공급업체 정의 HID 인터페이스를 제거하는 허브를 통하지 않음), HID 인터페이스를 사용 중인 다른 조명 앱(OpenRGB, 제조사 유틸리티)을 모두 닫으세요.",
@@ -974,5 +972,7 @@
   "How the protocol affects the keyboard": "프로토콜이 키보드에 미치는 영향",
   "The keyboard firmware writes colour data to its internal storage chip every time the colour changes on the wire. Static colours and slow effects cost nothing. Continuous fast-changing effects (spectrum cycle, audio visualizer, raid animations) write the chip hundreds of times per minute. Over years of continuous use, that wear could shorten the chip lifespan.": "키보드 펌웨어는 유선으로 색상이 변경될 때마다 내부 저장 칩에 색상 데이터를 기록합니다. 정적 색상과 느린 효과는 부담이 없습니다. 지속적으로 빠르게 변하는 효과(스펙트럼 순환, 오디오 비주얼라이저, 레이드 애니메이션)는 분당 수백 번 칩에 기록합니다. 수년 동안 계속 사용하면 이러한 마모로 인해 칩 수명이 단축될 수 있습니다.",
   "OpenRGB has used this same protocol for years and the community has not reported widespread storage-chip failures. The trade-off is real but the practical risk is small for typical use.": "OpenRGB는 수년 동안 이 동일한 프로토콜을 사용해 왔으며, 커뮤니티에서 저장 칩 고장이 광범위하게 보고된 적은 없습니다. 이러한 절충점은 실제로 존재하지만, 일반적인 사용에서는 실질적인 위험이 작습니다.",
-  "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "주로 정적 색상이나 느린 효과를 사용한다면 아무 조치도 필요하지 않습니다. 빠르게 변하는 효과를 매일 몇 시간씩 계속 실행할 계획이라면 필요하지 않을 때 매핑 탭에서 키보드를 끄세요. 그러면 기록이 즉시 중지됩니다."
+  "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "주로 정적 색상이나 느린 효과를 사용한다면 아무 조치도 필요하지 않습니다. 빠르게 변하는 효과를 매일 몇 시간씩 계속 실행할 계획이라면 필요하지 않을 때 매핑 탭에서 키보드를 끄세요. 그러면 기록이 즉시 중지됩니다.",
+  "EVision (Beta)": "EVision(베타)",
+  "QMK (Beta)": "QMK(베타)"
 }

@@ -838,7 +838,6 @@
   "No lights found on this bridge.": "此网桥上未找到灯。",
   "{0} Hue light(s) on this bridge.": "此网桥上有 {0} 个 Hue 灯。",
   "Couldn't read lights from the bridge: {0}": "无法从网桥读取灯光：{0}",
-  "QMK Keyboards (Beta)": "QMK 键盘（测试版）",
   "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.": "通过 Raw HID 连接的 QMK 键盘。涵盖 NovelKeys、KBDFans、Drop、GMMK、Glorious，以及任何其他启用了 Raw HID 且运行 QMK 的自定义键盘。",
   "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled": "[测试版] 启用/禁用 QMK Raw HID 键盘支持。自动采用任何启用了 Raw HID 的 QMK 兼容键盘（涵盖 NovelKeys、KBDFans、Drop、GMMK、Glorious，以及其他自定义 QMK 键盘）。默认：禁用",
   "No QMK Keyboards Found": "未找到 QMK 键盘",
@@ -964,7 +963,6 @@
   "[BETA] Enable/disable Redragon mouse device support. Drives Redragon mice that speak the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and 10 others) directly over HID — no OpenRGB server or Redragon software required. Default: Disabled": "【测试版】启用/禁用 Redragon 鼠标设备支持。通过 HID 直接驱动使用 OpenRGB HID 协议族的 Redragon 鼠标（M711 Cobra、M715 Dagger、M908 Impact 以及另外 10 款）——无需 OpenRGB 服务器或 Redragon 软件。默认：禁用",
   "Redragon mice on the OpenRGB HID protocol family (M711 Cobra, M715 Dagger, M908 Impact, and others). No OpenRGB server or Redragon software required.": "支持 OpenRGB HID 协议族的 Redragon 鼠标（M711 Cobra、M715 Dagger、M908 Impact 等）。无需 OpenRGB 服务器或 Redragon 软件。",
   "[BETA] Enable/disable Redragon mouse device support.": "[BETA] 启用/禁用 Redragon 鼠标设备支持。",
-  "EVision Keyboards (Beta)": "EVision 键盘（Beta）",
   "[BETA] Enable/disable support for Glorious, Redragon, and other EVision-family keyboards.": "[BETA] 启用/禁用对 Glorious、Redragon 及其他 EVision 系列键盘的支持。",
   "No EVision Keyboards Found": "未找到 EVision 键盘",
   "Chromatics didn't detect any EVision-family keyboards on this PC. Plug the keyboard in directly (not through a hub that strips vendor-defined HID interfaces) and close any other lighting app holding the HID interface (OpenRGB, the vendor utility).": "Chromatics 未在此电脑上检测到任何 EVision 系列键盘。请将键盘直接插入电脑（不要通过会过滤厂商定义 HID 接口的集线器），并关闭任何占用 HID 接口的其他灯效应用（OpenRGB、厂商工具）。",
@@ -973,5 +971,7 @@
   "How the protocol affects the keyboard": "该协议如何影响键盘",
   "The keyboard firmware writes colour data to its internal storage chip every time the colour changes on the wire. Static colours and slow effects cost nothing. Continuous fast-changing effects (spectrum cycle, audio visualizer, raid animations) write the chip hundreds of times per minute. Over years of continuous use, that wear could shorten the chip lifespan.": "每当通过线缆传输的颜色发生变化时，键盘固件都会将颜色数据写入其内部存储芯片。静态颜色和慢速效果不会造成影响。连续快速变化的效果（光谱循环、音频可视化、团队副本动画）会每分钟向芯片写入数百次。经过多年持续使用后，这种磨损可能会缩短芯片寿命。",
   "OpenRGB has used this same protocol for years and the community has not reported widespread storage-chip failures. The trade-off is real but the practical risk is small for typical use.": "OpenRGB 多年来一直使用同一协议，社区并未报告大范围的存储芯片故障。这种取舍确实存在，但对于典型使用场景，实际风险很小。",
-  "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "如果你主要使用静态颜色或慢速效果，则无需进行任何操作。如果你计划每天连续数小时运行快速变化的效果，请在不需要时在“映射”选项卡中关闭该键盘。这样会立即停止写入。"
+  "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "如果你主要使用静态颜色或慢速效果，则无需进行任何操作。如果你计划每天连续数小时运行快速变化的效果，请在不需要时在“映射”选项卡中关闭该键盘。这样会立即停止写入。",
+  "EVision (Beta)": "EVision（测试版）",
+  "QMK (Beta)": "QMK（测试版）"
 }

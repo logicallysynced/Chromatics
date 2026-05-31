@@ -17,7 +17,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.EVision.Protocol
     // can't safely be added here — the same VID is reused by Redragon
     // for non-EVision keyboards, and a misclassified PID would brick
     // the wrong board.
-    public enum EVisionKeyboardModel
+    // Underlying type is uint so values like 0x320F_5064 (840,167,524) can be
+    // declared without `unchecked` casts and so EVisionDiscovery can pass a
+    // uint VID/PID composite straight into Enum.IsDefined. The default
+    // underlying type (int) accepts these values too, but Enum.IsDefined
+    // throws ArgumentException("Enum underlying type and the object must be
+    // same type") when the argument's runtime type doesn't match the enum's
+    // underlying type, so the discovery uint had to be reboxed to int every
+    // call. Making it uint here removes that conversion entirely.
+    public enum EVisionKeyboardModel : uint
     {
         Unknown = 0,
 

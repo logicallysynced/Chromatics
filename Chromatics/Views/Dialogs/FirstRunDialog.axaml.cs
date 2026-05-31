@@ -372,7 +372,7 @@ namespace Chromatics.Views.Dialogs
                 }
             }
 
-            // If the user selected QMK Keyboards, show the per-key-control
+            // If the user selected QMK, show the per-key-control
             // hint dialog. Stock QMK firmware (incl. Keychron vendor builds)
             // only exposes a single matrix base colour via VIA; per-key
             // needs the OpenRGB-QMK firmware module compiled into a custom

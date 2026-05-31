@@ -1,5 +1,5 @@
 {
-    "EVision Keyboards (Beta)":  "EVision Keyboards (Beta)",
+    "EVision (Beta)":  "EVision (Beta)",
     "[BETA] Enable/disable support for Glorious, Redragon, and other EVision-family keyboards.":  "[BETA] Enable/disable support for Glorious, Redragon, and other EVision-family keyboards.",
     "No EVision Keyboards Found":  "No EVision Keyboards Found",
     "Chromatics didn't detect any EVision-family keyboards on this PC. Plug the keyboard in directly (not through a hub that strips vendor-defined HID interfaces) and close any other lighting app holding the HID interface (OpenRGB, the vendor utility).":  "Chromatics didn't detect any EVision-family keyboards on this PC. Plug the keyboard in directly (not through a hub that strips vendor-defined HID interfaces) and close any other lighting app holding the HID interface (OpenRGB, the vendor utility).",
@@ -629,7 +629,7 @@
     "OpenRGB":  "OpenRGB",
     "PlayStation":  "PlayStation",
     "PlayStation (Beta)":  "PlayStation (Beta)",
-    "QMK Keyboards (Beta)":  "QMK Keyboards (Beta)",
+    "QMK (Beta)":  "QMK (Beta)",
     "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.":  "QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.",
     "No QMK Keyboards Found":  "No QMK Keyboards Found",
     "Chromatics didn't detect any QMK keyboards. Make sure your keyboard is plugged in over USB and that its firmware has Raw HID enabled (the default for any VIA-compatible build). If VIA, Vial, or OpenRGB is running, close it before enabling this provider - they hold the Raw HID interface exclusively. See the console for the full list of detected HID devices.":  "Chromatics didn't detect any QMK keyboards. Make sure your keyboard is plugged in over USB and that its firmware has Raw HID enabled (the default for any VIA-compatible build). If VIA, Vial, or OpenRGB is running, close it before enabling this provider - they hold the Raw HID interface exclusively. See the console for the full list of detected HID devices.",

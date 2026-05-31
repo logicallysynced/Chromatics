@@ -409,7 +409,7 @@ namespace Chromatics.ViewModels
             // Beta). Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any
             // other custom keyboard running QMK with Raw HID enabled.
             DeviceToggles.Add(new DeviceToggleItem(
-                "QMK Keyboards (Beta)",
+                "QMK (Beta)",
                 "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled",
                 s.deviceQmkRawHidEnabled,
                 async () =>
@@ -734,7 +734,7 @@ namespace Chromatics.ViewModels
             // that the V1 protocol writes to firmware flash on every colour
             // change. Shown-once flag lives on SettingsModel.eVisionFlashHintShown.
             DeviceToggles.Add(new DeviceToggleItem(
-                "EVision Keyboards (Beta)",
+                "EVision (Beta)",
                 "[BETA] Enable/disable support for Glorious, Redragon, and other EVision-family keyboards.",
                 s.deviceEVisionEnabled,
                 async () =>
