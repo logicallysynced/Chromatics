@@ -73,6 +73,13 @@ namespace Chromatics.Models
         public bool deviceAlienwareEnabled { get; set; } = false;
         public List<AlienwareAdoptedDevice> deviceAlienwareAdoptedDevices { get; set; } = new();
         public bool deviceRedragonEnabled { get; set; } = false;
+        public bool deviceEVisionEnabled { get; set; } = false;
+        // True once the user has acknowledged the EVision-flash one-shot
+        // hint dialog. The dialog explains that the V1 protocol writes
+        // to the keyboard's firmware flash on every colour change so
+        // continuous dynamic effects may wear the storage chip over
+        // years. Shown once on the first successful enable.
+        public bool eVisionFlashHintShown { get; set; } = false;
         public bool deviceDynamicLightingEnabled { get; set; } = false;
         public bool dynamicLightingHintShown { get; set; } = false;
         // Default: false (bypass off, conservative dedup is on).

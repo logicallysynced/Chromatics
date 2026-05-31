@@ -589,6 +589,23 @@ namespace Chromatics.Core
                     }
                 }
 
+                if (appSettings.deviceEVisionEnabled)
+                {
+                    try
+                    {
+                        // EVision-family keyboards (Glorious, Redragon,
+                        // Womier, Tecware, Mars Gaming, and others — 13
+                        // boards, one shared firmware). Auto-adopt model
+                        // matches Redragon: discovery returns every match
+                        // and the Mappings tab is the per-device disable.
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.EVision.EVisionRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[EVisionDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 
                 _timerUpdateTrigger = new TimerUpdateTrigger();

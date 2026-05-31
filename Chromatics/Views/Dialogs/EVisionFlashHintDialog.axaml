@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        x:Class="Chromatics.Views.Dialogs.EVisionFlashHintDialog"
+        Title="{loc:Tr Key='About EVision keyboards'}"
+        Width="640" Height="460"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+
+        <TextBlock Grid.Row="0"
+                   Text="{loc:Tr Key='About EVision keyboards'}"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,12" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+
+                <TextBlock TextWrapping="Wrap"
+                           Text="{loc:Tr Key='Chromatics drives Glorious, Redragon, and 11 other EVision-family keyboards through the same HID protocol OpenRGB uses. The driver covers Glorious GMMK TKL, Redragon K550 / K552 / K552-2 / K556, Tecware Phantom Elite, Womier K66 / K87, Mars Gaming MKMini, Skillkorp K5, DEXP Blaze, Warrior Kane TC235, and Gamepower Ogre RGB.'}" />
+
+                <Border Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                        CornerRadius="4"
+                        Padding="12,10">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{loc:Tr Key='How the protocol affects the keyboard'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='The keyboard firmware writes colour data to its internal storage chip every time the colour changes on the wire. Static colours and slow effects cost nothing. Continuous fast-changing effects (spectrum cycle, audio visualizer, raid animations) write the chip hundreds of times per minute. Over years of continuous use, that wear could shorten the chip lifespan.'}" />
+                    </StackPanel>
+                </Border>
+
+                <TextBlock TextWrapping="Wrap"
+                           FontStyle="Italic"
+                           Opacity="0.85"
+                           Text="{loc:Tr Key='OpenRGB has used this same protocol for years and the community has not reported widespread storage-chip failures. The trade-off is real but the practical risk is small for typical use.'}" />
+
+                <TextBlock TextWrapping="Wrap"
+                           FontStyle="Italic"
+                           Opacity="0.85"
+                           Text="{loc:Tr Key='If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.'}" />
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button Name="GotItButton"
+                    Content="{loc:Tr Key='Got it'}"
+                    Click="OnGotIt"
+                    Classes="accent"
+                    MinWidth="120" />
+        </StackPanel>
+    </Grid>
+</Window>

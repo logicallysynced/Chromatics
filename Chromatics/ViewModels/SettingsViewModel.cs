@@ -723,6 +723,78 @@ namespace Chromatics.ViewModels
                     AppSettings.SaveSettings(cur);
                 }));
 
+            // EVision-family keyboards. One firmware (Sonix VS11K28A) covers
+            // 13 OEM rebrands - Glorious GMMK TKL, Redragon K550/K552/K552-2/
+            // K556, Tecware Phantom Elite, Womier K66/K87, Mars Gaming MKMini,
+            // Skillkorp K5, DEXP Blaze, Warrior Kane TC235, Gamepower Ogre RGB.
+            // Same auto-enrol model as Redragon: discovery returns every
+            // matching board, Mappings tab is the per-device disable.
+            //
+            // First successful enable pops EVisionFlashHintDialog explaining
+            // that the V1 protocol writes to firmware flash on every colour
+            // change. Shown-once flag lives on SettingsModel.eVisionFlashHintShown.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "EVision Keyboards (Beta)",
+                "[BETA] Enable/disable support for Glorious, Redragon, and other EVision-family keyboards.",
+                s.deviceEVisionEnabled,
+                async () =>
+                {
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[EVision] Scanning for EVision-family keyboards on the HID bus...");
+
+                    var result = await Task.Run(() =>
+                    {
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.EVision.Protocol.EVisionDiscovery.Discover();
+                        if (discovered.Count == 0) return false;
+
+                        var cur2 = AppSettings.GetSettings();
+                        cur2.deviceEVisionEnabled = true;
+                        AppSettings.SaveSettings(cur2);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.EVision.EVisionRGBDeviceProvider.Instance);
+                        return true;
+                    });
+
+                    if (!result)
+                    {
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No EVision Keyboards Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any EVision-family keyboards on this PC. Plug the keyboard in directly (not through a hub that strips vendor-defined HID interfaces) and close any other lighting app holding the HID interface (OpenRGB, the vendor utility)."]);
+                        return false;
+                    }
+
+                    // First-enable flash-hint dialog. One-shot via the
+                    // eVisionFlashHintShown flag so the user is told
+                    // about the EEPROM-write trade-off exactly once.
+                    var post = AppSettings.GetSettings();
+                    if (!post.eVisionFlashHintShown)
+                    {
+                        try
+                        {
+                            var owner = GetMainWindow();
+                            var hintDlg = new EVisionFlashHintDialog();
+                            if (owner != null) await hintDlg.ShowDialog(owner).ConfigureAwait(true);
+                            else hintDlg.Show();
+                        }
+                        catch { /* swallow - UX nicety */ }
+                    }
+
+                    return true;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.EVision.EVisionRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceEVisionEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
             // Windows Dynamic Lighting (LampArray). Discovery is handled by
             // the Windows DeviceWatcher inside the provider so there's no
             // per-device adoption picker — every Dynamic-Lighting-capable
