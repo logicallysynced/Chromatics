@@ -79,10 +79,10 @@ namespace Chromatics.Models
         // settings.chromatics4 directly. Each frame is two HID feature reports
         // (colour write + apply commit), and the firmware briefly dips PWM
         // output on every commit. At 30Hz those dips read as flicker on most
-        // hardware (the M908 Impact is the most visible). Default 10Hz puts
+        // hardware (the M908 Impact is the most visible). Default 15Hz puts
         // the dips below perception while keeping cycling effects smooth.
         // Clamped to [1, 30] at provider start.
-        public double redragonUpdateRateHz { get; set; } = 10.0;
+        public double redragonUpdateRateHz { get; set; } = 15.0;
         public bool deviceEVisionEnabled { get; set; } = false;
         // True once the user has acknowledged the EVision-flash one-shot
         // hint dialog. The dialog explains that the V1 protocol writes

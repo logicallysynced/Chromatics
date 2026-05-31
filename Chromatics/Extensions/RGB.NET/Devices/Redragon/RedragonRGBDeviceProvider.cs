@@ -50,7 +50,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon
         // feature reports (colour write to 0x0449 + apply commit 0xF1), and
         // the firmware briefly dips PWM output on every commit. At 30Hz
         // those dips manifest as visible flicker - the M908 Impact is the
-        // most affected board the OpenRGB driver covers. 10Hz puts the
+        // most affected board the OpenRGB driver covers. 15Hz puts the
         // dips below perception while keeping cycling effects smooth.
         // OpenRGB's effects engine pulses Direct mode at the effect's own
         // cadence (typically 5-15Hz), which is why OpenRGB users don't
@@ -62,7 +62,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon
         // trigger.
         private const double MinUpdateRateHz = 1.0;
         private const double MaxUpdateRateHz = 30.0;
-        private const double DefaultUpdateRateHz = 10.0;
+        private const double DefaultUpdateRateHz = 15.0;
 
         // Windows fires several PnP events for one logical USB connect; we
         // wait long enough for the device tree to settle before
