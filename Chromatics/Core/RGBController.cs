@@ -161,6 +161,15 @@ namespace Chromatics.Core
 
                     Debug.WriteLine($"{enviroment}\\x64\\CUESDK.dll");
 
+                    // Ask iCUE for exclusive lighting control. Without this,
+                    // iCUE keeps painting its own profile in parallel and our
+                    // writes fight the SDK's background animation thread,
+                    // which manifests as flicker or partial colour reverts on
+                    // some boards. Static on RGB.NET's CorsairDeviceProvider
+                    // and read once when the provider is initialised, so set
+                    // it before LoadDeviceProvider runs.
+                    CorsairDeviceProvider.ExclusiveAccess = true;
+
                     LoadDeviceProvider(CorsairDeviceProvider.Instance);
                 }
                     
