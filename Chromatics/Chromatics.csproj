@@ -84,7 +84,7 @@
     <PackageReference Include="RGB.NET.HID" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Layout" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Presets" Version="3.2.0" />
-    <PackageReference Include="Sharlayan" Version="9.0.34" />
+    <PackageReference Include="Sharlayan" Version="9.0.38" />
   </ItemGroup>
 
   <ItemGroup>
