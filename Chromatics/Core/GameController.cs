@@ -687,6 +687,33 @@ namespace Chromatics.Core
                                         p.CleanupLayer(layer.layerID);
                             }
                             dynamicProcessor.Process(layer);
+
+                            // Safety net for the "bleed off doesn't re-apply on re-enable"
+                            // path. When the user toggles a non-bleed dynamic layer off then
+                            // back on, the processor rebuilds its ledgroups and calls
+                            // Attach(surface). RGB.NET's RGBSurface.Attach is a no-op when
+                            // the group is already attached, so a group that wound up
+                            // attached at a stale ZIndex slot (or that another processor's
+                            // surface.Updating hook left detached for a frame) stays in the
+                            // wrong place and the base layer paints over it. Forcing a
+                            // Detach + Attach for every live group of an enabled dynamic
+                            // layer this tick re-inserts each group in the correct ZIndex
+                            // slot, so the dynamic always wins against the base.
+                            if (layer.Enabled)
+                            {
+                                var liveGroupsPost = RGBController.GetLiveLayerGroups();
+                                var surfaceRef = RGBController.GetLiveSurfaces();
+                                if (surfaceRef != null && liveGroupsPost.TryGetValue(layer.layerID, out var postGrps))
+                                {
+                                    foreach (var g in postGrps)
+                                    {
+                                        if (g == null) continue;
+                                        g.Detach();
+                                        g.Attach(surfaceRef);
+                                    }
+                                }
+                            }
+
                             // Raid highlight overlay runs only for highlight-class dynamic
                             // layers so it overrides Highlight, JobClassesHighlight, and
                             // ReactiveWeatherHighlight on the user's selected keys. Other

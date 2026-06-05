@@ -236,21 +236,27 @@ namespace Chromatics.Layers
                         }
                         else if (layer.layerModes == Enums.LayerModes.Fade)
                         {
-                            // Fade implementation
-                            var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, model.empty_brush.Color, model.enmity_brush.Color);
-                            if (currentVal_Fader != model._faderValue || model._targetReset || layer.requestUpdate)
+                            // Fade implementation - whole-row tier. All selected
+                            // keys light up with the current enmity tier colour
+                            // (Minimal / Low / High / Top) rather than blending
+                            // 0 - 100 through the gradient. This is the
+                            // status-indicator behaviour the threat HUD uses;
+                            // Interpolate above is the bar-fill alternative
+                            // for users who want a magnitude readout.
+                            var tier_col = model.enmity_brush.Color;
+                            if (tier_col != model._faderValue || model._targetReset || layer.requestUpdate)
                             {
                                 var ledGroup = new ListLedGroup(surface, ledArray)
                                 {
                                     ZIndex = layer.zindex,
-                                    Brush = new SolidColorBrush(currentVal_Fader)
+                                    Brush = new SolidColorBrush(tier_col)
                                 };
 
                                 ledGroup.Detach();
 
                                 DetachAndClearGroups(model._localgroups);
                                 model._localgroups.Add(ledGroup);
-                                model._faderValue = currentVal_Fader;
+                                model._faderValue = tier_col;
                             }
                         }
 

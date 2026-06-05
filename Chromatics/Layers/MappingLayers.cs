@@ -177,21 +177,17 @@ namespace Chromatics.Layers
             return toSwap.TryGetValue(canonical, out var t) ? t : canonical;
         }
 
-        // Position of DynamicLayerType.Highlight in ViewModels/Mapping/
-        // LayerItemViewModel._dynamicLayerOrder. layerTypeindex stores the
-        // ComboBox position, not the enum value, so we compare against the
-        // position - the canonical list is in LayerItemViewModel. Highlight
-        // is the only dynamic layer where the user picks individual keys by
-        // their printed letter; every other dynamic layer references a
-        // physical key cluster by purpose (movement, hotbar row, HP / MP
-        // bar, job gauges, weather, etc.).
-        private const int DynamicLayer_HighlightPosition = 1;
-
-        // Counts how many Highlight DynamicLayers hold at least one LedId
+        // Counts how many keyboard DynamicLayers hold at least one LedId
         // that would actually change in a from -> to layout swap. Powers
         // the "Update your layer key assignments?" prompt in Settings -
         // the prompt is skipped entirely when this returns 0 so the user
         // never sees a confirm dialog that wouldn't change anything.
+        //
+        // Every dynamic layer subtype is in scope - Highlight (user
+        // letter picks), Keybinds, HP / MP / Target HP / Castbar,
+        // job gauges, ReactiveWeatherHighlight, etc. The user decides
+        // via the confirm prompt whether to translate everything or
+        // keep the physical positions; this counter is just the trigger.
         public static int CountLayoutSwapAffectedLayers(KeyboardLocalization from, KeyboardLocalization to)
         {
             if (from == to) return 0;
@@ -204,7 +200,6 @@ namespace Chromatics.Layers
                 if (layer.deviceType != RGBDeviceType.Keyboard) continue;
                 if (layer.deviceLeds == null || layer.deviceLeds.Count == 0) continue;
                 if (layer.rootLayerType != LayerType.DynamicLayer) continue;
-                if (layer.layerTypeindex != DynamicLayer_HighlightPosition) continue;
 
                 foreach (var entry in layer.deviceLeds)
                 {
@@ -218,27 +213,18 @@ namespace Chromatics.Layers
             return count;
         }
 
-        // Called when the user switches keyboard layout. Translates each
-        // affected layer's deviceLeds so a Highlight layer the user built
-        // by clicking the "Y" key on QWERTY continues to light the "Y"
-        // label after switching to QWERTZ.
-        //
-        // Only the Highlight DynamicLayer is remapped. ReactiveWeather
-        // Highlight, Keybinds, HP / MP Trackers, Job Gauges, Battle Stance,
-        // Castbar, Job Classes Highlight, Experience Tracker - all the
-        // other DynamicLayer subtypes - reference physical positions
-        // chosen by Chromatics for their purpose (the WASD physical
-        // cluster, the hotbar row, a HP-bar key sequence). Swapping
-        // those breaks the physical layout: a WASD layer remapped on
-        // QWERTY -> AZERTY ends up lighting Keyboard_Z (= AZERTY's W
-        // shift-row key) and Keyboard_Q (= AZERTY's A top-row key)
-        // instead of the WASD physical cluster the user expects to
-        // glow. Base layers are full-keyboard fills, so swap is a
-        // no-op there. Effect layers paint based on their own
-        // processor logic and don't use stored letter LedIds either.
-        // The narrow Highlight-only rule preserves the documented
-        // "user picked by label, follow label across layouts" intent
-        // without breaking purpose-built physical-cluster layers.
+        // Called when the user accepts the "Update layer key assignments?"
+        // confirm in Settings after a keyboard-layout swap. Translates each
+        // keyboard DynamicLayer's deviceLeds through the swap table so a
+        // layer the user built by clicking "Y" on QWERTY continues to light
+        // the "Y" label after switching to QWERTZ. Every dynamic subtype is
+        // in scope - the user's confirm answer is the gate, not the layer
+        // type. SettingsViewModel.SelectedKeyboardLayout fires the prompt
+        // and only invokes this when the user picks "Update layers"; if they
+        // pick "Keep as-is" the call is skipped and the physical positions
+        // stay put. Base layers are full-keyboard fills, so swap is a
+        // no-op there. Effect layers paint via their own processors and
+        // don't carry stored letter LedIds either.
         public static void RemapLedIdsForLayoutChange(KeyboardLocalization from, KeyboardLocalization to)
         {
             if (from == to) return;
@@ -250,7 +236,6 @@ namespace Chromatics.Layers
                 if (layer.deviceType != RGBDeviceType.Keyboard) continue;
                 if (layer.deviceLeds == null || layer.deviceLeds.Count == 0) continue;
                 if (layer.rootLayerType != LayerType.DynamicLayer) continue;
-                if (layer.layerTypeindex != DynamicLayer_HighlightPosition) continue;
 
                 var remapped = new Dictionary<int, LedId>(layer.deviceLeds.Count);
                 var changed = false;
