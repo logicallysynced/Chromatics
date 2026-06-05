@@ -26,9 +26,9 @@ namespace Chromatics.Core
         // per-LedId state (e.g. layer key assignments) between layouts.
         public static event EventHandler<KeyboardLayoutChangedEventArgs> KeyboardLayoutChanged;
 
-        public static void RaiseKeyboardLayoutChanged(KeyboardLocalization oldLayout, KeyboardLocalization newLayout)
+        public static void RaiseKeyboardLayoutChanged(KeyboardLocalization oldLayout, KeyboardLocalization newLayout, bool remapLayers = true)
         {
-            KeyboardLayoutChanged?.Invoke(null, new KeyboardLayoutChangedEventArgs(oldLayout, newLayout));
+            KeyboardLayoutChanged?.Invoke(null, new KeyboardLayoutChangedEventArgs(oldLayout, newLayout, remapLayers));
         }
 
         public static void Startup()
@@ -112,10 +112,20 @@ namespace Chromatics.Core
         public KeyboardLocalization OldLayout { get; }
         public KeyboardLocalization NewLayout { get; }
 
-        public KeyboardLayoutChangedEventArgs(KeyboardLocalization oldLayout, KeyboardLocalization newLayout)
+        // True when the user agreed to translate stored Highlight-layer
+        // LedIds across the swap so a layer built around "Y" on QWERTY
+        // continues to reference the "Y" label on QWERTZ. False when the
+        // user declined the prompt (or no Highlight layers would have been
+        // affected, so the prompt was skipped). Virtual-keyboard rebuild
+        // and layer-VM refresh run either way - only the LedId translation
+        // is gated on this flag.
+        public bool RemapLayers { get; }
+
+        public KeyboardLayoutChangedEventArgs(KeyboardLocalization oldLayout, KeyboardLocalization newLayout, bool remapLayers = true)
         {
             OldLayout = oldLayout;
             NewLayout = newLayout;
+            RemapLayers = remapLayers;
         }
     }
 }

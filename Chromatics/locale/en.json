@@ -988,5 +988,10 @@
     "Don't Send":  "Don't Send",
     "Send Report":  "Send Report",
     "Reference ID:":  "Reference ID:",
-    "Copy":  "Copy"
+    "Copy":  "Copy",
+    "Update layer key assignments?":  "Update layer key assignments?",
+    "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?":  "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?",
+    "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?":  "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?",
+    "Update layers":  "Update layers",
+    "Keep as-is":  "Keep as-is"
 }

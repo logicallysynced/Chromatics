@@ -2,9 +2,14 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.66
+## 4.2.69
 
 - Added support for FFXIV 7.51
+- Added an option to remap layers when keyboard type is changed.
+- Fixed an issue where AZERTY keyboards weren't functioning properly.
+- Fixed an issue which caused Chromatics to crash when changing layer modes.
+- Fixed an issue which prevented non-bleed layers from re-applying if disabled and re-enabled.
+- Fixed an issue where the Enmity Tracker layer stayed dark while a target was engaged.
 
 ## 4.2.65
 

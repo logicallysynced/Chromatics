@@ -974,5 +974,10 @@
   "OpenRGB has used this same protocol for years and the community has not reported widespread storage-chip failures. The trade-off is real but the practical risk is small for typical use.": "OpenRGB는 수년 동안 이 동일한 프로토콜을 사용해 왔으며, 커뮤니티에서 저장 칩 고장이 광범위하게 보고된 적은 없습니다. 이러한 절충점은 실제로 존재하지만, 일반적인 사용에서는 실질적인 위험이 작습니다.",
   "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "주로 정적 색상이나 느린 효과를 사용한다면 아무 조치도 필요하지 않습니다. 빠르게 변하는 효과를 매일 몇 시간씩 계속 실행할 계획이라면 필요하지 않을 때 매핑 탭에서 키보드를 끄세요. 그러면 기록이 즉시 중지됩니다.",
   "EVision (Beta)": "EVision(베타)",
-  "QMK (Beta)": "QMK(베타)"
+  "QMK (Beta)": "QMK(베타)",
+  "Update layer key assignments?": "레이어 키 할당을 업데이트하시겠습니까?",
+  "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "하이라이트 레이어 1개가 키에 인쇄된 글자를 기준으로 키를 참조합니다. 새 레이아웃에서도 같은 글자가 켜지도록 변환하시겠습니까?",
+  "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "하이라이트 레이어 {0}개가 키에 인쇄된 글자를 기준으로 키를 참조합니다. 새 레이아웃에서도 같은 글자가 켜지도록 변환하시겠습니까?",
+  "Update layers": "레이어 업데이트",
+  "Keep as-is": "그대로 유지"
 }

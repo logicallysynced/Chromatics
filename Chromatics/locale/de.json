@@ -973,5 +973,10 @@
   "OpenRGB has used this same protocol for years and the community has not reported widespread storage-chip failures. The trade-off is real but the practical risk is small for typical use.": "OpenRGB verwendet dasselbe Protokoll seit Jahren, und die Community hat keine weit verbreiteten Ausfälle von Speicherchips gemeldet. Der Kompromiss ist real, aber das praktische Risiko ist bei typischer Nutzung gering.",
   "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "Wenn Sie hauptsächlich statische Farben oder langsame Effekte verwenden, müssen Sie nichts tun. Wenn Sie vorhaben, schnell wechselnde Effekte täglich stundenlang dauerhaft laufen zu lassen, schalten Sie die Tastatur auf der Registerkarte „Mappings“ aus, wenn Sie sie nicht benötigen. Dadurch werden die Schreibvorgänge sofort gestoppt.",
   "EVision (Beta)": "EVision (Beta)",
-  "QMK (Beta)": "QMK (Beta)"
+  "QMK (Beta)": "QMK (Beta)",
+  "Update layer key assignments?": "Tastenzuweisungen der Ebenen aktualisieren?",
+  "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1 Hervorhebungsebene referenziert Tasten anhand ihres aufgedruckten Buchstabens. Soll sie übertragen werden, damit dieselben Buchstaben auf Ihrem neuen Layout weiterhin leuchten?",
+  "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0} Hervorhebungsebenen referenzieren Tasten anhand ihres aufgedruckten Buchstabens. Sollen sie übertragen werden, damit dieselben Buchstaben auf Ihrem neuen Layout weiterhin leuchten?",
+  "Update layers": "Ebenen aktualisieren",
+  "Keep as-is": "Unverändert beibehalten"
 }

@@ -141,7 +141,12 @@ namespace Chromatics.Layers
                     if (getTargetInfo.TargetInfo.CurrentTarget != null && getTargetInfo.TargetInfo.EnmityItems != null && getTargetInfo.TargetInfo.EnmityItems.Count > 0)
                     {
                         var enmityList = getTargetInfo.TargetInfo.EnmityItems;
-                        var enmityProfile = enmityList.FirstOrDefault(item => item.ID == targetId);
+                        // TargetInfo.EnmityItems is the target's hate table -
+                        // each entry's ID is the hater's actor ID, not the
+                        // target's. Look up the player's own entry to read
+                        // their relative enmity (0 - 100) on this target.
+                        var playerId = getCurrentPlayer.Entity.ID;
+                        var enmityProfile = enmityList.FirstOrDefault(item => item.ID == playerId);
 
                         if (enmityProfile == null) return;
 
@@ -199,7 +204,7 @@ namespace Chromatics.Layers
                             var currentVal_Interpolate = LinearInterpolation.Interpolate(currentVal, minVal, maxVal, 0, countKeys);
                             currentVal_Interpolate = MathHelper.Clamp(currentVal_Interpolate, 0, countKeys);
 
-                            if (currentVal_Interpolate != model._interpolateValue || model._targetReset)
+                            if (currentVal_Interpolate != model._interpolateValue || model._targetReset || layer.requestUpdate)
                             {
                                 // Process Lighting
                                 var ledGroups = new List<ListLedGroup>();
@@ -233,7 +238,7 @@ namespace Chromatics.Layers
                         {
                             // Fade implementation
                             var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, minVal, maxVal, model.empty_brush.Color, model.enmity_brush.Color);
-                            if (currentVal_Fader != model._faderValue || model._targetReset)
+                            if (currentVal_Fader != model._faderValue || model._targetReset || layer.requestUpdate)
                             {
                                 var ledGroup = new ListLedGroup(surface, ledArray)
                                 {

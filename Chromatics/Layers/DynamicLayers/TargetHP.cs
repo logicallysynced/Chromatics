@@ -129,7 +129,7 @@ namespace Chromatics.Layers
                             var currentVal_Interpolate = LinearInterpolation.Interpolate(currentVal, 0, maxVal, 0, countKeys);
                             currentVal_Interpolate = Math.Max(0, Math.Min(countKeys, currentVal_Interpolate));
 
-                            if (currentVal_Interpolate != model._interpolateValue || model._targetReset)
+                            if (currentVal_Interpolate != model._interpolateValue || model._targetReset || layer.requestUpdate)
                             {
                                 var ledGroups = new List<ListLedGroup>();
 
@@ -157,7 +157,7 @@ namespace Chromatics.Layers
                         {
                             var currentVal_Fader = ColorHelper.GetInterpolatedColor(currentVal, 0, maxVal, model.empty_brush.Color, model.full_brush.Color);
 
-                            if (currentVal_Fader != model._faderValue || model._targetReset)
+                            if (currentVal_Fader != model._faderValue || model._targetReset || layer.requestUpdate)
                             {
                                 var ledGroup = new ListLedGroup(surface, ledArray)
                                 {

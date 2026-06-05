@@ -973,5 +973,10 @@
   "OpenRGB has used this same protocol for years and the community has not reported widespread storage-chip failures. The trade-off is real but the practical risk is small for typical use.": "OpenRGB ha usado este mismo protocolo durante años y la comunidad no ha informado de fallos generalizados en los chips de almacenamiento. La contrapartida es real, pero el riesgo práctico es bajo para un uso típico.",
   "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "Si usas principalmente colores estáticos o efectos lentos, no necesitas hacer nada. Si tienes previsto usar efectos con cambios rápidos de forma continua durante horas todos los días, desactiva el teclado en la pestaña Asignaciones cuando no lo necesites. Eso detiene las escrituras de inmediato.",
   "EVision (Beta)": "EVision (Beta)",
-  "QMK (Beta)": "QMK (Beta)"
+  "QMK (Beta)": "QMK (Beta)",
+  "Update layer key assignments?": "¿Actualizar las asignaciones de teclas de la capa?",
+  "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1 capa de resaltado hace referencia a las teclas por la letra impresa. ¿Traducirla para que las mismas letras permanezcan iluminadas en tu nueva distribución?",
+  "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0} capas de resaltado hacen referencia a las teclas por la letra impresa. ¿Traducirlas para que las mismas letras permanezcan iluminadas en tu nueva distribución?",
+  "Update layers": "Actualizar capas",
+  "Keep as-is": "Mantener tal cual"
 }

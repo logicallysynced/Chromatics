@@ -187,6 +187,37 @@ namespace Chromatics.Layers
         // bar, job gauges, weather, etc.).
         private const int DynamicLayer_HighlightPosition = 1;
 
+        // Counts how many Highlight DynamicLayers hold at least one LedId
+        // that would actually change in a from -> to layout swap. Powers
+        // the "Update your layer key assignments?" prompt in Settings -
+        // the prompt is skipped entirely when this returns 0 so the user
+        // never sees a confirm dialog that wouldn't change anything.
+        public static int CountLayoutSwapAffectedLayers(KeyboardLocalization from, KeyboardLocalization to)
+        {
+            if (from == to) return 0;
+            if (!_layoutSwapsFromQwerty.ContainsKey(from) || !_layoutSwapsFromQwerty.ContainsKey(to)) return 0;
+
+            int count = 0;
+            foreach (var kvp in _layers)
+            {
+                var layer = kvp.Value;
+                if (layer.deviceType != RGBDeviceType.Keyboard) continue;
+                if (layer.deviceLeds == null || layer.deviceLeds.Count == 0) continue;
+                if (layer.rootLayerType != LayerType.DynamicLayer) continue;
+                if (layer.layerTypeindex != DynamicLayer_HighlightPosition) continue;
+
+                foreach (var entry in layer.deviceLeds)
+                {
+                    if (TranslateLedId(entry.Value, from, to) != entry.Value)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+            }
+            return count;
+        }
+
         // Called when the user switches keyboard layout. Translates each
         // affected layer's deviceLeds so a Highlight layer the user built
         // by clicking the "Y" key on QWERTY continues to light the "Y"

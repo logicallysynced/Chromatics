@@ -973,5 +973,10 @@
   "OpenRGB has used this same protocol for years and the community has not reported widespread storage-chip failures. The trade-off is real but the practical risk is small for typical use.": "OpenRGB utilise ce même protocole depuis des années et la communauté n’a pas signalé de défaillances généralisées des puces de stockage. Le compromis est réel, mais le risque pratique est faible pour une utilisation typique.",
   "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "Si vous utilisez principalement des couleurs statiques ou des effets lents, vous n’avez rien à faire. Si vous prévoyez d’utiliser des effets à changements rapides en continu pendant des heures chaque jour, désactivez le clavier dans l’onglet Mappages lorsque vous n’en avez pas besoin. Cela arrête immédiatement les écritures.",
   "EVision (Beta)": "EVision (bêta)",
-  "QMK (Beta)": "QMK (bêta)"
+  "QMK (Beta)": "QMK (bêta)",
+  "Update layer key assignments?": "Mettre à jour les affectations de touches du calque ?",
+  "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1 calque de surbrillance fait référence aux touches d’après leur lettre imprimée. Le transposer pour que les mêmes lettres restent allumées sur votre nouvelle disposition ?",
+  "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0} calques de surbrillance font référence aux touches d’après leur lettre imprimée. Les transposer pour que les mêmes lettres restent allumées sur votre nouvelle disposition ?",
+  "Update layers": "Mettre à jour les calques",
+  "Keep as-is": "Conserver tel quel"
 }

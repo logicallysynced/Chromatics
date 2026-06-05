@@ -429,9 +429,10 @@ namespace Chromatics.ViewModels.Mapping
             return newId;
         }
 
-        public void ApplyKeyboardLayoutChange(KeyboardLocalization from, KeyboardLocalization to)
+        public void ApplyKeyboardLayoutChange(KeyboardLocalization from, KeyboardLocalization to, bool remapLayers = true)
         {
-            MappingLayers.RemapLedIdsForLayoutChange(from, to);
+            if (remapLayers)
+                MappingLayers.RemapLedIdsForLayoutChange(from, to);
             MappingLayers.SaveMappings();
             RebuildKeyboardVirtualDevices(to);
             RefreshLayers();
@@ -499,7 +500,7 @@ namespace Chromatics.ViewModels.Mapping
         }
 
         private void OnKeyboardLayoutChanged(object sender, KeyboardLayoutChangedEventArgs e)
-            => ApplyKeyboardLayoutChange(e.OldLayout, e.NewLayout);
+            => ApplyKeyboardLayoutChange(e.OldLayout, e.NewLayout, e.RemapLayers);
 
         private int AddLayerInternal(LayerType layerType, Guid deviceId, RGBDeviceType deviceType)
         {

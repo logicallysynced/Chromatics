@@ -973,5 +973,10 @@
   "OpenRGB has used this same protocol for years and the community has not reported widespread storage-chip failures. The trade-off is real but the practical risk is small for typical use.": "OpenRGB 多年来一直使用同一协议，社区并未报告大范围的存储芯片故障。这种取舍确实存在，但对于典型使用场景，实际风险很小。",
   "If you mostly run static colours or slow effects, you do not need to do anything. If you plan to run fast-changing effects continuously for hours every day, switch the keyboard off on the Mappings tab when you do not need it. That stops the writes immediately.": "如果你主要使用静态颜色或慢速效果，则无需进行任何操作。如果你计划每天连续数小时运行快速变化的效果，请在不需要时在“映射”选项卡中关闭该键盘。这样会立即停止写入。",
   "EVision (Beta)": "EVision（测试版）",
-  "QMK (Beta)": "QMK（测试版）"
+  "QMK (Beta)": "QMK（测试版）",
+  "Update layer key assignments?": "要更新层按键分配吗？",
+  "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1 个高亮层按键是按其印刷字母引用的。要转换它，以便在新布局上相同的字母保持点亮吗？",
+  "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0} 个高亮层按键是按其印刷字母引用的。要转换它们，以便在新布局上相同的字母保持点亮吗？",
+  "Update layers": "更新层",
+  "Keep as-is": "保持原样"
 }

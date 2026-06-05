@@ -12,6 +12,7 @@ using Chromatics.Extensions.RGB.NET.Devices.Alienware;
 using Chromatics.Extensions.RGB.NET.Devices.DynamicLighting;
 using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
 using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
+using Chromatics.Layers;
 using Chromatics.Models;
 using Chromatics.Helpers;
 using Chromatics.Views;
@@ -1184,9 +1185,31 @@ namespace Chromatics.ViewModels
 
                     s.keyboardLayout = value.Value;
                     AppSettings.SaveSettings(s);
-                    AppSettings.RaiseKeyboardLayoutChanged(oldLayout, value.Value);
+
+                    int affected = MappingLayers.CountLayoutSwapAffectedLayers(oldLayout, value.Value);
+                    if (affected <= 0)
+                    {
+                        AppSettings.RaiseKeyboardLayoutChanged(oldLayout, value.Value, remapLayers: false);
+                        return;
+                    }
+
+                    _ = PromptForLayoutRemapAsync(oldLayout, value.Value, affected);
                 }
             }
+        }
+
+        private static async Task PromptForLayoutRemapAsync(KeyboardLocalization from, KeyboardLocalization to, int affected)
+        {
+            string title = LocalizationService.Instance["Update layer key assignments?"];
+            string template = affected == 1
+                ? LocalizationService.Instance["1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?"]
+                : LocalizationService.Instance["{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?"];
+            string body = string.Format(template, affected);
+            string ok = LocalizationService.Instance["Update layers"];
+            string cancel = LocalizationService.Instance["Keep as-is"];
+
+            bool remap = await DialogService.ConfirmAsync(title, body, ok, cancel);
+            AppSettings.RaiseKeyboardLayoutChanged(from, to, remapLayers: remap);
         }
 
         public void ResetChromatics()
