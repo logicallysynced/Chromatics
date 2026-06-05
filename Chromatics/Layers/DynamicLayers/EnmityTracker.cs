@@ -100,169 +100,127 @@ namespace Chromatics.Layers
                 var getTargetInfo = _memoryHandler.Reader.GetTargetInfo();
                 var getCurrentPlayer = _memoryHandler.Reader.GetCurrentPlayer();
 
-                if (getTargetInfo.TargetInfo == null || getCurrentPlayer.Entity == null) return;
-
+                // Resolve enmityPosition with a default of 0 (no aggro) for
+                // every "we don't have the data" case: not in a fight, target
+                // is friendly, our actor isn't on the hate table yet, etc.
+                // The processor used to `return` on each of those branches -
+                // which on the re-enable tick left _localgroups empty (the
+                // top cleanup had just cleared it), nothing got attached, and
+                // the base layer painted through every selected key. From the
+                // user side that looked like "Bleed disabled is not
+                // re-applying" because the negative colour they expected on
+                // empty cells was wherever the base layer's colour was. The
+                // fall-through here keeps the layer painting an empty bar
+                // whenever the player has no measurable threat instead of
+                // going dark.
+                uint enmityPosition = 0;
                 uint targetId = 0;
 
-                if (getTargetInfo.TargetInfo.CurrentTarget != null)
+                if (getTargetInfo.TargetInfo != null && getCurrentPlayer.Entity != null)
                 {
-                    targetId = getTargetInfo.TargetInfo.CurrentTarget.ID;
-                }
+                    if (getTargetInfo.TargetInfo.CurrentTarget != null)
+                        targetId = getTargetInfo.TargetInfo.CurrentTarget.ID;
 
-                if (targetId != model._targetId)
-                {
-                    foreach (var layergroup in model._localgroups)
+                    if (targetId != 0
+                        && getTargetInfo.TargetInfo.EnmityItems != null
+                        && getTargetInfo.TargetInfo.EnmityItems.Count > 0)
                     {
-                        layergroup?.Detach();
-                    }
-
-                    model._localgroups.Clear();
-                    model._targetReset = true;
-                    model._targetId = targetId;
-                }
-
-                // No target found
-                if (targetId == 0 || !model.init)
-                {
-                    if (model._targetReset || !model.init)
-                    {
-                        var ledGroup = new ListLedGroup(surface, ledArray)
-                        {
-                            ZIndex = layer.zindex,
-                            Brush = model.empty_brush
-                        };
-
-                        ledGroup.Detach();
-                        model._localgroups.Add(ledGroup);
-                    }
-                }
-                else
-                {
-                    if (getTargetInfo.TargetInfo.CurrentTarget != null && getTargetInfo.TargetInfo.EnmityItems != null && getTargetInfo.TargetInfo.EnmityItems.Count > 0)
-                    {
-                        var enmityList = getTargetInfo.TargetInfo.EnmityItems;
                         // TargetInfo.EnmityItems is the target's hate table -
                         // each entry's ID is the hater's actor ID, not the
                         // target's. Look up the player's own entry to read
                         // their relative enmity (0 - 100) on this target.
                         var playerId = getCurrentPlayer.Entity.ID;
-                        var enmityProfile = enmityList.FirstOrDefault(item => item.ID == playerId);
-
-                        if (enmityProfile == null) return;
-
-                        var enmityPosition = enmityProfile.Enmity;
-
-                        var currentVal = (int)enmityPosition;
-                        var minVal = 0;
-                        var maxVal = 100;
-
-                        if (enmityPosition != model._enmityPosition || model._targetReset)
-                        {
-                            if (enmityPosition == 100)
-                            {
-                                //Full Aggro
-                                model.enmity_brush.Color = enmity_top_col;
-                            }
-                            else if (enmityPosition >= 80 && enmityPosition < 100)
-                            {
-                                //High Aggro
-                                model.enmity_brush.Color = enmity_high_col;
-                            }
-                            else if (enmityPosition >= 50 && enmityPosition < 80)
-                            {
-                                //Moderate Aggro
-                                model.enmity_brush.Color = enmity_med_col;
-                            }
-                            else if (enmityPosition < 50) //&& _enmityPosition <= 8)
-                            {
-                                //Low Aggro
-                                model.enmity_brush.Color = enmity_low_col;
-                            }
-                            else
-                            {
-                                //Not Engaged & No Aggro
-                                model.enmity_brush = model.empty_brush;
-                            }
-
-                        }
-
-                        // Check if layer mode has changed
-                        if (model._currentMode != layer.layerModes)
-                        {
-                            foreach (var layergroup in model._localgroups)
-                            {
-                                layergroup?.Detach();
-                            }
-
-                            model._localgroups.Clear();
-                            model._currentMode = layer.layerModes;
-                        }
-
-                        if (layer.layerModes == Enums.LayerModes.Interpolate)
-                        {
-                            // Interpolate implementation
-                            var currentVal_Interpolate = LinearInterpolation.Interpolate(currentVal, minVal, maxVal, 0, countKeys);
-                            currentVal_Interpolate = MathHelper.Clamp(currentVal_Interpolate, 0, countKeys);
-
-                            if (currentVal_Interpolate != model._interpolateValue || model._targetReset || layer.requestUpdate)
-                            {
-                                // Process Lighting
-                                var ledGroups = new List<ListLedGroup>();
-
-                                for (int i = 0; i < countKeys; i++)
-                                {
-                                    var ledGroup = new ListLedGroup(surface, ledArray[i])
-                                    {
-                                        ZIndex = layer.zindex,
-                                    };
-
-                                    ledGroup.Detach();
-
-                                    ledGroup.Brush = i < currentVal_Interpolate
-                                        ? model.enmity_brush
-                                        : model.empty_brush;
-
-                                    ledGroups.Add(ledGroup);
-                                }
-
-                                foreach (var layergroup in model._localgroups)
-                                {
-                                    layergroup.Detach();
-                                }
-
-                                model._localgroups = ledGroups;
-                                model._interpolateValue = currentVal_Interpolate;
-                            }
-                        }
-                        else if (layer.layerModes == Enums.LayerModes.Fade)
-                        {
-                            // Fade implementation - whole-row tier. All selected
-                            // keys light up with the current enmity tier colour
-                            // (Minimal / Low / High / Top) rather than blending
-                            // 0 - 100 through the gradient. This is the
-                            // status-indicator behaviour the threat HUD uses;
-                            // Interpolate above is the bar-fill alternative
-                            // for users who want a magnitude readout.
-                            var tier_col = model.enmity_brush.Color;
-                            if (tier_col != model._faderValue || model._targetReset || layer.requestUpdate)
-                            {
-                                var ledGroup = new ListLedGroup(surface, ledArray)
-                                {
-                                    ZIndex = layer.zindex,
-                                    Brush = new SolidColorBrush(tier_col)
-                                };
-
-                                ledGroup.Detach();
-
-                                DetachAndClearGroups(model._localgroups);
-                                model._localgroups.Add(ledGroup);
-                                model._faderValue = tier_col;
-                            }
-                        }
-
-                        model._enmityPosition = enmityPosition;
+                        var enmityProfile = getTargetInfo.TargetInfo.EnmityItems
+                            .FirstOrDefault(item => item.ID == playerId);
+                        if (enmityProfile != null)
+                            enmityPosition = enmityProfile.Enmity;
                     }
                 }
+
+                if (targetId != model._targetId)
+                {
+                    DetachAndClearGroups(model._localgroups);
+                    model._targetReset = true;
+                    model._targetId = targetId;
+                }
+
+                var currentVal = (int)enmityPosition;
+                var minVal = 0;
+                var maxVal = 100;
+
+                if (enmityPosition != model._enmityPosition || model._targetReset || layer.requestUpdate)
+                {
+                    if (enmityPosition == 100)
+                        model.enmity_brush.Color = enmity_top_col;
+                    else if (enmityPosition >= 80)
+                        model.enmity_brush.Color = enmity_high_col;
+                    else if (enmityPosition >= 50)
+                        model.enmity_brush.Color = enmity_med_col;
+                    else
+                        model.enmity_brush.Color = enmity_low_col;
+                }
+
+                if (model._currentMode != layer.layerModes)
+                {
+                    DetachAndClearGroups(model._localgroups);
+                    model._currentMode = layer.layerModes;
+                }
+
+                if (layer.layerModes == Enums.LayerModes.Interpolate)
+                {
+                    // Bar fill - cells 0..currentVal_Interpolate light up in
+                    // the current tier colour; cells past that point fall to
+                    // empty_brush (NoEmnity opaque when bleed off, transparent
+                    // when bleed on so the base shows through). Tier colour
+                    // changes with enmity rising through Minimal / Low / High
+                    // / Top.
+                    var currentVal_Interpolate = LinearInterpolation.Interpolate(currentVal, minVal, maxVal, 0, countKeys);
+                    currentVal_Interpolate = MathHelper.Clamp(currentVal_Interpolate, 0, countKeys);
+
+                    if (currentVal_Interpolate != model._interpolateValue || model._targetReset || layer.requestUpdate)
+                    {
+                        var ledGroups = new List<ListLedGroup>();
+                        for (int i = 0; i < countKeys; i++)
+                        {
+                            var ledGroup = new ListLedGroup(surface, ledArray[i])
+                            {
+                                ZIndex = layer.zindex,
+                            };
+                            ledGroup.Detach();
+                            ledGroup.Brush = i < currentVal_Interpolate
+                                ? model.enmity_brush
+                                : model.empty_brush;
+                            ledGroups.Add(ledGroup);
+                        }
+                        DetachAndClearGroups(model._localgroups);
+                        model._localgroups = ledGroups;
+                        model._interpolateValue = currentVal_Interpolate;
+                    }
+                }
+                else if (layer.layerModes == Enums.LayerModes.Fade)
+                {
+                    // Whole-row tier. All selected keys light up with the
+                    // current enmity tier colour (Minimal / Low / High / Top)
+                    // rather than blending 0 - 100 through the gradient.
+                    // Matches the status-indicator shape FFXIV's threat HUD
+                    // uses; Interpolate above is the bar-fill alternative
+                    // for users who want a magnitude readout.
+                    var tier_col = enmityPosition == 0 ? model.empty_brush.Color : model.enmity_brush.Color;
+                    if (tier_col != model._faderValue || model._targetReset || layer.requestUpdate)
+                    {
+                        var ledGroup = new ListLedGroup(surface, ledArray)
+                        {
+                            ZIndex = layer.zindex,
+                            Brush = new SolidColorBrush(tier_col)
+                        };
+                        ledGroup.Detach();
+                        DetachAndClearGroups(model._localgroups);
+                        model._localgroups.Add(ledGroup);
+                        model._faderValue = tier_col;
+                    }
+                }
+
+                model._enmityPosition = enmityPosition;
 
                 // Send layers to _layergroups Dictionary to be tracked outside this method
                 var lg = model._localgroups.ToArray();
