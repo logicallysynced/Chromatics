@@ -32,7 +32,7 @@ Chromatics 4 stores your settings in a new location on your computer, and **your
 You'll need to set up your effects from scratch. Sorry about that - the rebuild changed too much under the hood for everything to carry over automatically.
 <br><br>
 
-### What is Chromatics? ### 
+### What is Chromatics? ###
 Chromatics is a third-party add-on for Final Fantasy XIV that turns your RGB devices into an extension of the game. It ships with a range of scenes and effects, including:
 * HP/MP/GP/CP
 * Keybinds - lights your keys depending on your mapped keybind status
