@@ -121,19 +121,42 @@ namespace Chromatics.Layers
                     if (getTargetInfo.TargetInfo.CurrentTarget != null)
                         targetId = getTargetInfo.TargetInfo.CurrentTarget.ID;
 
-                    if (targetId != 0
-                        && getTargetInfo.TargetInfo.EnmityItems != null
-                        && getTargetInfo.TargetInfo.EnmityItems.Count > 0)
+                    if (targetId != 0)
                     {
+                        // Cross-check two sources and take the larger value.
                         // TargetInfo.EnmityItems is the target's hate table -
-                        // each entry's ID is the hater's actor ID, not the
-                        // target's. Look up the player's own entry to read
-                        // their relative enmity (0 - 100) on this target.
+                        // each entry's ID is the hater's actor ID and the
+                        // Enmity field is that hater's percentage on this
+                        // target. PlayerInfo.EnmityItems is the player's own
+                        // AGGROMAP - each entry's ID is a mob the player has
+                        // aggro on, and Enmity is the player's enmity on
+                        // that mob. The player-centric list updates the
+                        // moment a target swap happens; the target-centric
+                        // list can lag by 1 - 2 seconds while FFXIV
+                        // re-populates Hate._hateInfo for the new current
+                        // target. Without the cross-check, retargeting an
+                        // already-engaged enemy flashes the empty colour
+                        // (or, with bleed on, the base layer) until the
+                        // hate table catches up. Taking max() keeps the
+                        // value monotonic across both lists - whichever
+                        // updated first wins for that tick, and the second
+                        // source catches up within a tick or two without
+                        // ever pulling the visual down.
                         var playerId = getCurrentPlayer.Entity.ID;
-                        var enmityProfile = getTargetInfo.TargetInfo.EnmityItems
-                            .FirstOrDefault(item => item.ID == playerId);
-                        if (enmityProfile != null)
-                            enmityPosition = enmityProfile.Enmity;
+                        if (getTargetInfo.TargetInfo.EnmityItems != null)
+                        {
+                            var targetEntry = getTargetInfo.TargetInfo.EnmityItems
+                                .FirstOrDefault(item => item.ID == playerId);
+                            if (targetEntry != null && targetEntry.Enmity > enmityPosition)
+                                enmityPosition = targetEntry.Enmity;
+                        }
+                        if (getCurrentPlayer.PlayerInfo?.EnmityItems != null)
+                        {
+                            var playerEntry = getCurrentPlayer.PlayerInfo.EnmityItems
+                                .FirstOrDefault(item => item.ID == targetId);
+                            if (playerEntry != null && playerEntry.Enmity > enmityPosition)
+                                enmityPosition = playerEntry.Enmity;
+                        }
                     }
                 }
 

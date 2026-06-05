@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.71
+## 4.2.72
 
 - Added support for FFXIV 7.51
 - Added an option to remap layers when keyboard type is changed.
@@ -10,6 +10,7 @@ All notable changes to Chromatics are documented here.
 - Fixed an issue which caused Chromatics to crash when changing layer modes.
 - Fixed an issue which prevented non-bleed layers from re-applying if disabled and re-enabled, with the Enmity Tracker layer specifically going dark whenever the player wasn't on the target's hate table.
 - Fixed an issue where the Enmity Tracker layer stayed dark while a target was engaged.
+- Fixed a 1-2 second delay on the Enmity Tracker layer when switching back to an already-engaged target. The layer now reads enmity from both the target's hate table and the player's aggro list and uses whichever updated first, so retargeting an enemy you're tanking lights the top tier instantly.
 
 ## 4.2.65
 
