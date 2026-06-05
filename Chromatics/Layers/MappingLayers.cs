@@ -169,10 +169,37 @@ namespace Chromatics.Layers
             return toSwap.TryGetValue(canonical, out var t) ? t : canonical;
         }
 
-        // Called when the user switches keyboard layout. Rewrites every
-        // keyboard layer's deviceLeds so that a key the user picked by its
-        // printed label (e.g. "Y") continues to refer to the same label on the
-        // new layout (e.g. QWERTZ's Y, which is physical LedId.Keyboard_Z).
+        // Position of DynamicLayerType.Highlight in ViewModels/Mapping/
+        // LayerItemViewModel._dynamicLayerOrder. layerTypeindex stores the
+        // ComboBox position, not the enum value, so we compare against the
+        // position - the canonical list is in LayerItemViewModel. Highlight
+        // is the only dynamic layer where the user picks individual keys by
+        // their printed letter; every other dynamic layer references a
+        // physical key cluster by purpose (movement, hotbar row, HP / MP
+        // bar, job gauges, weather, etc.).
+        private const int DynamicLayer_HighlightPosition = 1;
+
+        // Called when the user switches keyboard layout. Translates each
+        // affected layer's deviceLeds so a Highlight layer the user built
+        // by clicking the "Y" key on QWERTY continues to light the "Y"
+        // label after switching to QWERTZ.
+        //
+        // Only the Highlight DynamicLayer is remapped. ReactiveWeather
+        // Highlight, Keybinds, HP / MP Trackers, Job Gauges, Battle Stance,
+        // Castbar, Job Classes Highlight, Experience Tracker - all the
+        // other DynamicLayer subtypes - reference physical positions
+        // chosen by Chromatics for their purpose (the WASD physical
+        // cluster, the hotbar row, a HP-bar key sequence). Swapping
+        // those breaks the physical layout: a WASD layer remapped on
+        // QWERTY -> AZERTY ends up lighting Keyboard_Z (= AZERTY's W
+        // shift-row key) and Keyboard_Q (= AZERTY's A top-row key)
+        // instead of the WASD physical cluster the user expects to
+        // glow. Base layers are full-keyboard fills, so swap is a
+        // no-op there. Effect layers paint based on their own
+        // processor logic and don't use stored letter LedIds either.
+        // The narrow Highlight-only rule preserves the documented
+        // "user picked by label, follow label across layouts" intent
+        // without breaking purpose-built physical-cluster layers.
         public static void RemapLedIdsForLayoutChange(KeyboardLocalization from, KeyboardLocalization to)
         {
             if (from == to) return;
@@ -183,6 +210,8 @@ namespace Chromatics.Layers
                 var layer = kvp.Value;
                 if (layer.deviceType != RGBDeviceType.Keyboard) continue;
                 if (layer.deviceLeds == null || layer.deviceLeds.Count == 0) continue;
+                if (layer.rootLayerType != LayerType.DynamicLayer) continue;
+                if (layer.layerTypeindex != DynamicLayer_HighlightPosition) continue;
 
                 var remapped = new Dictionary<int, LedId>(layer.deviceLeds.Count);
                 var changed = false;

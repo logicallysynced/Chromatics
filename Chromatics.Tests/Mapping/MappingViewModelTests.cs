@@ -176,13 +176,20 @@ public class MappingViewModelTests : IDisposable
     }
 
     [Fact]
-    public void ApplyKeyboardLayoutChange_QwertyToQwertz_SwapsYAndZLeds()
+    public void ApplyKeyboardLayoutChange_HighlightLayer_QwertyToQwertz_SwapsYAndZLeds()
     {
+        // Highlight layers track letter labels - if the user clicks "Y" on
+        // QWERTY they want "Y" lit after switching to QWERTZ (which has Y at
+        // the physical Z position). Only DynamicLayerType.Highlight (position
+        // 1 in _dynamicLayerOrder) gets remapped on layout change.
+        const int HighlightPosition = 1;
+
         var deviceId = Guid.NewGuid();
         using var vm = NewVmWithSelectedDevice(deviceId);
         int id = vm.AddDynamicLayer();
 
         var layer = MappingLayers.GetLayer(id);
+        layer.layerTypeindex = HighlightPosition;
         layer.deviceLeds[0] = LedId.Keyboard_Y;
         layer.deviceLeds[1] = LedId.Keyboard_A;
         MappingLayers.UpdateLayer(layer);
@@ -192,6 +199,39 @@ public class MappingViewModelTests : IDisposable
         var after = MappingLayers.GetLayer(id);
         Assert.Equal(LedId.Keyboard_Z, after.deviceLeds[0]);
         Assert.Equal(LedId.Keyboard_A, after.deviceLeds[1]);
+    }
+
+    [Fact]
+    public void ApplyKeyboardLayoutChange_ReactiveWeatherLayer_QwertyToAzerty_PreservesPhysicalCluster()
+    {
+        // Regression guard: ReactiveWeatherHighlight references the WASD
+        // physical movement cluster, not letter labels. Swapping it on
+        // QWERTY -> AZERTY would push Keyboard_W to Keyboard_Z (the AZERTY
+        // "W" shift-row key) and Keyboard_A to Keyboard_Q (the AZERTY "A"
+        // top-row key), scattering the movement cluster on the user's
+        // hardware. ReactiveWeatherHighlight sits at position 15 in
+        // _dynamicLayerOrder and must NOT be remapped on layout change.
+        const int ReactiveWeatherHighlightPosition = 15;
+
+        var deviceId = Guid.NewGuid();
+        using var vm = NewVmWithSelectedDevice(deviceId);
+        int id = vm.AddDynamicLayer();
+
+        var layer = MappingLayers.GetLayer(id);
+        layer.layerTypeindex = ReactiveWeatherHighlightPosition;
+        layer.deviceLeds[0] = LedId.Keyboard_W;
+        layer.deviceLeds[1] = LedId.Keyboard_A;
+        layer.deviceLeds[2] = LedId.Keyboard_S;
+        layer.deviceLeds[3] = LedId.Keyboard_D;
+        MappingLayers.UpdateLayer(layer);
+
+        vm.ApplyKeyboardLayoutChange(KeyboardLocalization.qwerty, KeyboardLocalization.azerty);
+
+        var after = MappingLayers.GetLayer(id);
+        Assert.Equal(LedId.Keyboard_W, after.deviceLeds[0]);
+        Assert.Equal(LedId.Keyboard_A, after.deviceLeds[1]);
+        Assert.Equal(LedId.Keyboard_S, after.deviceLeds[2]);
+        Assert.Equal(LedId.Keyboard_D, after.deviceLeds[3]);
     }
 
     [Fact]
