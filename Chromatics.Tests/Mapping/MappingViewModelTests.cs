@@ -202,6 +202,32 @@ public class MappingViewModelTests : IDisposable
     }
 
     [Fact]
+    public void ApplyKeyboardLayoutChange_HighlightLayer_QwertyToAzerty_FollowsMLabelToHomeRow()
+    {
+        // Real French AZERTY puts M at the end of the home row, not the shift
+        // row. The swap table pairs Keyboard_M with Keyboard_SemicolonAndColon
+        // so a Highlight layer the user built by clicking "M" on QWERTY
+        // (Keyboard_M, physical shift-row col 7) follows the M label across to
+        // AZERTY's home-row position (Keyboard_SemicolonAndColon physical
+        // position).
+        const int HighlightPosition = 1;
+
+        var deviceId = Guid.NewGuid();
+        using var vm = NewVmWithSelectedDevice(deviceId);
+        int id = vm.AddDynamicLayer();
+
+        var layer = MappingLayers.GetLayer(id);
+        layer.layerTypeindex = HighlightPosition;
+        layer.deviceLeds[0] = LedId.Keyboard_M;
+        MappingLayers.UpdateLayer(layer);
+
+        vm.ApplyKeyboardLayoutChange(KeyboardLocalization.qwerty, KeyboardLocalization.azerty);
+
+        var after = MappingLayers.GetLayer(id);
+        Assert.Equal(LedId.Keyboard_SemicolonAndColon, after.deviceLeds[0]);
+    }
+
+    [Fact]
     public void ApplyKeyboardLayoutChange_ReactiveWeatherLayer_QwertyToAzerty_PreservesPhysicalCluster()
     {
         // Regression guard: ReactiveWeatherHighlight references the WASD

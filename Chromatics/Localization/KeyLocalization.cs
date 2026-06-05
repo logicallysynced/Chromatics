@@ -410,8 +410,13 @@ namespace Chromatics.Localization
             new KeyboardKey("J", LedId.Keyboard_J),
             new KeyboardKey("K", LedId.Keyboard_K),
             new KeyboardKey("L", LedId.Keyboard_L),
-            new KeyboardKey(":", LedId.Keyboard_SemicolonAndColon),
-            new KeyboardKey("\"", LedId.Keyboard_ApostropheAndDoubleQuote),
+            // Real French AZERTY moves M from the shift row to the end of
+            // the home row (where QWERTY has ; :). LedId stays at the QWERTY
+            // canonical scan code (Keyboard_SemicolonAndColon) - the swap
+            // table in Layers/MappingLayers.cs handles label-following for
+            // Highlight layers across layout changes.
+            new KeyboardKey("M", LedId.Keyboard_SemicolonAndColon),
+            new KeyboardKey("ù", LedId.Keyboard_ApostropheAndDoubleQuote),
             new KeyboardKey("ENTER", LedId.Keyboard_Enter, true, false, 12, 7, 0, 87),
 
             new KeyboardKey("4", LedId.Keyboard_Num4, true, false, 12, 131),
@@ -425,10 +430,14 @@ namespace Chromatics.Localization
             new KeyboardKey("V", LedId.Keyboard_V),
             new KeyboardKey("B", LedId.Keyboard_B),
             new KeyboardKey("N", LedId.Keyboard_N),
-            new KeyboardKey("M", LedId.Keyboard_M),
-            new KeyboardKey("<", LedId.Keyboard_CommaAndLessThan),
-            new KeyboardKey(">", LedId.Keyboard_PeriodAndBiggerThan),
-            new KeyboardKey("?", LedId.Keyboard_SlashAndQuestionMark),
+            // With M gone, AZERTY shift row reads W X C V B N , ; : ! - the
+            // QWERTY-M scan code now sits under the comma label, and the
+            // rest of the punctuation stays one position to the left of
+            // QWERTY's < > ? mapping.
+            new KeyboardKey(",", LedId.Keyboard_M),
+            new KeyboardKey(";", LedId.Keyboard_CommaAndLessThan),
+            new KeyboardKey(":", LedId.Keyboard_PeriodAndBiggerThan),
+            new KeyboardKey("!", LedId.Keyboard_SlashAndQuestionMark),
             new KeyboardKey("SHIFT", LedId.Keyboard_RightShift, true, false, 12, 7, 0, 102),
 
             new KeyboardKey("UP", LedId.Keyboard_ArrowUp, true, false, 9, 47),
@@ -642,16 +651,19 @@ namespace Chromatics.Localization
                 (LedId.Keyboard_Y, LedId.Keyboard_Z),
                 (LedId.Keyboard_Z, LedId.Keyboard_Y)));
 
-        // AZERTY rearranges A<->Q, Z<->W and moves M. We remap only the keys whose
-        // physical position differs from QWERTY; everything else (digits, symbols,
-        // modifiers) stays put.
+        // AZERTY rearranges A<->Q, Z<->W and moves M to the end of the home
+        // row (where QWERTY has SemicolonAndColon). We remap the four letter
+        // pairs and the M / SemicolonAndColon pair; everything else (digits,
+        // other symbols, modifiers) stays put.
         public static Dictionary<LedId, int[]> AZERTY_Grid => _azertyGrid.Value;
         private static readonly Lazy<Dictionary<LedId, int[]>> _azertyGrid = new Lazy<Dictionary<LedId, int[]>>(() =>
             BuildRemappedGrid(
                 (LedId.Keyboard_Q, LedId.Keyboard_A),
                 (LedId.Keyboard_A, LedId.Keyboard_Q),
                 (LedId.Keyboard_W, LedId.Keyboard_Z),
-                (LedId.Keyboard_Z, LedId.Keyboard_W)));
+                (LedId.Keyboard_Z, LedId.Keyboard_W),
+                (LedId.Keyboard_M, LedId.Keyboard_SemicolonAndColon),
+                (LedId.Keyboard_SemicolonAndColon, LedId.Keyboard_M)));
 
         public static Dictionary<LedId, int[]> QWERTY_Grid = new Dictionary<LedId, int[]>() //row, column
         {

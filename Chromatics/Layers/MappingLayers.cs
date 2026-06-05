@@ -152,6 +152,14 @@ namespace Chromatics.Layers
                         { LedId.Keyboard_A, LedId.Keyboard_Q },
                         { LedId.Keyboard_W, LedId.Keyboard_Z },
                         { LedId.Keyboard_Z, LedId.Keyboard_W },
+                        // M moves from the QWERTY shift row to the AZERTY
+                        // home row (label position alongside ;/: on QWERTY).
+                        // Keyboard_M ↔ Keyboard_SemicolonAndColon so a
+                        // Highlight layer made by clicking "M" on QWERTY
+                        // lights up the home-row "M" label after switching
+                        // to AZERTY.
+                        { LedId.Keyboard_M, LedId.Keyboard_SemicolonAndColon },
+                        { LedId.Keyboard_SemicolonAndColon, LedId.Keyboard_M },
                     }
                 },
             };
