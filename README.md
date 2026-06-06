@@ -57,7 +57,8 @@ It ships with a range of scenes and effects, including:
 <br>
 Chromatics works with a wide range of RGB devices via the RGB.NET library. If RGB.NET supports your device, Chromatics does too.
 <br>
-Chromatics reads game memory to follow the action. It never writes to, changes or injects into FFXIV.
+<br>
+Chromatics reads game memory to integrate with the game. It never writes to, changes or injects into FFXIV.
 <br>
 
 ### Developers ### 
