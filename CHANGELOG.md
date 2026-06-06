@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.2.72
+## 4.2.73
 
 - Added support for FFXIV 7.51
 - Added an option to remap layers when keyboard type is changed.

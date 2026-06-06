@@ -33,24 +33,31 @@ You'll need to set up your effects from scratch. Sorry about that - the rebuild 
 <br><br>
 
 ### What is Chromatics? ###
-Chromatics is a third-party add-on for Final Fantasy XIV that turns your RGB devices into an extension of the game. It ships with a range of scenes and effects, including:
-* HP/MP/GP/CP
-* Keybinds - lights your keys depending on your mapped keybind status
-* Castbar progress
-* Target HP/Target Castbar progress
-* Job Gauges
-* Enmity Tracker
-* Battle Stance
-* Reactive Weather - displays static & animation weather effects
-* Duty Finder Bell - flash your device when your DF pops
-* Damage Flash - flash your device when you take damage
-* Gold Saucer Vegas Mode
-* Title screen & cutscene animations
+
+Chromatics is a third-party add-on for Final Fantasy XIV that turns your RGB devices into an extension of the game. Turn a row of your keyboard into a dynamic health bar. Make your smart light automatically change colors to match the in-game weather. Save different color profiles that swap out when you change jobs.
+
+It ships with a range of scenes and effects, including:
+* HP, MP, GP and CP stat bars - Show your health and magic as meters on your devices.
+* Keybinds - Keys light up when an ability is ready, proc'd and while on cooldown.
+* Castbar Animations - Animated castbars on your devices for your player or target enemy.
+* Job Gauges - Show job's gauge on your devices.
+* Enmity Tracker - See your current aggro so you know when a boss is about to turn on you.
+* Raid Effects - Supported fights take over your devices with choreographed animations that follow phases and music.
+* Reactive Weather - Your devices follow the weather in each zone, from light rain to thunderstorms and sandstorms. Includes animations for special weather effects.
+* Duty Finder Bell - flash your device when your DF pops.
+* Damage Flash - flash your device when you take damage.
+* Target HP/Target Castbar animations.
+* Battle Stance.
+* Gold Saucer Vegas Mode.
+* Title screen & cutscene animations.
+
 <br>
 <img src="https://chromaticsffxiv.com/img/Chromatics4_MappingScreen.png" alt="Chromatics Palettes">
 <br>
 <br>
 Chromatics works with a wide range of RGB devices via the RGB.NET library. If RGB.NET supports your device, Chromatics does too.
+<br>
+Chromatics reads game memory to follow the action. It never writes to, changes or injects into FFXIV.
 <br>
 
 ### Developers ### 
