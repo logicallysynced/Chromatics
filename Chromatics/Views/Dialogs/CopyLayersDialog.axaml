@@ -1,0 +1,173 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        xmlns:vm="clr-namespace:Chromatics.ViewModels"
+        x:Class="Chromatics.Views.Dialogs.CopyLayersDialog"
+        x:DataType="vm:CopyLayersDialogViewModel"
+        Title="{loc:Tr Key='Copy layers between devices'}"
+        Width="760" Height="640"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto,Auto" Margin="24">
+
+        <TextBlock Grid.Row="0"
+                   Text="{loc:Tr Key='Copy layers between devices'}"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,6" />
+
+        <TextBlock Grid.Row="1"
+                   Text="{loc:Tr Key='Pick which dynamic layers from the source device to duplicate onto the destination. Base and Effect layers are not copied; they belong to the destination device. New dynamic layers are added without disturbing any that already exist on the destination.'}"
+                   TextWrapping="Wrap"
+                   Opacity="0.8"
+                   Margin="0,0,0,16" />
+
+        <!-- Source device -->
+        <Grid Grid.Row="2" ColumnDefinitions="120,*" Margin="0,0,0,8">
+            <TextBlock Grid.Column="0"
+                       Text="{loc:Tr Key='Source device'}"
+                       VerticalAlignment="Center"
+                       FontWeight="SemiBold" />
+            <ComboBox Grid.Column="1"
+                      ItemsSource="{Binding Devices}"
+                      SelectedItem="{Binding SelectedSource, Mode=TwoWay}"
+                      DisplayMemberBinding="{Binding Name}"
+                      HorizontalAlignment="Stretch" />
+        </Grid>
+
+        <!-- Destination device -->
+        <Grid Grid.Row="3" ColumnDefinitions="120,*" Margin="0,0,0,16">
+            <TextBlock Grid.Column="0"
+                       VerticalAlignment="Center"
+                       FontWeight="SemiBold">
+                <Run Text="&#x2193;" FontSize="20" />
+                <Run Text=" " />
+                <Run Text="{loc:Tr Key='Destination'}" />
+            </TextBlock>
+            <ComboBox Grid.Column="1"
+                      ItemsSource="{Binding AvailableDestinations}"
+                      SelectedItem="{Binding SelectedDestination, Mode=TwoWay}"
+                      DisplayMemberBinding="{Binding Name}"
+                      HorizontalAlignment="Stretch" />
+        </Grid>
+
+        <!-- Select / clear all -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    Spacing="8"
+                    Margin="0,0,0,8"
+                    IsVisible="{Binding !HasNoLayers}">
+            <Button Content="{loc:Tr Key='Select all'}"
+                    Click="OnSelectAll"
+                    MinWidth="100" />
+            <Button Content="{loc:Tr Key='Clear all'}"
+                    Click="OnClearAll"
+                    MinWidth="100" />
+        </StackPanel>
+
+        <!-- Layer rows -->
+        <Border Grid.Row="5"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                BorderThickness="1"
+                CornerRadius="4">
+            <Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                              IsVisible="{Binding !HasNoLayers}">
+                    <ItemsControl ItemsSource="{Binding LayerRows}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="12,8"
+                                        BorderThickness="0,0,0,1"
+                                        BorderBrush="{DynamicResource SystemControlBackgroundAltMediumLowBrush}">
+                                    <StackPanel Spacing="6">
+                                        <!-- Header: checkbox + name -->
+                                        <Grid ColumnDefinitions="Auto,*">
+                                            <CheckBox Grid.Column="0"
+                                                      IsChecked="{Binding IsSelected, Mode=TwoWay}"
+                                                      VerticalAlignment="Center"
+                                                      Margin="0,0,12,0" />
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding DisplayName}"
+                                                       FontWeight="SemiBold"
+                                                       VerticalAlignment="Center" />
+                                        </Grid>
+
+                                        <!-- Per-LED mapping expander (Dynamic layers only) -->
+                                        <Expander IsVisible="{Binding ShowKeyMappings}"
+                                                  Header="{loc:Tr Key='Key mapping for this layer'}"
+                                                  IsExpanded="False"
+                                                  Margin="32,0,0,0">
+                                            <Border BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="3"
+                                                    Padding="0">
+                                                <ItemsControl ItemsSource="{Binding KeyMappings}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid ColumnDefinitions="*,30,*" Margin="8,3">
+                                                                <TextBlock Grid.Column="0"
+                                                                           Text="{Binding SourceLedIdLabel}"
+                                                                           VerticalAlignment="Center" />
+                                                                <TextBlock Grid.Column="1"
+                                                                           Text="&#x2192;"
+                                                                           HorizontalAlignment="Center"
+                                                                           VerticalAlignment="Center"
+                                                                           Opacity="0.6" />
+                                                                <ComboBox Grid.Column="2"
+                                                                          ItemsSource="{Binding $parent[Window].((vm:CopyLayersDialogViewModel)DataContext).AvailableDestLedIds}"
+                                                                          SelectedItem="{Binding DestinationLedId, Mode=TwoWay}"
+                                                                          IsEnabled="{Binding HasDestination, Mode=TwoWay}"
+                                                                          HorizontalAlignment="Stretch" />
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Border>
+                                        </Expander>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Empty state when source device has no dynamic layers -->
+                <TextBlock IsVisible="{Binding HasNoLayers}"
+                           Text="{loc:Tr Key='The source device has no dynamic layers to copy. Add a dynamic layer to it on the Mappings tab first.'}"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Opacity="0.7"
+                           FontStyle="Italic"
+                           TextWrapping="Wrap"
+                           MaxWidth="420" />
+            </Grid>
+        </Border>
+
+        <!-- Summary -->
+        <TextBlock Grid.Row="6"
+                   Text="{Binding SummaryText}"
+                   Margin="0,12,0,0"
+                   FontStyle="Italic"
+                   Opacity="0.8"
+                   TextWrapping="Wrap" />
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="7"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button Name="CancelButton"
+                    Content="{loc:Tr Key=Cancel}"
+                    Click="OnCancel"
+                    MinWidth="100" />
+            <Button Name="CopyButton"
+                    Content="{loc:Tr Key='Copy layers'}"
+                    Click="OnCopy"
+                    IsEnabled="{Binding CanCopy}"
+                    Classes="accent"
+                    MinWidth="120" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,5 +1,6 @@
 using Avalonia;
 using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Helpers;
 using Chromatics.Models;
 using Chromatics.Views;
@@ -35,6 +36,11 @@ namespace Chromatics
         private const string SingleInstanceMutexName = "Chromatics-SingleInstance-{6E5F8A4D-2B4C-4F7E-9D1A-3E8B5C2F1A0D}";
         private static Mutex _singleInstanceMutex;
 
+        // Sentinel argv flag set by RestartForPackageIdentity. Present on the
+        // second-pass invocation so we don't re-enter the restart logic and
+        // loop forever if identity still fails to bind.
+        private const string PostRegisterRestartArg = "--chromatics-post-register-restart";
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -44,7 +50,31 @@ namespace Chromatics
             // that UpdateService depends on, so this must run even under a
             // debugger. Lifecycle args are never passed during debug sessions,
             // so Run() just registers the locator and returns cleanly.
-            VelopackApp.Build().Run();
+            //
+            // OnBeforeUninstallFastCallback removes the Dynamic Lighting sparse
+            // package registration before Velopack kills the process, so the
+            // app stops appearing in Settings → Personalization → Dynamic
+            // Lighting → Background light control after uninstall.
+            //
+            // OnBeforeUpdateFastCallback runs the same Deregister against the
+            // OUTGOING build before Velopack swaps the current\ tree. Without
+            // it the OS keeps file handles on current\Chromatics.exe (because
+            // the sparse package is registered with ExternalLocationUri
+            // pointing there) and Velopack fails with "Failed to remove
+            // existing application directory". The incoming version
+            // re-registers itself on next launch via EnsureRegistered.
+            VelopackApp.Build()
+                .OnBeforeUninstallFastCallback(_ =>
+                {
+                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                        SparsePackageRegistrar.Deregister();
+                })
+                .OnBeforeUpdateFastCallback(_ =>
+                {
+                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                        SparsePackageRegistrar.Deregister();
+                })
+                .Run();
 
             if (!ThereCanOnlyBeOne())
             {
@@ -109,6 +139,42 @@ namespace Chromatics
             RunExpansionMigrationIfNeeded(appSettings);
             AppSettings.SaveSettings(appSettings);
 
+            // Re-register the Dynamic Lighting sparse package on startup if the
+            // user already had the DL provider enabled. Catches the upgrade
+            // path: a new Chromatics version ships a new sparse-package version,
+            // so the OS-side registration needs to be refreshed to match.
+            // Initial registration on first enable is driven from the Settings
+            // toggle (see SettingsViewModel); this is just the keep-in-sync
+            // pass on subsequent launches.
+            if (appSettings.deviceDynamicLightingEnabled && OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+            {
+                SparsePackageRegistrar.EnsureRegistered();
+
+                // Gate the identity check + relaunch path on a bundled
+                // Chromatics.appx. Debug builds and IDE F5 runs don't ship
+                // the .appx, so EnsureRegistered already short-circuited;
+                // running the Package.Current probe and the relaunch on
+                // top of that would (a) raise a first-chance
+                // InvalidOperationException every debug session, and
+                // (b) detach the VS debugger via RestartForPackageIdentity.
+                // Packaged builds keep the full flow: the OS loader binds
+                // fusion-manifest identity at CreateProcess time, so the
+                // process that performed the first registration is forever
+                // without identity; the sentinel-armed relaunch picks up
+                // the binding without the user having to close-and-reopen.
+                if (SparsePackageRegistrar.HasBundledAppx())
+                {
+                    if (!args.Contains(PostRegisterRestartArg) && !SparsePackageRegistrar.HasPackageIdentity())
+                    {
+                        Logger.WriteVerbose("[SparsePackage] Process started before package was registered; relaunching once to bind identity");
+                        RestartForPackageIdentity(args);
+                        return;
+                    }
+
+                    SparsePackageRegistrar.LogPackageIdentity();
+                }
+            }
+
             try
             {
                 BuildAvaloniaApp()
@@ -142,6 +208,45 @@ namespace Chromatics
             ForceTerminate(0);
         }
 
+        // Relaunches the current Chromatics.exe with a sentinel argv flag so the
+        // new process picks up package identity bound by the sparse-package
+        // registration that just completed. The current process started before
+        // the package existed, so its identity is forever absent — only a fresh
+        // CreateProcess can pick up the new binding. Releases the single-instance
+        // mutex first so the new process doesn't have to wait through the
+        // ThereCanOnlyBeOne 3-second grace window before claiming it.
+        private static void RestartForPackageIdentity(string[] originalArgs)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = Environment.ProcessPath,
+                UseShellExecute = false,
+            };
+            foreach (var arg in originalArgs) psi.ArgumentList.Add(arg);
+            psi.ArgumentList.Add(PostRegisterRestartArg);
+
+            try { _singleInstanceMutex?.ReleaseMutex(); } catch { }
+            try { _singleInstanceMutex?.Dispose();   } catch { }
+            _singleInstanceMutex = null;
+
+            try
+            {
+                Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[SparsePackage] Relaunch failed: {ex.GetType().Name} — {ex.Message}. Continuing without identity (foreground DL only).");
+                // Re-acquire the mutex so this surviving process still passes
+                // single-instance checks downstream. Best-effort; if it fails
+                // we soldier on rather than killing the surviving instance.
+                try { _singleInstanceMutex = new Mutex(initiallyOwned: true, SingleInstanceMutexName, out _); } catch { }
+                return;
+            }
+
+            try { SentryService.Shutdown(); } catch { }
+            Environment.Exit(0);
+        }
+
         // Hard process termination via OS TerminateProcess. SentryService.Shutdown
         // does a 3-second sync flush first so pending events leave the wire,
         // then Process.Kill is uninterruptible — no risk of being held hostage
@@ -150,6 +255,16 @@ namespace Chromatics
         // indefinitely on a slow network.
         private static void ForceTerminate(int exitCode)
         {
+            // Materialise any clipboard data the user has copied during the
+            // session so it survives this process dying. Avalonia's clipboard
+            // uses OLE delayed rendering on Windows, which means a Ctrl+C
+            // inside the Console TextBox (or any Avalonia text control) only
+            // leaves a "ask Chromatics for the bytes" pointer in Windows'
+            // clipboard chain; once Process.Kill fires the pointer is dead
+            // and the user's clipboard goes empty. OleFlushClipboard walks
+            // the pending OLE formats and serialises them into the system
+            // clipboard before we tear the process down.
+            try { Helpers.ClipboardHelper.FlushOleClipboard(); } catch { }
             try { SentryService.Shutdown(); } catch { }
             try { Process.GetCurrentProcess().Kill(); } catch { }
             // Should never reach here — Kill terminates synchronously.

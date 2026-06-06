@@ -51,7 +51,23 @@ public class HueDevice : AbstractRGBDevice<HueDeviceInfo>
         Led led = model switch
         {
             // ── Light strips: long thin rectangle, gets LedStripe1 ──────────
+            //
+            // Single-colour strips (LST*, LCL*): the whole strip is one
+            // colour at a time — Hue's CLIP REST API only addresses the
+            // overall light colour. One LedStripe1 LED is the right model.
+            //
+            // Gradient strips (LCX*, the Hue Play Gradient Lightstrip
+            // family): the hardware supports per-zone (5 zones for the
+            // TV strip), but per-zone addressing is only exposed through
+            // Hue's Entertainment streaming API (DTLS UDP), not the CLIP
+            // REST API Chromatics currently uses. So for now LCX strips
+            // also show as a single LedStripe1 LED that paints the
+            // entire strip a uniform colour. Adding Entertainment
+            // streaming would unlock true per-zone — tracked as a
+            // future enhancement.
             "LST001" or "LST002" or "LCL001"
+            or "LCX001" or "LCX002" or "LCX003"
+            or "LCX004" or "LCX005" or "LCX006"
                 => AddLed(LedId.LedStripe1, new Point(0, 0), new Size(2000, 14)),
 
             // ── BR30 reflectors: large round ────────────────────────────────
@@ -122,7 +138,9 @@ public class HueDevice : AbstractRGBDevice<HueDeviceInfo>
         };
 
         // Light strips render as elongated rectangles; everything else is a circle.
-        bool isStrip = model is "LST001" or "LST002" or "LCL001";
+        bool isStrip = model is "LST001" or "LST002" or "LCL001"
+                              or "LCX001" or "LCX002" or "LCX003"
+                              or "LCX004" or "LCX005" or "LCX006";
         if (led != null && !isStrip)
             led.Shape = Shape.Circle;
     }

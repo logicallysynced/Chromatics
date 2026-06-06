@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Models;
 using Chromatics.ViewModels;
 using System.Collections.Generic;

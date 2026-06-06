@@ -7,9 +7,16 @@ using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
+using RGB.NET.Devices.PlayStation;
+using Chromatics.Extensions.RGB.NET.Devices.Alienware;
+using Chromatics.Extensions.RGB.NET.Devices.DynamicLighting;
+using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
+using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
+using Chromatics.Layers;
 using Chromatics.Models;
 using Chromatics.Helpers;
 using Chromatics.Views;
+using Chromatics.Views.Dialogs;
 using Microsoft.VisualBasic.FileIO;
 using Microsoft.Win32;
 using RGB.NET.Devices.Asus;
@@ -23,6 +30,7 @@ using RGB.NET.Devices.Razer;
 using RGB.NET.Devices.SteelSeries;
 using RGB.NET.Devices.Wooting;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -51,6 +59,7 @@ namespace Chromatics.ViewModels
             _betaChannel = s.betaChannel;
             _alwaysRunAsAdmin = s.alwaysRunAsAdmin;
             _enableCrashReports = s.enableCrashReports;
+            _dynamicLightingBypassConflictCheck = s.dynamicLightingBypassConflictCheck;
             _closeWithGame = s.closeWithGame;
             _globalBrightness = s.globalbrightness;
 
@@ -77,11 +86,45 @@ namespace Chromatics.ViewModels
                 () => RGBController.UnloadDeviceProvider(RazerDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.deviceRazerEnabled = v; AppSettings.SaveSettings(cur); }));
 
-            DeviceToggles.Add(MakeDeviceToggle("Logitech", "Enable/disable Logitech device library. Default: Enabled",
+            // Logitech is special - the LightSync SDK only loads while
+            // Logitech G HUB is running, and RGB.NET surfaces that failure
+            // with "Failed to initialize Logitech-SDK." Catch that path,
+            // flip the toggle back off, and prompt the user to start G HUB.
+            // Other Logitech failures (driver missing, permission, etc.)
+            // fall through to the generic error log and the toggle stays on
+            // so the user can re-toggle once they've fixed the underlying
+            // issue.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Logitech",
+                "Enable/disable Logitech device library. Requires Logitech G HUB to be running. Default: Enabled",
                 s.deviceLogitechEnabled,
-                () => RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance),
-                () => RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance),
-                v => { var cur = AppSettings.GetSettings(); cur.deviceLogitechEnabled = v; AppSettings.SaveSettings(cur); }));
+                async () =>
+                {
+                    RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance, out var loadError);
+                    if (loadError != null
+                        && loadError.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase))
+                    {
+                        try { RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance); } catch { /* best-effort */ }
+                        var c = AppSettings.GetSettings();
+                        c.deviceLogitechEnabled = false;
+                        AppSettings.SaveSettings(c);
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["Logitech G HUB not detected"],
+                            LocalizationService.Instance["Chromatics couldn't load the Logitech LightSync SDK. The SDK only loads while Logitech G HUB is running. Open G HUB on this machine, then re-enable the Logitech provider. If G HUB is already open, try restarting it."]);
+                        return false;
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceLogitechEnabled = true;
+                    AppSettings.SaveSettings(cur);
+                    return true;
+                },
+                () =>
+                {
+                    RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance);
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceLogitechEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
 
             DeviceToggles.Add(MakeDeviceToggle("Corsair", "Enable/disable Corsair device library. Default: Enabled",
                 s.deviceCorsairEnabled,
@@ -125,16 +168,105 @@ namespace Chromatics.ViewModels
                 () => RGBController.UnloadDeviceProvider(NovationDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.deviceNovationEnabled = v; AppSettings.SaveSettings(cur); }));
 
-            DeviceToggles.Add(MakeDeviceToggle("OpenRGB", "Enable/disable OpenRGB device library. Default: Disabled",
+            // OpenRGB is special — it can't enumerate devices until it has
+            // connected to an SDK server. If the server isn't running the
+            // provider throws on Load; if the server is running but has no
+            // devices configured the provider loads cleanly with an empty
+            // Devices list. Both modes need user-facing feedback (a generic
+            // "toggle silently turned itself off" leaves the user staring
+            // at a dead checkbox). Mirrors the LIFX / Yeelight / QMK
+            // patterns: empty-result auto-untoggle + dialog, connection-
+            // refused catch + dialog.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "OpenRGB",
+                "Enable/disable OpenRGB device library. Requires the OpenRGB SDK server to be running (OpenRGB -> Settings -> SDK Server -> Start at Application Start). Default: Disabled",
                 s.deviceOpenRGBEnabled,
-                () => RGBController.LoadDeviceProvider(OpenRGBDeviceProvider.Instance),
-                () => RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance),
-                v => { var cur = AppSettings.GetSettings(); cur.deviceOpenRGBEnabled = v; AppSettings.SaveSettings(cur); }));
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+                    var ip = string.IsNullOrWhiteSpace(cur.openRgbServerIp)
+                        ? "127.0.0.1"
+                        : cur.openRgbServerIp.Trim();
 
-            DeviceToggles.Add(MakeDeviceToggle("PlayStation (Beta)", "[BETA] Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
+                    try
+                    {
+                        // The Setup() path in RGBController only adds the
+                        // server definition if the toggle was already on at
+                        // startup. A first-time user-driven enable needs to
+                        // add it here too. AddDeviceDefinition is idempotent
+                        // enough for the common case where the user toggles
+                        // on/off without changing the IP.
+                        OpenRGBDeviceProvider.Instance.AddDeviceDefinition(new OpenRGBServerDefinition
+                        {
+                            Port = 6742,
+                            Ip = ip,
+                            ClientName = "Chromatics",
+                        });
+
+                        Logger.WriteConsole(LoggerTypes.Devices,
+                            $"[OpenRGB] Connecting to SDK server at {ip}:6742...");
+
+                        // Load runs synchronously on the UI thread and the
+                        // OpenRGB.NET client probe is sub-second when the
+                        // server is local; no Task.Run wrap needed.
+                        RGBController.LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
+
+                        int count = OpenRGBDeviceProvider.Instance.Devices.Count();
+                        if (count == 0)
+                        {
+                            // Server reachable but reports zero devices.
+                            // Pull the provider back out and flip the toggle
+                            // off so the user gets a clear "didn't take" UX
+                            // instead of a checked toggle that paints nothing.
+                            RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance);
+                            var cc = AppSettings.GetSettings();
+                            cc.deviceOpenRGBEnabled = false;
+                            AppSettings.SaveSettings(cc);
+                            Logger.WriteConsole(LoggerTypes.Devices,
+                                $"[OpenRGB] Connected to {ip}:6742 but no devices are configured in OpenRGB. Add devices in OpenRGB before enabling this provider.");
+                            await DialogService.ShowAsync(
+                                LocalizationService.Instance["No OpenRGB devices found"],
+                                LocalizationService.Instance["Chromatics connected to the OpenRGB SDK server but it reports no devices. Open OpenRGB on the host machine, confirm at least one device shows up there, then enable this provider again."]);
+                            return false;
+                        }
+
+                        Logger.WriteConsole(LoggerTypes.Devices,
+                            $"[OpenRGB] Connected to {ip}:6742 - {count} device(s) adopted");
+                        var c = AppSettings.GetSettings();
+                        c.deviceOpenRGBEnabled = true;
+                        AppSettings.SaveSettings(c);
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Connection refused / timeout / DNS failure / etc.
+                        // Log the full error to console for diagnosis and
+                        // show a short user-facing dialog with the prereq.
+                        Logger.WriteConsole(LoggerTypes.Error,
+                            $"[OpenRGB] Connection to {ip}:6742 failed: {ex.Message}");
+                        try { RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance); } catch { /* best-effort */ }
+                        var c = AppSettings.GetSettings();
+                        c.deviceOpenRGBEnabled = false;
+                        AppSettings.SaveSettings(c);
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["OpenRGB SDK server unreachable"],
+                            LocalizationService.Instance["Chromatics couldn't reach the OpenRGB SDK server. Open OpenRGB on the host machine, go to Settings -> SDK Server, and enable 'Start at Application Start'. To target a remote server, set openRgbServerIp in settings.chromatics4 (Chromatics %AppData% folder)."]);
+                        return false;
+                    }
+                },
+                () =>
+                {
+                    RGBController.UnloadDeviceProvider(OpenRGBDeviceProvider.Instance);
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceOpenRGBEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                    Logger.WriteConsole(LoggerTypes.Devices, "[OpenRGB] Provider disabled");
+                }));
+
+            DeviceToggles.Add(MakeDeviceToggle("PlayStation", "Enable/disable PlayStation controller lighting (DualShock 4 / DualSense over USB or Bluetooth). Default: Disabled",
                 s.devicePlayStationEnabled,
-                () => RGBController.LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
-                () => RGBController.UnloadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance),
+                () => { PlayStationProviderHooks.EnsureInstalled(); RGBController.LoadDeviceProvider(PlayStationDeviceProvider.Instance); PlayStationProviderHooks.EmitPostLoadHints(); },
+                () => RGBController.UnloadDeviceProvider(PlayStationDeviceProvider.Instance),
                 v => { var cur = AppSettings.GetSettings(); cur.devicePlayStationEnabled = v; AppSettings.SaveSettings(cur); }));
 
             // Hue is special — enabling opens the bridge-pairing dialog (with
@@ -143,8 +275,8 @@ namespace Chromatics.ViewModels
             // stick. If either is cancelled, or the user adopts no bulbs,
             // the toggle reverts to off — same UX as the LIFX flow below.
             DeviceToggles.Add(new DeviceToggleItem(
-                "Hue (Beta)",
-                "[BETA] Enable/disable Philips HUE device library. Default: Disabled",
+                "Hue",
+                "Enable/disable Philips HUE device library. Default: Disabled",
                 s.deviceHueEnabled,
                 async () =>
                 {
@@ -207,8 +339,8 @@ namespace Chromatics.ViewModels
             // Re-enabling re-prompts with existing adoptions pre-checked
             // (matches the user spec: see SettingsModel.deviceLifxAdoptedDevices).
             DeviceToggles.Add(new DeviceToggleItem(
-                "LIFX (Beta)",
-                "[BETA] Enable/disable LIFX device library (LAN protocol). Default: Disabled",
+                "LIFX",
+                "Enable/disable LIFX device library (LAN protocol). Default: Disabled",
                 s.deviceLifxEnabled,
                 async () =>
                 {
@@ -271,6 +403,489 @@ namespace Chromatics.ViewModels
                     cur.deviceLifxEnabled = false;
                     AppSettings.SaveSettings(cur);
                 }));
+
+            // QMK Raw HID — auto-adopts every QMK-compatible board on first
+            // enable (no picker dialog yet; per-keyboard disable via the
+            // Mapping tab covers the "I don't want this one" case for v1
+            // Beta). Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any
+            // other custom keyboard running QMK with Raw HID enabled.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "QMK (Beta)",
+                "[BETA] Enable/disable QMK Raw HID keyboard support. Auto-adopts any QMK-compatible keyboard with Raw HID enabled (covers NovelKeys, KBDFans, Drop, GMMK, Glorious, and other custom QMK boards). Default: Disabled",
+                s.deviceQmkRawHidEnabled,
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[QMK] Scanning for QMK-compatible keyboards on the USB bus...");
+
+                    // Discovery + auto-adopt: run on a background thread to
+                    // keep the Settings dialog responsive — per-device VIA
+                    // handshakes can take 200-500ms each on a sluggish USB
+                    // stack, and discovery + handshake of 5+ boards adds up.
+                    bool result = await Task.Run(() =>
+                    {
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol.QmkRawHidDiscovery.Discover();
+                        if (discovered.Count == 0)
+                        {
+                            // No boards responded — leave the toggle off so
+                            // the user sees the immediate "didn't take" UX
+                            // rather than an empty-but-on provider.
+                            return false;
+                        }
+
+                        var adopted = new System.Collections.Generic.List<QmkRawHidAdoptedDevice>();
+                        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance.AdoptedDevices.Clear();
+                        foreach (var c in discovered)
+                        {
+                            string mfg = ""; string prod = "";
+                            try { mfg  = c.Hid.GetManufacturer() ?? ""; } catch { }
+                            try { prod = c.Hid.GetProductName() ?? ""; } catch { }
+                            var key = $"{c.Hid.VendorID:X4}:{c.Hid.ProductID:X4}:{mfg}:{prod}";
+                            if (!seen.Add(key)) continue;
+
+                            adopted.Add(new QmkRawHidAdoptedDevice
+                            {
+                                VendorId = c.Hid.VendorID,
+                                ProductId = c.Hid.ProductID,
+                                Manufacturer = mfg,
+                                Product = prod,
+                                LedCount = c.LedCount,
+                                Protocol = c.Protocol.ToString(),
+                                ViaKeymapKey = string.Empty,
+                            });
+                            Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance.AdoptedDevices.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidAdoptedDeviceFilter(
+                                    c.Hid.VendorID, c.Hid.ProductID, mfg, prod));
+                        }
+
+                        cur.deviceQmkRawHidAdoptedDevices = adopted;
+                        cur.deviceQmkRawHidEnabled = true;
+                        AppSettings.SaveSettings(cur);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance);
+                        return true;
+                    });
+
+                    if (!result)
+                    {
+                        // The "no boards found" path. Logger.WriteConsole has
+                        // already written the detailed enumeration breakdown
+                        // (count of HID devices seen, candidates with the
+                        // Raw HID interface, open-failures, etc.). Surface a
+                        // short user-facing dialog too so it's obvious why
+                        // the toggle didn't take — without this the toggle
+                        // flashes on then back off with no visible feedback.
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No QMK Keyboards Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any QMK keyboards. Make sure your keyboard is plugged in over USB and that its firmware has Raw HID enabled (the default for any VIA-compatible build). If VIA, Vial, or OpenRGB is running, close it before enabling this provider - they hold the Raw HID interface exclusively. See the console for the full list of detected HID devices."]);
+                    }
+                    else
+                    {
+                        // First-time hint dialog explaining the VIA single-
+                        // colour vs OpenRGB-QMK per-key tradeoff. We never
+                        // ship per-key for stock QMK firmware because the
+                        // VIA protocol only exposes a single matrix base
+                        // colour; the OpenRGB-QMK firmware module gives per-key,
+                        // but has to be built into a custom firmware image and
+                        // flashed by the user. Surface this once so users
+                        // who plug in a stock-firmware board don't think
+                        // per-key support is broken in Chromatics.
+                        var post = AppSettings.GetSettings();
+                        if (!post.qmkOpenRgbHintShown)
+                        {
+                            try
+                            {
+                                var owner = GetMainWindow();
+                                var hintDlg = new QmkOpenRgbHintDialog();
+                                if (owner != null) await hintDlg.ShowDialog(owner).ConfigureAwait(true);
+                                else hintDlg.Show();
+                            }
+                            catch { /* dialog failure shouldn't block enable */ }
+                        }
+                    }
+
+                    return result;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        prov.AdoptedDevices.Clear();
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceQmkRawHidEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
+            // Yeelight — LAN-protocol bulbs, strips, lamps, ceiling lights.
+            // Mirrors the LIFX flow: enabling the toggle pops the
+            // YeelightAdoptionDialog which runs SSDP discovery and lets
+            // the user pick which bulbs Chromatics drives. Empty
+            // selection or no bulbs found leaves the toggle off.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Yeelight (Beta)",
+                "[BETA] Enable/disable Yeelight LAN device support. Discovers Yeelight bulbs, light strips, lamps, and ceiling lights on your LAN (requires LAN Control enabled in the Yeelight / Mi Home app). Default: Disabled",
+                s.deviceYeelightEnabled,
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+                    var owner = GetMainWindow();
+
+                    var alreadyAdopted = (cur.deviceYeelightAdoptedDevices ?? new System.Collections.Generic.List<YeelightAdoptedDevice>())
+                        .ToDictionary(d => d.Id, d => d, StringComparer.OrdinalIgnoreCase);
+
+                    var dlg = new YeelightAdoptionDialog(alreadyAdopted);
+                    if (owner != null)
+                        await dlg.ShowDialog(owner);
+                    else
+                        dlg.Show();
+
+                    if (!dlg.Saved) return false;
+
+                    // Empty selection or discovery returning nothing → leave
+                    // the toggle off so the user sees the immediate "didn't
+                    // take" UX rather than an empty-but-on provider.
+                    if (dlg.SelectedDevices == null || dlg.SelectedDevices.Count == 0)
+                        return false;
+
+                    cur.deviceYeelightAdoptedDevices = dlg.SelectedDevices;
+                    cur.deviceYeelightEnabled = true;
+                    AppSettings.SaveSettings(cur);
+
+                    Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                    foreach (var d in cur.deviceYeelightAdoptedDevices)
+                    {
+                        System.Net.IPEndPoint ep = null;
+                        if (!string.IsNullOrEmpty(d.LastIp) &&
+                            System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                        {
+                            ep = new System.Net.IPEndPoint(ip, d.LastPort > 0 ? d.LastPort : 55443);
+                        }
+                        Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                            new Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightClientDefinition(
+                                d.Id, d.Label, ep, d.Model, d.FirmwareVersion, d.Support));
+                    }
+
+                    // LoadDeviceProvider runs LoadDevices synchronously which
+                    // for Yeelight includes a discovery sweep + per-bulb TCP
+                    // connect + Music Mode handshake (~1.5s per bulb on a
+                    // healthy LAN). Push to a background thread so the
+                    // toggle returns immediately and the UI stays responsive
+                    // while bulbs come online.
+                    _ = Task.Run(() => RGBController.LoadDeviceProvider(
+                        Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance));
+                    return true;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.Yeelight.YeelightRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        prov.ClientDefinitions.Clear();
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceYeelightEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
+            // Alienware AlienFX — pure managed HID via HidSharp, no native
+            // DLL or Dell driver. Three HID dialects (V4 zone chassis, V5
+            // notebook per-key, V8 external per-key) dispatched from one
+            // provider; auto-adopt every AlienFX device discovered on
+            // first enable. Mapping tab handles per-device disable.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Alienware (Beta)",
+                "[BETA] Enable/disable Alienware AlienFX device support. Auto-adopts any AlienFX-capable Alienware or Dell G-series chassis, notebook keyboard, or external keyboard discovered on the HID bus. Default: Disabled",
+                s.deviceAlienwareEnabled,
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[Alienware] Scanning for AlienFX devices on the HID bus...");
+
+                    bool result = await Task.Run(() =>
+                    {
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.Alienware.Protocol.AlienwareDiscovery.Discover();
+                        if (discovered.Count == 0) return false;
+
+                        var adopted = new System.Collections.Generic.List<AlienwareAdoptedDevice>();
+                        var seen = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                        Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+
+                        foreach (var c in discovered)
+                        {
+                            string key = $"{c.Hid.VendorID:X4}:{c.Hid.ProductID:X4}:{c.Hid.DevicePath}";
+                            if (!seen.Add(key)) continue;
+
+                            adopted.Add(new AlienwareAdoptedDevice
+                            {
+                                VendorId = c.Hid.VendorID,
+                                ProductId = c.Hid.ProductID,
+                                Manufacturer = c.Manufacturer,
+                                Product = c.Product,
+                                DevicePath = c.Hid.DevicePath,
+                                ApiVersion = c.ApiVersion.ToString(),
+                                LightCount = c.LightCount,
+                                ReportLength = c.ReportLength,
+                            });
+
+                            Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareClientDefinition(
+                                    c.Hid.VendorID, c.Hid.ProductID, c.Manufacturer, c.Product,
+                                    c.ApiVersion, c.LightCount, c.ReportLength, c.Hid.DevicePath));
+                        }
+
+                        cur.deviceAlienwareAdoptedDevices = adopted;
+                        cur.deviceAlienwareEnabled = true;
+                        AppSettings.SaveSettings(cur);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance);
+                        return true;
+                    });
+
+                    if (!result)
+                    {
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No Alienware Devices Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any AlienFX hardware on this PC. Make sure you're on an Alienware (or Dell G-series) machine with AlienFX lighting. If Alienware Command Center or another AlienFX tool is running, close it before enabling this provider - they hold the HID interface exclusively."]);
+                    }
+                    return result;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        prov.ClientDefinitions.Clear();
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceAlienwareEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
+            // Redragon mice on the shared OpenRGB HID protocol family.
+            // Pure managed HidSharp; no OpenRGB server required. Auto-adopts
+            // every Redragon mouse on the curated VID/PID table at load
+            // time, hot-plug picks up new ones live. Mapping tab handles
+            // per-device disable.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Redragon (Beta)",
+                "[BETA] Enable/disable Redragon mouse device support.",
+                s.deviceRedragonEnabled,
+                async () =>
+                {
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[Redragon] Scanning for Redragon mice on the HID bus...");
+
+                    bool result = await Task.Run(() =>
+                    {
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.Redragon.Protocol.RedragonDiscovery.Discover();
+                        if (discovered.Count == 0) return false;
+
+                        var cur2 = AppSettings.GetSettings();
+                        cur2.deviceRedragonEnabled = true;
+                        AppSettings.SaveSettings(cur2);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.Redragon.RedragonRGBDeviceProvider.Instance);
+                        return true;
+                    });
+
+                    if (!result)
+                    {
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No Redragon Devices Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any Redragon mice on this PC. Make sure your mouse is plugged in directly (not through a hub that strips vendor-defined HID interfaces) and that no other lighting app (OpenRGB, Razer Synapse, the Redragon utility) is holding the HID interface exclusively."]);
+                    }
+                    return result;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.Redragon.RedragonRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceRedragonEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
+            // EVision-family keyboards. One firmware (Sonix VS11K28A) covers
+            // 13 OEM rebrands - Glorious GMMK TKL, Redragon K550/K552/K552-2/
+            // K556, Tecware Phantom Elite, Womier K66/K87, Mars Gaming MKMini,
+            // Skillkorp K5, DEXP Blaze, Warrior Kane TC235, Gamepower Ogre RGB.
+            // Same auto-enrol model as Redragon: discovery returns every
+            // matching board, Mappings tab is the per-device disable.
+            //
+            // First successful enable pops EVisionFlashHintDialog explaining
+            // that the V1 protocol writes to firmware flash on every colour
+            // change. Shown-once flag lives on SettingsModel.eVisionFlashHintShown.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "EVision (Beta)",
+                "[BETA] Enable/disable support for Glorious, Redragon, and other EVision-family keyboards.",
+                s.deviceEVisionEnabled,
+                async () =>
+                {
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        "[EVision] Scanning for EVision-family keyboards on the HID bus...");
+
+                    var result = await Task.Run(() =>
+                    {
+                        var discovered = Chromatics.Extensions.RGB.NET.Devices.EVision.Protocol.EVisionDiscovery.Discover();
+                        if (discovered.Count == 0) return false;
+
+                        var cur2 = AppSettings.GetSettings();
+                        cur2.deviceEVisionEnabled = true;
+                        AppSettings.SaveSettings(cur2);
+
+                        RGBController.LoadDeviceProvider(
+                            Chromatics.Extensions.RGB.NET.Devices.EVision.EVisionRGBDeviceProvider.Instance);
+                        return true;
+                    });
+
+                    if (!result)
+                    {
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No EVision Keyboards Found"],
+                            LocalizationService.Instance["Chromatics didn't detect any EVision-family keyboards on this PC. Plug the keyboard in directly (not through a hub that strips vendor-defined HID interfaces) and close any other lighting app holding the HID interface (OpenRGB, the vendor utility)."]);
+                        return false;
+                    }
+
+                    // First-enable flash-hint dialog. One-shot via the
+                    // eVisionFlashHintShown flag so the user is told
+                    // about the EEPROM-write trade-off exactly once.
+                    var post = AppSettings.GetSettings();
+                    if (!post.eVisionFlashHintShown)
+                    {
+                        try
+                        {
+                            var owner = GetMainWindow();
+                            var hintDlg = new EVisionFlashHintDialog();
+                            if (owner != null) await hintDlg.ShowDialog(owner).ConfigureAwait(true);
+                            else hintDlg.Show();
+                        }
+                        catch { /* swallow - UX nicety */ }
+                    }
+
+                    return true;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.EVision.EVisionRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceEVisionEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
+            // Windows Dynamic Lighting (LampArray). Discovery is handled by
+            // the Windows DeviceWatcher inside the provider so there's no
+            // per-device adoption picker — every Dynamic-Lighting-capable
+            // device the OS exposes shows up automatically.
+            //
+            // The sparse package registration is intentionally NOT torn down
+            // when the user toggles this off. Identity is bound to the
+            // process by the OS loader at CreateProcess time; if we
+            // deregistered on disable, a subsequent re-enable in the same
+            // process would not re-acquire identity and background lighting
+            // would silently fall back to foreground-only until the user
+            // restarted Chromatics. Settings → Reset (and the Velopack
+            // uninstall callback) are the two paths that explicitly remove
+            // the registration when the user actually wants it gone.
+            //
+            // Background lighting on Windows 10 isn't supported by the OS
+            // (LampArray is a Windows 11 API), so the toggle is greyed out
+            // there via isAvailable; the tooltip explains the requirement.
+            bool isWin11OrLater = OperatingSystem.IsWindowsVersionAtLeast(10, 0, 22000);
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Windows Dynamic Lighting (Beta)",
+                "[BETA] Enable/disable the Windows Dynamic Lighting provider. Requires Windows 11. Picks up any device Windows lists in Settings -> Personalization -> Dynamic Lighting (Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP/Omen). Default: Disabled",
+                s.deviceDynamicLightingEnabled,
+                async () =>
+                {
+                    // Conflict popup (vendor providers already enabled).
+                    await ShowDynamicLightingOverlapPopupIfNeededAsync("Windows Dynamic Lighting (Beta)").ConfigureAwait(true);
+
+                    // Register BEFORE loading the device provider so the
+                    // package exists for AmbientLightingServer-side checks
+                    // when the provider starts adopting devices. (Identity
+                    // binding to the CURRENT process can only happen at
+                    // process start, so the user may still need to restart
+                    // for background to kick in on their very first enable —
+                    // Program.cs handles that auto-restart for subsequent
+                    // launches.)
+                    if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                        await SparsePackageRegistrar.EnsureRegisteredAsync().ConfigureAwait(true);
+
+                    // First-time hint dialog walking the user through the
+                    // Settings → Personalization → Dynamic Lighting steps,
+                    // including dragging Chromatics to the top of the
+                    // Background light control list for gameplay-time writes.
+                    var cur = AppSettings.GetSettings();
+                    if (!cur.dynamicLightingHintShown)
+                    {
+                        try
+                        {
+                            var owner = GetMainWindow();
+                            var hintDlg = new DynamicLightingHintDialog();
+                            if (owner != null) await hintDlg.ShowDialog(owner).ConfigureAwait(true);
+                            else hintDlg.Show();
+                        }
+                        catch { /* dialog failure shouldn't block enable */ }
+                    }
+
+                    RGBController.LoadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
+
+                    // Empty-result handling: if Windows enumerated zero
+                    // compatible devices, unload the provider and leave the
+                    // toggle off rather than ship an enabled-but-empty
+                    // provider. Mirrors the LIFX / Yeelight pattern.
+                    if (DynamicLightingRGBDeviceProvider.Instance.AdoptedDeviceCount == 0)
+                    {
+                        RGBController.UnloadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
+                        var cc = AppSettings.GetSettings();
+                        cc.deviceDynamicLightingEnabled = false;
+                        AppSettings.SaveSettings(cc);
+                        await DialogService.ShowAsync(
+                            LocalizationService.Instance["No Dynamic Lighting devices found"],
+                            LocalizationService.Instance["Chromatics didn't detect any Dynamic Lighting devices on this PC. Open Settings -> Personalization -> Dynamic Lighting in Windows and check that at least one compatible device is listed there. If your hardware is listed but Chromatics still doesn't see it, it may be hidden by an enabled vendor provider conflict; Settings -> Advanced has a toggle to control that."]);
+                        return false;
+                    }
+
+                    var c = AppSettings.GetSettings();
+                    c.deviceDynamicLightingEnabled = true;
+                    AppSettings.SaveSettings(c);
+                    return true;
+                },
+                () =>
+                {
+                    RGBController.UnloadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
+                    var c = AppSettings.GetSettings();
+                    c.deviceDynamicLightingEnabled = false;
+                    AppSettings.SaveSettings(c);
+                    // Intentionally NO DeregisterAsync — see block comment
+                    // above. Keeping the registration keeps process identity
+                    // valid for subsequent re-enables in the same session.
+                },
+                isAvailable: isWin11OrLater));
         }
 
         private static Avalonia.Controls.Window GetMainWindow()
@@ -289,17 +904,67 @@ namespace Chromatics.ViewModels
             Action<bool> saveFlag)
         {
             return new DeviceToggleItem(label, tooltip, initial,
-                () =>
+                async () =>
                 {
+                    // Surface the Dynamic Lighting overlap popup before
+                    // we kick off the load. Either side (vendor → DL or
+                    // DL → vendor) gets a one-shot warning naming the
+                    // other provider so the user knows what to expect.
+                    // The auto-dedup in DynamicLightingRGBDeviceProvider
+                    // makes the actual conflict harmless (vendor SDK
+                    // wins on overlapping devices), but we still tell
+                    // the user up-front rather than make them figure it
+                    // out from the device list.
+                    await ShowDynamicLightingOverlapPopupIfNeededAsync(label).ConfigureAwait(true);
+
                     load();
                     saveFlag(true);
-                    return Task.FromResult(true);
+                    return true;
                 },
                 () =>
                 {
                     unload();
                     saveFlag(false);
                 });
+        }
+
+        // Shows a one-shot popup naming the other half of an overlap
+        // (DL → enabled vendor providers, or vendor → DL when DL is
+        // enabled). Returns immediately for any provider that doesn't
+        // overlap with Dynamic Lighting (Corsair, Wooting, Coolermaster,
+        // Novation, OpenRGB, etc.) so the helper is safe to call
+        // unconditionally from MakeDeviceToggle.
+        internal static async Task ShowDynamicLightingOverlapPopupIfNeededAsync(string enablingProviderLabel)
+        {
+            try
+            {
+                var settings = AppSettings.GetSettings();
+
+                // Match both legacy "Dynamic Lighting (Beta)" and current
+                // "Windows Dynamic Lighting (Beta)" labels — the rename to
+                // include "Windows" broke a plain StartsWith check.
+                bool isDl = enablingProviderLabel.Contains("Dynamic Lighting", StringComparison.OrdinalIgnoreCase);
+                IReadOnlyList<string> conflicts;
+                if (isDl)
+                {
+                    conflicts = Chromatics.Extensions.RGB.NET.Devices.DynamicLighting.DynamicLightingVendorOverlap
+                        .GetEnabledOverlappingVendorNames(settings);
+                    if (conflicts.Count == 0) return;
+                }
+                else
+                {
+                    if (!Chromatics.Extensions.RGB.NET.Devices.DynamicLighting.DynamicLightingVendorOverlap
+                            .IsOverlappingVendorName(enablingProviderLabel)) return;
+                    if (!settings.deviceDynamicLightingEnabled) return;
+                    conflicts = new[] { "Dynamic Lighting" };
+                }
+
+                string title = LocalizationService.Instance["Provider conflict"];
+                string template = LocalizationService.Instance["{0} overlaps with {1}. Both providers may try to control the same physical devices on this PC. To prevent flickering, the existing vendor SDK takes priority on overlapping devices and Dynamic Lighting silently skips them; you can override per device from the Mappings tab."];
+                string body = string.Format(template, enablingProviderLabel, string.Join(", ", conflicts));
+                await DialogService.ShowAsync(title, body).ConfigureAwait(true);
+            }
+            catch { /* popup is advisory; never block toggle on failure */ }
         }
 
         private bool _winStart;
@@ -421,6 +1086,21 @@ namespace Chromatics.ViewModels
             }
         }
 
+        private bool _dynamicLightingBypassConflictCheck;
+        public bool DynamicLightingBypassConflictCheck
+        {
+            get => _dynamicLightingBypassConflictCheck;
+            set
+            {
+                if (SetProperty(ref _dynamicLightingBypassConflictCheck, value))
+                {
+                    var s = AppSettings.GetSettings();
+                    s.dynamicLightingBypassConflictCheck = value;
+                    AppSettings.SaveSettings(s);
+                }
+            }
+        }
+
         private bool _closeWithGame;
         public bool CloseWithGame
         {
@@ -505,9 +1185,31 @@ namespace Chromatics.ViewModels
 
                     s.keyboardLayout = value.Value;
                     AppSettings.SaveSettings(s);
-                    AppSettings.RaiseKeyboardLayoutChanged(oldLayout, value.Value);
+
+                    int affected = MappingLayers.CountLayoutSwapAffectedLayers(oldLayout, value.Value);
+                    if (affected <= 0)
+                    {
+                        AppSettings.RaiseKeyboardLayoutChanged(oldLayout, value.Value, remapLayers: false);
+                        return;
+                    }
+
+                    _ = PromptForLayoutRemapAsync(oldLayout, value.Value, affected);
                 }
             }
+        }
+
+        private static async Task PromptForLayoutRemapAsync(KeyboardLocalization from, KeyboardLocalization to, int affected)
+        {
+            string title = LocalizationService.Instance["Update layer key assignments?"];
+            string template = affected == 1
+                ? LocalizationService.Instance["1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?"]
+                : LocalizationService.Instance["{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?"];
+            string body = string.Format(template, affected);
+            string ok = LocalizationService.Instance["Update layers"];
+            string cancel = LocalizationService.Instance["Keep as-is"];
+
+            bool remap = await DialogService.ConfirmAsync(title, body, ok, cancel);
+            AppSettings.RaiseKeyboardLayoutChanged(from, to, remapLayers: remap);
         }
 
         public void ResetChromatics()
@@ -537,6 +1239,16 @@ namespace Chromatics.ViewModels
             {
                 Logger.WriteConsole(LoggerTypes.Error, $"Unable to reset Chromatics: {ex.Message}");
             }
+
+            // Reset is the user's "nuke everything Chromatics-related" path, so
+            // also tear down the Dynamic Lighting sparse package registration —
+            // otherwise Chromatics would keep appearing in Settings →
+            // Personalization → Dynamic Lighting → Background light control
+            // even after the user wiped local state. Fire-and-forget so the
+            // ~1s RemovePackageAsync call doesn't block the UI; the OS
+            // completes the removal even if we exit before it finishes.
+            if (OperatingSystem.IsWindowsVersionAtLeast(10, 0, 19041))
+                _ = SparsePackageRegistrar.DeregisterAsync();
         }
 
         public sealed class ThemeOption

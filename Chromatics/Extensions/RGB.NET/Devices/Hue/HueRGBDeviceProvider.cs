@@ -120,7 +120,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         // runs, so an empty list at this layer means we're
                         // running through the legacy code path and should keep
                         // the original "adopt everything" behaviour).
-                        var adopted = appSettings.deviceHueAdoptedDevices ?? new System.Collections.Generic.List<Models.HueAdoptedDevice>();
+                        var adopted = appSettings.deviceHueAdoptedDevices ?? new System.Collections.Generic.List<HueAdoptedDevice>();
                         var adoptedIds = new System.Collections.Generic.HashSet<Guid>(adopted.Select(a => a.LightId));
                         bool adoptEverything = adoptedIds.Count == 0;
 

@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Interactivity;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using Chromatics.Core;
 using Chromatics.Enums;
@@ -11,6 +12,7 @@ using Chromatics.Views.Dialogs;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace Chromatics.Views
@@ -20,14 +22,219 @@ namespace Chromatics.Views
         public MainWindow()
         {
             InitializeComponent();
+            EnsureTaskbarIconLoaded();
             DataContext = new MainWindowViewModel();
             Opened += OnOpened;
             Closed += OnClosed;
             Closing += OnClosing;
         }
 
+        // Defensive re-load of the window icon. The Icon="avares://..."
+        // attribute on the AXAML root is resolved through Avalonia's asset
+        // pipeline at parse time; if that resolution races (notably after
+        // FirstRunDialog tear-down, or when the styled-element graph is
+        // still warming up on cold start) it lands as null and Windows
+        // shows the default blank taskbar entry instead of our icon.
+        // Re-opening the asset stream and assigning a fresh WindowIcon
+        // after InitializeComponent() bypasses whatever the parser saw
+        // and lets the window register the real icon before Show() runs.
+        private void EnsureTaskbarIconLoaded()
+        {
+            try
+            {
+                using var stream = AssetLoader.Open(new Uri("avares://Chromatics/Resources/Chromatics_icon_128x128.png"));
+                Icon = new WindowIcon(stream);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[MainWindow] Could not re-load taskbar icon: {ex.GetType().Name} — {ex.Message}");
+            }
+        }
+
+        // Two-stage taskbar icon fix.
+        //
+        // STAGE 1 — PKEY_AppUserModel_RelaunchIconResource. Points the shell
+        // at "<exe>,0" (first icon resource in Chromatics.exe) for this
+        // window's taskbar entry and jump-list relaunch icon. Mostly cosmetic
+        // jump-list polish for installer builds (the Start Menu shortcut
+        // already binds the right icon) but load-bearing for portable
+        // extractions where no shortcut exists, so the shell falls through
+        // to this property when resolving the AUMID's icon.
+        //
+        // STAGE 2 — WM_SETICON. Sets the window's own HICON pair from the
+        // EXE's embedded application icon. Title bar and Alt-Tab thumbnail
+        // read this directly; the Win11 taskbar uses it as the final
+        // fallback if the AUMID + RelaunchIconResource chain still lands
+        // somewhere blank.
+        //
+        // Both stages run from OnOpened so the HWND exists and is
+        // registered with the shell before we touch any icon path.
+        //
+        // Pre-Velopack-1.0 this method also overrode PKEY_AppUserModel_ID
+        // per-window to escape Velopack's hard-coded "velopack.Chromatics"
+        // AUMID. Velopack 1.0+ accepts --aumid at pack time (publish.py
+        // passes AUMID_INSTALLER / AUMID_PORTABLE), so the process-level
+        // AUMID already matches the sparse-package identity and the
+        // per-window override is gone.
+        private void ForceTaskbarIcon()
+        {
+            var platformHandle = TryGetPlatformHandle();
+            if (platformHandle == null || platformHandle.Handle == IntPtr.Zero)
+            {
+                Logger.WriteVerbose("[MainWindow] ForceTaskbarIcon: no platform handle yet, skipping");
+                return;
+            }
+            var hwnd = platformHandle.Handle;
+            var exe = Environment.ProcessPath;
+
+            // Stage 1: RelaunchIconResource on this window's property store.
+            if (!string.IsNullOrEmpty(exe))
+            {
+                try
+                {
+                    var iid = NativeRelaunch.IID_IPropertyStore;
+                    int hr = NativeRelaunch.SHGetPropertyStoreForWindow(hwnd, ref iid, out var propStore);
+                    if (hr != 0 || propStore == null)
+                    {
+                        Logger.WriteVerbose($"[MainWindow] SHGetPropertyStoreForWindow returned HRESULT 0x{hr:X8}, skipping relaunch-icon stage");
+                    }
+                    else
+                    {
+                        try
+                        {
+                            var iconResource = $"{exe},0";
+                            SetStringProperty(propStore, NativeRelaunch.PKEY_AppUserModel_RelaunchIconResource, iconResource, "PKEY_AppUserModel_RelaunchIconResource");
+                            int commitHr = propStore.Commit();
+                            Logger.WriteVerbose($"[MainWindow] IPropertyStore.Commit returned 0x{commitHr:X8}");
+                        }
+                        finally
+                        {
+                            Marshal.ReleaseComObject(propStore);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteVerbose($"[MainWindow] Property-store path failed: {ex.GetType().Name} — {ex.Message}");
+                }
+            }
+
+            // Stage 2: WM_SETICON from EXE's embedded application icon.
+            try
+            {
+                if (!string.IsNullOrEmpty(exe))
+                {
+                    var extracted = NativeIcon.ExtractIconEx(exe, 0, out var bigIcon, out var smallIcon, 1);
+                    Logger.WriteVerbose($"[MainWindow] ExtractIconEx returned {extracted}, small=0x{smallIcon.ToInt64():X}, big=0x{bigIcon.ToInt64():X}");
+                    try
+                    {
+                        if (smallIcon != IntPtr.Zero)
+                            NativeIcon.SendMessage(hwnd, NativeIcon.WM_SETICON, (IntPtr)NativeIcon.ICON_SMALL, smallIcon);
+                        if (bigIcon != IntPtr.Zero)
+                            NativeIcon.SendMessage(hwnd, NativeIcon.WM_SETICON, (IntPtr)NativeIcon.ICON_BIG, bigIcon);
+                    }
+                    finally
+                    {
+                        // WM_SETICON copies the HICON internally, so the originals
+                        // can be released right after.
+                        if (smallIcon != IntPtr.Zero) NativeIcon.DestroyIcon(smallIcon);
+                        if (bigIcon   != IntPtr.Zero) NativeIcon.DestroyIcon(bigIcon);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[MainWindow] WM_SETICON path failed: {ex.GetType().Name} — {ex.Message}");
+            }
+        }
+
+        private static void SetStringProperty(NativeRelaunch.IPropertyStore propStore, NativeRelaunch.PROPERTYKEY pkey, string value, string label)
+        {
+            var pwsz = Marshal.StringToCoTaskMemUni(value);
+            try
+            {
+                var pv = new NativeRelaunch.PROPVARIANT { vt = NativeRelaunch.VT_LPWSTR, valuePtr = pwsz };
+                var keyLocal = pkey;
+                int setHr = propStore.SetValue(ref keyLocal, ref pv);
+                Logger.WriteVerbose($"[MainWindow] {label} = '{value}' (SetValue=0x{setHr:X8})");
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(pwsz);
+            }
+        }
+
+        private static class NativeIcon
+        {
+            public const uint WM_SETICON = 0x0080;
+            public const int  ICON_SMALL = 0;
+            public const int  ICON_BIG   = 1;
+
+            [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+            public static extern uint ExtractIconEx(string lpszFile, int nIconIndex, out IntPtr phiconLarge, out IntPtr phiconSmall, uint nIcons);
+
+            [DllImport("user32.dll")]
+            public static extern IntPtr SendMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
+            [DllImport("user32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            public static extern bool DestroyIcon(IntPtr hIcon);
+        }
+
+        private static class NativeRelaunch
+        {
+            public const ushort VT_LPWSTR = 31;
+
+            public static readonly Guid IID_IPropertyStore = new Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99");
+
+            // PKEY_AppUserModel_RelaunchIconResource — see
+            // https://learn.microsoft.com/windows/win32/properties/props-system-appusermodel-relauniconresource
+            public static readonly PROPERTYKEY PKEY_AppUserModel_RelaunchIconResource = new PROPERTYKEY
+            {
+                fmtid = new Guid("9F4C2855-9F79-4B39-A8D0-E1D42DE1D5F3"),
+                pid = 3,
+            };
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct PROPERTYKEY
+            {
+                public Guid fmtid;
+                public uint pid;
+            }
+
+            // PROPVARIANT in C is a 24-byte struct on x64 (2-byte vt + 6 bytes
+            // of reserved padding + 16-byte union). We only need the VT_LPWSTR
+            // case here, which stores a pointer at union offset 0.
+            [StructLayout(LayoutKind.Explicit, Size = 24)]
+            public struct PROPVARIANT
+            {
+                [FieldOffset(0)] public ushort vt;
+                [FieldOffset(2)] public ushort wReserved1;
+                [FieldOffset(4)] public ushort wReserved2;
+                [FieldOffset(6)] public ushort wReserved3;
+                [FieldOffset(8)] public IntPtr valuePtr;
+            }
+
+            [ComImport]
+            [Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99")]
+            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+            public interface IPropertyStore
+            {
+                [PreserveSig] int GetCount(out uint cProps);
+                [PreserveSig] int GetAt(uint iProp, out PROPERTYKEY pkey);
+                [PreserveSig] int GetValue(ref PROPERTYKEY key, out PROPVARIANT pv);
+                [PreserveSig] int SetValue(ref PROPERTYKEY key, ref PROPVARIANT pv);
+                [PreserveSig] int Commit();
+            }
+
+            [DllImport("shell32.dll")]
+            public static extern int SHGetPropertyStoreForWindow(IntPtr hwnd, ref Guid iid, [MarshalAs(UnmanagedType.Interface)] out IPropertyStore propStore);
+        }
+
         private async void OnOpened(object sender, EventArgs e)
         {
+            ForceTaskbarIcon();
+
             // Match Fm_MainWindow's bring-up order so backend subsystems initialize
             // exactly as they did under WinForms. Settings are already loaded by
             // Program.Main. Offload BOTH RGBController.Setup (device enumeration)
@@ -79,15 +286,33 @@ namespace Chromatics.Views
 
         private async Task CheckForUpdateAsync()
         {
-            var includeBeta = AppSettings.GetSettings().betaChannel;
-            var result = await UpdateService.CheckAsync(includeBeta);
-            if (result == null) return;
-
-            await Dispatcher.UIThread.InvokeAsync(async () =>
+            // Fire-and-forget at the call site (`_ = CheckForUpdateAsync()`), so
+            // any exception that escapes here lands in the UnobservedTaskException
+            // path and Sentry captures it as an unhandled crash. Wrap the whole
+            // body so the worst case is a verbose-log line, not a beta-channel
+            // Sentry event.
+            try
             {
-                var dialog = new UpdateDialog(result);
-                await dialog.ShowDialog(this);
-            });
+                var includeBeta = AppSettings.GetSettings().betaChannel;
+                var result = await UpdateService.CheckAsync(includeBeta);
+                if (result == null) return;
+
+                await Dispatcher.UIThread.InvokeAsync(async () =>
+                {
+                    // If the user hid the window to the tray between the check
+                    // kickoff and the result landing, ShowDialog throws "Cannot
+                    // show window with non-visible owner". The next launch will
+                    // re-detect the same update, so skip silently this run.
+                    if (!IsVisible) return;
+
+                    var dialog = new UpdateDialog(result);
+                    await dialog.ShowDialog(this);
+                });
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteVerbose($"[MainWindow] CheckForUpdateAsync skipped: {ex.GetType().Name} — {ex.Message}");
+            }
         }
 
         private void OnClosing(object sender, WindowClosingEventArgs e)
@@ -128,6 +353,13 @@ namespace Chromatics.Views
             // AND silent crash-event drops. SentryService.Shutdown does a sync
             // 3-second flush first so any pending events leave the wire before
             // we kill the process.
+            //
+            // Flush the OLE clipboard first so anything the user copied via
+            // Ctrl+C in the Console (or the Copy All button) materialises
+            // into the system clipboard and survives Process.Kill. Avalonia
+            // uses OLE delayed rendering for its clipboard writes; without
+            // this, paste-after-close returns empty.
+            try { Chromatics.Helpers.ClipboardHelper.FlushOleClipboard(); } catch { }
             try { Chromatics.Core.SentryService.Shutdown(); } catch { }
             try { Process.GetCurrentProcess().Kill(); } catch { }
         }

@@ -6,11 +6,43 @@ on:
   pull_request:
     branches: [master, 'chromatics-4.0.x', 'chromatics-4.*']
 
+# Minimum-privilege GITHUB_TOKEN: the workflow only checks out the repo and
+# runs build/test/manifest-validation locally on the runner — it never calls
+# the GitHub API to write commits, comments, releases, packages, etc. So
+# contents: read is the only permission needed. Explicit block also silences
+# the GitHub Advanced Security warning about unrestricted token scope.
+permissions:
+  contents: read
+
+# Deduplicate push + pull_request runs on the same branch. A commit pushed to
+# a PR branch fires both a `push` event and a `pull_request:synchronize`
+# event; with the same concurrency group key (resolved from
+# pull_request.head.ref on PR events and ref_name on push events), the
+# newer run cancels the older one, so we get a single CI completion per
+# commit instead of two parallel ones.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.head.ref || github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
   build-and-test:
-    # GDI + WASAPI loopback means the project targets
-    # net10.0-windows7.0 and can only build on a Windows runner.
-    runs-on: windows-latest
+    # GDI + WASAPI loopback + Windows.Devices.Lights.LampArray plus the
+    # sparse-package PackageManager APIs mean the project targets
+    # net10.0-windows10.0.19041.0 and can only build on a Windows runner.
+    #
+    # Matrix on both currently-supported GitHub-hosted Windows runners so
+    # platform-specific regressions surface early:
+    #   - windows-2022 = Server 2022, build 20348 (~Win11 21H2 equivalent)
+    #   - windows-2025 = Server 2025, build 26100 (~Win11 24H2 equivalent)
+    # windows-2019 (build 17763) was retired by GitHub Actions in mid-2025, so
+    # SupportedOSPlatformVersion=10.0.17763.0 cannot be exercised in CI today;
+    # OS-guarded codepaths (e.g. SparsePackageRegistrar skipping on <19041) are
+    # validated locally / via user-reported issues.
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [windows-2022, windows-2025]
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - name: Checkout
@@ -21,11 +53,58 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
+      # nuget.org occasionally returns 502 Bad Gateway mid-restore (saw
+      # one such failure on commit bb0c9ed, second run on the same SHA
+      # succeeded immediately). Retry up to 3 times before failing the
+      # build to absorb transient feed flakiness without needing a
+      # manual re-run.
       - name: Restore
-        run: dotnet restore Chromatics.sln
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          retry_wait_seconds: 30
+          shell: pwsh
+          command: dotnet restore Chromatics.sln
 
       - name: Build (Release, no restore)
         run: dotnet build Chromatics.sln --configuration Release --no-restore --nologo
 
       - name: Test (Release, no build)
         run: dotnet test Chromatics.Tests/Chromatics.Tests.csproj --configuration Release --no-build --nologo --verbosity normal
+
+      # Validate the Dynamic Lighting sparse-package manifest by packing it
+      # with makeappx (no signing, /nv = no schema validation skipping). The
+      # real publish.py pipeline does this against a freshly-bumped version
+      # number; here we substitute 0.0.0.0 just to satisfy the 4-part
+      # version requirement. Catches schema regressions (typo'd capability
+      # names, namespace drift, missing assets) before they reach a user,
+      # because registration failures at runtime are silent — the AppX
+      # subsystem reports them via DeploymentResult.ErrorText into the log,
+      # not via a dialog or exception. SDK 10 ships on both runners.
+      - name: Validate sparse-package manifest (makeappx)
+        shell: pwsh
+        run: |
+          $sdk = Get-ChildItem 'C:\Program Files (x86)\Windows Kits\10\bin' -Directory `
+                   | Where-Object { $_.Name -match '^10\.' } `
+                   | Sort-Object Name -Descending `
+                   | Select-Object -First 1
+          if (-not $sdk) { throw "Windows 10 SDK not found on runner" }
+          $makeappx = Join-Path $sdk.FullName 'x64\makeappx.exe'
+          if (-not (Test-Path $makeappx)) { throw "makeappx.exe not found at $makeappx" }
+          Write-Host "Using makeappx at $makeappx"
+
+          $src = 'Chromatics/Resources/SparsePackage'
+          $work = Join-Path $env:RUNNER_TEMP 'sparse-validate'
+          if (Test-Path $work) { Remove-Item $work -Recurse -Force }
+          Copy-Item $src $work -Recurse
+
+          # Substitute the {{VERSION}} placeholder so the manifest parses.
+          $manifest = Join-Path $work 'AppxManifest.xml'
+          (Get-Content $manifest -Raw) -replace '\{\{VERSION\}\}', '0.0.0.0' `
+              | Set-Content $manifest -NoNewline
+
+          $out = Join-Path $env:RUNNER_TEMP 'Chromatics.test.appx'
+          & $makeappx pack /d $work /p $out /o /nv
+          if ($LASTEXITCODE -ne 0) { throw "makeappx pack failed with exit code $LASTEXITCODE" }
+          Write-Host "Sparse package validated: $out"

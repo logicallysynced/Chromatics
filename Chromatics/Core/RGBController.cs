@@ -3,6 +3,11 @@ using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.Hue;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
+using RGB.NET.Devices.PlayStation;
+using Chromatics.Extensions.RGB.NET.Devices.Alienware;
+using Chromatics.Extensions.RGB.NET.Devices.DynamicLighting;
+using Chromatics.Extensions.RGB.NET.Devices.QmkRawHid;
+using Chromatics.Extensions.RGB.NET.Devices.Yeelight;
 using Chromatics.Helpers;
 using Chromatics.Layers;
 using Chromatics.Models;
@@ -17,7 +22,6 @@ using RGB.NET.Devices.OpenRGB;
 using RGB.NET.Devices.Razer;
 using RGB.NET.Devices.SteelSeries;
 using RGB.NET.Devices.Wooting;
-using RGB.NET.Layout;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures;
 using RGB.NET.Presets.Textures.Gradients;
@@ -85,6 +89,22 @@ namespace Chromatics.Core
 
         private static EventHandler<ExceptionEventArgs> deviceExceptionEventHandler;
 
+        // Detects "Failed to initialize Logitech-SDK." (the exact phrase
+        // RGB.NET.Devices.Logitech surfaces when LogiLedInit returns false)
+        // and appends a follow-up console line pointing the user at G HUB.
+        // Called from every place a Logitech load failure can surface:
+        // the surface.Exception event, the provider.Exception event, and
+        // the synchronous catch inside LoadDeviceProvider. The Logitech SDK
+        // failure can route through any of those depending on whether the
+        // provider raises sync or async, so this helper covers all three.
+        private static void LogLogitechSdkHintIfNeeded(Exception ex)
+        {
+            if (ex == null) return;
+            if (!ex.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase)) return;
+            Logger.WriteConsole(Enums.LoggerTypes.Devices,
+                "[Logitech] The Logitech LightSync SDK didn't load. The SDK only loads while Logitech G HUB is running. Open G HUB on this machine, then re-enable the Logitech provider. If G HUB is already open, try restarting it.");
+        }
+
         private static TimerUpdateTrigger _timerUpdateTrigger;
 
         private const double IdleUpdateFrequency = 0.05; // 20 Hz
@@ -107,8 +127,22 @@ namespace Chromatics.Core
                 var appSettings = AppSettings.GetSettings();
 
                 //Setup Exception Events
-                surfaceExceptionEventHandler = args_ => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}", forwardToSentry: false);
-                deviceExceptionEventHandler = (sender, e) => Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {e.Exception.Message}", forwardToSentry: false);
+                // RGB.NET surfaces provider initialisation failures through
+                // either the surface.Exception event or the provider's
+                // Exception event (depends on the provider; Logitech goes
+                // through the surface). Both handlers append the same
+                // Logitech-SDK hint when the message matches, so the user
+                // sees the G HUB tip regardless of which channel fires.
+                surfaceExceptionEventHandler = args_ =>
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {args_.Exception.Message}", forwardToSentry: false);
+                    LogLogitechSdkHintIfNeeded(args_.Exception);
+                };
+                deviceExceptionEventHandler = (sender, e) =>
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, $"Device Error: {e.Exception.Message}", forwardToSentry: false);
+                    LogLogitechSdkHintIfNeeded(e.Exception);
+                };
 
                 surface.Exception += surfaceExceptionEventHandler;
 
@@ -126,6 +160,15 @@ namespace Chromatics.Core
                     natives.Add($"{enviroment}\\x64\\CUESDK.dll");
 
                     Debug.WriteLine($"{enviroment}\\x64\\CUESDK.dll");
+
+                    // Ask iCUE for exclusive lighting control. Without this,
+                    // iCUE keeps painting its own profile in parallel and our
+                    // writes fight the SDK's background animation thread,
+                    // which manifests as flicker or partial colour reverts on
+                    // some boards. Static on RGB.NET's CorsairDeviceProvider
+                    // and read once when the provider is initialised, so set
+                    // it before LoadDeviceProvider runs.
+                    CorsairDeviceProvider.ExclusiveAccess = true;
 
                     LoadDeviceProvider(CorsairDeviceProvider.Instance);
                 }
@@ -180,19 +223,25 @@ namespace Chromatics.Core
 
                 if (appSettings.deviceOpenRGBEnabled)
                 {
+                    // IP comes from settings.chromatics4 (hidden field — not
+                    // exposed in the UI). Defaults to 127.0.0.1 for the
+                    // local-SDK-server case; users on a multi-machine setup
+                    // can point Chromatics at a remote server by editing
+                    // openRgbServerIp directly.
+                    var ip = string.IsNullOrWhiteSpace(appSettings.openRgbServerIp)
+                        ? "127.0.0.1"
+                        : appSettings.openRgbServerIp.Trim();
                     var openrgb = new OpenRGBServerDefinition
                     {
                         Port = 6742,
-                        Ip = "127.0.0.1",
+                        Ip = ip,
                         ClientName = "Chromatics"
                     };
 
                     OpenRGBDeviceProvider.Instance.AddDeviceDefinition(openrgb);
                     LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
 
-
-
-                }   
+                }
 
                 if (appSettings.deviceHueEnabled)
                 {
@@ -231,7 +280,7 @@ namespace Chromatics.Core
                                     var devicesResp = api.Device.GetAllAsync().GetAwaiter().GetResult();
                                     var modelByDevice = devicesResp.Data.ToDictionary(d => d.Id, d => d.ProductData?.ModelId ?? "");
 
-                                    var migrated = lights.Data.Select(l => new Models.HueAdoptedDevice
+                                    var migrated = lights.Data.Select(l => new Chromatics.Extensions.RGB.NET.Devices.Hue.HueAdoptedDevice
                                     {
                                         LightId = l.Id,
                                         Label = l.Metadata?.Name ?? l.Id.ToString(),
@@ -272,7 +321,9 @@ namespace Chromatics.Core
 
                 if (appSettings.devicePlayStationEnabled)
                 {
-                    LoadDeviceProvider(PlayStationControllerRGBDeviceProvider.Instance);
+                    PlayStationProviderHooks.EnsureInstalled();
+                    LoadDeviceProvider(PlayStationDeviceProvider.Instance);
+                    PlayStationProviderHooks.EmitPostLoadHints();
                 }
 
                 if (appSettings.deviceLifxEnabled)
@@ -304,8 +355,266 @@ namespace Chromatics.Core
                         Logger.WriteConsole(Enums.LoggerTypes.Error, $"[LifxDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
                     }
                 }
-                            
-            
+
+                if (appSettings.deviceYeelightEnabled)
+                {
+                    try
+                    {
+                        // Auto-adopt on first enable. Mirrors the QMK
+                        // provider's pattern: when the persisted adopted-set
+                        // is empty (initial launch after the user enabled
+                        // the Yeelight toggle), run one SSDP sweep and adopt
+                        // every bulb that responds. Subsequent launches
+                        // reuse the persisted list and re-resolve only the
+                        // IPs that may have changed. Users disable specific
+                        // bulbs they don't want Chromatics to drive from the
+                        // Mapping tab.
+                        //
+                        // (A proper Hue/LIFX-style adoption picker dialog
+                        // is tracked as a v4.2.x follow-up — it's
+                        // significantly more UI work and shipping
+                        // auto-adopt first keeps the beta path testable.)
+                        var adopted = appSettings.deviceYeelightAdoptedDevices ?? new List<YeelightAdoptedDevice>();
+                        if (adopted.Count == 0)
+                        {
+                            try
+                            {
+                                var discovered = Chromatics.Extensions.RGB.NET.Devices.Yeelight.Protocol.YeelightDiscovery
+                                    .DiscoverAsync(TimeSpan.FromMilliseconds(2500))
+                                    .GetAwaiter().GetResult();
+                                foreach (var d in discovered)
+                                {
+                                    if (string.IsNullOrEmpty(d.Id) || d.Endpoint == null) continue;
+                                    adopted.Add(new YeelightAdoptedDevice
+                                    {
+                                        Id = d.Id,
+                                        Label = d.DisplayLabel,
+                                        LastIp = d.Endpoint.Address.ToString(),
+                                        LastPort = d.Endpoint.Port,
+                                        Model = d.Model,
+                                        FirmwareVersion = d.FirmwareVersion,
+                                        Support = d.Support is List<string> list ? list : new List<string>(d.Support ?? Array.Empty<string>()),
+                                    });
+                                }
+                                if (adopted.Count > 0)
+                                {
+                                    appSettings.deviceYeelightAdoptedDevices = adopted;
+                                    AppSettings.SaveSettings(appSettings);
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Yeelight] Adopted {adopted.Count} bulb(s) discovered on the LAN. Open the Mapping tab to disable any you don't want Chromatics to control.");
+                                }
+                                else
+                                {
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, "[Yeelight] Discovery found no Yeelight bulbs on the LAN. Make sure each bulb has LAN Control enabled in the Yeelight / Mi Home app (Settings -> LAN Control).", forwardToSentry: false);
+                                }
+                            }
+                            catch (Exception discEx)
+                            {
+                                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Yeelight] Initial discovery sweep failed: {discEx.Message}");
+                            }
+                        }
+
+                        YeelightRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        foreach (var d in adopted)
+                        {
+                            System.Net.IPEndPoint ep = null;
+                            if (!string.IsNullOrEmpty(d.LastIp) &&
+                                System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                            {
+                                ep = new System.Net.IPEndPoint(ip, d.LastPort > 0 ? d.LastPort : 55443);
+                            }
+                            YeelightRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new YeelightClientDefinition(d.Id, d.Label, ep, d.Model, d.FirmwareVersion, d.Support));
+                        }
+
+                        LoadDeviceProvider(YeelightRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[YeelightDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+                if (appSettings.deviceQmkRawHidEnabled)
+                {
+                    try
+                    {
+                        // QMK Raw HID provider — auto-adopts every QMK-compatible
+                        // keyboard discovered on the USB bus when the user has
+                        // an empty persisted adopted-set (first launch after
+                        // enabling). The adopted-set is the union of (a) the
+                        // boards the user has explicitly seen in the Mapping
+                        // tab and not removed via per-device disable, and (b)
+                        // any new boards that appear on subsequent launches
+                        // — the keymap fetch + handshake is cheap so refreshing
+                        // is fine. Persistence stays in
+                        // deviceQmkRawHidAdoptedDevices for the next launch's
+                        // hot-plug filter.
+                        Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance.AdoptedDevices.Clear();
+                        var adopted = appSettings.deviceQmkRawHidAdoptedDevices ?? new List<QmkRawHidAdoptedDevice>();
+                        if (adopted.Count == 0)
+                        {
+                            // Discover once and adopt everything that responds.
+                            // Subsequent launches will reuse the persisted list
+                            // unless the user explicitly clears it.
+                            var discovered = Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.Protocol.QmkRawHidDiscovery.Discover();
+                            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                            foreach (var c in discovered)
+                            {
+                                string mfg = "";
+                                string prod = "";
+                                try { mfg = c.Hid.GetManufacturer() ?? ""; } catch { }
+                                try { prod = c.Hid.GetProductName() ?? ""; } catch { }
+                                var key = $"{c.Hid.VendorID:X4}:{c.Hid.ProductID:X4}:{mfg}:{prod}";
+                                if (!seen.Add(key)) continue;
+                                adopted.Add(new QmkRawHidAdoptedDevice
+                                {
+                                    VendorId = c.Hid.VendorID,
+                                    ProductId = c.Hid.ProductID,
+                                    Manufacturer = mfg,
+                                    Product = prod,
+                                    LedCount = c.LedCount,
+                                    Protocol = c.Protocol.ToString(),
+                                    ViaKeymapKey = string.Empty,
+                                });
+                            }
+                            appSettings.deviceQmkRawHidAdoptedDevices = adopted;
+                            if (adopted.Count > 0) AppSettings.SaveSettings(appSettings);
+                        }
+
+                        foreach (var d in adopted)
+                        {
+                            Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance.AdoptedDevices.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidAdoptedDeviceFilter(
+                                    d.VendorId, d.ProductId, d.Manufacturer, d.Product));
+                        }
+
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[QmkRawHidDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+                if (appSettings.deviceAlienwareEnabled)
+                {
+                    try
+                    {
+                        // Auto-adopt on first enable. Mirrors the QMK / Yeelight
+                        // pattern: when the persisted adopted-set is empty,
+                        // sweep the HID bus once and adopt every Alienware
+                        // device that responds. Subsequent launches reuse the
+                        // persisted list and re-bind by VID/PID/DevicePath.
+                        var adopted = appSettings.deviceAlienwareAdoptedDevices ?? new List<AlienwareAdoptedDevice>();
+                        if (adopted.Count == 0)
+                        {
+                            try
+                            {
+                                var discovered = Chromatics.Extensions.RGB.NET.Devices.Alienware.Protocol.AlienwareDiscovery.Discover();
+                                var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                                foreach (var c in discovered)
+                                {
+                                    string key = $"{c.Hid.VendorID:X4}:{c.Hid.ProductID:X4}:{c.Hid.DevicePath}";
+                                    if (!seen.Add(key)) continue;
+                                    adopted.Add(new AlienwareAdoptedDevice
+                                    {
+                                        VendorId = c.Hid.VendorID,
+                                        ProductId = c.Hid.ProductID,
+                                        Manufacturer = c.Manufacturer,
+                                        Product = c.Product,
+                                        DevicePath = c.Hid.DevicePath,
+                                        ApiVersion = c.ApiVersion.ToString(),
+                                        LightCount = c.LightCount,
+                                        ReportLength = c.ReportLength,
+                                    });
+                                }
+                                if (adopted.Count > 0)
+                                {
+                                    appSettings.deviceAlienwareAdoptedDevices = adopted;
+                                    AppSettings.SaveSettings(appSettings);
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Alienware] Adopted {adopted.Count} AlienFX device(s) discovered on the HID bus.");
+                                }
+                                else
+                                {
+                                    Logger.WriteConsole(Enums.LoggerTypes.Devices, "[Alienware] No AlienFX devices detected. Make sure your machine is an Alienware / Dell G-series with AlienFX hardware, and that the Alienware Command Center isn't holding the HID interface exclusively.", forwardToSentry: false);
+                                }
+                            }
+                            catch (Exception discEx)
+                            {
+                                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Alienware] Initial discovery sweep failed: {discEx.Message}");
+                            }
+                        }
+
+                        Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        foreach (var d in adopted)
+                        {
+                            if (!Enum.TryParse<Chromatics.Extensions.RGB.NET.Devices.Alienware.Protocol.AlienwareApiVersion>(d.ApiVersion, out var api))
+                                api = Chromatics.Extensions.RGB.NET.Devices.Alienware.Protocol.AlienwareApiVersion.Unknown;
+                            Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareClientDefinition(
+                                    d.VendorId, d.ProductId, d.Manufacturer, d.Product,
+                                    api, d.LightCount, d.ReportLength, d.DevicePath));
+                        }
+
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.Alienware.AlienwareRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[AlienwareDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+                if (appSettings.deviceDynamicLightingEnabled)
+                {
+                    try
+                    {
+                        // Windows Dynamic Lighting (LampArray). DeviceWatcher
+                        // inside the provider handles initial enumeration and
+                        // hot-plug, so there's no per-device adoption list to
+                        // hydrate before LoadDeviceProvider.
+                        LoadDeviceProvider(DynamicLightingRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[DynamicLightingDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+                if (appSettings.deviceRedragonEnabled)
+                {
+                    try
+                    {
+                        // Redragon mice on the OpenRGB protocol family.
+                        // RedragonDiscovery inside LoadDevices walks USB and
+                        // auto-adopts everything matching the curated VID/PID
+                        // table — there's no per-device persisted adoption
+                        // list, so users disable individual devices on the
+                        // Mapping tab instead.
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.Redragon.RedragonRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[RedragonDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+                if (appSettings.deviceEVisionEnabled)
+                {
+                    try
+                    {
+                        // EVision-family keyboards (Glorious, Redragon,
+                        // Womier, Tecware, Mars Gaming, and others — 13
+                        // boards, one shared firmware). Auto-adopt model
+                        // matches Redragon: discovery returns every match
+                        // and the Mappings tab is the per-device disable.
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.EVision.EVisionRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[EVisionDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 
                 _timerUpdateTrigger = new TimerUpdateTrigger();
@@ -378,6 +687,16 @@ namespace Chromatics.Core
                         catch { /* best-effort */ }
                     });
                 }
+                else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
+                {
+                    // QMK boards have no captured pre-Chromatics state to
+                    // restore — the firmware's built-in RGB matrix mode
+                    // resumes by itself as soon as Update() stops sending
+                    // frames. Gate the queue so any buffered frames in
+                    // flight don't slip through, then let the firmware
+                    // take over.
+                    qmkDev.SetPerDeviceDisabled(true);
+                }
 
                 surface.Detach(device);
 
@@ -428,6 +747,11 @@ namespace Chromatics.Core
                 else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
                 {
                     hueDev.SetPerDeviceDisabled(false);
+                }
+                else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
+                {
+                    qmkDev.ResetCache();
+                    qmkDev.SetPerDeviceDisabled(false);
                 }
 
                 // Tagged effects (startup rainbow, title-screen starfield)
@@ -584,35 +908,29 @@ namespace Chromatics.Core
             {
                 //Device Added
 
-                //Handle cases where a device is loaded with 0 LEDs
-                if (device.Count() <= 0 && device.DeviceInfo.DeviceType == RGBDeviceType.Keyboard)
-                {
-                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis XL keyboard-ISO.xml";
+                // Some providers hand us a device with zero LEDs (SDK silent
+                // on the geometry, or a model we have no layout for). Without
+                // at least one Led the device is invisible to every layer,
+                // so synthesise a sensible default grid from KeyLocalization
+                // — keyboards get the full QWERTY ANSI 104, headsets get a
+                // 2x2 left-ear / right-ear quartet.
+                Helpers.DefaultLayoutInference.Apply(device);
 
-                    if (File.Exists(path))
-                    {
-                        var layout = DeviceLayout.Load(path);
-                        LayoutExtension.ApplyTo(layout, device, true);
-
-                        #if DEBUG
-                            Debug.WriteLine($"Loaded layout for {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}. New Leds: {device.Count()}");
-                        #endif
-                    }
-                }
-                else if (device.Count() <= 0 && device.DeviceInfo.DeviceType == RGBDeviceType.Headset)
-                {
-                    var path = $"{enviroment}/Layouts/Default/Keyboard/Artemis 4 LEDs headset.xml";
-
-                    if (File.Exists(path))
-                    {
-                        var layout = DeviceLayout.Load(path);
-                        LayoutExtension.ApplyTo(layout, device, true);
-
-                        #if DEBUG
-                            Debug.WriteLine($"Loaded layout for {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}. New Leds: {device.Count()}");
-                        #endif
-                    }
-                }
+                // Logitech per-key keyboards arrive from RGB.NET with every
+                // LED at Y=0 (LogitechPerKeyRGBDevice.InitializeLayout lays
+                // them out in a single horizontal row at pos*19,0). That
+                // breaks any decorator that reads Led.Location for spatial
+                // computation — most visibly conical gradients, which use
+                // atan2(dy, dx) and degenerate to a left-half / right-half
+                // fade when every dy is 0. Per-key matrix-grid effects
+                // (CircularPulse via DeviceGridHelper) are unaffected
+                // because they use the QWERTY row/col grid, not Location.
+                //
+                // Apply the matching shipped layout XML over the top so
+                // Location matches the physical keycap. Mice / headsets
+                // get the same treatment for consistency. Falls through
+                // silently when the model has no shipped layout.
+                Helpers.LogitechLayoutFixup.Apply(device, enviroment);
 
                 lock (_devicesLock)
                 {
@@ -780,7 +1098,17 @@ namespace Chromatics.Core
         }
 
         public static bool LoadDeviceProvider(IRGBDeviceProvider provider)
+            => LoadDeviceProvider(provider, out _);
+
+        // Overload that surfaces the caught exception to the caller so toggle
+        // / first-run handlers can react to specific failure shapes (e.g.
+        // Logitech's "Failed to initialize Logitech-SDK." when G HUB isn't
+        // running) without re-parsing the console log. Returns null in
+        // loadError when the call succeeds or is a no-op (provider already
+        // loaded).
+        public static bool LoadDeviceProvider(IRGBDeviceProvider provider, out Exception loadError)
         {
+            loadError = null;
             try
             {
                 if (provider == null) return false;
@@ -822,6 +1150,18 @@ namespace Chromatics.Core
                     surface.Load(provider);
                     loadedDeviceProviders.Add(provider);
 
+                    // Warn the user when a freshly-loaded provider gives us
+                    // devices whose hardware/SDK can't accept per-LED writes
+                    // (zone-only or single-colour fallback). Effects that
+                    // depend on per-LED spatial position — radial pulses,
+                    // ripples, audio-visualizer columns — degrade visually
+                    // on those devices, and the user can't tell whether
+                    // it's a Chromatics bug or hardware limit without this
+                    // hint. Logitech is the only provider with a known set
+                    // of zone/per-device fallback classes; the helper is
+                    // pattern-matchable and easy to extend.
+                    WarnLimitedDevices(provider);
+
                     // surface.Load attaches every device in provider.Devices
                     // unconditionally (the comment in DevicesChanged about
                     // "startup attachment is owned by SurfaceExtensions.Load"
@@ -852,6 +1192,8 @@ namespace Chromatics.Core
                             lifxDev.SetPerDeviceDisabled(true);
                         else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
                             hueDev.SetPerDeviceDisabled(true);
+                        else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
+                            qmkDev.SetPerDeviceDisabled(true);
                         if (_activeDevices.ContainsKey(device))
                             _activeDevices[device] = false;
                         else
@@ -874,10 +1216,67 @@ namespace Chromatics.Core
             }
             catch (Exception ex)
             {
-                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{provider.Devices.FirstOrDefault().DeviceInfo.DeviceName}] LoadDeviceProvider Error: {ex.Message}");
+                // Asynchronous providers (Hue, LIFX, OpenRGB) fail before
+                // populating Devices, so the old `provider.Devices.FirstOrDefault().DeviceInfo.DeviceName`
+                // log line NRE'd inside the catch and masked the real error.
+                // Provider type name is always available and more useful for
+                // diagnosis anyway (which provider failed, not which device).
+                var label = provider?.GetType().Name ?? "Unknown";
+
+                // RGB.NET singletons (Corsair in particular) can throw
+                // ObjectDisposedException when Load is called after the
+                // provider's own teardown path disposed Instance. The user
+                // still sees the load failure in console, but Sentry doesn't
+                // get spammed — the root cause is upstream and a single
+                // failed load is non-fatal (Chromatics carries on with the
+                // remaining providers).
+                bool benign = ex is ObjectDisposedException;
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{label}] LoadDeviceProvider Error: {ex.Message}", forwardToSentry: !benign);
+
+                // Logitech-SDK init failure can route through the catch
+                // (synchronous throw) AND/OR through the surface.Exception
+                // event handler (async). Dispatch to the shared helper so
+                // every channel produces the same G HUB tip.
+                LogLogitechSdkHintIfNeeded(ex);
+
+                loadError = ex;
                 return false;
             }
-            
+
+        }
+
+        // Surface a one-time console warning per provider load when devices
+        // can't accept per-LED writes — zone-based or single-colour SDK
+        // fallbacks. Effects that depend on per-LED spatial position
+        // (CircularPulse, BPMRipple, AudioVisualizer) degrade visibly on
+        // those devices, and the user otherwise has no way to tell whether
+        // it's a hardware limit or a Chromatics bug. Pattern-match on the
+        // device's runtime class — RGB.NET names them <Brand><Family>RGBDevice
+        // (LogitechZoneRGBDevice, LogitechPerDeviceRGBDevice, etc.).
+        // Extend the type-name list as new providers ship limited-mode
+        // device classes.
+        private static readonly Dictionary<string, string> _limitedDeviceTypeWarnings = new(StringComparer.Ordinal)
+        {
+            ["LogitechZoneRGBDevice"]      = "is using zone-based lighting (the SDK limits this model to a small number of zones); radial effects (CircularPulse, BPMRipple, AudioVisualizer) will look like horizontal stripes rather than circles",
+            ["LogitechPerDeviceRGBDevice"] = "is using single-colour lighting (the SDK exposes one zone for the whole device); radial and per-key effects will paint a single uniform colour",
+        };
+
+        private static void WarnLimitedDevices(IRGBDeviceProvider provider)
+        {
+            if (provider == null) return;
+            try
+            {
+                foreach (var device in provider.Devices)
+                {
+                    string typeName = device.GetType().Name;
+                    if (!_limitedDeviceTypeWarnings.TryGetValue(typeName, out var description)) continue;
+
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices,
+                        $"[Devices] '{device.DeviceInfo.DeviceName}' {description}.",
+                        forwardToSentry: false);
+                }
+            }
+            catch { /* diagnostic — never fatal */ }
         }
 
         public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true)
@@ -1236,7 +1635,7 @@ namespace Chromatics.Core
 
         // Tear down ONLY the groups registered under `tag` — used when the
         // user disables Startup Animation / Title Screen via the Effects
-        // tab and we need to stop the rainbow / starfield mid-cycle without
+        // tab and we need to stop the effects mid-cycle without
         // killing other running effects on the surface.
         //
         // LEDs are painted BLACK and one surface render is forced before

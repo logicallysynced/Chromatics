@@ -1274,6 +1274,53 @@ namespace Chromatics.Layers
 
                     return RaidEffectState.raidEffectsRunning;
                 }
+                
+                case "Akh Afah Amphitheatre":
+                    if (layer.Decorators.Count == 0 || !RaidEffectState.raidEffectsRunning || currentBgmId != RaidEffectState.currentRaidBgmId)
+                    {
+                        // BGM-trigger scene gate — first tick of this
+                        // (zone, bgm) captures scene + fade-in, computes
+                        // start time. Hold black until ready. Don't set
+                        // raidEffectsRunning so freshStart re-checks
+                        // each tick.
+                        if (!BgmTriggerGate.IsReady(zone, currentBgmId))
+                        {
+                            layer.RemoveAllDecorators();
+                            layer.Brush = new SolidColorBrush(new Color((byte)255, (byte)0, (byte)0, (byte)0));
+                            layer.ZIndex = masterlayer.zindex;
+                            return true;
+                        }
+
+                        switch (currentBgmId)
+                        {
+                            case 231:
+                            {
+                                var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SBase.Color);
+                                var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8SHighlight3.Color) };
+                                var pulse = new BPMCircularPulseEffect(layer, 164, 4, 12, 2, colors, surface, baseCol);
+
+                                layer.Brush = new SolidColorBrush(baseCol);
+                                SetEffect(pulse, layer, runningEffects);
+                                break;
+                            }
+                            default: //230
+                            {
+                                var baseCol = ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8Base.Color);
+                                var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8Highlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8Highlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM8Highlight3.Color) };
+                                var starfield = new BPMStarfieldDecorator(layer, layer.Count() / 6, 272, 500, animationCol, surface, 2, false, baseCol);
+
+                                layer.Brush = new SolidColorBrush(baseCol);
+                                SetEffect(starfield, layer, runningEffects);
+                                break;
+                            }
+                        }
+
+                        RaidEffectState.raidEffectsRunning = true;
+                        RaidEffectState.currentRaidBgmId = currentBgmId;
+                        return true;
+                    }
+                    return RaidEffectState.raidEffectsRunning;
+                
             }
 
             return false;

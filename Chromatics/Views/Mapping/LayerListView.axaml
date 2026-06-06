@@ -118,10 +118,14 @@
             <Setter Property="Padding"         Value="6,0" />
         </Style>
         <!-- Per-item tooltip in the layer-type ComboBox open dropdown. Binds to
-             Description on LayerTypeOption. x:DataType scopes the compiled binding
-             to LayerTypeOption; for other ComboBoxes (string items) it silently
-             produces no tooltip, which is acceptable. -->
-        <Style Selector="ComboBoxItem" x:DataType="vm:LayerTypeOption">
+             Description on LayerTypeOption. The selector is scoped to ComboBox
+             with the typeCombo class so the compiled binding only runs against
+             LayerTypeOption items. A wider "ComboBoxItem" selector applies to
+             every ComboBox in the visual tree, including the Mode picker whose
+             items are LayerModes enums, and the compiled binding's cast to
+             LayerTypeOption throws InvalidCastException the first time the
+             user opens that dropdown. -->
+        <Style Selector="ComboBox.typeCombo ComboBoxItem" x:DataType="vm:LayerTypeOption">
             <Setter Property="ToolTip.Tip" Value="{Binding Description}" />
         </Style>
     </UserControl.Styles>
@@ -200,6 +204,7 @@
                                      column still occupies width via the `*`
                                      so other columns stay in line. -->
                                 <ComboBox Grid.Column="3"
+                                          Classes="typeCombo"
                                           ItemsSource="{Binding TypeOptions}"
                                           SelectedIndex="{Binding LayerTypeIndex, Mode=TwoWay}"
                                           IsEnabled="{Binding IsTypeEditable}"

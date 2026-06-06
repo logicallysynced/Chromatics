@@ -56,6 +56,10 @@ namespace Chromatics.Views
             var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
             if (clipboard == null) return;
             await clipboard.SetTextAsync(_vm.GetAllText());
+            // Avalonia's clipboard uses OLE delayed rendering; without this
+            // flush the data evaporates when Chromatics exits. See
+            // ClipboardHelper for the full story.
+            Helpers.ClipboardHelper.FlushOleClipboard();
         }
     }
 }

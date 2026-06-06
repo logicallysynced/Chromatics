@@ -9,6 +9,10 @@
 # folder is local-only and must not be committed.
 Build Dependencies/Sharlayan/
 
+# Build Dependencies/RGB.NET/ holds custom RGB.NET.Devices.* DLLs that the
+# main + harness csprojs reference via HintPath. Those DLLs are checked in
+# (CI needs them) so this folder is intentionally NOT ignored.
+
 # Project-scoped MCP server configuration. Local-only — contains personal
 # tool wiring (Sentry hosted MCP) that's specific to maintainer accounts.
 .mcp.json
@@ -100,6 +104,9 @@ ipch/
 *.opensdf
 *.sdf
 *.cachefile
+
+# Avalonia / IDE language-server project cache, regenerated on every load.
+*.csproj.lscache
 
 # Visual Studio profiler
 *.psess

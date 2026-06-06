@@ -2,6 +2,46 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.2.73
+
+- Added support for FFXIV 7.51
+- Added an option to remap layers when keyboard type is changed.
+- Fixed an issue where AZERTY keyboards weren't functioning properly.
+- Fixed an issue which caused Chromatics to crash when changing layer modes.
+- Fixed an issue which prevented non-bleed layers from re-applying if disabled and re-enabled, with the Enmity Tracker layer specifically going dark whenever the player wasn't on the target's hate table.
+- Fixed an issue where the Enmity Tracker layer stayed dark while a target was engaged.
+
+## 4.2.65
+
+- **New:** EVision keyboard support (Beta). Covers 13 keyboards that share the Sonix VS11K28A firmware - Glorious GMMK TKL, Redragon K550 / K552 / K552-2 / K556, Tecware Phantom Elite, Womier K66 / K87, Mars Gaming MKMini, Skillkorp K5, DEXP Blaze, Warrior Kane TC235, and Gamepower Ogre RGB.
+- **New:** Redragon mouse support (Beta). Covers 13 Redragon RGB mice that speak the OpenRGB HID protocol family - M711 Cobra, M715 Dagger, M716 Inquisitor, M602 Griffin, M801 Sniper, M808 Storm, M810 Taipan, M908 Impact, M987 Reaping, M719 Invader, M990 Legend, M709 Tiger, and M721-Pro Lonewolf 2.
+- Updated internal Corsair, CoolerMaster, MSI & Wooting SDK libraries.
+- Fixed an issue which prevented Corsair and OpenRGB RGB.NET device providers from starting.
+- Fixed an error that could appear when Chromatics auto-checked for updates while minimized to the tray.
+- Minor fixes and improvements.
+
+## 4.2.50
+
+- **New:** Windows Dynamic Lighting support. This is currently in beta.
+- **New:** Yeelight device support. This is currently in beta.
+- **New:** Alienware LightFX device support. This is currently in beta.
+- **New:** Layers can now be copied between devices. A new copy icon next to the device brightness button on the **Mappings** tab opens a dialog that duplicates every layer from one device onto another.
+- Hue, LIFX and Yeelight have been added to the first-run wizard, each with their own discovery flow.
+- PlayStation, Hue and LIFX devices are no longer classed as beta.
+- Multi-zone keyboards now show assignable keys for each zone instead of using the full keyboard grid intended for per-key LED layouts.
+- Updated RGB.NET device providers for Razer, Logitech, SteelSeries, Corsair and OpenRGB.
+- Chromatics is now officially code-signed for additional installer security.
+- Increased the minimum Windows target to Windows 10 version 1809, build 17763.
+- Fixed an issue that prevented Vegas Mode from starting in The Gold Saucer.
+- Fixed an issue that could cause the title screen animation to play when loading between zones.
+- Fixed an issue where console lines copied to the clipboard could be lost when Chromatics closed.
+- Minor fixes and improvements.
+
+## 4.1.44
+
+- **New:** QMK Raw HID keyboard support (Beta). Covers custom keyboards from NovelKeys, KBDFans, Drop, GMMK, Glorious, and any other brand running QMK firmware with Raw HID enabled. Enable it from Settings → Device Providers or pick it on the first-run device selector. Chromatics auto-detects compatible boards over USB and adopts them with no firmware flashing or extra software required. The provider drives per-key lighting through the OpenRGB-QMK plugin when the firmware has it installed; otherwise it controls the firmware's built-in RGB matrix base colour and effect mode via VIA. A pre-built key layout database covering 2650 QMK boards ships with Chromatics, so the Highlight and Keybind layers map to the correct physical keys without manual setup.
+- Updated dependency libraries to latest version
+
 ## 4.1.38
 
 - Added Auto-discovery for Hue bridges.

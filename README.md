@@ -2,9 +2,9 @@
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
-[![Github All Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/total.svg)](https://github.com/roxaskeyheart/Chromatics/releases)
-[![Github Latest Releases](https://img.shields.io/github/downloads/roxaskeyheart/Chromatics/latest/total.svg)](https://github.com/roxaskeyheart/Chromatics/releases/latest)
-[![Latest Release](https://img.shields.io/github/release/roxaskeyheart/Chromatics.svg)](https://github.com/roxaskeyheart/Chromatics/releases/latest)
+[![Github All Releases](https://img.shields.io/github/downloads/logicallysynced/Chromatics/total.svg)](https://github.com/logicallysynced/Chromatics/releases)
+[![Github Latest Releases](https://img.shields.io/github/downloads/logicallysynced/Chromatics/latest/total.svg)](https://github.com/logicallysynced/Chromatics/releases/latest)
+[![Latest Release](https://img.shields.io/github/release/logicallysynced/Chromatics.svg)](https://github.com/logicallysynced/Chromatics/releases/latest)
 [![Discord](https://img.shields.io/discord/334196655131721741.svg)](https://discord.gg/sK47yFE)
 
 [Join Support Discord](https://discord.gg/sK47yFE)
@@ -16,40 +16,48 @@
 
 **Language Support:** Chromatics only supports the global version of FFXIV (all languages included). Korean & Chinese versions of the game are not supported.
 
-> ### ⚠️ Upgrading from Chromatics 3?
-> Chromatics 4 stores your settings in a new location on your computer, and **your previous settings will not be carried across automatically**. You can bring your layers and colour palette across manually using the steps below.
->
-> **To bring your layer mappings across:**
-> 1. Find your old `layers.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
-> 2. Open Chromatics 4 and go to the **Mapping** tab.
-> 3. Click **Import** and select your `layers.chromatics3` file.
->
-> **To bring your colour palette across:**
-> 1. Find your old `palette.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
-> 2. Open Chromatics 4 and go to the **Palette** tab.
-> 3. Click **Import** and select your `palette.chromatics3` file.
->
-> You'll need to set up your effects from scratch. Sorry about that - the rebuild changed too much under the hood for everything to carry over automatically.
+### ⚠️ Upgrading from Chromatics 3?
+Chromatics 4 stores your settings in a new location on your computer, and **your previous settings will not be carried across automatically**. You can bring your layers and colour palette across manually using the steps below.
+
+**To bring your layer mappings across:**
+1. Find your old `layers.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
+2. Open Chromatics 4 and go to the **Mapping** tab.
+3. Click **Import** and select your `layers.chromatics3` file.
+
+**To bring your colour palette across:**
+1. Find your old `palette.chromatics3` file. It will be in the same folder you had Chromatics 3 installed in.
+2. Open Chromatics 4 and go to the **Palette** tab.
+3. Click **Import** and select your `palette.chromatics3` file.
+
+You'll need to set up your effects from scratch. Sorry about that - the rebuild changed too much under the hood for everything to carry over automatically.
 <br><br>
 
-Chromatics is a third-party add-on for Final Fantasy XIV that turns your RGB devices into an extension of the game. It ships with a range of scenes and effects, including:
-* HP/MP/GP/CP
-* Keybinds - lights your keys depending on your mapped keybind status
-* Castbar progress
-* Target HP/Target Castbar progress
-* Job Gauges
-* Enmity Tracker
-* Battle Stance
-* Reactive Weather - displays static & animation weather effects
-* Duty Finder Bell - flash your device when your DF pops
-* Damage Flash - flash your device when you take damage
-* Gold Saucer Vegas Mode
-* Title screen & cutscene animations
+### What is Chromatics? ###
+
+Chromatics is a third-party add-on for Final Fantasy XIV that turns your RGB devices into an extension of the game. Turn a row of your keyboard into a dynamic health bar. Make your smart light automatically change colors to match the in-game weather. Save different color profiles that swap out when you change jobs.
+
+It ships with a range of scenes and effects, including:
+* HP, MP, GP and CP stat bars - Show your health and magic as meters on your devices.
+* Keybinds - Keys light up when an ability is ready, proc'd and while on cooldown.
+* Castbar Animations - Animated castbars on your devices for your player or target enemy.
+* Job Gauges - Show job's gauge on your devices.
+* Enmity Tracker - See your current aggro so you know when a boss is about to turn on you.
+* Raid Effects - Supported fights take over your devices with choreographed animations that follow phases and music.
+* Reactive Weather - Your devices follow the weather in each zone, from light rain to thunderstorms and sandstorms. Includes animations for special weather effects.
+* Duty Finder Bell - flash your device when your DF pops.
+* Damage Flash - flash your device when you take damage.
+* Target HP/Target Castbar animations.
+* Battle Stance.
+* Gold Saucer Vegas Mode.
+* Title screen & cutscene animations.
+
 <br>
 <img src="https://chromaticsffxiv.com/img/Chromatics4_MappingScreen.png" alt="Chromatics Palettes">
 <br>
 <br>
 Chromatics works with a wide range of RGB devices via the RGB.NET library. If RGB.NET supports your device, Chromatics does too.
+<br>
+Chromatics reads game memory to follow the action. It never writes to, changes or injects into FFXIV.
 <br>
 
 ### Developers ### 

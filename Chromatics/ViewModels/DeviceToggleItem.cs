@@ -19,6 +19,13 @@ namespace Chromatics.ViewModels
         public string Label { get; }
         public string Tooltip => LocalizationService.Instance[_tooltipKey];
 
+        // UI-availability flag (separate from the on/off state in IsEnabled).
+        // Bound to the ToggleButton's IsEnabled in the Settings view so a
+        // toggle can be presented as greyed-out + unclickable when the host
+        // OS doesn't support the underlying provider — e.g. Dynamic Lighting
+        // on Windows 10. Default true keeps every other toggle unchanged.
+        public bool IsAvailable { get; }
+
         public bool IsEnabled
         {
             get => _isEnabled;
@@ -44,13 +51,14 @@ namespace Chromatics.ViewModels
             }
         }
 
-        public DeviceToggleItem(string label, string tooltipKey, bool initialValue, Func<Task<bool>> enableAsync, Action disable)
+        public DeviceToggleItem(string label, string tooltipKey, bool initialValue, Func<Task<bool>> enableAsync, Action disable, bool isAvailable = true)
         {
             Label = label;
             _tooltipKey = tooltipKey;
             _isEnabled = initialValue;
             _enableAsync = enableAsync;
             _disable = disable;
+            IsAvailable = isAvailable;
 
             LocalizationService.Instance.PropertyChanged += OnLocaleVersionChanged;
         }

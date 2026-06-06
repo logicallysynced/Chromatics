@@ -176,13 +176,20 @@ public class MappingViewModelTests : IDisposable
     }
 
     [Fact]
-    public void ApplyKeyboardLayoutChange_QwertyToQwertz_SwapsYAndZLeds()
+    public void ApplyKeyboardLayoutChange_HighlightLayer_QwertyToQwertz_SwapsYAndZLeds()
     {
+        // Highlight layers track letter labels - if the user clicks "Y" on
+        // QWERTY they want "Y" lit after switching to QWERTZ (which has Y at
+        // the physical Z position). Only DynamicLayerType.Highlight (position
+        // 1 in _dynamicLayerOrder) gets remapped on layout change.
+        const int HighlightPosition = 1;
+
         var deviceId = Guid.NewGuid();
         using var vm = NewVmWithSelectedDevice(deviceId);
         int id = vm.AddDynamicLayer();
 
         var layer = MappingLayers.GetLayer(id);
+        layer.layerTypeindex = HighlightPosition;
         layer.deviceLeds[0] = LedId.Keyboard_Y;
         layer.deviceLeds[1] = LedId.Keyboard_A;
         MappingLayers.UpdateLayer(layer);
@@ -192,6 +199,96 @@ public class MappingViewModelTests : IDisposable
         var after = MappingLayers.GetLayer(id);
         Assert.Equal(LedId.Keyboard_Z, after.deviceLeds[0]);
         Assert.Equal(LedId.Keyboard_A, after.deviceLeds[1]);
+    }
+
+    [Fact]
+    public void ApplyKeyboardLayoutChange_HighlightLayer_QwertyToAzerty_FollowsMLabelToHomeRow()
+    {
+        // Real French AZERTY puts M at the end of the home row, not the shift
+        // row. The swap table pairs Keyboard_M with Keyboard_SemicolonAndColon
+        // so a Highlight layer the user built by clicking "M" on QWERTY
+        // (Keyboard_M, physical shift-row col 7) follows the M label across to
+        // AZERTY's home-row position (Keyboard_SemicolonAndColon physical
+        // position).
+        const int HighlightPosition = 1;
+
+        var deviceId = Guid.NewGuid();
+        using var vm = NewVmWithSelectedDevice(deviceId);
+        int id = vm.AddDynamicLayer();
+
+        var layer = MappingLayers.GetLayer(id);
+        layer.layerTypeindex = HighlightPosition;
+        layer.deviceLeds[0] = LedId.Keyboard_M;
+        MappingLayers.UpdateLayer(layer);
+
+        vm.ApplyKeyboardLayoutChange(KeyboardLocalization.qwerty, KeyboardLocalization.azerty);
+
+        var after = MappingLayers.GetLayer(id);
+        Assert.Equal(LedId.Keyboard_SemicolonAndColon, after.deviceLeds[0]);
+    }
+
+    [Fact]
+    public void ApplyKeyboardLayoutChange_ReactiveWeatherLayer_QwertyToAzerty_TranslatesWhenAccepted()
+    {
+        // Every dynamic-layer subtype - Highlight, ReactiveWeatherHighlight,
+        // Keybinds, the trackers, etc. - is in scope for the layout swap.
+        // The user picks at the Settings confirm prompt whether to translate
+        // or keep the physical positions; ApplyKeyboardLayoutChange with
+        // remapLayers: true is the accepted path. ReactiveWeatherHighlight
+        // here gets its WASD selection translated so the same printed
+        // letters stay lit on AZERTY.
+        const int ReactiveWeatherHighlightPosition = 15;
+
+        var deviceId = Guid.NewGuid();
+        using var vm = NewVmWithSelectedDevice(deviceId);
+        int id = vm.AddDynamicLayer();
+
+        var layer = MappingLayers.GetLayer(id);
+        layer.layerTypeindex = ReactiveWeatherHighlightPosition;
+        layer.deviceLeds[0] = LedId.Keyboard_W;
+        layer.deviceLeds[1] = LedId.Keyboard_A;
+        layer.deviceLeds[2] = LedId.Keyboard_S;
+        layer.deviceLeds[3] = LedId.Keyboard_D;
+        MappingLayers.UpdateLayer(layer);
+
+        vm.ApplyKeyboardLayoutChange(KeyboardLocalization.qwerty, KeyboardLocalization.azerty);
+
+        var after = MappingLayers.GetLayer(id);
+        Assert.Equal(LedId.Keyboard_Z, after.deviceLeds[0]);
+        Assert.Equal(LedId.Keyboard_Q, after.deviceLeds[1]);
+        Assert.Equal(LedId.Keyboard_S, after.deviceLeds[2]);
+        Assert.Equal(LedId.Keyboard_D, after.deviceLeds[3]);
+    }
+
+    [Fact]
+    public void ApplyKeyboardLayoutChange_RemapDeclined_LeavesLedsUntouched()
+    {
+        // When the user picks "Keep as-is" at the Settings prompt,
+        // SettingsViewModel calls RaiseKeyboardLayoutChanged with
+        // remapLayers: false and ApplyKeyboardLayoutChange receives it
+        // the same way. Stored LedIds stay put; only the virtual-keyboard
+        // labels rebuild against the new layout.
+        const int ReactiveWeatherHighlightPosition = 15;
+
+        var deviceId = Guid.NewGuid();
+        using var vm = NewVmWithSelectedDevice(deviceId);
+        int id = vm.AddDynamicLayer();
+
+        var layer = MappingLayers.GetLayer(id);
+        layer.layerTypeindex = ReactiveWeatherHighlightPosition;
+        layer.deviceLeds[0] = LedId.Keyboard_W;
+        layer.deviceLeds[1] = LedId.Keyboard_A;
+        layer.deviceLeds[2] = LedId.Keyboard_S;
+        layer.deviceLeds[3] = LedId.Keyboard_D;
+        MappingLayers.UpdateLayer(layer);
+
+        vm.ApplyKeyboardLayoutChange(KeyboardLocalization.qwerty, KeyboardLocalization.azerty, remapLayers: false);
+
+        var after = MappingLayers.GetLayer(id);
+        Assert.Equal(LedId.Keyboard_W, after.deviceLeds[0]);
+        Assert.Equal(LedId.Keyboard_A, after.deviceLeds[1]);
+        Assert.Equal(LedId.Keyboard_S, after.deviceLeds[2]);
+        Assert.Equal(LedId.Keyboard_D, after.deviceLeds[3]);
     }
 
     [Fact]

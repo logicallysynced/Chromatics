@@ -152,6 +152,14 @@ namespace Chromatics.Layers
                         { LedId.Keyboard_A, LedId.Keyboard_Q },
                         { LedId.Keyboard_W, LedId.Keyboard_Z },
                         { LedId.Keyboard_Z, LedId.Keyboard_W },
+                        // M moves from the QWERTY shift row to the AZERTY
+                        // home row (label position alongside ;/: on QWERTY).
+                        // Keyboard_M ↔ Keyboard_SemicolonAndColon so a
+                        // Highlight layer made by clicking "M" on QWERTY
+                        // lights up the home-row "M" label after switching
+                        // to AZERTY.
+                        { LedId.Keyboard_M, LedId.Keyboard_SemicolonAndColon },
+                        { LedId.Keyboard_SemicolonAndColon, LedId.Keyboard_M },
                     }
                 },
             };
@@ -169,10 +177,54 @@ namespace Chromatics.Layers
             return toSwap.TryGetValue(canonical, out var t) ? t : canonical;
         }
 
-        // Called when the user switches keyboard layout. Rewrites every
-        // keyboard layer's deviceLeds so that a key the user picked by its
-        // printed label (e.g. "Y") continues to refer to the same label on the
-        // new layout (e.g. QWERTZ's Y, which is physical LedId.Keyboard_Z).
+        // Counts how many keyboard DynamicLayers hold at least one LedId
+        // that would actually change in a from -> to layout swap. Powers
+        // the "Update your layer key assignments?" prompt in Settings -
+        // the prompt is skipped entirely when this returns 0 so the user
+        // never sees a confirm dialog that wouldn't change anything.
+        //
+        // Every dynamic layer subtype is in scope - Highlight (user
+        // letter picks), Keybinds, HP / MP / Target HP / Castbar,
+        // job gauges, ReactiveWeatherHighlight, etc. The user decides
+        // via the confirm prompt whether to translate everything or
+        // keep the physical positions; this counter is just the trigger.
+        public static int CountLayoutSwapAffectedLayers(KeyboardLocalization from, KeyboardLocalization to)
+        {
+            if (from == to) return 0;
+            if (!_layoutSwapsFromQwerty.ContainsKey(from) || !_layoutSwapsFromQwerty.ContainsKey(to)) return 0;
+
+            int count = 0;
+            foreach (var kvp in _layers)
+            {
+                var layer = kvp.Value;
+                if (layer.deviceType != RGBDeviceType.Keyboard) continue;
+                if (layer.deviceLeds == null || layer.deviceLeds.Count == 0) continue;
+                if (layer.rootLayerType != LayerType.DynamicLayer) continue;
+
+                foreach (var entry in layer.deviceLeds)
+                {
+                    if (TranslateLedId(entry.Value, from, to) != entry.Value)
+                    {
+                        count++;
+                        break;
+                    }
+                }
+            }
+            return count;
+        }
+
+        // Called when the user accepts the "Update layer key assignments?"
+        // confirm in Settings after a keyboard-layout swap. Translates each
+        // keyboard DynamicLayer's deviceLeds through the swap table so a
+        // layer the user built by clicking "Y" on QWERTY continues to light
+        // the "Y" label after switching to QWERTZ. Every dynamic subtype is
+        // in scope - the user's confirm answer is the gate, not the layer
+        // type. SettingsViewModel.SelectedKeyboardLayout fires the prompt
+        // and only invokes this when the user picks "Update layers"; if they
+        // pick "Keep as-is" the call is skipped and the physical positions
+        // stay put. Base layers are full-keyboard fills, so swap is a
+        // no-op there. Effect layers paint via their own processors and
+        // don't carry stored letter LedIds either.
         public static void RemapLedIdsForLayoutChange(KeyboardLocalization from, KeyboardLocalization to)
         {
             if (from == to) return;
@@ -183,6 +235,7 @@ namespace Chromatics.Layers
                 var layer = kvp.Value;
                 if (layer.deviceType != RGBDeviceType.Keyboard) continue;
                 if (layer.deviceLeds == null || layer.deviceLeds.Count == 0) continue;
+                if (layer.rootLayerType != LayerType.DynamicLayer) continue;
 
                 var remapped = new Dictionary<int, LedId>(layer.deviceLeds.Count);
                 var changed = false;

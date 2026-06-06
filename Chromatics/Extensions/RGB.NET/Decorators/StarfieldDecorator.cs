@@ -31,6 +31,17 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private double Timing;
         private double startDelay;
         private double updateCounter = 0;
+        // Serialises Update across concurrent surface.Updating ticks. Each
+        // RGB.NET provider runs its own update trigger on its own thread and
+        // all of them invoke RGBSurface.OnUpdating, which fires this
+        // decorator's Update on whichever thread raised the event. The
+        // currentBrightness/currentColors/startTimes dictionaries are regular
+        // Dictionary<,> (not concurrent), so two threads racing a rehash
+        // throws KeyNotFoundException on the indexer mid-Update even though
+        // the key was just added. A lock-based serialiser is cheaper than
+        // swapping every dict to ConcurrentDictionary and covers the whole
+        // critical section in one place.
+        private readonly Lock _updateLock = new();
 
         public StarfieldDecorator(ListLedGroup _ledGroup, int numberOfLeds, double interval, double fadeSpeed, Color[] colors, RGBSurface surface, bool updateIfDisabled = false, Color baseColor = default(Color)) : base(surface, updateIfDisabled)
         {
@@ -89,6 +100,11 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         protected override void Update(double deltaTime)
         {
+            // Skip rather than queue if another tick is already in flight.
+            // Queueing would let provider trigger threads pile up behind a
+            // slow tick; skipping is fine because animation state is purely
+            // visual and the next tick catches up.
+            if (!_updateLock.TryEnter()) return;
             try
             {
                 if (ledGroup == null || fadingInLeds == null || fadingOutLeds == null) return;
@@ -223,6 +239,10 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             catch (Exception ex)
             {
                 Debug.WriteLine($"Exception: {ex.Message}");
+            }
+            finally
+            {
+                _updateLock.Exit();
             }
         }
 

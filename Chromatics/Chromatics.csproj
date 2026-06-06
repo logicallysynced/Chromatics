@@ -2,16 +2,37 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows7.0</TargetFramework>
+    <!-- TFM is 19041 because PackageManager.AddPackageByUriAsync(Uri, AddPackageOptions)
+         and AddPackageOptions.ExternalLocationUri (used by SparsePackageRegistrar)
+         were introduced in Win10 2004 (10.0.19041.0). SupportedOSPlatformVersion
+         stays at 17763 so the app still runs on Win10 1809+; Win10 1809-1909 users
+         simply lose Dynamic Lighting background access (foreground DL keeps working). -->
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.1.38.0</Version>
+    <Version>4.2.73.0</Version>
     <Authors>Danielle Thompson</Authors>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- ApplicationManifest is conditional: local Debug + Release builds embed
+         app.manifest (no fusion-identity <msix> element) so VS debug runs and
+         dev `dotnet build` invocations launch without a registered sparse
+         package on the box. publish.py sets -p:IncludeFusionIdentity=true to
+         swap in app.fusion.manifest for the signed release build.
+
+         publish.py additionally sets -p:PortableBuild=true for the portable
+         pass; that swaps in app.fusion.portable.manifest (which references
+         the com.logicallysynced.Chromatics.Portable package) and defines the
+         PORTABLE_BUILD compile constant so SparsePackageRegistrar registers
+         against the portable sparse-package identity. The two fusion
+         variants let installer + portable coexist on the same machine. -->
+    <ApplicationManifest Condition="'$(IncludeFusionIdentity)' != 'true'">app.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(IncludeFusionIdentity)' == 'true' And '$(PortableBuild)' != 'true'">app.fusion.manifest</ApplicationManifest>
+    <ApplicationManifest Condition="'$(IncludeFusionIdentity)' == 'true' And '$(PortableBuild)' == 'true'">app.fusion.portable.manifest</ApplicationManifest>
+    <DefineConstants Condition="'$(PortableBuild)' == 'true'">$(DefineConstants);PORTABLE_BUILD</DefineConstants>
     <Copyright>logicallysynced 2026</Copyright>
     <PackageProjectUrl>https://chromaticsffxiv.com</PackageProjectUrl>
     <NeutralLanguage>en-AU</NeutralLanguage>
     <ApplicationIcon>Resources\Chromatics_icon_144x144.ico</ApplicationIcon>
-    <PackageReleaseNotes>https://github.com/roxaskeyheart/chromatics/releases</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/logicallysynced/chromatics/releases</PackageReleaseNotes>
     <Title>Chromatics</Title>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -30,6 +51,11 @@
 
   <ItemGroup>
     <None Remove="app.manifest" />
+    <None Remove="app.fusion.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\qmk_keymap_data.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,17 +74,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.2" />
+    <PackageReference Include="Avalonia" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.4" />
     <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
-    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.2" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.4" />
     <PackageReference Include="Markdown.Avalonia.Tight" Version="12.0.0-a3" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
-    <PackageReference Include="Velopack" Version="0.0.1298" />
-    <PackageReference Include="Sentry" Version="6.5.0" />
-    <PackageReference Include="Sentry.Profiling" Version="6.5.0" />
+    <PackageReference Include="Velopack" Version="1.2.0" />
+    <PackageReference Include="Sentry" Version="6.6.0" />
+    <PackageReference Include="Sentry.Profiling" Version="6.6.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -66,30 +92,80 @@
     <PackageReference Include="HueApi" Version="3.2.0" />
     <PackageReference Include="HueApi.ColorConverters" Version="3.1.0" />
     <PackageReference Include="HueApi.Entertainment" Version="3.1.0" />
-    <PackageReference Include="System.Drawing.Common" Version="10.0.7" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.8" />
     <PackageReference Include="NAudio" Version="2.3.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="6.1.3" />
-    <PackageReference Include="RGB.NET.Core" Version="3.2.0" />
+    <!-- RGB.NET.Core comes from a local DLL (Build Dependencies/RGB.NET/)
+         that carries the CHROMATICS-15 disposed-singleton fix. The
+         PackageReference stays so transitive references from the other
+         RGB.NET.Devices.* NuGet packages below don't pull NuGet's
+         RGB.NET.Core 3.2.0 in ahead of the local DLL. ExcludeAssets='all'
+         + PrivateAssets='all' suppress the package's compile + runtime
+         + build assets, leaving the local <Reference Include='RGB.NET.Core'>
+         in the ItemGroup below as the only assembly source. -->
+    <PackageReference Include="RGB.NET.Core" Version="3.2.0">
+      <ExcludeAssets>all</ExcludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="RGB.NET.Devices.Asus" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Devices.CoolerMaster" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Devices.Corsair" Version="3.2.0" />
-    <PackageReference Include="RGB.NET.Devices.Logitech" Version="3.2.0" />
+    <!-- RGB.NET.Devices.Logitech swapped to a local DLL for ad-hoc debugging
+         (see Build Dependencies/RGB.NET/). Revert to PackageReference before
+         committing. -->
+    <!--<PackageReference Include="RGB.NET.Devices.Logitech" Version="3.2.0" />-->
     <PackageReference Include="RGB.NET.Devices.Msi" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Devices.Novation" Version="3.2.0" />
-    <PackageReference Include="RGB.NET.Devices.OpenRGB" Version="3.2.0" />
-    <PackageReference Include="RGB.NET.Devices.Razer" Version="3.2.0" />
-    <PackageReference Include="RGB.NET.Devices.SteelSeries" Version="3.2.0" />
+    <!-- RGB.NET.Devices.OpenRGB swapped to a local DLL for ad-hoc debugging
+         (see Build Dependencies/RGB.NET/). OpenRGB.NET stays as a direct
+         PackageReference - it was previously brought in transitively by
+         the now-commented-out provider package. Version matches what
+         RGB.NET.Devices.OpenRGB's deps.json calls for. -->
+    <!--<PackageReference Include="RGB.NET.Devices.OpenRGB" Version="3.2.0" />-->
+    <PackageReference Include="OpenRGB.NET" Version="3.1.1" />
+    <!-- RGB.NET.Devices.Razer swapped to a local DLL for ad-hoc debugging
+         (see Build Dependencies/RGB.NET/). -->
+    <!--<PackageReference Include="RGB.NET.Devices.Razer" Version="3.2.0" />-->
+    <!-- RGB.NET.Devices.SteelSeries swapped to a local DLL for ad-hoc
+         debugging (see Build Dependencies/RGB.NET/). -->
+    <!--<PackageReference Include="RGB.NET.Devices.SteelSeries" Version="3.2.0" />-->
     <PackageReference Include="RGB.NET.Devices.Wooting" Version="3.2.0" />
     <PackageReference Include="RGB.NET.HID" Version="3.2.0" />
-    <PackageReference Include="RGB.NET.Layout" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Presets" Version="3.2.0" />
-    <PackageReference Include="Sharlayan" Version="9.0.34" />
+    <PackageReference Include="Sharlayan" Version="9.0.39" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Interop.AuraServiceLib">
       <HintPath>..\Build Dependencies\Interop.AuraServiceLib.dll</HintPath>
+    </Reference>
+    <Reference Include="RGB.NET.Core">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Logitech">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Logitech.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <!-- Local RGB.NET.Devices.Logitech build for ad-hoc debugging. The
+         folder is gitignored; revert to the PackageReference above before
+         committing. -->
+    <Reference Include="RGB.NET.Devices.Razer">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Razer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.SteelSeries">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.SteelSeries.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.OpenRGB">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.OpenRGB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.PlayStation">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.PlayStation.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
 

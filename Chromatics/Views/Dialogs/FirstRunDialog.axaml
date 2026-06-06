@@ -69,7 +69,43 @@
                               Content="{loc:Tr Key=OpenRGB}" />
                 <ToggleButton Classes="tile" Name="TilePlayStation"
                               Width="150" Height="80"
-                              Content="{loc:Tr Key='PlayStation (Beta)'}" />
+                              Content="{loc:Tr Key=PlayStation}" />
+                <ToggleButton Classes="tile" Name="TileQmkRawHid"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='QMK keyboards over Raw HID. Covers NovelKeys, KBDFans, Drop, GMMK, Glorious and any other custom keyboard running QMK with Raw HID enabled.'}"
+                              Content="{loc:Tr Key='QMK (Beta)'}" />
+                <ToggleButton Classes="tile" Name="TileHue"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='Philips Hue smart bulbs over your local Hue Bridge.'}"
+                              Content="{loc:Tr Key=Hue}" />
+                <ToggleButton Classes="tile" Name="TileLifx"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='LIFX bulbs, strips and tiles on your local network. No cloud account required.'}"
+                              Content="{loc:Tr Key=LIFX}" />
+                <ToggleButton Classes="tile" Name="TileYeelight"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='Yeelight bulbs, light strips and lamps on your local network. Requires LAN Control enabled in the Yeelight or Mi Home app.'}"
+                              Content="{loc:Tr Key='Yeelight (Beta)'}" />
+                <ToggleButton Classes="tile" Name="TileAlienware"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='Alienware AlienFX hardware (chassis, notebook keyboards, external keyboards). Close Alienware Command Center first - it holds the AlienFX HID interface exclusively.'}"
+                              Content="{loc:Tr Key='Alienware (Beta)'}" />
+                <ToggleButton Classes="tile" Name="TileDynamicLighting"
+                              Width="150" Height="80"
+                              ToolTip.Tip="{loc:Tr Key='Windows Dynamic Lighting picks up any device Windows lists in Settings -> Personalization -> Dynamic Lighting. Requires Windows 11. Covers Razer, Logitech G LIGHTSYNC, ASUS ROG, HyperX, MSI, SteelSeries, HP and Omen hardware.'}">
+                    <!-- Explicit TextBlock instead of string Content so the
+                         label wraps inside the 150px-wide tile. ContentPresenter
+                         creates an implicit TextBlock for string content but
+                         it isn't a logical-tree descendant of the ToggleButton,
+                         so the global ToggleButton.tile TextBlock wrap style
+                         in App.axaml doesn't reach it. -->
+                    <TextBlock Text="{loc:Tr Key='Windows Dynamic Lighting (Beta)'}"
+                               TextWrapping="Wrap"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               MaxWidth="130" />
+                </ToggleButton>
             </WrapPanel>
         </ScrollViewer>
 

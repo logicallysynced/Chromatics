@@ -44,9 +44,9 @@ namespace Chromatics.Views.Dialogs
         // common case for someone who skipped a few updates.
         private static string BuildCumulativeChangelog(UpdateResult result)
         {
-            var versions = new List<(NuGet.Versioning.SemanticVersion Version, string Notes)>();
+            var versions = new List<(Velopack.SemanticVersion Version, string Notes)>();
 
-            void AddIfNotes(NuGet.Versioning.SemanticVersion? v, string? notes)
+            void AddIfNotes(Velopack.SemanticVersion? v, string? notes)
             {
                 if (v == null || string.IsNullOrWhiteSpace(notes)) return;
                 if (versions.Any(e => e.Version.Equals(v))) return;

@@ -148,6 +148,24 @@
                     <TextBlock Text="&#x1F513;" IsVisible="{Binding IsDraggable}" />
                 </Grid>
             </ToggleButton>
+            <Button Classes="lockToggle"
+                    Click="OnCopyLayersClick"
+                    ToolTip.Tip="{loc:Tr Key='Copy all layers from this device onto another device'}">
+                <!-- Two overlapping rounded rectangles: classic
+                     "copy" affordance. Inner rect offset down-right
+                     so both edges read at toolbar size. -->
+                <Grid Width="36" Height="36">
+                    <Path Data="M 5,3 H 13 V 11 H 5 Z M 8,6 H 16 V 14 H 8 Z"
+                          Stretch="Uniform"
+                          Width="18" Height="18"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Stroke="{Binding $parent[Button].Foreground}"
+                          StrokeThickness="1.6"
+                          Fill="{x:Null}"
+                          Opacity="0.85" />
+                </Grid>
+            </Button>
             <ToggleButton Name="BrightnessToggle"
                           Classes="lockToggle"
                           ToolTip.Tip="{loc:Tr Key='Adjust per-device brightness'}">

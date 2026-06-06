@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.Input;
 using Chromatics.Extensions.RGB.NET.Decorators;
 using Chromatics.Extensions.RGB.NET.Devices;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
-using Chromatics.Extensions.RGB.NET.Devices.PlayStation;
+using RGB.NET.Devices.PlayStation;
 using RGB.NET.Core;
 using RGB.NET.Presets.Decorators;
 using RGB.NET.Presets.Textures;
@@ -76,7 +76,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         new("Wooting",      () => WootingDeviceProvider.Instance),
         new("Novation",     () => NovationDeviceProvider.Instance),
         new("OpenRGB",      () => OpenRGBDeviceProvider.Instance),
-        new("PlayStation",  () => PlayStationControllerRGBDeviceProvider.Instance),
+        new("PlayStation",  () => PlayStationDeviceProvider.Instance),
         new("LIFX",         () => LifxRGBDeviceProvider.Instance),
     ];
 
@@ -100,6 +100,32 @@ public partial class MainViewModel : ObservableObject, IDisposable
         try
         {
             var provider = SelectedProvider.Factory();
+
+            // Native-DLL providers (Logitech, Corsair, etc.) resolve their
+            // PossibleX64NativePaths entries against the current working
+            // directory, which is the workspace root when the harness
+            // launches from VS or `dotnet run` — not the harness's own bin
+            // folder where the DLLs actually sit. Pre-pend an absolute path
+            // computed from the harness assembly location so the SDK loader
+            // finds the wrapper without the user juggling cwd. Mirrors what
+            // the main app does for Corsair in RGBController.Setup.
+            string asmDir = System.IO.Path.GetDirectoryName(
+                System.Reflection.Assembly.GetExecutingAssembly().Location) ?? "";
+            if (!string.IsNullOrEmpty(asmDir))
+            {
+                if (provider is LogitechDeviceProvider)
+                {
+                    LogitechDeviceProvider.PossibleX64NativePaths.Insert(
+                        0, System.IO.Path.Combine(asmDir, "x64", "LogitechLedEnginesWrapper.dll"));
+                    LogitechDeviceProvider.PossibleX86NativePaths.Insert(
+                        0, System.IO.Path.Combine(asmDir, "x86", "LogitechLedEnginesWrapper.dll"));
+                }
+                else if (provider is CorsairDeviceProvider)
+                {
+                    CorsairDeviceProvider.PossibleX64NativePaths.Insert(
+                        0, System.IO.Path.Combine(asmDir, "x64", "CUESDK.dll"));
+                }
+            }
 
             // LIFX is the only provider in the harness that needs an
             // adoption gate — the LAN protocol has no concept of "all
@@ -137,20 +163,60 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 }
             }
 
-            provider.Initialize(throwExceptions: false);
-            _surface.Load(provider);
-            _loadedProvider = provider;
+            // Capture provider-side exceptions before we try to Initialize so
+            // the harness surfaces them in the status panel rather than
+            // silently coming up with zero devices. RGB.NET reports SDK
+            // failures (missing native DLL, vendor service not running,
+            // exclusive-mode conflict) through this event and would
+            // otherwise drop them on the floor when throwExceptions:false.
+            var providerErrors = new System.Text.StringBuilder();
+            void OnProviderException(object? s, ExceptionEventArgs e)
+                => providerErrors.AppendLine(e.Exception?.Message ?? e.Exception?.GetType().Name ?? "(null)");
+            provider.Exception += OnProviderException;
 
-            Devices.Clear();
-            foreach (var d in _surface.Devices)
-                Devices.Add(new DeviceItem(d.DeviceInfo.DeviceName, d.DeviceInfo.DeviceType.ToString(), d));
+            try
+            {
+                provider.Initialize(throwExceptions: false);
+                _surface.Load(provider);
+                _loadedProvider = provider;
 
-            StartSurfaceTick();
-            ProviderLoaded = true;
-            ProviderStatus = $"{Devices.Count} device(s) loaded";
-            // Now that the surface has devices, evaluate the WASD highlight
-            // hook so the toggle works even before the user starts an effect.
-            RefreshWasdOverlay();
+                // Same Logitech-layout fixup the main app applies in
+                // RGBController.DevicesChanged.Added — rebinds Led.Location
+                // for Logitech keyboards/mice so position-aware decorators
+                // (conical gradients in particular) render correctly. RGB.NET's
+                // LogitechPerKeyRGBDevice ships every LED at Y=0 by default.
+                string asmDirForLayout = System.IO.Path.GetDirectoryName(
+                    System.Reflection.Assembly.GetExecutingAssembly().Location) ?? "";
+                foreach (var d in _surface.Devices)
+                    Chromatics.Helpers.LogitechLayoutFixup.Apply(d, asmDirForLayout);
+
+                Devices.Clear();
+                foreach (var d in _surface.Devices)
+                    Devices.Add(new DeviceItem(d.DeviceInfo.DeviceName, d.DeviceInfo.DeviceType.ToString(), d));
+
+                StartSurfaceTick();
+                ProviderLoaded = true;
+
+                if (Devices.Count > 0)
+                {
+                    ProviderStatus = $"{Devices.Count} device(s) loaded";
+                }
+                else if (providerErrors.Length > 0)
+                {
+                    ProviderStatus = $"0 devices. SDK said: {providerErrors.ToString().Trim()}";
+                }
+                else
+                {
+                    ProviderStatus = "0 devices. SDK initialized but enumerated nothing — vendor service may not be running, or no supported hardware connected.";
+                }
+                // Now that the surface has devices, evaluate the WASD highlight
+                // hook so the toggle works even before the user starts an effect.
+                RefreshWasdOverlay();
+            }
+            finally
+            {
+                provider.Exception -= OnProviderException;
+            }
         }
         catch (Exception ex)
         {
@@ -170,18 +236,18 @@ public partial class MainViewModel : ObservableObject, IDisposable
         "Chromatics.DecoratorHarnessUI",
         "lifx-adopted.json");
 
-    private static List<Chromatics.Models.LifxAdoptedDevice> LoadHarnessLifxAdoptions()
+    private static List<Chromatics.Extensions.RGB.NET.Devices.LIFX.LifxAdoptedDevice> LoadHarnessLifxAdoptions()
     {
         try
         {
             if (!System.IO.File.Exists(LifxAdoptionsPath)) return new();
             var json = System.IO.File.ReadAllText(LifxAdoptionsPath);
-            return System.Text.Json.JsonSerializer.Deserialize<List<Chromatics.Models.LifxAdoptedDevice>>(json) ?? new();
+            return System.Text.Json.JsonSerializer.Deserialize<List<Chromatics.Extensions.RGB.NET.Devices.LIFX.LifxAdoptedDevice>>(json) ?? new();
         }
         catch { return new(); }
     }
 
-    private static void SaveHarnessLifxAdoptions(IEnumerable<Chromatics.Models.LifxAdoptedDevice> adoptions)
+    private static void SaveHarnessLifxAdoptions(IEnumerable<Chromatics.Extensions.RGB.NET.Devices.LIFX.LifxAdoptedDevice> adoptions)
     {
         try
         {
@@ -2247,5 +2313,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _surfaceTimer?.Stop();
         _surfaceTimer?.Dispose();
         try { _surface.Dispose(); } catch { }
+
+        // Provider disposal stops the per-provider UpdateTrigger threads.
+        // Each provider's trigger is a Task.Factory.StartNew(... LongRunning ...)
+        // which spawns a foreground thread, and surface.Dispose only kills
+        // triggers explicitly registered via RegisterUpdateTrigger — not the
+        // providers' internal ones. Without this, the harness window closes
+        // but the process hangs around forever.
+        try { _loadedProvider?.Dispose(); } catch { }
     }
 }

@@ -1,0 +1,73 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:loc="clr-namespace:Chromatics.Localization"
+        x:Class="Chromatics.Views.Dialogs.QmkOpenRgbHintDialog"
+        Title="{loc:Tr Key='Per-LED control on QMK devices'}"
+        Width="640" Height="460"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        ShowInTaskbar="False">
+    <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+
+        <TextBlock Grid.Row="0"
+                   Text="{loc:Tr Key='Per-LED control on QMK devices'}"
+                   FontSize="18"
+                   FontWeight="SemiBold"
+                   Margin="0,0,0,12" />
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="12">
+
+                <TextBlock TextWrapping="Wrap"
+                           Text="{loc:Tr Key='Chromatics drives QMK devices through two protocols, chosen automatically based on what the device firmware supports.'}" />
+
+                <Border Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                        CornerRadius="4"
+                        Padding="12,10">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{loc:Tr Key='VIA (stock QMK firmware)'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='Your device acts as a single zone. VIA only exposes one RGB matrix base colour for the whole device, so it glows one colour at a time even when your Chromatics layers paint per-LED. Most stock firmware lands here, including Keychron vendor builds.'}" />
+                    </StackPanel>
+                </Border>
+
+                <Border Background="{DynamicResource SystemControlBackgroundAltMediumLowBrush}"
+                        CornerRadius="4"
+                        Padding="12,10">
+                    <StackPanel Spacing="6">
+                        <TextBlock FontWeight="SemiBold"
+                                   Text="{loc:Tr Key='OpenRGB-QMK firmware module'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='Per-LED control needs the OpenRGB-QMK firmware module compiled into your QMK build. It is a third-party add-on, not part of stock QMK - you compile it into a custom firmware image and flash that onto your device yourself.'}" />
+                        <TextBlock TextWrapping="Wrap"
+                                   Text="{loc:Tr Key='Once flashed, the next Chromatics launch detects the module during the QMK handshake and switches the device to per-LED direct mode. No Chromatics setting needs to change.'}" />
+                    </StackPanel>
+                </Border>
+
+                <TextBlock TextWrapping="Wrap"
+                           FontStyle="Italic"
+                           Opacity="0.85"
+                           Text="{loc:Tr Key='Chromatics does not provide instructions, support, or pre-built firmware images for the OpenRGB-QMK firmware module. Building and flashing custom firmware is between you, the QMK keymap on the device, and the OpenRGB-QMK project. A bad flash can brick a device - only attempt this if you can recover from one.'}" />
+
+                <TextBlock TextWrapping="Wrap"
+                           FontStyle="Italic"
+                           Opacity="0.85"
+                           Text="{loc:Tr Key='If Chromatics detects the QMK Raw HID interface but the device never responds, the usual firmware-side cause is a RAW_EPSIZE mismatch: the USB descriptor and openrgb.c are compiled with different packet sizes, so the kernel drops every reply at its length check. OpenRGB-QMK upstream convention is 64-byte reports - put OPT_DEFS += -DRAW_EPSIZE=64 in the keymap rules.mk so the 64 reaches every translation unit, not just openrgb.c.'}" />
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="8"
+                    Margin="0,16,0,0">
+            <Button Name="GotItButton"
+                    Content="{loc:Tr Key='Got it'}"
+                    Click="OnGotIt"
+                    Classes="accent"
+                    MinWidth="120" />
+        </StackPanel>
+    </Grid>
+</Window>

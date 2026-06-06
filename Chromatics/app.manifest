@@ -1,6 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
-  <assemblyIdentity version="1.0.0.0" name="MyApplication.app"/>
+  <assemblyIdentity version="1.0.0.0" name="Chromatics"/>
+
+  <!--
+    Default manifest used by Debug + local Release builds (anything not
+    invoked via publish.py). No <msix> fusion-identity element on purpose:
+    without a registered sparse package on the box, the OS loader throws
+    "The process has no package identity" at CreateProcess time and
+    Windows refuses to start the process, which would block VS-debug runs
+    of unsigned local builds.
+
+    Published builds get the fusion variant via publish.py's
+    -p:IncludeFusionIdentity=true on dotnet publish, which swaps in
+    app.fusion.manifest. Keep this file and app.fusion.manifest in sync
+    on the trustInfo / compatibility blocks below; only the <msix>
+    element differs.
+  -->
+
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
     <security>
       <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">

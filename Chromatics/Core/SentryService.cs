@@ -1,6 +1,5 @@
 using Chromatics.Models;
 using Sentry;
-using Sentry.Extensibility;
 using Sentry.Profiling;
 using System;
 using System.Diagnostics;
@@ -38,13 +37,12 @@ namespace Chromatics.Core
         // its purpose is to exist so ProfilesSampleRate has something to
         // sample against.
         private static System.Threading.Timer _heartbeatTimer;
-        private const double HeartbeatIntervalSeconds = 60.0;
-        // Short first-fire delay so we get at least one heartbeat per session
-        // even on short-lived runs (typical dev-iteration restart cadence is
-        // ~5 minutes and we want CPU/memory baseline data from every run).
-        // Sentry confirmed missing data with the previous 60-second initial
-        // delay — many sessions ended before the first tick ever fired.
-        private const double HeartbeatInitialDelaySeconds = 15.0;
+        private const double HeartbeatIntervalSeconds = 300.0;
+        // First-fire delay so a baseline tick lands on most sessions without
+        // burning quota on transient one-second launches (Velopack lifecycle
+        // probes, --help, etc.). 60s catches typical user sessions while
+        // staying clear of the noisy early seconds.
+        private const double HeartbeatInitialDelaySeconds = 60.0;
 
         // CPU usage is computed from deltas between heartbeats, so we keep
         // the last-sampled values here. Initial call returns 0% (no baseline
@@ -71,10 +69,7 @@ namespace Chromatics.Core
         {
             if (_initialized) return;
             if (string.IsNullOrWhiteSpace(Dsn))
-            {
-                Logger.WriteVerbose("[Sentry] Initialize skipped: DSN not configured");
                 return;
-            }
 
             // Under a debugger, do nothing. The Sentry SDK installs its own
             // AppDomain.UnhandledException + TaskScheduler.UnobservedTaskException
@@ -82,10 +77,7 @@ namespace Chromatics.Core
             // normal break-on-unhandled flow. Skipping init keeps the IDE
             // experience identical to a clean (non-Sentry) debug session.
             if (Debugger.IsAttached)
-            {
-                Logger.WriteVerbose("[Sentry] Initialize skipped: debugger attached");
                 return;
-            }
 
             var version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "0.0.0";
 
@@ -154,22 +146,16 @@ namespace Chromatics.Core
                 // user-visible Console tab is already replayed via Logger.
                 o.MaxBreadcrumbs = 100;
 
-                // Route Sentry SDK's internal diagnostics to verbose.log so
-                // any send/queue/flush failure surfaces something searchable.
-                // Without this, transport errors (DNS failure, TLS reject,
-                // 4xx/5xx responses) are silently swallowed and the user
-                // just observes "no events arrived".
-                //
-                // DiagnosticLevel = Warning (not Debug) so steady-state
-                // operation doesn't spam verbose.log with per-envelope
-                // queue/handoff/transport-200 lines (one Debug line every
-                // ~2-3 seconds across init, breadcrumbs, transactions,
-                // sessions, heartbeats — would fill the 10MB rotation
-                // budget in hours). Bump to Debug temporarily when
-                // diagnosing send issues.
-                o.Debug = true;
-                o.DiagnosticLevel = SentryLevel.Warning;
-                o.DiagnosticLogger = new SentryToVerboseLogLogger();
+                // SDK internal diagnostics are disabled. When Debug is on, the
+                // SDK emits the "Debug=true in production" warning, the
+                // MergeDebugImagesInto-multiple-times warning, periodic
+                // envelope queue/handoff lines, and full HTTP transport
+                // payload dumps — together they fill verbose.log with
+                // megabytes of noise that doesn't help end users. Transport
+                // failures will surface server-side ("no events arrived")
+                // rather than client-side; flip Debug back to true and
+                // re-enable DiagnosticLogger when diagnosing send issues.
+                o.Debug = false;
 
                 // Enable the Logs product (separate from Issues). Once on,
                 // SentrySdk.Logger.LogInfo/LogWarning/LogError accept
@@ -196,17 +182,13 @@ namespace Chromatics.Core
                     // own UnobservedTaskExceptionHandler already filters them
                     // from the crash flow on the same criteria.
                     if (evt.Exception != null && IsBenignBackgroundException(evt.Exception))
-                    {
-                        Logger.WriteVerbose($"[Sentry] BeforeSend dropped event {evt.EventId} — benign background exception ({evt.Exception.GetType().Name})");
                         return null;
-                    }
 
                     var s = _settings;
                     bool consent = s == null || s.enableCrashReports;
                     bool isCrash = evt.Exception?.Data.Contains("Chromatics.HandledByCrashDialog") == true
                                    || evt.Tags.TryGetValue("kind", out var k) && k == "user_feedback";
                     if (consent || isCrash) return evt;
-                    Logger.WriteVerbose($"[Sentry] BeforeSend dropped event {evt.EventId} — consent disabled (non-crash)");
                     return null;
                 });
 
@@ -228,7 +210,6 @@ namespace Chromatics.Core
             });
 
             _initialized = true;
-            Logger.WriteVerbose($"[Sentry] Initialize complete: enabled={SentrySdk.IsEnabled}, defaultConsent={_settings?.enableCrashReports ?? true}");
 
             StartHeartbeat();
         }
@@ -364,10 +345,7 @@ namespace Chromatics.Core
         public static void ApplySettings(SettingsModel settings)
         {
             if (!_initialized)
-            {
-                Logger.WriteVerbose("[Sentry] ApplySettings skipped: SDK not initialized");
                 return;
-            }
 
             // Defensive: AppSettings.Startup can hand us null when settings
             // deserialization fails (malformed settings.chromatics4). The
@@ -375,13 +353,9 @@ namespace Chromatics.Core
             // NRE'd on the next field access, which cascaded into BeforeSend
             // and CaptureCrash failures and broke the themed crash dialog.
             if (settings == null)
-            {
-                Logger.WriteVerbose("[Sentry] ApplySettings skipped: settings is null — keeping defaults");
                 return;
-            }
 
             _settings = settings;
-            Logger.WriteVerbose($"[Sentry] ApplySettings: consent={settings.enableCrashReports}, channel={(settings.betaChannel ? "beta" : "stable")}");
 
             SentrySdk.ConfigureScope(scope =>
             {
@@ -483,23 +457,12 @@ namespace Chromatics.Core
             // telemetry. BeforeSend detects these via ex.Data and lets them
             // through unconditionally.
             if (!_initialized || !SentrySdk.IsEnabled)
-            {
-                Logger.WriteVerbose($"[Sentry] CaptureCrash skipped: SDK not available (initialized={_initialized}, sdkEnabled={SentrySdk.IsEnabled})");
                 return SentryId.Empty;
-            }
 
             ex.Data["Chromatics.HandledByCrashDialog"] = true;
             var id = SentrySdk.CaptureException(ex);
-            // Defensive: _settings can be null transiently if ApplySettings
-            // has not yet run (early-startup crashes); use ?? so the log line
-            // doesn't NRE — which would then propagate up out of CaptureCrash
-            // and break the CrashApp dialog bootstrap (caller catches it
-            // and falls back to the unthemed Win32 MessageBox).
-            var consent = _settings?.enableCrashReports ?? true;
-            Logger.WriteVerbose($"[Sentry] CaptureCrash captured id={id}, consent={consent}, type={ex.GetType().Name}");
 
-            try { SentrySdk.Flush(TimeSpan.FromSeconds(5)); } catch (Exception flushEx) { Logger.WriteVerbose($"[Sentry] CaptureCrash flush threw: {flushEx.Message}"); }
-            Logger.WriteVerbose($"[Sentry] CaptureCrash flush complete for id={id}");
+            try { SentrySdk.Flush(TimeSpan.FromSeconds(5)); } catch { /* best-effort flush */ }
 
             return id;
         }
@@ -603,6 +566,14 @@ namespace Chromatics.Core
                 System.IO.IOException io => io.InnerException is System.Net.Sockets.SocketException ise && IsBenignSocketError(ise.SocketErrorCode),
                 ObjectDisposedException => true,
                 OperationCanceledException => true,
+                // Avalonia's WndProc raises ShutdownRequested a second time
+                // (e.g. system logoff / WM_CLOSE on a transient window) after
+                // our OnClosed already called desktop.Shutdown(). DoShutdown
+                // throws because _isShuttingDown is already true. We Process.Kill
+                // immediately after, so the throw never affects the user — but
+                // Sentry's UnhandledException integration still captures it as
+                // handled noise. Filter at source.
+                InvalidOperationException ioe when ioe.Message.StartsWith("Application is already shutting down", StringComparison.Ordinal) => true,
                 _ => false,
             };
         }
@@ -619,28 +590,4 @@ namespace Chromatics.Core
         };
     }
 
-    /// <summary>
-    /// Bridges Sentry's IDiagnosticLogger into Chromatics's verbose.log.
-    /// Captures everything the SDK normally writes to its own debug stream:
-    /// envelope queueing, transport HTTP responses, BeforeSend invocations,
-    /// rate limit handling. Lets us diagnose "no events arriving" without
-    /// attaching a network sniffer.
-    /// </summary>
-    internal sealed class SentryToVerboseLogLogger : IDiagnosticLogger
-    {
-        public bool IsEnabled(SentryLevel level) => true;
-
-        public void Log(SentryLevel logLevel, string message, Exception exception = null, params object[] args)
-        {
-            try
-            {
-                var formatted = (args == null || args.Length == 0) ? message : string.Format(message, args);
-                var line = $"[Sentry SDK {logLevel}] {formatted}";
-                if (exception != null)
-                    line += $" — {exception.GetType().Name}: {exception.Message}";
-                Logger.WriteVerbose(line);
-            }
-            catch { /* never let diagnostic logging throw */ }
-        }
-    }
 }

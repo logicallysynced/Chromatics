@@ -209,7 +209,13 @@ namespace Chromatics.Views
             {
                 var clipboard = TopLevel.GetTopLevel(this)?.Clipboard;
                 if (clipboard != null)
+                {
                     await clipboard.SetTextAsync(_eventId.ToString());
+                    // Avalonia clipboard uses OLE delayed rendering; flush
+                    // so the reference id survives Chromatics force-killing
+                    // itself after the user dismisses the crash dialog.
+                    Helpers.ClipboardHelper.FlushOleClipboard();
+                }
             }
             catch
             {

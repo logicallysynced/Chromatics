@@ -49,6 +49,18 @@ namespace Chromatics.Core
         private static bool _isInGame;
         private static bool _onTitle;
         private static bool wasPreviewed;
+        // Title-screen detection debounce. The Sharlayan 9.0.36+ login-state
+        // latch was expected to handle this upstream, but in practice the
+        // title-detect branch below still trips during a zone transition
+        // ("User on title or character screen" / "User logging in to FFXIV.."
+        // fire back-to-back on a teleport). Belt-and-braces: require N
+        // consecutive game-loop ticks of the title condition before flipping
+        // state, so brief Entity-null windows during zone-in don't tear down
+        // the in-game layer stack and fire BuildTitleScreenAnimation mid-
+        // zone. A genuine logout / disconnect holds the condition for many
+        // ticks so the debounce passes through.
+        private static int _titleStateConsecutiveTicks;
+        private const int TitleStateDebounceTicks = 5;
         // Set to true by Exit() before any teardown, so that concurrent loops on
         // the thread pool bail out before touching disposed CancellationTokenSources.
         private static volatile bool _isShuttingDown;
@@ -550,17 +562,26 @@ namespace Chromatics.Core
                     var runningEffects = RGBController.GetRunningEffects();
 
                     // Title-screen detection: player entity not loaded AND
-                    // not logged in. We deliberately do NOT also require
-                    // chatLogCount == 0 — Sharlayan's chat reader picks up
-                    // system messages ("Welcome to FFXIV", etc.) on the
-                    // title screen, which would flip the count to 1 within
-                    // a frame of the title animation building and
-                    // incorrectly re-classify the user as in-game. Entity
-                    // + login state alone are unambiguous for title vs
-                    // in-game.
+                    // not logged in. Debounced via _titleStateConsecutiveTicks
+                    // so a brief Entity-null window during zone-in doesn't
+                    // tear down the in-game layer stack and fire
+                    // BuildTitleScreenAnimation mid-zone. A genuine logout
+                    // / disconnect holds the condition for many ticks so
+                    // the debounce passes through.
                     if (getCurrentPlayer.Entity == null && !isLoggedIn)
                     {
-                        //Game is still on Main Menu or Character Screen
+                        _titleStateConsecutiveTicks++;
+                        // If we were already in-game and this is a transient
+                        // hit (under the debounce threshold), leave state
+                        // alone — the rest of Process tolerates a null
+                        // Entity on this tick via per-call null checks.
+                        if (_isInGame && _titleStateConsecutiveTicks < TitleStateDebounceTicks)
+                        {
+                            return;
+                        }
+
+                        //Game is on Main Menu or Character Screen (cold start
+                        //or confirmed sustained title state).
                         if (!_onTitle || wasPreviewed)
                         {
                             RGBController.StopEffects();
@@ -583,6 +604,7 @@ namespace Chromatics.Core
                     else
                     {
                         //Character has logged in
+                        _titleStateConsecutiveTicks = 0;
                         _isInGame = true;
 
                         if (_onTitle)
@@ -665,6 +687,33 @@ namespace Chromatics.Core
                                         p.CleanupLayer(layer.layerID);
                             }
                             dynamicProcessor.Process(layer);
+
+                            // Safety net for the "bleed off doesn't re-apply on re-enable"
+                            // path. When the user toggles a non-bleed dynamic layer off then
+                            // back on, the processor rebuilds its ledgroups and calls
+                            // Attach(surface). RGB.NET's RGBSurface.Attach is a no-op when
+                            // the group is already attached, so a group that wound up
+                            // attached at a stale ZIndex slot (or that another processor's
+                            // surface.Updating hook left detached for a frame) stays in the
+                            // wrong place and the base layer paints over it. Forcing a
+                            // Detach + Attach for every live group of an enabled dynamic
+                            // layer this tick re-inserts each group in the correct ZIndex
+                            // slot, so the dynamic always wins against the base.
+                            if (layer.Enabled)
+                            {
+                                var liveGroupsPost = RGBController.GetLiveLayerGroups();
+                                var surfaceRef = RGBController.GetLiveSurfaces();
+                                if (surfaceRef != null && liveGroupsPost.TryGetValue(layer.layerID, out var postGrps))
+                                {
+                                    foreach (var g in postGrps)
+                                    {
+                                        if (g == null) continue;
+                                        g.Detach();
+                                        g.Attach(surfaceRef);
+                                    }
+                                }
+                            }
+
                             // Raid highlight overlay runs only for highlight-class dynamic
                             // layers so it overrides Highlight, JobClassesHighlight, and
                             // ReactiveWeatherHighlight on the user's selected keys. Other

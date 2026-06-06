@@ -1,0 +1,55 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "RGB.NET.Devices.OpenRGB/0.0.1": {
+        "dependencies": {
+          "OpenRGB.NET": "3.1.1",
+          "RGB.NET.Core": "0.0.1"
+        },
+        "runtime": {
+          "RGB.NET.Devices.OpenRGB.dll": {}
+        }
+      },
+      "OpenRGB.NET/3.1.1": {
+        "runtime": {
+          "lib/net8.0/OpenRGB.NET.dll": {
+            "assemblyVersion": "3.1.1.0",
+            "fileVersion": "3.1.1.0"
+          }
+        }
+      },
+      "RGB.NET.Core/0.0.1": {
+        "runtime": {
+          "RGB.NET.Core.dll": {
+            "assemblyVersion": "0.0.1.0",
+            "fileVersion": "0.0.1.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "RGB.NET.Devices.OpenRGB/0.0.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "OpenRGB.NET/3.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oM9zmjwaDSAb0MxTK+cMhebFRrK5emnJW3K0zeuYmh5AMVYx0JxsCLQClrdh1x1cZOWCxjnbuJ5VIC6+yJh0zw==",
+      "path": "openrgb.net/3.1.1",
+      "hashPath": "openrgb.net.3.1.1.nupkg.sha512"
+    },
+    "RGB.NET.Core/0.0.1": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

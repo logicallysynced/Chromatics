@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -16,11 +16,62 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Avalonia" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Desktop" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.2" />
-    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.2" />
+    <!-- Mirror the main Chromatics csproj's local RGB.NET swaps. RGB.NET.Core
+         must be referenced directly here because the main csproj suppresses
+         its NuGet PackageReference with PrivateAssets='all' (so the local
+         DLL wins over the transitive copy), and <Reference> items don't flow
+         transitively through <ProjectReference>. Without this direct Core
+         reference, the harness can't see RGBSurface / IRGBDeviceProvider /
+         ListLedGroup / LedId / etc. at compile time. -->
+    <Reference Include="RGB.NET.Core">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Logitech">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Logitech.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.Razer">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.Razer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.SteelSeries">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.SteelSeries.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.OpenRGB">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.OpenRGB.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RGB.NET.Devices.PlayStation">
+      <HintPath>..\Build Dependencies\RGB.NET\RGB.NET.Devices.PlayStation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="12.0.4" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
+
+  <!--
+    Native SDK wrappers (LogitechLedEnginesWrapper.dll, CUESDK.dll, etc.)
+    are not shipped in the RGB.NET NuGet packages — they're obtained from
+    each vendor's SDK installer and live in the main Chromatics project's
+    bin/<config>/<tfm>/x64 output. Mirror them into the harness's bin so
+    the harness can run the same set of providers without asking the user
+    to copy files manually after every clean rebuild.
+  -->
+  <Target Name="CopyNativeSdkDlls" AfterTargets="Build">
+    <ItemGroup>
+      <_NativeSdkDlls Include="$(MSBuildThisFileDirectory)..\Chromatics\bin\$(Configuration)\$(TargetFramework)\x64\*.dll" />
+      <_NativeSdkDllsX86 Include="$(MSBuildThisFileDirectory)..\Chromatics\bin\$(Configuration)\$(TargetFramework)\x86\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_NativeSdkDlls)" DestinationFolder="$(OutputPath)x64" SkipUnchangedFiles="true" Condition="@(_NativeSdkDlls -> Count()) &gt; 0" />
+    <Copy SourceFiles="@(_NativeSdkDllsX86)" DestinationFolder="$(OutputPath)x86" SkipUnchangedFiles="true" Condition="@(_NativeSdkDllsX86 -> Count()) &gt; 0" />
+  </Target>
 
 </Project>
