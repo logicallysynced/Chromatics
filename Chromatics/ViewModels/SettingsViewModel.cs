@@ -41,8 +41,6 @@ namespace Chromatics.ViewModels
 {
     public sealed class SettingsViewModel : ViewModelBase
     {
-        private readonly RegistryKey _runKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
-
         public ObservableCollection<DeviceToggleItem> DeviceToggles { get; } = new();
         public ObservableCollection<ThemeOption> ThemeOptions { get; } = new();
         public ObservableCollection<LanguageOption> LanguageOptions { get; } = new();
@@ -1010,10 +1008,11 @@ namespace Chromatics.ViewModels
 
                     try
                     {
+                        using var runKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
                         if (value)
-                            _runKey?.SetValue("Chromatics4", Environment.ProcessPath ?? Assembly.GetExecutingAssembly().Location);
+                            runKey?.SetValue("Chromatics4", Environment.ProcessPath ?? Assembly.GetExecutingAssembly().Location);
                         else
-                            _runKey?.DeleteValue("Chromatics4", false);
+                            runKey?.DeleteValue("Chromatics4", false);
                     }
                     catch (Exception ex)
                     {

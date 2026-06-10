@@ -739,6 +739,18 @@ public partial class MainViewModel : ObservableObject, IDisposable
             ParamWaveSpeed = snap.WaveSpeed; ParamWaveFreq = snap.WaveFreq;
             ParamFadeTime = snap.FadeTime; ParamGroupSize = snap.GroupSize;
             ParamBlockSize = snap.BlockSize; ParamBlocks = snap.Blocks; ParamSize = snap.Size;
+            ParamNumberOfLeds = snap.NumberOfLeds; ParamStepSpeed = snap.StepSpeed;
+            ParamSustain = snap.Sustain; ParamRelease = snap.Release; ParamRepetitions = snap.Repetitions;
+            ParamDirection = snap.Direction; ParamRandomise = snap.Randomise;
+            ParamTextureType = snap.TextureType; ParamDiagonalDir = snap.DiagonalDir; ParamFallDir = snap.FallDir;
+            ParamIntensity = snap.Intensity; ParamFlickerSpeed = snap.FlickerSpeed;
+            ParamBeamWidth = snap.BeamWidth; ParamPulseRadius = snap.PulseRadius; ParamFadeWidth = snap.FadeWidth;
+            ParamTailLength = snap.TailLength; ParamSpawnInterval = snap.SpawnInterval;
+            ParamRippleSpeed = snap.RippleSpeed; ParamLaserDir = snap.LaserDir;
+            ParamBpmSpeed = snap.BpmSpeed; ParamBeatsPerCycle = snap.BeatsPerCycle;
+            ParamSimultaneousBeams = snap.SimultaneousBeams; ParamFlickerOpacity = snap.FlickerOpacity;
+            ParamMatrixDir = snap.MatrixDir; ParamFadeBetween = snap.FadeBetween;
+            ParamAccentEvery = snap.AccentEvery; ParamDecay = snap.Decay; ParamWedgeDegrees = snap.WedgeDegrees;
             ColorBase = snap.Base;
             SetColors(snap.Colors);
             return;
@@ -1259,6 +1271,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
             ParamBpm, ParamSpeed, ParamInterval, ParamFadeSpeed, ParamDensity,
             ParamWaveSpeed, ParamWaveFreq, ParamFadeTime, ParamGroupSize,
             ParamBlockSize, ParamBlocks, ParamSize,
+            ParamNumberOfLeds, ParamStepSpeed, ParamSustain, ParamRelease, ParamRepetitions,
+            ParamDirection, ParamRandomise, ParamTextureType, ParamDiagonalDir, ParamFallDir,
+            ParamIntensity, ParamFlickerSpeed, ParamBeamWidth, ParamPulseRadius, ParamFadeWidth,
+            ParamTailLength, ParamSpawnInterval, ParamRippleSpeed, ParamLaserDir,
+            ParamBpmSpeed, ParamBeatsPerCycle, ParamSimultaneousBeams, ParamFlickerOpacity,
+            ParamMatrixDir, ParamFadeBetween, ParamAccentEvery, ParamDecay, ParamWedgeDegrees,
             ColorBase, ColorSlots.Select(s => s.Color).ToArray());
         _savedParams[name] = snap;
 
@@ -1273,6 +1291,12 @@ public partial class MainViewModel : ObservableObject, IDisposable
         int Bpm, int Speed, double Interval, double FadeSpeed, double Density,
         double WaveSpeed, double WaveFreq, double FadeTime, int GroupSize,
         int BlockSize, int Blocks, int Size,
+        int NumberOfLeds, int StepSpeed, double Sustain, double Release, int Repetitions,
+        bool Direction, bool Randomise, string TextureType, string DiagonalDir, string FallDir,
+        double Intensity, double FlickerSpeed, double BeamWidth, double PulseRadius, double FadeWidth,
+        double TailLength, double SpawnInterval, double RippleSpeed, string LaserDir,
+        string BpmSpeed, double BeatsPerCycle, int SimultaneousBeams, double FlickerOpacity,
+        string MatrixDir, double FadeBetween, int AccentEvery, double Decay, double WedgeDegrees,
         AvColor Base, AvColor[] Colors);
 
     // ── Code snippet generator ──────────────────────────────────────────

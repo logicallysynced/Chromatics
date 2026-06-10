@@ -76,7 +76,7 @@ namespace Chromatics.Layers
                 };
 
                 var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
+                _layergroups[layer.layerID] = lg;
                 layergroup.Detach();
             }
 
@@ -154,7 +154,6 @@ namespace Chromatics.Layers
                 new GradientStop(1.00f, baseColor));
 
             var gradientMove = new MoveGradientDecorator(surface, 80, true);
-            var animation = new StarfieldDecorator(layergroup, (layergroup.Count() / 4), 10, 500, highlightColors, surface, false, baseColor);
 
             // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();

@@ -95,30 +95,11 @@ namespace Chromatics.Layers
                 };
 
                 var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
+                _layergroups[layer.layerID] = lg;
                 layergroup.Detach();
             }
 
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.DamageFlashAnimation.Color);
-            // Opacity 1.0 so peak-envelope renders at full alpha. RGB.NET's
-            // Led.Color setter alpha-blends via Color+, so a 0.5 default would
-            // only produce a ~50% tint over a bright raid decorator write —
-            // visually swamped. ShotFlashDecorator modulates A through its
-            // ADSR envelope, ramping in/out smoothly.
-            var highlight_brush = new SolidColorBrush(highlight_col)
-            {
-                Opacity = 1.0f
-            };
-
-            var flash = new ShotFlashDecorator(surface)
-            {
-                IsEnabled = true,
-                Order = 100,
-                Attack = 0.15f,
-                Release = 0.15f,
-                Sustain = 0.1f,
-                Repetitions = 1
-            };
 
             // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
@@ -144,6 +125,26 @@ namespace Chromatics.Layers
                         const float autoAttackThreshold = 0.015f;
                         if (damageRatio >= autoAttackThreshold)
                         {
+                            // Opacity 1.0 so peak-envelope renders at full alpha. RGB.NET's
+                            // Led.Color setter alpha-blends via Color+, so a 0.5 default would
+                            // only produce a ~50% tint over a bright raid decorator write —
+                            // visually swamped. ShotFlashDecorator modulates A through its
+                            // ADSR envelope, ramping in/out smoothly.
+                            var highlight_brush = new SolidColorBrush(highlight_col)
+                            {
+                                Opacity = 1.0f
+                            };
+
+                            var flash = new ShotFlashDecorator(surface)
+                            {
+                                IsEnabled = true,
+                                Order = 100,
+                                Attack = 0.15f,
+                                Release = 0.15f,
+                                Sustain = 0.1f,
+                                Repetitions = 1
+                            };
+
                             // Scale flash opacity depending on how much damage taken. More damage = brighter flash
                             if (effectSettings.effect_damageflash_scaledamage)
                             {
@@ -152,7 +153,7 @@ namespace Chromatics.Layers
 
                                 var minOpacity = effectSettings.effect_damageflash_min_flash;
                                 if (minOpacity > 1) minOpacity = 1;
-                                if (minOpacity < 1) minOpacity = 0;
+                                if (minOpacity < 0) minOpacity = 0;
 
                                 var opacity = Math.Max((float)minOpacity, (float)damageRatio);
                                 highlight_brush.Opacity = opacity;

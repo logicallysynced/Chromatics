@@ -22,7 +22,7 @@ namespace Chromatics.ViewModels.Mapping
     // Wraps a single Layer in MappingLayers. Mutations commit straight back
     // through MappingLayers.UpdateLayer so the VM and persistence stay in
     // sync without a separate save step per property.
-    public sealed partial class LayerItemViewModel : ObservableObject
+    public sealed partial class LayerItemViewModel : ObservableObject, IDisposable
     {
         private readonly Layer _layer;
         private readonly Action<int> _onDelete;
@@ -250,6 +250,11 @@ namespace Chromatics.ViewModels.Mapping
             { (Actor.Job.VPR, DynamicLayerType.JobGaugeC), "Reawakened Timer. Tracks the remaining duration of the Reawakened phase." },
             { (Actor.Job.AST, DynamicLayerType.JobGaugeC), "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active." },
         };
+
+        public void Dispose()
+        {
+            LocService.Instance.PropertyChanged -= OnLocaleVersionChanged;
+        }
 
         public void RefreshHelpText() => OnPropertyChanged(nameof(HelpText));
 

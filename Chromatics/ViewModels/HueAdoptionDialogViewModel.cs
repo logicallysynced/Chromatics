@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.ViewModels
 {
-    public partial class HueAdoptionDialogViewModel : ViewModelBase
+    public partial class HueAdoptionDialogViewModel : ViewModelBase, IDisposable
     {
         public ObservableCollection<HueBulbItem> Bulbs { get; } = new();
 
@@ -42,6 +42,11 @@ namespace Chromatics.ViewModels
                 StatusText = string.Format(LocalizationService.Instance["{0} Hue light(s) on this bridge."], Bulbs.Count);
         }
 
+        public void Dispose()
+        {
+            LocalizationService.Instance.PropertyChanged -= OnLocaleChanged;
+        }
+
         // Query the bridge for its lights, merging with the user's already-
         // adopted set so previously-adopted bulbs come back pre-checked. New
         // lights since the last adoption are unchecked by default.
@@ -54,8 +59,8 @@ namespace Chromatics.ViewModels
             try
             {
                 var api = new LocalHueApi(bridgeIp, bridgeKey);
-                var lights = await api.Light.GetAllAsync().ConfigureAwait(false);
-                var devices = await api.Device.GetAllAsync().ConfigureAwait(false);
+                var lights = await api.Light.GetAllAsync();
+                var devices = await api.Device.GetAllAsync();
 
                 var modelByDevice = new Dictionary<Guid, string>();
                 foreach (var d in devices.Data)

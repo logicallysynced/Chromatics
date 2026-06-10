@@ -14,6 +14,7 @@ namespace Chromatics.Layers
     {
         private static JobClassesHighlightProcessor _instance;
         private bool _disposed = false;
+        private readonly Dictionary<int, SolidColorBrush> _brushCache = new Dictionary<int, SolidColorBrush>();
 
         // Private constructor to prevent direct instantiation
         private JobClassesHighlightProcessor() { }
@@ -63,7 +64,7 @@ namespace Chromatics.Layers
                 };
 
                 var lg = new ListLedGroup[] { updatedLayerGroup };
-                _layergroups.Add(layer.layerID, lg);
+                _layergroups[layer.layerID] = lg;
                 updatedLayerGroup.Detach();
             }
 
@@ -94,7 +95,15 @@ namespace Chromatics.Layers
             }
 
             // Apply lighting
-            var brush = new SolidColorBrush(highlight_col);
+            if (!_brushCache.TryGetValue(layer.layerID, out var brush))
+            {
+                brush = new SolidColorBrush(highlight_col);
+                _brushCache[layer.layerID] = brush;
+            }
+            else
+            {
+                brush.Color = highlight_col;
+            }
             updatedLayerGroup.Brush = brush;
             updatedLayerGroup.Attach(surface);
             _init = true;
@@ -117,6 +126,7 @@ namespace Chromatics.Layers
                 if (disposing)
                 {
                     // Dispose managed resources
+                    _brushCache.Clear();
                     var _layergroups = RGBController.GetLiveLayerGroups();
                     if (_layergroups != null && _layergroups.Values != null)
                     {

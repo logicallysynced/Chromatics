@@ -43,6 +43,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.EVision
         // ACK buffer reused across reads.
         private readonly byte[] _ackBuffer = new byte[EVisionKeyboardProtocol.ReportLength];
 
+        // Write buffer reused across all WriteAndAck calls in a single
+        // frame. Avoids the per-call buf.ToArray() heap allocation.
+        // Safe because WriteAndAck runs serially under _lock on the
+        // trigger thread.
+        private readonly byte[] _writeBuffer = new byte[EVisionKeyboardProtocol.ReportLength];
+
         #endregion
 
         #region Constructors
@@ -165,10 +171,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.EVision
 
         private bool WriteAndAck(ReadOnlySpan<byte> buf)
         {
-            byte[] arr = buf.ToArray();
+            buf.CopyTo(_writeBuffer);
             try
             {
-                _stream.Write(arr);
+                _stream.Write(_writeBuffer);
                 // ReadExactly because the firmware returns a fixed 64-byte
                 // ACK per packet; partial reads would mean we'd accept the
                 // next write before the device finished signalling.

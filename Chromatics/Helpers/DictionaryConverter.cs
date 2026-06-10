@@ -76,7 +76,7 @@ namespace Chromatics.Helpers
                                      : dictionaryTypes.Where(z => z.IsGenericTypeDefinition)
                                                       .FirstOrDefault();
 
-                if (dictionaryType == null) dictionaryTypes.First();
+                if (dictionaryType == null) dictionaryType = dictionaryTypes.First();
 
                 keyType = !dictionaryType.IsGenericType
                               ? typeof(object)

@@ -45,7 +45,6 @@ namespace Chromatics.Core
         private static int activeProcessId = -1;
         private static bool gameConnected;
         private static bool gameSetup;
-        private static bool memoryEfficientLoop;
         private static bool _isInGame;
         private static bool _onTitle;
         private static bool wasPreviewed;
@@ -386,18 +385,6 @@ namespace Chromatics.Core
 
                 // Wait for the interval before continuing
                 var delay = _loopInterval;
-                memoryEfficientLoop = false;
-
-                if (memoryEfficientLoop)
-                {
-                    var currentCpuUsage = SystemMonitorHelper.GetCurrentCpuUsage();
-                    var _maxCpuUsage = SystemMonitorHelper.GetMaxCpuUsage();
-
-                    if (currentCpuUsage > _maxCpuUsage)
-                    {
-                        delay += (int)(currentCpuUsage - _maxCpuUsage) * 10;
-                    }
-                }
 
                 await Task.Delay(delay, cancellationToken).ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
                 if (cancellationToken.IsCancellationRequested || _isShuttingDown) break;
@@ -559,8 +546,6 @@ namespace Chromatics.Core
                     var getCurrentPlayer = handler.Reader.GetCurrentPlayer();
                     var isLoggedIn = handler.Reader.GetGameState().IsLoggedIn;
 
-                    var runningEffects = RGBController.GetRunningEffects();
-
                     // Title-screen detection: player entity not loaded AND
                     // not logged in. Debounced via _titleStateConsecutiveTicks
                     // so a brief Entity-null window during zone-in doesn't
@@ -656,7 +641,7 @@ namespace Chromatics.Core
                                         g?.RemoveAllDecorators();
                                         g?.Detach();
                                     }
-                                    liveGroups.Remove(layer.layerID);
+                                    liveGroups.TryRemove(layer.layerID, out _);
                                 }
                             }
                             baseProcessor.Process(layer);
@@ -679,7 +664,7 @@ namespace Chromatics.Core
                                 {
                                     foreach (var g in prevGroups)
                                         g?.Detach();
-                                    liveGroups.Remove(layer.layerID);
+                                    liveGroups.TryRemove(layer.layerID, out _);
                                 }
                                 // Per-processor model cleanup (overridden on JobGaugeA/B/C).
                                 foreach (var p in _layerProcessorFactory.GetActiveDynamicProcessors())
@@ -753,7 +738,7 @@ namespace Chromatics.Core
                                         g?.RemoveAllDecorators();
                                         g?.Detach();
                                     }
-                                    effectLiveGroups.Remove(layer.layerID);
+                                    effectLiveGroups.TryRemove(layer.layerID, out _);
                                 }
                             }
                             var effectProcessors = EffectLayerProcessorFactory.GetProcessors();

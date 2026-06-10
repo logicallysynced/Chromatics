@@ -28,7 +28,7 @@ namespace Chromatics.Extensions.RGB.NET.Gradients
         public override Color GetColor(float value) 
         {
             var x = value % 1;
-            var y = (int)value / 1;
+            var y = value % 1;
             System.Drawing.Color c1 = System.Drawing.Color.FromArgb(
                 (int) (topLeft.R + (topRight.R - topLeft.R) * x),
                 (int) (topLeft.G + (topRight.G - topLeft.G) * x),

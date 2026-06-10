@@ -50,8 +50,15 @@ namespace Chromatics.ViewModels
 
             if (Entries.Count > MaxEntries)
             {
-                for (int i = 0; i < TrimChunk && Entries.Count > 0; i++)
-                    Entries.RemoveAt(0);
+                // Snapshot the entries we keep, then rebuild via Clear +
+                // re-Add. Each RemoveAt(0) shifts the whole backing array,
+                // so trimming 500 entries cost ~500 full-list shifts; the
+                // rebuild appends instead, trading the Remove notifications
+                // for one Reset plus the re-Adds.
+                var retained = Entries.Skip(TrimChunk).ToList();
+                Entries.Clear();
+                foreach (var entry in retained)
+                    Entries.Add(entry);
             }
 
             EntryAdded?.Invoke(this, EventArgs.Empty);

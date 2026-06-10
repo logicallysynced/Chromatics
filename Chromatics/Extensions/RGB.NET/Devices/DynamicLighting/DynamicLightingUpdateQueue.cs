@@ -143,11 +143,18 @@ namespace Chromatics.Extensions.RGB.NET.Devices.DynamicLighting
                     // WinRT call. Cheaper than N SetSingleColor calls
                     // (one IPC trip vs N), and the WinRT layer batches
                     // the underlying HID multi-update reports for us.
-                    var indicesSlice = new int[dirtyCount];
-                    var colorsSlice = new WinColor[dirtyCount];
-                    Array.Copy(_dirtyIndicesBuffer, indicesSlice, dirtyCount);
-                    Array.Copy(_dirtyColorsBuffer, colorsSlice, dirtyCount);
-                    lampArray.SetColorsForIndices(colorsSlice, indicesSlice);
+                    // The pre-allocated buffers are passed whole to avoid a
+                    // per-frame slice allocation, so the tail beyond
+                    // dirtyCount is padded with copies of entry 0. Leaving
+                    // stale entries there instead would repaint a lamp with
+                    // an OLDER colour whenever its position in the dirty
+                    // ordering drops between frames.
+                    for (int i = dirtyCount; i < _lampCount; i++)
+                    {
+                        _dirtyIndicesBuffer[i] = _dirtyIndicesBuffer[0];
+                        _dirtyColorsBuffer[i] = _dirtyColorsBuffer[0];
+                    }
+                    lampArray.SetColorsForIndices(_dirtyColorsBuffer, _dirtyIndicesBuffer);
                     return true;
                 }
                 catch (Exception ex)

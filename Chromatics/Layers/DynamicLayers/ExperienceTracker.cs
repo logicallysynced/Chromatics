@@ -211,7 +211,7 @@ namespace Chromatics.Layers
                 }
                 else
                 {
-                    _layergroups.Add(layer.layerID, lg);
+                    _layergroups[layer.layerID] = lg;
                 }
             }
 

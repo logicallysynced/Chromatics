@@ -15,6 +15,7 @@ namespace Chromatics.Layers
         private static BaseBattleStanceProcessor _instance;
         private bool _disposed = false;
         private Dictionary<int, HashSet<Led>> _layergroupledcollections = new Dictionary<int, HashSet<Led>>();
+        private readonly Dictionary<int, SolidColorBrush> _brushCache = new Dictionary<int, SolidColorBrush>();
 
         // Private constructor to prevent direct instantiation
         private BaseBattleStanceProcessor() { }
@@ -71,7 +72,7 @@ namespace Chromatics.Layers
                 };
 
                 var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
+                _layergroups[layer.layerID] = lg;
             }
 
             if (!layer.Enabled)
@@ -111,7 +112,15 @@ namespace Chromatics.Layers
             }
 
             // Apply lighting
-            var brush = new SolidColorBrush(engaged_color);
+            if (!_brushCache.TryGetValue(layer.layerID, out var brush))
+            {
+                brush = new SolidColorBrush(engaged_color);
+                _brushCache[layer.layerID] = brush;
+            }
+            else
+            {
+                brush.Color = engaged_color;
+            }
             layergroup.Brush = brush;
             _init = true;
             layer.requestUpdate = false;
@@ -124,6 +133,7 @@ namespace Chromatics.Layers
                 if (disposing)
                 {
                     // Dispose managed resources
+                    _brushCache.Clear();
                     _layergroupledcollections.Clear();
                     var _layergroups = RGBController.GetLiveLayerGroups();
                     foreach (var layergroup in _layergroups.Values.SelectMany(lg => lg))

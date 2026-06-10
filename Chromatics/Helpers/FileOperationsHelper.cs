@@ -714,19 +714,7 @@ namespace Chromatics.Helpers
 
             try
             {
-                using (var sw = new StreamWriter(path, false))
-                {
-                    var serializer = new JsonSerializer
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    };
-
-                    serializer.Serialize(sw, palette);
-                    sw.WriteLine();
-                    sw.Close();
-                }
-
-
+                WriteJsonAtomic(path, palette);
             }
             catch (Exception ex)
             {
@@ -911,19 +899,7 @@ namespace Chromatics.Helpers
 
             try
             {
-                using (var sw = new StreamWriter(path, false))
-                {
-                    var serializer = new JsonSerializer
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    };
-
-                    serializer.Serialize(sw, palette);
-                    sw.WriteLine();
-                    sw.Close();
-                }
-
-
+                WriteJsonAtomic(path, palette);
             }
             catch (Exception ex)
             {
@@ -973,19 +949,7 @@ namespace Chromatics.Helpers
 
             try
             {
-                using (var sw = new StreamWriter(path, false))
-                {
-                    var serializer = new JsonSerializer
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    };
-
-                    serializer.Serialize(sw, settings);
-                    sw.WriteLine();
-                    sw.Close();
-                }
-
-
+                WriteJsonAtomic(path, settings);
             }
             catch (Exception ex)
             {

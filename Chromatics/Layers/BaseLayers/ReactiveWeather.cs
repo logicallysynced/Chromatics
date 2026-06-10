@@ -137,7 +137,7 @@ namespace Chromatics.Layers
                 };
 
                 var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
+                _layergroups[layer.layerID] = lg;
 
                 layergroup.Brush = weather_brush;
                 layergroup.Detach();

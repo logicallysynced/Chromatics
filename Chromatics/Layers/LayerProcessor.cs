@@ -31,7 +31,8 @@ namespace Chromatics.Layers
                 return Array.Empty<Led>();
             }
 
-            return device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledSet = new HashSet<LedId>(layer.deviceLeds.Values);
+            return device.Where(led => ledSet.Contains(led.Id)).ToArray();
         }
 
         internal Led[] GetLedSortedArray(IMappingLayer layer)
@@ -59,7 +60,8 @@ namespace Chromatics.Layers
                 return Array.Empty<Led>();
             }
 
-            return device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledSet = new HashSet<LedId>(baseLayer.deviceLeds.Values);
+            return device.Where(led => ledSet.Contains(led.Id)).ToArray();
         }
 
         internal IRGBDevice GetDevice(IMappingLayer layer)

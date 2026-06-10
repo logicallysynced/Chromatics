@@ -81,6 +81,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         protected override void Update(double deltaTime)
         {
+            if (savedColors == null || fadingInLeds == null || fadingOutLeds == null || currentColors == null) return;
+            try
+            {
             // increment the Timing variable
             Timing += deltaTime;
 
@@ -381,7 +384,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                 led.Key.Color = led.Value;
                 //Surface.Update(true);
             }
-            
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Exception: {ex.Message}");
+            }
         }
 
 

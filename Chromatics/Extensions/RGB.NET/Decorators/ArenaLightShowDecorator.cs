@@ -83,9 +83,9 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     var color = Lerp(currentColor, nextColor, (float)intensity);
 
                     var newCol = new Color(
-                        (int)(color.R * 255 * intensity + baseColor.R * (1 - intensity)),
-                        (int)(color.G * 255 * intensity + baseColor.G * (1 - intensity)),
-                        (int)(color.B * 255 * intensity + baseColor.B * (1 - intensity))
+                        (int)(color.R * 255 * intensity + baseColor.R * 255 * (1 - intensity)),
+                        (int)(color.G * 255 * intensity + baseColor.G * 255 * (1 - intensity)),
+                        (int)(color.B * 255 * intensity + baseColor.B * 255 * (1 - intensity))
                     );
 
                     led.Color = newCol;

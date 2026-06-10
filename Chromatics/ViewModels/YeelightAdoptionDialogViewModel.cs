@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.ViewModels
 {
-    public partial class YeelightAdoptionDialogViewModel : ViewModelBase
+    public partial class YeelightAdoptionDialogViewModel : ViewModelBase, IDisposable
     {
         // Discovered + already-adopted bulbs are merged into a single list,
         // pre-checked for any Id that's already adopted. The dialog reads
@@ -44,6 +44,11 @@ namespace Chromatics.ViewModels
                 StatusText = LocalizationService.Instance["No Yeelight devices found. Make sure each bulb has LAN Control enabled in the Yeelight or Mi Home app."];
             else
                 StatusText = string.Format(LocalizationService.Instance["{0} Yeelight device(s) found."], Bulbs.Count);
+        }
+
+        public void Dispose()
+        {
+            LocalizationService.Instance.PropertyChanged -= OnLocaleChanged;
         }
 
         public async Task StartDiscoveryAsync(IReadOnlyDictionary<string, YeelightAdoptedDevice> alreadyAdopted, CancellationToken ct)
