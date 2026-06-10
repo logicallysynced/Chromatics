@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.1
+
+- Various performance improvements and bug fixes
+
 ## 4.2.73
 
 - Added support for FFXIV 7.51
