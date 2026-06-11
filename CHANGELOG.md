@@ -7,7 +7,6 @@ All notable changes to Chromatics are documented here.
 - Added new dynamic layers for Focus Target HP and Focus Target Castbar
 - Fixed a bug which caused the Experience Tracker layer to not work with Reaper and Sage.
 - Fixed the Keybinds layer misreading hotbar actions with high action ids.
-- Fixed party member position data reporting the wrong Y coordinate.
 - Updated Sharlayan to latest version
 - Various performance improvements and bug fixes
 
