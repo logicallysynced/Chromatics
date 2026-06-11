@@ -462,7 +462,7 @@ namespace Chromatics.Layers
                     // immediate next play while Gauge A keeps the currently-active arcana.
                     {
                         var ast = jobResources.JobResourcesContainer.Astrologian;
-                        var nextCard = ast.DrawnCards != null && ast.DrawnCards.Count > 0
+                        var nextCard = ast.DrawnCards != null && ast.DrawnCards.Length > 0
                             ? ast.DrawnCards[0]
                             : AstrologianCard.None;
 

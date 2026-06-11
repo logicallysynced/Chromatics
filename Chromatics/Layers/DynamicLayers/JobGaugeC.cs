@@ -274,7 +274,7 @@ namespace Chromatics.Layers
                     // Draw cycle. Full-fill on the active colour; negative when no card is held.
                     {
                         var hasCard = container.Astrologian.CurrentArcana != AstrologianCard.None
-                                      || container.Astrologian.DrawnCards.Count > 0;
+                                      || container.Astrologian.DrawnCards.Length > 0;
 
                         jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTNegative.Color);
                         jobGauge.minValue = 0;

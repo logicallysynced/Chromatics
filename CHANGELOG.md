@@ -2,6 +2,13 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.2
+
+- Updated the FFXIV memory reader (Sharlayan) with a large batch of stability and accuracy fixes.
+- The Experience Tracker layer now works for Reaper and Sage. Their level and EXP data previously read as zero.
+- Fixed the Keybinds layer misreading hotbar actions with high action ids.
+- Fixed party member position data reporting the wrong Y coordinate.
+
 ## 4.3.1
 
 - Various performance improvements and bug fixes
