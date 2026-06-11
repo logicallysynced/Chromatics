@@ -979,5 +979,9 @@
   "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1つのハイライトレイヤーが、印字された文字でキーを参照しています。新しいレイアウトでも同じ文字のキーが点灯するように変換しますか？",
   "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0}個のハイライトレイヤーが、印字された文字でキーを参照しています。新しいレイアウトでも同じ文字のキーが点灯するように変換しますか？",
   "Update layers": "レイヤーを更新",
-  "Keep as-is": "そのままにする"
+  "Keep as-is": "そのままにする",
+  "Focus Target HP": "フォーカスターゲットのHP",
+  "Focus Target Castbar": "フォーカスターゲットのキャストバー",
+  "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "選択したキー上にフォーカスターゲットのHPを表示します。\n［対応モード：補間、フェード］",
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "選択したキー上にフォーカスターゲットのキャスト進行状況を表示します。\n［対応モード：補間、フェード］"
 }

@@ -104,6 +104,8 @@ namespace Chromatics.Layers
                 DynamicLayerType.Castbar => CastbarProcessor.Instance,
                 DynamicLayerType.JobClassesHighlight => JobClassesHighlightProcessor.Instance,
                 DynamicLayerType.ReactiveWeatherHighlight => ReactiveWeatherHighlightProcessor.Instance,
+                DynamicLayerType.FocusTargetHP => FocusTargetHPProcessor.Instance,
+                DynamicLayerType.FocusTargetCastbar => FocusTargetCastbarProcessor.Instance,
                 _ => throw new ArgumentException("Unknown DynamicLayerType")
             };
         }

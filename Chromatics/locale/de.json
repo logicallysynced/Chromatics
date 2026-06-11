@@ -978,5 +978,9 @@
   "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1 Hervorhebungsebene referenziert Tasten anhand ihres aufgedruckten Buchstabens. Soll sie übertragen werden, damit dieselben Buchstaben auf Ihrem neuen Layout weiterhin leuchten?",
   "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0} Hervorhebungsebenen referenzieren Tasten anhand ihres aufgedruckten Buchstabens. Sollen sie übertragen werden, damit dieselben Buchstaben auf Ihrem neuen Layout weiterhin leuchten?",
   "Update layers": "Ebenen aktualisieren",
-  "Keep as-is": "Unverändert beibehalten"
+  "Keep as-is": "Unverändert beibehalten",
+  "Focus Target HP": "LP des Fokusziels",
+  "Focus Target Castbar": "Zauberleiste des Fokusziels",
+  "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "Zeigt die LP deines Fokusziels über die ausgewählten Tasten an.\n[Unterstützte Modi: Interpolieren, Verblassen]",
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Zeigt den Zauberfortschritt deines Fokusziels über die ausgewählten Tasten an.\n[Unterstützte Modi: Interpolieren, Verblassen]"
 }

@@ -67,6 +67,12 @@ namespace Chromatics.Models
         public ColorMapping TargetHpClaimed = new("Target HP (Claimed)", PaletteTypes.TargetEnemy, Color.Red);
         public ColorMapping TargetHpEmpty = new("Target HP (Empty)", PaletteTypes.TargetEnemy, Color.Black);
         public ColorMapping TargetHpIdle = new("Target HP (Idle)", PaletteTypes.TargetEnemy, Color.Yellow);
+        public ColorMapping FocusTargetCastbar = new("Focus Target Cast Bar Charge Build", PaletteTypes.TargetEnemy, Color.Orange);
+        public ColorMapping FocusTargetCastbarEmpty = new("Focus Target Cast Bar Charge Empty", PaletteTypes.TargetEnemy, Color.Black);
+        public ColorMapping FocusTargetHpFriendly = new("Focus Target HP (Friendly)", PaletteTypes.TargetEnemy, Color.Lime);
+        public ColorMapping FocusTargetHpClaimed = new("Focus Target HP (Claimed)", PaletteTypes.TargetEnemy, Color.Red);
+        public ColorMapping FocusTargetHpEmpty = new("Focus Target HP (Empty)", PaletteTypes.TargetEnemy, Color.Black);
+        public ColorMapping FocusTargetHpIdle = new("Focus Target HP (Idle)", PaletteTypes.TargetEnemy, Color.Yellow);
 
         //Status Effects
         public ColorMapping Amnesia = new("Amnesia", PaletteTypes.StatusEffects, Color.Snow);

@@ -978,5 +978,9 @@
   "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1 capa de resaltado hace referencia a las teclas por la letra impresa. ¿Traducirla para que las mismas letras permanezcan iluminadas en tu nueva distribución?",
   "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0} capas de resaltado hacen referencia a las teclas por la letra impresa. ¿Traducirlas para que las mismas letras permanezcan iluminadas en tu nueva distribución?",
   "Update layers": "Actualizar capas",
-  "Keep as-is": "Mantener tal cual"
+  "Keep as-is": "Mantener tal cual",
+  "Focus Target HP": "PS del objetivo de foco",
+  "Focus Target Castbar": "Barra de lanzamiento del objetivo de foco",
+  "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "Muestra los PS de tu objetivo de foco en las teclas seleccionadas.\n[Modos compatibles: Interpolar, Desvanecer]",
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Muestra el progreso de lanzamiento de tu objetivo de foco en las teclas seleccionadas.\n[Modos compatibles: Interpolar, Desvanecer]"
 }

@@ -283,6 +283,8 @@ namespace Chromatics.ViewModels.Mapping
             DynamicLayerType.Castbar,
             DynamicLayerType.JobClassesHighlight,
             DynamicLayerType.ReactiveWeatherHighlight,
+            DynamicLayerType.FocusTargetHP,
+            DynamicLayerType.FocusTargetCastbar,
         ];
 
         private static IReadOnlyList<LayerTypeOption> BuildTypeOptions(LayerType layerType) => layerType switch

@@ -993,5 +993,9 @@
     "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?":  "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?",
     "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?":  "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?",
     "Update layers":  "Update layers",
-    "Keep as-is":  "Keep as-is"
+    "Keep as-is":  "Keep as-is",
+    "Focus Target HP":  "Focus Target HP",
+    "Focus Target Castbar":  "Focus Target Castbar",
+    "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]":  "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]",
+    "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]":  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]"
 }

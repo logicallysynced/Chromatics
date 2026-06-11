@@ -269,6 +269,8 @@ namespace Chromatics.ViewModels
             DynamicLayerType.Castbar,
             DynamicLayerType.JobClassesHighlight,
             DynamicLayerType.ReactiveWeatherHighlight,
+            DynamicLayerType.FocusTargetHP,
+            DynamicLayerType.FocusTargetCastbar,
         };
 
         private static DynamicLayerType DynamicLayerTypeFromComboIndex(int index)

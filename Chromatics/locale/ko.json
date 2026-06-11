@@ -979,5 +979,9 @@
   "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "하이라이트 레이어 1개가 키에 인쇄된 글자를 기준으로 키를 참조합니다. 새 레이아웃에서도 같은 글자가 켜지도록 변환하시겠습니까?",
   "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "하이라이트 레이어 {0}개가 키에 인쇄된 글자를 기준으로 키를 참조합니다. 새 레이아웃에서도 같은 글자가 켜지도록 변환하시겠습니까?",
   "Update layers": "레이어 업데이트",
-  "Keep as-is": "그대로 유지"
+  "Keep as-is": "그대로 유지",
+  "Focus Target HP": "주시 대상 HP",
+  "Focus Target Castbar": "주시 대상 시전 바",
+  "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "선택한 키 전반에 주시 대상의 HP를 표시합니다.\n[지원 모드: 보간, 페이드]",
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "선택한 키 전반에 주시 대상의 시전 진행도를 표시합니다.\n[지원 모드: 보간, 페이드]"
 }

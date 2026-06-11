@@ -2,14 +2,18 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.3
+
+- **New:** Focus Target HP layer. Works like the Target HP layer but follows whatever you have focus targeted, with its own palette colours for claimed, friendly, idle, and empty states.
+- **New:** Focus Target Castbar layer. Shows your focus target's cast progress across selected keys, with its own palette colours.
+- Loading or importing a layer file that contains layer types from a newer Chromatics version no longer breaks. Unrecognised layer types reset to None and the rest of the file loads normally.
+
 ## 4.3.2
 
 - Fixed a bug which caused the Experience Tracker layer to not work with Reaper and Sage.
 - Fixed the Keybinds layer misreading hotbar actions with high action ids.
 - Fixed party member position data reporting the wrong Y coordinate.
-
-## 4.3.1
-
+- Updated Sharlayan to latest version
 - Various performance improvements and bug fixes
 
 ## 4.2.73

@@ -978,5 +978,9 @@
   "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1 calque de surbrillance fait référence aux touches d’après leur lettre imprimée. Le transposer pour que les mêmes lettres restent allumées sur votre nouvelle disposition ?",
   "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0} calques de surbrillance font référence aux touches d’après leur lettre imprimée. Les transposer pour que les mêmes lettres restent allumées sur votre nouvelle disposition ?",
   "Update layers": "Mettre à jour les calques",
-  "Keep as-is": "Conserver tel quel"
+  "Keep as-is": "Conserver tel quel",
+  "Focus Target HP": "PV de la cible focalisée",
+  "Focus Target Castbar": "Barre d’incantation de la cible focalisée",
+  "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "Affiche les PV de votre cible focalisée sur les touches sélectionnées.\n[Modes pris en charge : Interpolation, Fondu]",
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Affiche la progression de l’incantation de votre cible focalisée sur les touches sélectionnées.\n[Modes pris en charge : Interpolation, Fondu]"
 }

@@ -978,5 +978,9 @@
   "1 Highlight layer references keys by their printed letter. Translate it so the same letters stay lit on your new layout?": "1 个高亮层按键是按其印刷字母引用的。要转换它，以便在新布局上相同的字母保持点亮吗？",
   "{0} Highlight layers reference keys by their printed letter. Translate them so the same letters stay lit on your new layout?": "{0} 个高亮层按键是按其印刷字母引用的。要转换它们，以便在新布局上相同的字母保持点亮吗？",
   "Update layers": "更新层",
-  "Keep as-is": "保持原样"
+  "Keep as-is": "保持原样",
+  "Focus Target HP": "焦点目标生命值",
+  "Focus Target Castbar": "焦点目标施法条",
+  "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "在选定按键上显示你的焦点目标生命值。\n[支持模式：插值、渐隐]",
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "在选定按键上显示你的焦点目标施法进度。\n[支持模式：插值、渐隐]"
 }
