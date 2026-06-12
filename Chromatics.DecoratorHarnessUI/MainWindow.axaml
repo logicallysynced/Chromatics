@@ -248,6 +248,14 @@
                                 <TextBlock Text="Snow Direction"/>
                                 <ComboBox ItemsSource="{Binding SnowDirections}" SelectedItem="{Binding ParamSnowDir}" Width="190"/>
                             </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowOneShot}">
+                                <TextBlock Text="One Shot"/>
+                                <ToggleSwitch IsChecked="{Binding ParamOneShot}" OnContent="On" OffContent="Off"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowWireDir}">
+                                <TextBlock Text="Pillar Mode"/>
+                                <ComboBox ItemsSource="{Binding WireframeDirections}" SelectedItem="{Binding ParamWireDir}" Width="130"/>
+                            </StackPanel>
                         </WrapPanel>
 
                         <Separator Margin="0,4"/>

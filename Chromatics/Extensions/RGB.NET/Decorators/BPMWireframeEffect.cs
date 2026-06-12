@@ -13,6 +13,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly int bpm;
         private readonly double beatsPerCycle;
         private readonly double beamWidth;
+        private readonly WireframeEffect.PillarMode mode;
         private readonly Color baseColor;
 
         private readonly Dictionary<LedId, int[]> _grid;
@@ -22,6 +23,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly List<Pillar> _pillars = [];
         private double _beatTimer;
         private double _hue;
+        private bool _lastVertical;
 
         private class Pillar
         {
@@ -30,12 +32,13 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             public double Hue { get; set; }
         }
 
-        public BPMWireframeEffect(ListLedGroup _ledGroup, int bpm, double beatsPerCycle, double beamWidth, RGBSurface surface, Color baseColor = default) : base(surface, updateIfDisabled: false)
+        public BPMWireframeEffect(ListLedGroup _ledGroup, int bpm, double beatsPerCycle, double beamWidth, RGBSurface surface, WireframeEffect.PillarMode mode = WireframeEffect.PillarMode.Random, Color baseColor = default) : base(surface, updateIfDisabled: false)
         {
             this.ledGroup = _ledGroup;
             this.bpm = Math.Max(1, bpm);
             this.beatsPerCycle = Math.Max(0.05, beatsPerCycle);
             this.beamWidth = Math.Max(0.3, beamWidth);
+            this.mode = mode;
             this.baseColor = baseColor == default ? new Color(0, 0, 0) : baseColor;
             _beatInterval = 60.0 / this.bpm;
 
@@ -74,7 +77,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     _beatTimer -= _beatInterval;
                     _pillars.Add(new Pillar
                     {
-                        Vertical = random.Next(2) == 0,
+                        Vertical = WireframeEffect.NextPillarVertical(mode, random, ref _lastVertical),
                         Offset = 0,
                         Hue = _hue,
                     });

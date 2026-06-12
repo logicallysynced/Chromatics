@@ -73,7 +73,10 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     double dist = Math.Sqrt(dr * dr + dc * dc);
                     double angle = Math.Atan2(dr * 2.0, dc);
 
-                    double a = angle + _rotation + twist * dist;
+                    // Rotation subtracted so bands radiate outward from the
+                    // centre as the wheel turns - same flow model as the
+                    // non-BPM PinwheelEffect.
+                    double a = angle - _rotation + twist * dist;
                     a %= Math.PI * 2;
                     if (a < 0) a += Math.PI * 2;
 

@@ -13,6 +13,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly double speed;
         private readonly double spawnInterval;
         private readonly double beamWidth;
+        private readonly PillarMode mode;
         private readonly Color baseColor;
 
         private readonly Dictionary<LedId, int[]> _grid;
@@ -21,6 +22,19 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly List<Pillar> _pillars = [];
         private double _spawnTimer;
         private double _hue;
+        private bool _lastVertical;
+
+        public enum PillarMode
+        {
+            // Each spawn picks vertical or horizontal at random.
+            Random,
+            // Vertical pillars only - columns sweeping left and right.
+            Vertical,
+            // Horizontal pillars only - rows sweeping up and down.
+            Horizontal,
+            // Strict vertical / horizontal alternation per spawn.
+            Alternating
+        }
 
         private class Pillar
         {
@@ -32,15 +46,29 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             public double Hue { get; set; }
         }
 
-        public WireframeEffect(ListLedGroup _ledGroup, double speed, double spawnInterval, double beamWidth, RGBSurface surface, Color baseColor = default) : base(surface, updateIfDisabled: false)
+        public WireframeEffect(ListLedGroup _ledGroup, double speed, double spawnInterval, double beamWidth, RGBSurface surface, PillarMode mode = PillarMode.Random, Color baseColor = default) : base(surface, updateIfDisabled: false)
         {
             this.ledGroup = _ledGroup;
             this.speed = Math.Max(0.1, speed);
             this.spawnInterval = Math.Max(0.05, spawnInterval);
             this.beamWidth = Math.Max(0.3, beamWidth);
+            this.mode = mode;
             this.baseColor = baseColor == default ? new Color(0, 0, 0) : baseColor;
 
             (_grid, _maxRow, _maxCol) = DeviceGridHelper.GetGrid(_ledGroup);
+        }
+
+        internal static bool NextPillarVertical(PillarMode mode, Random random, ref bool lastVertical)
+        {
+            bool vertical = mode switch
+            {
+                PillarMode.Vertical => true,
+                PillarMode.Horizontal => false,
+                PillarMode.Alternating => !lastVertical,
+                _ => random.Next(2) == 0,
+            };
+            lastVertical = vertical;
+            return vertical;
         }
 
         public override void OnAttached(IDecoratable decoratable)
@@ -75,7 +103,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     _spawnTimer -= spawnInterval;
                     _pillars.Add(new Pillar
                     {
-                        Vertical = random.Next(2) == 0,
+                        Vertical = NextPillarVertical(mode, random, ref _lastVertical),
                         Offset = 0,
                         Hue = _hue,
                     });

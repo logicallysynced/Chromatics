@@ -71,10 +71,13 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     // squashed into horizontal slivers.
                     double angle = Math.Atan2(dr * 2.0, dc);
 
-                    // Adding rotation spins the wheel; adding twist * dist
-                    // bends each blade into a spiral arm the further it is
-                    // from the centre.
-                    double a = angle + _rotation + twist * dist;
+                    // twist * dist bends each blade into a spiral arm.
+                    // Rotation is SUBTRACTED so the bands flow outward from
+                    // the centre as the wheel turns: for a fixed band,
+                    // twist * dist = const + rotation, so dist grows as
+                    // rotation advances. Adding it instead makes the spiral
+                    // suck inward.
+                    double a = angle - _rotation + twist * dist;
                     a %= Math.PI * 2;
                     if (a < 0) a += Math.PI * 2;
 

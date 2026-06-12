@@ -12,6 +12,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly LedId startKey;
         private readonly double speed;
         private readonly double ringWidth;
+        private readonly bool oneShot;
         private readonly Color[] colors;
         private readonly Color baseColor;
 
@@ -24,13 +25,20 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private double _originR;
         private double _originC;
         private bool _originResolved;
+        private bool _finished;
 
-        public ReactiveKeyboardEffect(ListLedGroup _ledGroup, LedId startKey, double speed, double ringWidth, Color[] colors, RGBSurface surface, Color baseColor = default) : base(surface, updateIfDisabled: false)
+        // True once a one-shot wave has left the board. Owners poll this to
+        // remove the decorator, same as OneShotPulseEffect. Always false in
+        // repeating mode.
+        public bool IsFinished => _finished;
+
+        public ReactiveKeyboardEffect(ListLedGroup _ledGroup, LedId startKey, double speed, double ringWidth, Color[] colors, RGBSurface surface, Color baseColor = default, bool oneShot = false) : base(surface, updateIfDisabled: false)
         {
             this.ledGroup = _ledGroup;
             this.startKey = startKey;
             this.speed = Math.Max(0.1, speed);
             this.ringWidth = Math.Max(0.3, ringWidth);
+            this.oneShot = oneShot;
             this.colors = colors is { Length: > 0 } ? colors : [new Color(0, 200, 255)];
             this.baseColor = baseColor == default ? new Color(0, 0, 0) : baseColor;
 
@@ -42,6 +50,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         {
             base.OnAttached(decoratable);
             ledGroup.Detach();
+            _radius = 0;
+            _finished = false;
         }
 
         public override void OnDetached(IDecoratable decoratable)
@@ -49,6 +59,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             base.OnDetached(decoratable);
             _radius = 0;
             _originResolved = false;
+            _finished = false;
         }
 
         protected override void Update(double deltaTime)
@@ -75,18 +86,28 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
                     _originResolved = true;
                 }
 
-                _radius += speed * deltaTime;
-                if (_radius > _maxExtent + ringWidth * 2)
+                if (!_finished)
                 {
-                    _radius = 0;
-                    _colorIndex++;
+                    _radius += speed * deltaTime;
+                    if (_radius > _maxExtent + ringWidth * 2)
+                    {
+                        if (oneShot)
+                        {
+                            _finished = true;
+                        }
+                        else
+                        {
+                            _radius = 0;
+                            _colorIndex++;
+                        }
+                    }
                 }
 
                 var waveColor = colors[_colorIndex % colors.Length];
 
                 foreach (var led in ledGroup)
                 {
-                    if (!_grid.TryGetValue(led.Id, out var pos)) { led.Color = baseColor; continue; }
+                    if (_finished || !_grid.TryGetValue(led.Id, out var pos)) { led.Color = baseColor; continue; }
 
                     double dr = pos[0] - _originR;
                     double dc = pos[1] - _originC;

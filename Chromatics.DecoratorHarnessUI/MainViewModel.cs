@@ -433,6 +433,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty] private double _paramOpacity = 0.85;
     [ObservableProperty] private string _paramStartKey = "Enter";
     [ObservableProperty] private string _paramSnowDir = "TopToBottom";
+    [ObservableProperty] private bool _paramOneShot;
+    [ObservableProperty] private string _paramWireDir = "Random";
 
     public static string[] TextureTypes { get; } = ["Linear", "Conical"];
     public static string[] SnowDirections { get; } =
@@ -446,6 +448,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [
         "Enter", "Space", "Escape", "W", "A", "S", "D", "G", "H", "NumLock", "Backspace",
     ];
+    public static string[] WireframeDirections { get; } = ["Random", "Vertical", "Horizontal", "Alternating"];
     public static string[] DiagonalDirections { get; } = ["TopLeftToBottomRight", "TopRightToBottomLeft", "BottomLeftToTopRight", "BottomRightToTopLeft", "Random"];
     public static string[] FallDirections { get; } = ["TopToBottom", "BottomToTop", "LeftToRight", "RightToLeft"];
     public static string[] LaserDirections { get; } = ["Horizontal", "Vertical", "DiagonalForward", "DiagonalBackward", "RandomHV", "RandomDiagonal", "RandomAll"];
@@ -606,6 +609,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty] private bool _showOpacity;
     [ObservableProperty] private bool _showStartKey;
     [ObservableProperty] private bool _showSnowDir;
+    [ObservableProperty] private bool _showOneShot;
+    [ObservableProperty] private bool _showWireDir;
 
     public static string[] MatrixDirections { get; } = ["Down", "Up", "Left", "Right"];
 
@@ -779,6 +784,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ShowOpacity = name is "CloudsEffect" or "BPMCloudsEffect";
         ShowStartKey = name is "ReactiveKeyboardEffect";
         ShowSnowDir = name is "SnowstormDecorator" or "BPMSnowstormDecorator";
+        ShowOneShot = name is "ReactiveKeyboardEffect";
+        ShowWireDir = name is "WireframeEffect" or "BPMWireframeEffect";
 
         ShowColorBase = name is not ("PulseDecorator" or "ShotFlashDecorator"
             or "MoveBPMGradientDecorator" or "MoveBPMDiagonalGradientDecorator"
@@ -808,6 +815,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             ParamAccentEvery = snap.AccentEvery; ParamDecay = snap.Decay; ParamWedgeDegrees = snap.WedgeDegrees;
             ParamFanCount = snap.FanCount; ParamTwist = snap.Twist; ParamOpacity = snap.Opacity;
             ParamStartKey = snap.StartKey; ParamSnowDir = snap.SnowDir;
+            ParamOneShot = snap.OneShot; ParamWireDir = snap.WireDir;
             ColorBase = snap.Base;
             SetColors(snap.Colors);
             return;
@@ -1134,17 +1142,17 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 SetColors(ToAv(220, 230, 240), AvColors.White);
                 break;
             case "ReactiveKeyboardEffect":
-                ParamStartKey = "Enter"; ParamRippleSpeed = 14.0; ParamFadeWidth = 2.0;
+                ParamStartKey = "Enter"; ParamRippleSpeed = 14.0; ParamFadeWidth = 2.0; ParamOneShot = false;
                 ColorBase = AvColors.Black;
                 SetColors(ToAv(0, 200, 255));
                 break;
             case "WireframeEffect":
-                ParamRippleSpeed = 8.0; ParamSpawnInterval = 0.5; ParamBeamWidth = 0.8;
+                ParamRippleSpeed = 8.0; ParamSpawnInterval = 0.5; ParamBeamWidth = 0.8; ParamWireDir = "Random";
                 ColorBase = AvColors.Black;
                 SetColors(AvColors.White);
                 break;
             case "BPMWireframeEffect":
-                ParamBpm = 128; ParamBpmSpeed = "Sync"; ParamBeamWidth = 0.8;
+                ParamBpm = 128; ParamBpmSpeed = "Sync"; ParamBeamWidth = 0.8; ParamWireDir = "Random";
                 ColorBase = AvColors.Black;
                 SetColors(AvColors.White);
                 break;
@@ -1395,6 +1403,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             ParamBpmSpeed, ParamBeatsPerCycle, ParamSimultaneousBeams, ParamFlickerOpacity,
             ParamMatrixDir, ParamFadeBetween, ParamAccentEvery, ParamDecay, ParamWedgeDegrees,
             ParamFanCount, ParamTwist, ParamOpacity, ParamStartKey, ParamSnowDir,
+            ParamOneShot, ParamWireDir,
             ColorBase, ColorSlots.Select(s => s.Color).ToArray());
         _savedParams[name] = snap;
 
@@ -1416,6 +1425,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         string BpmSpeed, double BeatsPerCycle, int SimultaneousBeams, double FlickerOpacity,
         string MatrixDir, double FadeBetween, int AccentEvery, double Decay, double WedgeDegrees,
         int FanCount, double Twist, double Opacity, string StartKey, string SnowDir,
+        bool OneShot, string WireDir,
         AvColor Base, AvColor[] Colors);
 
     // ── Code snippet generator ──────────────────────────────────────────
@@ -1892,17 +1902,18 @@ public partial class MainViewModel : ObservableObject, IDisposable
             "ReactiveKeyboardEffect" =>
                 $"var baseCol = {bS};\n" +
                 $"var colors = {arr};\n" +
-                $"var reactive = new ReactiveKeyboardEffect(layer, LedId.Keyboard_{ParamStartKey}, {ParamRippleSpeed}, {ParamFadeWidth}, colors, surface, baseCol);\n\n" +
+                $"var reactive = new ReactiveKeyboardEffect(layer, LedId.Keyboard_{ParamStartKey}, {ParamRippleSpeed}, {ParamFadeWidth}, colors, surface, baseCol, oneShot: {(ParamOneShot ? "true" : "false")});\n" +
+                (ParamOneShot ? "// One-shot: poll reactive.IsFinished and remove the decorator when true.\n\n" : "\n") +
                 "SetEffect(reactive, layer, runningEffects);",
 
             "WireframeEffect" =>
                 $"var baseCol = {bS};\n" +
-                $"var wireframe = new WireframeEffect(layer, {ParamRippleSpeed}, {ParamSpawnInterval}, {ParamBeamWidth}, surface, baseCol);\n\n" +
+                $"var wireframe = new WireframeEffect(layer, {ParamRippleSpeed}, {ParamSpawnInterval}, {ParamBeamWidth}, surface, WireframeEffect.PillarMode.{ParamWireDir}, baseCol);\n\n" +
                 "SetEffect(wireframe, layer, runningEffects);",
 
             "BPMWireframeEffect" =>
                 $"var baseCol = {bS};\n" +
-                $"var wireframe = new BPMWireframeEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamBeamWidth}, surface, baseCol);\n\n" +
+                $"var wireframe = new BPMWireframeEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamBeamWidth}, surface, WireframeEffect.PillarMode.{ParamWireDir}, baseCol);\n\n" +
                 "SetEffect(wireframe, layer, runningEffects);",
 
             "OneShotPulseEffect" =>
@@ -2527,19 +2538,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
             case "ReactiveKeyboardEffect":
             {
                 var key = Enum.Parse<LedId>("Keyboard_" + ParamStartKey);
-                var dec = new ReactiveKeyboardEffect(group, key, ParamRippleSpeed, ParamFadeWidth, colors, _surface, baseCol);
+                var dec = new ReactiveKeyboardEffect(group, key, ParamRippleSpeed, ParamFadeWidth, colors, _surface, baseCol, ParamOneShot);
                 group.AddDecorator(dec);
                 return () => group.RemoveDecorator(dec);
             }
             case "WireframeEffect":
             {
-                var dec = new WireframeEffect(group, ParamRippleSpeed, ParamSpawnInterval, ParamBeamWidth, _surface, baseCol);
+                var mode = Enum.Parse<WireframeEffect.PillarMode>(ParamWireDir);
+                var dec = new WireframeEffect(group, ParamRippleSpeed, ParamSpawnInterval, ParamBeamWidth, _surface, mode, baseCol);
                 group.AddDecorator(dec);
                 return () => group.RemoveDecorator(dec);
             }
             case "BPMWireframeEffect":
             {
-                var dec = new BPMWireframeEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamBeamWidth, _surface, baseCol);
+                var mode = Enum.Parse<WireframeEffect.PillarMode>(ParamWireDir);
+                var dec = new BPMWireframeEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamBeamWidth, _surface, mode, baseCol);
                 group.AddDecorator(dec);
                 return () => group.RemoveDecorator(dec);
             }
