@@ -60,24 +60,25 @@ namespace Chromatics.Layers
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
 
-            ListLedGroup layergroup;
-            var ledArray = GetLedArray(layer);
-
-            if (_layergroups.ContainsKey(layer.layerID))
+            // Own group at the cutscene slot in the effect z-order, above the
+            // raid overlays and the title tier, below bell and flash. Rebuilt
+            // whenever the generic cleanup in GameController evicted it from
+            // the live registry so LED reassignments are picked up.
+            ListLedGroup layergroup = model.layergroup;
+            bool groupRegistered = layergroup != null
+                && _layergroups.TryGetValue(layer.layerID, out var registeredGroups)
+                && Array.IndexOf(registeredGroups, layergroup) >= 0;
+            if (!groupRegistered)
             {
-                layergroup = _layergroups[layer.layerID].FirstOrDefault();
-                layergroup.ZIndex = layer.zindex;
-            }
-            else
-            {
-                layergroup = new ListLedGroup(surface, ledArray)
+                layergroup?.RemoveAllDecorators();
+                layergroup?.Detach();
+                layergroup = new ListLedGroup(surface, GetLedArray(layer))
                 {
-                    ZIndex = layer.zindex,
+                    ZIndex = EffectZIndex.Cutscene,
                 };
-
-                var lg = new ListLedGroup[] { layergroup };
-                _layergroups[layer.layerID] = lg;
                 layergroup.Detach();
+                model.layergroup = layergroup;
+                RGBController.RegisterLiveLayerGroup(layer.layerID, layergroup);
             }
 
             // Raid-effect override: when a raid effect is active (or held in
@@ -103,15 +104,8 @@ namespace Chromatics.Layers
 
             if (!layer.Enabled || !effectSettings.effect_cutscenes || raidEffectActive || isVictoryFanfare || !MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
             {
-                // GameController dispatches every effect processor on every
-                // EffectLayer (DF Bell, Damage Flash, Vegas, Cutscene all
-                // share the same layergroup). If we wipe the layergroup
-                // unconditionally here, we clobber whatever DF Bell or
-                // Damage Flash has just painted on the same tick. Only do
-                // the wipe when this processor was actually painting (i.e.
-                // a cutscene was running) — that's a one-shot teardown of
-                // OUR contribution. Outside a cutscene, leave the
-                // layergroup alone so other processors' work survives.
+                // One-shot teardown, only when a cutscene was actually
+                // painting.
                 //
                 // Tear down the active gradient too: the MoveGradientDecorator
                 // is attached to the gradient object (not the layergroup), so
@@ -189,7 +183,7 @@ namespace Chromatics.Layers
                         model.activeGradient = animationGradient;
 
                         layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), animationGradient));
-                        layergroup.ZIndex = 1000;
+                        if (layergroup.Surface == null) layergroup.Attach(surface);
 
                         runningEffects.Add(layergroup);
                     }
@@ -251,6 +245,7 @@ namespace Chromatics.Layers
             public bool _inInstance { get; set; }
             public bool wasDisabled { get; set; }
             public SolidColorBrush activeBrush { get; set; }
+            public ListLedGroup layergroup { get; set; }
             public bool init { get; set; }
             // Tracks the currently-painting gradient so cleanup paths
             // (raid-effect override, natural-exit from cutscene, shutdown)

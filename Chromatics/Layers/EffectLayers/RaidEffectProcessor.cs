@@ -42,13 +42,15 @@ namespace Chromatics.Layers
         private bool _disposed;
 
         // Higher than user layer ZIndexes (typically 1-10) so the raid
-        // effect visibly overrides them. Lower than 1000 (CutsceneAnimation)
-        // so cutscenes still take priority over gameplay raid effects.
+        // effect visibly overrides them. Lower than the whole-device effect
+        // stack (EffectZIndex, 1000+) so cutscenes, the bell, and the damage
+        // flash all take priority over gameplay raid effects.
         private const int RaidOverlayZIndex = 500;
 
-        // Mirrors DamageFlash.FlashPriorityZIndex (private over there). Used
-        // by the Arcadia case to bump the overlay above every other layer
-        // for the duration of its scripted red flash.
+        // Used by the Arcadia case to bump the overlay above the raid
+        // highlight tier (600) for the duration of its scripted red flash.
+        // Still below the EffectZIndex stack: the user's damage flash and
+        // duty bell signals beat scripted raid flashes.
         private const int FlashPriorityZIndex = 700;
 
         // Dev-only switch: when true, the Cutscene Viewer in Private Mansion

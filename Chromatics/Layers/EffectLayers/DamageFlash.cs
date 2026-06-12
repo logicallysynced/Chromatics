@@ -15,15 +15,6 @@ namespace Chromatics.Layers
 {
     public class DamageFlashProcessor : LayerProcessor
     {
-        // ZIndex floor used while a flash is mid-envelope. Sits above
-        // RaidEffectHighlightProcessor's overlay (600) and the raid base
-        // overlay (500) so the flash punches through during raid effects;
-        // stays below CutsceneAnimationProcessor (1000) so cutscenes still
-        // mask gameplay alerts. When no flash is active the user-configured
-        // layer.zindex is used so DamageFlash composes normally with the
-        // rest of the layer stack.
-        private const int FlashPriorityZIndex = 700;
-
         private static DamageFlashProcessor _instance;
         private static Dictionary<int, DamageFlashEffectModel> layerProcessorModel = new Dictionary<int, DamageFlashEffectModel>();
         private bool _disposed = false;
@@ -73,30 +64,28 @@ namespace Chromatics.Layers
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
 
-            ListLedGroup layergroup;
-            var ledArray = GetLedArray(layer);
-
-            if (_layergroups.ContainsKey(layer.layerID))
+            // Own group at the top of the effect z-order: the flash is the
+            // "you're dying" signal, so it composites over the bell, the
+            // cutscene gradient, and every raid overlay. Idle brush stays
+            // Color.Transparent, which Color+ short-circuits to a no-op, so
+            // the pin has no visible effect outside a flash event. Rebuilt
+            // whenever the generic cleanup in GameController evicted it from
+            // the live registry so LED reassignments are picked up.
+            ListLedGroup layergroup = model.layergroup;
+            bool registered = layergroup != null
+                && _layergroups.TryGetValue(layer.layerID, out var registeredGroups)
+                && Array.IndexOf(registeredGroups, layergroup) >= 0;
+            if (!registered)
             {
-                layergroup = _layergroups[layer.layerID].FirstOrDefault();
-            }
-            else
-            {
-                // Pinned at FlashPriorityZIndex so the flash brush always wins over
-                // RaidEffectHighlightProcessor (600) and gradient raid overlays
-                // (set at the base layer's zindex, but re-asserted to 500 each
-                // tick by RaidEffectProcessor — sort order is undefined). When
-                // idle the brush stays Color.Transparent, which Color+ short-
-                // circuits to a no-op, so this has no visible effect outside a
-                // flash event regardless of where the user put the layer.
-                layergroup = new ListLedGroup(surface, ledArray)
+                layergroup?.RemoveAllDecorators();
+                layergroup?.Detach();
+                layergroup = new ListLedGroup(surface, GetLedArray(layer))
                 {
-                    ZIndex = FlashPriorityZIndex,
+                    ZIndex = EffectZIndex.DamageFlash,
                 };
-
-                var lg = new ListLedGroup[] { layergroup };
-                _layergroups[layer.layerID] = lg;
                 layergroup.Detach();
+                model.layergroup = layergroup;
+                RGBController.RegisterLiveLayerGroup(layer.layerID, layergroup);
             }
 
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.DamageFlashAnimation.Color);
@@ -220,6 +209,7 @@ namespace Chromatics.Layers
             public Actor.Job currentJob { get; set; }
             public bool wasDisabled { get; set; }
             public SolidColorBrush activeBrush { get; set; }
+            public ListLedGroup layergroup { get; set; }
             public bool init { get; set; }
         }
     }

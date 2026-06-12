@@ -122,7 +122,7 @@ namespace Chromatics.Core
                 // becomes the star and cycles through highlight colours.
                 int starCount = Math.Max(1, ledgroup.Count() / 4);
                 var starfield = new StarfieldDecorator(ledgroup, starCount, 10, 500, highlightColors, surface, false, baseColor);
-                ledgroup.ZIndex = 1000;
+                ledgroup.ZIndex = EffectZIndex.TitleScreen;
 
                 foreach (var led in device)
                 {

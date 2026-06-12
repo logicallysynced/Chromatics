@@ -1502,7 +1502,7 @@ namespace Chromatics.Core
             };
             var gradient = new RainbowGradient();
             var ledgroup = new ListLedGroup(surface);
-            ledgroup.ZIndex = 1000;
+            ledgroup.ZIndex = EffectZIndex.StartupAnimation;
             foreach (var led in device) ledgroup.AddLed(led);
             gradient.AddDecorator(move);
 
@@ -1555,7 +1555,7 @@ namespace Chromatics.Core
                 var gradient = new RainbowGradient();
                 var ledgroup = new ListLedGroup(surface);
 
-                ledgroup.ZIndex = 1000;
+                ledgroup.ZIndex = EffectZIndex.StartupAnimation;
                 foreach (var led in device)
                 {
                     ledgroup.AddLed(led);
@@ -1762,6 +1762,26 @@ namespace Chromatics.Core
         public static System.Collections.Concurrent.ConcurrentDictionary<int, ListLedGroup[]> GetLiveLayerGroups()
         {
             return _layergroups;
+        }
+
+        // Appends a group to a layer's live-group registration without
+        // displacing groups other processors registered under the same id.
+        // The effect-layer processors each own one group per layerID, and
+        // the requestUpdate / type-switch cleanup in GameController detaches
+        // all of them through this one registry entry.
+        public static void RegisterLiveLayerGroup(int layerID, ListLedGroup group)
+        {
+            if (group == null) return;
+            _layergroups.AddOrUpdate(layerID,
+                _ => new[] { group },
+                (_, existing) =>
+                {
+                    if (Array.IndexOf(existing, group) >= 0) return existing;
+                    var next = new ListLedGroup[existing.Length + 1];
+                    existing.CopyTo(next, 0);
+                    next[existing.Length] = group;
+                    return next;
+                });
         }
 
         public static void RemoveLayerGroup(int targetId)
