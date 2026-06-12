@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.3.4
+## 4.3.5
 
 - Added new dynamic layers for Focus Target HP and Focus Target Castbar
 - Fixed a bug which caused the Experience Tracker layer to not work with Reaper and Sage.

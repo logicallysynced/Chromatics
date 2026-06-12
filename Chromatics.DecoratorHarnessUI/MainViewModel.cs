@@ -299,6 +299,18 @@ public partial class MainViewModel : ObservableObject, IDisposable
         new("BPMHeartbeatEffect",               "Decorators"),
         new("BPMEqualizerEffect",               "Decorators"),
         new("BPMSpinnerEffect",                 "Decorators"),
+        new("SnowstormDecorator",               "Decorators"),
+        new("BPMSnowstormDecorator",            "Decorators"),
+        new("PinwheelEffect",                   "Decorators"),
+        new("BPMPinwheelEffect",                "Decorators"),
+        new("BlueParticlesEffect",              "Decorators"),
+        new("BPMBlueParticlesEffect",           "Decorators"),
+        new("CloudsEffect",                     "Decorators"),
+        new("BPMCloudsEffect",                  "Decorators"),
+        new("ReactiveKeyboardEffect",           "Decorators"),
+        new("WireframeEffect",                  "Decorators"),
+        new("BPMWireframeEffect",               "Decorators"),
+        new("OneShotPulseEffect",               "Decorators"),
     ];
 
     public static EffectEntry[] RaidPresets { get; } =
@@ -415,7 +427,25 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty] private double _paramDecay = 0.5;
     [ObservableProperty] private double _paramWedgeDegrees = 60;
 
+    // Params for the Snowstorm / Pinwheel / Clouds / Reactive family.
+    [ObservableProperty] private int _paramFanCount = 4;
+    [ObservableProperty] private double _paramTwist = 0.5;
+    [ObservableProperty] private double _paramOpacity = 0.85;
+    [ObservableProperty] private string _paramStartKey = "Enter";
+    [ObservableProperty] private string _paramSnowDir = "TopToBottom";
+
     public static string[] TextureTypes { get; } = ["Linear", "Conical"];
+    public static string[] SnowDirections { get; } =
+    [
+        "TopToBottom", "BottomToTop", "LeftToRight", "RightToLeft",
+        "TopLeftToBottomRight", "TopRightToBottomLeft", "BottomLeftToTopRight", "BottomRightToTopLeft",
+    ];
+    // Mapped to LedId via "Keyboard_" + name in BuildEffect; falls back to
+    // the grid centre when the key is missing from the device.
+    public static string[] StartKeys { get; } =
+    [
+        "Enter", "Space", "Escape", "W", "A", "S", "D", "G", "H", "NumLock", "Backspace",
+    ];
     public static string[] DiagonalDirections { get; } = ["TopLeftToBottomRight", "TopRightToBottomLeft", "BottomLeftToTopRight", "BottomRightToTopLeft", "Random"];
     public static string[] FallDirections { get; } = ["TopToBottom", "BottomToTop", "LeftToRight", "RightToLeft"];
     public static string[] LaserDirections { get; } = ["Horizontal", "Vertical", "DiagonalForward", "DiagonalBackward", "RandomHV", "RandomDiagonal", "RandomAll"];
@@ -570,6 +600,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty] private bool _showDecay;
     [ObservableProperty] private bool _showWedgeDegrees;
 
+    // Visibility flags for the Snowstorm / Pinwheel / Clouds / Reactive family.
+    [ObservableProperty] private bool _showFanCount;
+    [ObservableProperty] private bool _showTwist;
+    [ObservableProperty] private bool _showOpacity;
+    [ObservableProperty] private bool _showStartKey;
+    [ObservableProperty] private bool _showSnowDir;
+
     public static string[] MatrixDirections { get; } = ["Down", "Up", "Left", "Right"];
 
     // ── Live update ──────────────────────────────────────────────────────
@@ -620,6 +657,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
             or "BPMLaserEffect" or "BPMLaserEffect2" or "BPMCircularPulseEffect"
             or "BPMMatrixEffect" or "BPMChaseRandom" or "BPMThunderstrikeEffect"
             or "BPMHeartbeatEffect" or "BPMEqualizerEffect" or "BPMSpinnerEffect"
+            or "BPMSnowstormDecorator" or "BPMPinwheelEffect" or "BPMBlueParticlesEffect"
+            or "BPMCloudsEffect" or "BPMWireframeEffect"
             or "Groovy Ring (Dancing Green)" or "Rebel Ring (Sugar Riot)"
             or "Demolition Site (Brute Abombinator)"
             or "Hunter's Ring — Howling Blade (M8)" or "Hunter's Ring — Howling Blade (M8S)"
@@ -629,7 +668,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         // Speed-driven gradient effects
         ShowSpeed = name is "Interphos (Queen Eternal)" or "Wind" or "Gales"
             or "Sandstorms / Dust Storms" or "Umbral Wind" or "Astromagnetic Storm"
-            or "Umbral Static" or "Everlasting Light" or "MatrixEffect";
+            or "Umbral Static" or "Everlasting Light" or "MatrixEffect"
+            or "SnowstormDecorator" or "PinwheelEffect";
 
         // Interval-based effects
         ShowInterval = name is "StarfieldDecorator" or "FastStarfieldDecorator"
@@ -652,7 +692,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
             or "Hunter's Ring — Howling Blade (M8)" or "Arcadia P1 Effect 1 — Intro";
 
         ShowWaveSpeed = name is "ArenaLightShowDecorator"
-            or "Lovely Lovering (Honey B. Lovely)" or "Sphere of Naught (Cloud of Darkness)";
+            or "Lovely Lovering (Honey B. Lovely)" or "Sphere of Naught (Cloud of Darkness)"
+            or "BlueParticlesEffect" or "CloudsEffect";
 
         ShowWaveFreq = name is "ArenaLightShowDecorator"
             or "Lovely Lovering (Honey B. Lovely)" or "Sphere of Naught (Cloud of Darkness)"
@@ -676,6 +717,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
         ShowNumberOfLeds = name is "StarfieldDecorator" or "FastStarfieldDecorator"
             or "BPMStarfieldDecorator" or "BPMFastStarfieldDecorator"
+            or "SnowstormDecorator" or "BPMSnowstormDecorator"
+            or "BlueParticlesEffect" or "BPMBlueParticlesEffect"
             or "Hunter's Ring — Howling Blade (M8)" or "Arcadia P1 Effect 1 — Intro";
 
         ShowStepSpeed = name is "PulseDecorator";
@@ -701,18 +744,22 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ShowIntensity = name is "FireEffect";
         ShowFlickerSpeed = name is "FireEffect" or "MatrixEffect" or "BPMMatrixEffect";
         ShowBeamWidth = name is "LaserEffect" or "BPMLaserEffect" or "BPMLaserEffect2"
-            or "BPMHeartbeatEffect";
+            or "BPMHeartbeatEffect" or "WireframeEffect" or "BPMWireframeEffect";
         ShowPulseRadius = name is "CircularPulseEffect" or "BPMCircularPulseEffect"
             or "Hunter's Ring — Howling Blade (M8S)" or "Arcadia P2 (M12)";
         ShowFadeWidth = name is "CircularPulseEffect" or "BPMCircularPulseEffect" or "BPMRippleDecorator"
+            or "ReactiveKeyboardEffect" or "OneShotPulseEffect"
             or "Groovy Ring (Dancing Green)" or "Demolition Site (Brute Abombinator)"
             or "Hunter's Ring — Howling Blade (M8S)" or "Arcadia P2 (M12)";
         ShowTailLength = name is "BPMChaseDecorator" or "Rebel Ring (Sugar Riot)";
-        ShowSpawnInterval = name is "LaserEffect" or "CircularPulseEffect";
-        ShowRippleSpeed = name is "CircularPulseEffect"; // non-BPM only; BPM* now uses BpmSpeed
+        ShowSpawnInterval = name is "LaserEffect" or "CircularPulseEffect" or "WireframeEffect";
+        ShowRippleSpeed = name is "CircularPulseEffect" // non-BPM only; BPM* now uses BpmSpeed
+            or "ReactiveKeyboardEffect" or "WireframeEffect" or "OneShotPulseEffect";
         ShowLaserDir = name is "LaserEffect" or "BPMLaserEffect" or "BPMLaserEffect2";
         ShowBpmSpeed = name is "BPMLaserEffect" or "BPMLaserEffect2" or "BPMCircularPulseEffect"
             or "BPMRippleDecorator" or "BPMMatrixEffect" or "BPMSpinnerEffect"
+            or "BPMSnowstormDecorator" or "BPMPinwheelEffect" or "BPMBlueParticlesEffect"
+            or "BPMCloudsEffect" or "BPMWireframeEffect"
             or "Groovy Ring (Dancing Green)" or "Demolition Site (Brute Abombinator)"
             or "Hunter's Ring — Howling Blade (M8S)" or "Arcadia P2 (M12)";
         ShowBeatsPerCycle = ShowBpmSpeed && ParamBpmSpeed == "Custom";
@@ -726,8 +773,16 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ShowDecay = name is "BPMThunderstrikeEffect" or "BPMEqualizerEffect" or "Arcadia P1 Effect 2 — Post-Flash";
         ShowWedgeDegrees = name is "BPMSpinnerEffect";
 
+        // Snowstorm / Pinwheel / Clouds / Reactive family
+        ShowFanCount = name is "PinwheelEffect" or "BPMPinwheelEffect";
+        ShowTwist = name is "PinwheelEffect" or "BPMPinwheelEffect";
+        ShowOpacity = name is "CloudsEffect" or "BPMCloudsEffect";
+        ShowStartKey = name is "ReactiveKeyboardEffect";
+        ShowSnowDir = name is "SnowstormDecorator" or "BPMSnowstormDecorator";
+
         ShowColorBase = name is not ("PulseDecorator" or "ShotFlashDecorator"
-            or "MoveBPMGradientDecorator" or "MoveBPMDiagonalGradientDecorator");
+            or "MoveBPMGradientDecorator" or "MoveBPMDiagonalGradientDecorator"
+            or "WireframeEffect" or "BPMWireframeEffect");
     }
 
     private void ApplyDefaults(EffectEntry effect)
@@ -751,6 +806,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
             ParamSimultaneousBeams = snap.SimultaneousBeams; ParamFlickerOpacity = snap.FlickerOpacity;
             ParamMatrixDir = snap.MatrixDir; ParamFadeBetween = snap.FadeBetween;
             ParamAccentEvery = snap.AccentEvery; ParamDecay = snap.Decay; ParamWedgeDegrees = snap.WedgeDegrees;
+            ParamFanCount = snap.FanCount; ParamTwist = snap.Twist; ParamOpacity = snap.Opacity;
+            ParamStartKey = snap.StartKey; ParamSnowDir = snap.SnowDir;
             ColorBase = snap.Base;
             SetColors(snap.Colors);
             return;
@@ -1036,6 +1093,66 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 ColorBase = AvColors.Black;
                 SetColors(AvColors.Red, AvColors.Green, AvColors.Blue);
                 break;
+            case "SnowstormDecorator":
+                ParamSpeed = 4; ParamNumberOfLeds = 14; ParamSnowDir = "TopToBottom";
+                ColorBase = ToAv(0, 10, 30);
+                SetColors(AvColors.White, ToAv(180, 220, 255));
+                break;
+            case "BPMSnowstormDecorator":
+                ParamBpm = 128; ParamBpmSpeed = "/4"; ParamNumberOfLeds = 14; ParamSnowDir = "TopToBottom";
+                ColorBase = ToAv(0, 10, 30);
+                SetColors(AvColors.White, ToAv(180, 220, 255));
+                break;
+            case "PinwheelEffect":
+                ParamSpeed = 90; ParamFanCount = 4; ParamTwist = 0.5;
+                ColorBase = AvColors.Black;
+                SetColors(AvColors.Red, AvColors.Yellow, AvColors.Cyan, AvColors.Magenta);
+                break;
+            case "BPMPinwheelEffect":
+                ParamBpm = 128; ParamBpmSpeed = "Sync"; ParamFanCount = 4; ParamTwist = 0.5;
+                ColorBase = AvColors.Black;
+                SetColors(AvColors.Red, AvColors.Yellow, AvColors.Cyan, AvColors.Magenta);
+                break;
+            case "BlueParticlesEffect":
+                ParamWaveSpeed = 2.0; ParamNumberOfLeds = 18;
+                ColorBase = ToAv(0, 0, 40);
+                SetColors(ToAv(0, 120, 255), ToAv(80, 200, 255), ToAv(160, 230, 255));
+                break;
+            case "BPMBlueParticlesEffect":
+                ParamBpm = 128; ParamBpmSpeed = "/2"; ParamNumberOfLeds = 6;
+                ColorBase = ToAv(0, 0, 40);
+                SetColors(ToAv(0, 120, 255), ToAv(80, 200, 255), ToAv(160, 230, 255));
+                break;
+            case "CloudsEffect":
+                ParamWaveSpeed = 1.5; ParamOpacity = 0.85;
+                ColorBase = ToAv(40, 90, 160);
+                SetColors(ToAv(220, 230, 240), AvColors.White);
+                break;
+            case "BPMCloudsEffect":
+                ParamBpm = 100; ParamBpmSpeed = "/8"; ParamOpacity = 0.85;
+                ColorBase = ToAv(40, 90, 160);
+                SetColors(ToAv(220, 230, 240), AvColors.White);
+                break;
+            case "ReactiveKeyboardEffect":
+                ParamStartKey = "Enter"; ParamRippleSpeed = 14.0; ParamFadeWidth = 2.0;
+                ColorBase = AvColors.Black;
+                SetColors(ToAv(0, 200, 255));
+                break;
+            case "WireframeEffect":
+                ParamRippleSpeed = 8.0; ParamSpawnInterval = 0.5; ParamBeamWidth = 0.8;
+                ColorBase = AvColors.Black;
+                SetColors(AvColors.White);
+                break;
+            case "BPMWireframeEffect":
+                ParamBpm = 128; ParamBpmSpeed = "Sync"; ParamBeamWidth = 0.8;
+                ColorBase = AvColors.Black;
+                SetColors(AvColors.White);
+                break;
+            case "OneShotPulseEffect":
+                ParamRippleSpeed = 12.0; ParamFadeWidth = 2.5;
+                ColorBase = AvColors.Black;
+                SetColors(AvColors.White);
+                break;
             case "MoveBPMGradientDecorator":
                 ParamBpm = 32; ParamDirection = true; ParamTextureType = "Linear";
                 SetColors(AvColors.Red, AvColors.Green, AvColors.Blue);
@@ -1277,6 +1394,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             ParamTailLength, ParamSpawnInterval, ParamRippleSpeed, ParamLaserDir,
             ParamBpmSpeed, ParamBeatsPerCycle, ParamSimultaneousBeams, ParamFlickerOpacity,
             ParamMatrixDir, ParamFadeBetween, ParamAccentEvery, ParamDecay, ParamWedgeDegrees,
+            ParamFanCount, ParamTwist, ParamOpacity, ParamStartKey, ParamSnowDir,
             ColorBase, ColorSlots.Select(s => s.Color).ToArray());
         _savedParams[name] = snap;
 
@@ -1297,6 +1415,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         double TailLength, double SpawnInterval, double RippleSpeed, string LaserDir,
         string BpmSpeed, double BeatsPerCycle, int SimultaneousBeams, double FlickerOpacity,
         string MatrixDir, double FadeBetween, int AccentEvery, double Decay, double WedgeDegrees,
+        int FanCount, double Twist, double Opacity, string StartKey, string SnowDir,
         AvColor Base, AvColor[] Colors);
 
     // ── Code snippet generator ──────────────────────────────────────────
@@ -1721,6 +1840,77 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 $"var colors = {arr};\n" +
                 $"var spinner = new BPMSpinnerEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamWedgeDegrees}, colors, surface, baseCol);\n\n" +
                 "SetEffect(spinner, layer, runningEffects);",
+
+            "SnowstormDecorator" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var snow = new SnowstormDecorator(layer, {ParamNumberOfLeds}, {ParamSpeed}, colors, surface, SnowstormDecorator.SnowDirection.{ParamSnowDir}, baseCol);\n\n" +
+                "SetEffect(snow, layer, runningEffects);",
+
+            "BPMSnowstormDecorator" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var snow = new BPMSnowstormDecorator(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamNumberOfLeds}, colors, surface, SnowstormDecorator.SnowDirection.{ParamSnowDir}, baseCol);\n\n" +
+                "SetEffect(snow, layer, runningEffects);",
+
+            "PinwheelEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var pinwheel = new PinwheelEffect(layer, {ParamSpeed}, {ParamFanCount}, {ParamTwist}, colors, surface, baseCol);\n\n" +
+                "SetEffect(pinwheel, layer, runningEffects);",
+
+            "BPMPinwheelEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var pinwheel = new BPMPinwheelEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamFanCount}, {ParamTwist}, colors, surface, baseCol);\n\n" +
+                "SetEffect(pinwheel, layer, runningEffects);",
+
+            "BlueParticlesEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var particles = new BlueParticlesEffect(layer, {ParamNumberOfLeds}, {ParamWaveSpeed}, colors, surface, baseCol);\n\n" +
+                "SetEffect(particles, layer, runningEffects);",
+
+            "BPMBlueParticlesEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var particles = new BPMBlueParticlesEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamNumberOfLeds}, colors, surface, baseCol);\n\n" +
+                "SetEffect(particles, layer, runningEffects);",
+
+            "CloudsEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var clouds = new CloudsEffect(layer, {ParamWaveSpeed}, {ParamOpacity}, colors, surface, baseCol);\n\n" +
+                "SetEffect(clouds, layer, runningEffects);",
+
+            "BPMCloudsEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var clouds = new BPMCloudsEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamOpacity}, colors, surface, baseCol);\n\n" +
+                "SetEffect(clouds, layer, runningEffects);",
+
+            "ReactiveKeyboardEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var reactive = new ReactiveKeyboardEffect(layer, LedId.Keyboard_{ParamStartKey}, {ParamRippleSpeed}, {ParamFadeWidth}, colors, surface, baseCol);\n\n" +
+                "SetEffect(reactive, layer, runningEffects);",
+
+            "WireframeEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var wireframe = new WireframeEffect(layer, {ParamRippleSpeed}, {ParamSpawnInterval}, {ParamBeamWidth}, surface, baseCol);\n\n" +
+                "SetEffect(wireframe, layer, runningEffects);",
+
+            "BPMWireframeEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var wireframe = new BPMWireframeEffect(layer, {ParamBpm}, {ResolveBeatsPerCycle()}, {ParamBeamWidth}, surface, baseCol);\n\n" +
+                "SetEffect(wireframe, layer, runningEffects);",
+
+            "OneShotPulseEffect" =>
+                $"var baseCol = {bS};\n" +
+                $"var colors = {arr};\n" +
+                $"var pulse = new OneShotPulseEffect(layer, {ParamRippleSpeed}, {ParamFadeWidth}, colors, surface, baseCol);\n" +
+                "// One-shot: poll pulse.IsFinished and remove the decorator when true.\n\n" +
+                "SetEffect(pulse, layer, runningEffects);",
 
             _ => $"// Select an effect to generate code",
         };
@@ -2281,6 +2471,81 @@ public partial class MainViewModel : ObservableObject, IDisposable
             case "BPMSpinnerEffect":
             {
                 var dec = new BPMSpinnerEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamWedgeDegrees, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "SnowstormDecorator":
+            {
+                var dir = Enum.Parse<SnowstormDecorator.SnowDirection>(ParamSnowDir);
+                var dec = new SnowstormDecorator(group, ParamNumberOfLeds, ParamSpeed, colors, _surface, dir, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMSnowstormDecorator":
+            {
+                var dir = Enum.Parse<SnowstormDecorator.SnowDirection>(ParamSnowDir);
+                var dec = new BPMSnowstormDecorator(group, ParamBpm, ResolveBeatsPerCycle(), ParamNumberOfLeds, colors, _surface, dir, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "PinwheelEffect":
+            {
+                var dec = new PinwheelEffect(group, ParamSpeed, ParamFanCount, ParamTwist, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMPinwheelEffect":
+            {
+                var dec = new BPMPinwheelEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamFanCount, ParamTwist, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BlueParticlesEffect":
+            {
+                var dec = new BlueParticlesEffect(group, ParamNumberOfLeds, ParamWaveSpeed, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMBlueParticlesEffect":
+            {
+                var dec = new BPMBlueParticlesEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamNumberOfLeds, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "CloudsEffect":
+            {
+                var dec = new CloudsEffect(group, ParamWaveSpeed, ParamOpacity, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMCloudsEffect":
+            {
+                var dec = new BPMCloudsEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamOpacity, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "ReactiveKeyboardEffect":
+            {
+                var key = Enum.Parse<LedId>("Keyboard_" + ParamStartKey);
+                var dec = new ReactiveKeyboardEffect(group, key, ParamRippleSpeed, ParamFadeWidth, colors, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "WireframeEffect":
+            {
+                var dec = new WireframeEffect(group, ParamRippleSpeed, ParamSpawnInterval, ParamBeamWidth, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "BPMWireframeEffect":
+            {
+                var dec = new BPMWireframeEffect(group, ParamBpm, ResolveBeatsPerCycle(), ParamBeamWidth, _surface, baseCol);
+                group.AddDecorator(dec);
+                return () => group.RemoveDecorator(dec);
+            }
+            case "OneShotPulseEffect":
+            {
+                var dec = new OneShotPulseEffect(group, ParamRippleSpeed, ParamFadeWidth, colors, _surface, baseCol);
                 group.AddDecorator(dec);
                 return () => group.RemoveDecorator(dec);
             }
