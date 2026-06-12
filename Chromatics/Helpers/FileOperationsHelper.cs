@@ -770,6 +770,9 @@ namespace Chromatics.Helpers
 
             // v1 -> v2: Dawntrail job-gauge additions. Newly added ColorMapping fields come from
             // their initialisers automatically, so there is no per-field remap required here.
+            // v2 -> v3: full detrimental status catalogue + focus-target + Casting Success
+            // entries. Same mechanism - initialisers supply the new fields, this re-save
+            // persists them.
             // Future palette-schema transitions should branch on `from` and mutate the model in
             // place before the final version bump below.
 
