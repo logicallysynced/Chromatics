@@ -78,7 +78,10 @@ namespace Chromatics.Models
         public ColorMapping Amnesia = new("Amnesia", PaletteTypes.StatusEffects, Color.Snow);
         public ColorMapping Bind = new("Bind", PaletteTypes.StatusEffects, Color.BlueViolet);
         public ColorMapping VulnerabilityUp = new("Vulnerability Up", PaletteTypes.StatusEffects, Color.Orange);
-        public ColorMapping Bleed = new("Bleed", PaletteTypes.StatusEffects, Color.IndianRed);
+        // Display names double as the StatusNameEnglish match keys for the
+        // Status Inflicted effect - keep them identical to the in-game
+        // status names.
+        public ColorMapping Bleed = new("Bleeding", PaletteTypes.StatusEffects, Color.IndianRed);
         public ColorMapping Burns = new("Burns", PaletteTypes.StatusEffects, Color.OrangeRed);
         public ColorMapping DamageDown = new("Damage Down", PaletteTypes.StatusEffects, Color.PaleVioletRed);
         public ColorMapping Daze = new("Daze", PaletteTypes.StatusEffects, Color.PaleVioletRed);
@@ -86,7 +89,7 @@ namespace Chromatics.Models
         public ColorMapping DeepFreeze = new("Deep Freeze", PaletteTypes.StatusEffects, Color.RoyalBlue);
         public ColorMapping Dropsy = new("Dropsy", PaletteTypes.StatusEffects, Color.DeepSkyBlue);
         public ColorMapping Incapacitation = new("Incapacitation", PaletteTypes.StatusEffects, Color.DarkRed);
-        public ColorMapping Infirmary = new("Infirmary", PaletteTypes.StatusEffects, Color.PaleVioletRed);
+        public ColorMapping Infirmary = new("Infirmity", PaletteTypes.StatusEffects, Color.PaleVioletRed);
         public ColorMapping Leaden = new("Leaden", PaletteTypes.StatusEffects, Color.DarkGray);
         public ColorMapping Misery = new("Misery", PaletteTypes.StatusEffects, Color.MidnightBlue);
         public ColorMapping Paralysis = new("Paralysis", PaletteTypes.StatusEffects, Color.PeachPuff);
@@ -121,6 +124,23 @@ namespace Chromatics.Models
         public ColorMapping BrinkOfDeath = new("Brink of Death", PaletteTypes.StatusEffects, Color.Maroon);
         public ColorMapping Weakness = new("Weakness", PaletteTypes.StatusEffects, Color.RosyBrown);
         public ColorMapping Nausea = new("Nausea", PaletteTypes.StatusEffects, Color.YellowGreen);
+        public ColorMapping AccuracyDown = new("Accuracy Down", PaletteTypes.StatusEffects, Color.SlateBlue);
+        public ColorMapping Blind = new("Blind", PaletteTypes.StatusEffects, Color.DarkSlateGray);
+        public ColorMapping BrushWithDeath = new("Brush with Death", PaletteTypes.StatusEffects, Color.DarkOrchid);
+        public ColorMapping Charm = new("Charm", PaletteTypes.StatusEffects, Color.Orchid);
+        public ColorMapping Seduce = new("Seduce", PaletteTypes.StatusEffects, Color.MediumVioletRed);
+        public ColorMapping Pacification = new("Pacification", PaletteTypes.StatusEffects, Color.LightCoral);
+        public ColorMapping ReducedImmunity = new("Reduced Immunity", PaletteTypes.StatusEffects, Color.DarkKhaki);
+        public ColorMapping Sludge = new("Sludge", PaletteTypes.StatusEffects, Color.DarkOliveGreen);
+        public ColorMapping FireResistanceDown = new("Fire Resistance Down", PaletteTypes.StatusEffects, Color.OrangeRed);
+        public ColorMapping IceResistanceDown = new("Ice Resistance Down", PaletteTypes.StatusEffects, Color.LightBlue);
+        public ColorMapping WindResistanceDown = new("Wind Resistance Down", PaletteTypes.StatusEffects, Color.SpringGreen);
+        public ColorMapping EarthResistanceDown = new("Earth Resistance Down", PaletteTypes.StatusEffects, Color.Sienna);
+        public ColorMapping LightningResistanceDown = new("Lightning Resistance Down", PaletteTypes.StatusEffects, Color.MediumPurple);
+        public ColorMapping WaterResistanceDown = new("Water Resistance Down", PaletteTypes.StatusEffects, Color.SteelBlue);
+        public ColorMapping BluntResistanceDown = new("Blunt Resistance Down", PaletteTypes.StatusEffects, Color.Gray);
+        public ColorMapping PiercingResistanceDown = new("Piercing Resistance Down", PaletteTypes.StatusEffects, Color.LightSteelBlue);
+        public ColorMapping SlashingResistanceDown = new("Slashing Resistance Down", PaletteTypes.StatusEffects, Color.Silver);
 
         //Cooldowns/Keybinds
         public ColorMapping HotbarCd = new("Keybind Cooldown", PaletteTypes.CooldownsKeybinds, Color.Red);
