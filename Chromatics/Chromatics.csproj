@@ -10,7 +10,7 @@
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.3.6.0</Version>
+    <Version>4.3.7.0</Version>
     <Authors>Danielle Thompson</Authors>
     <!-- ApplicationManifest is conditional: local Debug + Release builds embed
          app.manifest (no fusion-identity <msix> element) so VS debug runs and
@@ -71,6 +71,8 @@
     <AvaloniaResource Include="Resources\video-clip.png" />
     <AvaloniaResource Include="Resources\coin.png" />
     <AvaloniaResource Include="Resources\raid.png" />
+    <AvaloniaResource Include="Resources\cast.png" />
+    <AvaloniaResource Include="Resources\debuff.png" />
   </ItemGroup>
 
   <ItemGroup>

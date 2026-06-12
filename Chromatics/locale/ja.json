@@ -983,5 +983,9 @@
   "Focus Target HP": "フォーカスターゲットのHP",
   "Focus Target Castbar": "フォーカスターゲットのキャストバー",
   "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "選択したキー上にフォーカスターゲットのHPを表示します。\n［対応モード：補間、フェード］",
-  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "選択したキー上にフォーカスターゲットのキャスト進行状況を表示します。\n［対応モード：補間、フェード］"
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "選択したキー上にフォーカスターゲットのキャスト進行状況を表示します。\n［対応モード：補間、フェード］",
+  "Casting Success": "詠唱成功",
+  "Status Inflicted": "状態異常付与",
+  "Ripple out from the centre of the keyboard when your spell cast completes.": "呪文の詠唱が完了すると、キーボードの中央から波紋が広がります。",
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "有害なステータス効果を受けると、デバイスを脈動させます。色はステータス効果のパレットに従います。"
 }

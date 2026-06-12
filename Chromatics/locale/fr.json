@@ -982,5 +982,9 @@
   "Focus Target HP": "PV de la cible focalisée",
   "Focus Target Castbar": "Barre d’incantation de la cible focalisée",
   "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "Affiche les PV de votre cible focalisée sur les touches sélectionnées.\n[Modes pris en charge : Interpolation, Fondu]",
-  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Affiche la progression de l’incantation de votre cible focalisée sur les touches sélectionnées.\n[Modes pris en charge : Interpolation, Fondu]"
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Affiche la progression de l’incantation de votre cible focalisée sur les touches sélectionnées.\n[Modes pris en charge : Interpolation, Fondu]",
+  "Casting Success": "Lancement réussi",
+  "Status Inflicted": "Effet de statut infligé",
+  "Ripple out from the centre of the keyboard when your spell cast completes.": "Ondulation depuis le centre du clavier lorsque le lancement de votre sort se termine.",
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "Fait pulser les périphériques lorsque vous recevez un effet de statut néfaste. Les couleurs suivent la palette des effets de statut."
 }

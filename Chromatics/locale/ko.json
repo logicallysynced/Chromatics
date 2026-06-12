@@ -983,5 +983,9 @@
   "Focus Target HP": "주시 대상 HP",
   "Focus Target Castbar": "주시 대상 시전 바",
   "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "선택한 키 전반에 주시 대상의 HP를 표시합니다.\n[지원 모드: 보간, 페이드]",
-  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "선택한 키 전반에 주시 대상의 시전 진행도를 표시합니다.\n[지원 모드: 보간, 페이드]"
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "선택한 키 전반에 주시 대상의 시전 진행도를 표시합니다.\n[지원 모드: 보간, 페이드]",
+  "Casting Success": "시전 성공",
+  "Status Inflicted": "상태 이상 부여됨",
+  "Ripple out from the centre of the keyboard when your spell cast completes.": "주문 시전이 완료되면 키보드 중앙에서 바깥쪽으로 물결 효과가 퍼집니다.",
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "해로운 상태 이상 효과를 받으면 기기가 맥동합니다. 색상은 상태 효과 팔레트를 따릅니다."
 }

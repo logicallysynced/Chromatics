@@ -1,10 +1,11 @@
 namespace Chromatics.Layers
 {
     // Fixed z-order for whole-device effects, top to bottom:
-    // DamageFlash > DutyFinderBell > Cutscene > TitleScreen > VegasMode >
-    // StartupAnimation. Each effect paints its own ListLedGroup and idles
-    // on a transparent brush (a Color+ no-op), so simultaneous effects
-    // composite by this order instead of fighting over one shared brush.
+    // DamageFlash > DutyFinderBell > CastingSuccess > Cutscene >
+    // StatusInflicted > TitleScreen > VegasMode > StartupAnimation.
+    // Each effect paints its own ListLedGroup and idles on a transparent
+    // brush (a Color+ no-op), so simultaneous effects composite by this
+    // order instead of fighting over one shared brush.
     //
     // Everything here sits above the raid overlays (500 / 600, with a 700
     // intra-raid flash pin) and the user-draggable layer range.
@@ -19,7 +20,9 @@ namespace Chromatics.Layers
     {
         public const int DamageFlash      = 1500;
         public const int DutyFinderBell   = 1400;
+        public const int CastingSuccess   = 1350;
         public const int Cutscene         = 1300;
+        public const int StatusInflicted  = 1250;
         public const int TitleScreen      = 1200;
         public const int StartupAnimation = 1000;
     }

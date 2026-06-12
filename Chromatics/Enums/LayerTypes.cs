@@ -87,6 +87,10 @@ namespace Chromatics.Enums
         GoldSaucerVegas = 3,
         [LayerDisplay(Name="Cutscene Animation", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         CutsceneAnimation = 4,
+        [LayerDisplay(Name="Casting Success", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        CastingSuccess = 5,
+        [LayerDisplay(Name="Status Inflicted", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        StatusInflicted = 6,
     };
 
     public enum LayerModes

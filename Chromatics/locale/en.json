@@ -997,5 +997,9 @@
     "Focus Target HP":  "Focus Target HP",
     "Focus Target Castbar":  "Focus Target Castbar",
     "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]":  "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]",
-    "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]":  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]"
+    "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]":  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]",
+    "Casting Success":  "Casting Success",
+    "Status Inflicted":  "Status Inflicted",
+    "Ripple out from the centre of the keyboard when your spell cast completes.":  "Ripple out from the centre of the keyboard when your spell cast completes.",
+    "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.":  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette."
 }

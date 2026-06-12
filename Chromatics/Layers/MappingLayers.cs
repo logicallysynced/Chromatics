@@ -698,9 +698,13 @@ namespace Chromatics.Layers
     //       dynamic layer positions (16 / 17) added in 4.3.3, paired with
     //       the SanitizeLayerTypeIndexes guard that resets unknown
     //       positions on load / import.
+    //   v7: no shape change. Marks files that can carry the Casting
+    //       Success / Status Inflicted effect layer values (5 / 6) added
+    //       with the 4.3.x Effects-tab additions. Same
+    //       SanitizeLayerTypeIndexes guard covers them.
     public class MappingFileV3
     {
-        public int schemaVersion { get; set; } = 6;
+        public int schemaVersion { get; set; } = 7;
         public ConcurrentDictionary<int, Layer> layers { get; set; } = new ConcurrentDictionary<int, Layer>();
         public Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> deviceLayouts { get; set; }
             = new Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();

@@ -186,7 +186,9 @@ namespace Chromatics.Layers
             { EffectLayerType.DutyFinderBell, DutyFinderBellProcessor.Instance },
             { EffectLayerType.DamageFlash, DamageFlashProcessor.Instance },
             { EffectLayerType.GoldSaucerVegas, GoldSaucerVegasProcessor.Instance },
-            { EffectLayerType.CutsceneAnimation, CutsceneAnimationProcessor.Instance }
+            { EffectLayerType.CutsceneAnimation, CutsceneAnimationProcessor.Instance },
+            { EffectLayerType.CastingSuccess, CastingSuccessProcessor.Instance },
+            { EffectLayerType.StatusInflicted, StatusInflictedProcessor.Instance }
         };
 
         public static Dictionary<EffectLayerType, LayerProcessor> GetProcessors()

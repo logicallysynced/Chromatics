@@ -982,5 +982,9 @@
   "Focus Target HP": "PS del objetivo de foco",
   "Focus Target Castbar": "Barra de lanzamiento del objetivo de foco",
   "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "Muestra los PS de tu objetivo de foco en las teclas seleccionadas.\n[Modos compatibles: Interpolar, Desvanecer]",
-  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Muestra el progreso de lanzamiento de tu objetivo de foco en las teclas seleccionadas.\n[Modos compatibles: Interpolar, Desvanecer]"
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Muestra el progreso de lanzamiento de tu objetivo de foco en las teclas seleccionadas.\n[Modos compatibles: Interpolar, Desvanecer]",
+  "Casting Success": "Lanzamiento exitoso",
+  "Status Inflicted": "Estado alterado infligido",
+  "Ripple out from the centre of the keyboard when your spell cast completes.": "Genera una onda desde el centro del teclado cuando se completa el lanzamiento de tu hechizo.",
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "Haz que los dispositivos pulsen cuando recibas un efecto de estado perjudicial. Los colores siguen la paleta de efectos de estado."
 }

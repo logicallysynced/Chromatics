@@ -982,5 +982,9 @@
   "Focus Target HP": "LP des Fokusziels",
   "Focus Target Castbar": "Zauberleiste des Fokusziels",
   "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "Zeigt die LP deines Fokusziels über die ausgewählten Tasten an.\n[Unterstützte Modi: Interpolieren, Verblassen]",
-  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Zeigt den Zauberfortschritt deines Fokusziels über die ausgewählten Tasten an.\n[Unterstützte Modi: Interpolieren, Verblassen]"
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "Zeigt den Zauberfortschritt deines Fokusziels über die ausgewählten Tasten an.\n[Unterstützte Modi: Interpolieren, Verblassen]",
+  "Casting Success": "Zauber erfolgreich gewirkt",
+  "Status Inflicted": "Statuseffekt erlitten",
+  "Ripple out from the centre of the keyboard when your spell cast completes.": "Lässt beim Abschluss deines Zaubers eine Welle von der Mitte der Tastatur nach außen laufen.",
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "Lässt Geräte pulsieren, wenn du einen schädlichen Statuseffekt erleidest. Die Farben richten sich nach der Palette für Statuseffekte."
 }

@@ -99,7 +99,29 @@ namespace Chromatics.Models
         public ColorMapping Slow = new("Slow", PaletteTypes.StatusEffects, Color.YellowGreen);
         public ColorMapping Stun = new("Stun", PaletteTypes.StatusEffects, Color.Snow);
         public ColorMapping Heavy = new("Heavy", PaletteTypes.StatusEffects, Color.DarkCyan);
-        
+        public ColorMapping Doom = new("Doom", PaletteTypes.StatusEffects, Color.Purple);
+        public ColorMapping Frostbite = new("Frostbite", PaletteTypes.StatusEffects, Color.LightSkyBlue);
+        public ColorMapping Windburn = new("Windburn", PaletteTypes.StatusEffects, Color.MediumSeaGreen);
+        public ColorMapping Dehydration = new("Dehydration", PaletteTypes.StatusEffects, Color.SandyBrown);
+        public ColorMapping Disease = new("Disease", PaletteTypes.StatusEffects, Color.OliveDrab);
+        public ColorMapping Concussion = new("Concussion", PaletteTypes.StatusEffects, Color.LightSlateGray);
+        public ColorMapping SustainedDamage = new("Sustained Damage", PaletteTypes.StatusEffects, Color.Crimson);
+        public ColorMapping MagicVulnerabilityUp = new("Magic Vulnerability Up", PaletteTypes.StatusEffects, Color.MediumOrchid);
+        public ColorMapping PhysicalVulnerabilityUp = new("Physical Vulnerability Up", PaletteTypes.StatusEffects, Color.Tomato);
+        public ColorMapping HealingMagicDown = new("Healing Magic Down", PaletteTypes.StatusEffects, Color.SeaGreen);
+        public ColorMapping Confused = new("Confused", PaletteTypes.StatusEffects, Color.Plum);
+        public ColorMapping Hysteria = new("Hysteria", PaletteTypes.StatusEffects, Color.HotPink);
+        public ColorMapping Seduced = new("Seduced", PaletteTypes.StatusEffects, Color.DeepPink);
+        public ColorMapping Fetters = new("Fetters", PaletteTypes.StatusEffects, Color.DimGray);
+        public ColorMapping Electrocution = new("Electrocution", PaletteTypes.StatusEffects, Color.MediumPurple);
+        public ColorMapping Throttle = new("Throttle", PaletteTypes.StatusEffects, Color.DarkSlateBlue);
+        public ColorMapping TemporaryMisdirection = new("Temporary Misdirection", PaletteTypes.StatusEffects, Color.Khaki);
+        public ColorMapping ForcedMarch = new("Forced March", PaletteTypes.StatusEffects, Color.Peru);
+        public ColorMapping DownForTheCount = new("Down for the Count", PaletteTypes.StatusEffects, Color.SaddleBrown);
+        public ColorMapping BrinkOfDeath = new("Brink of Death", PaletteTypes.StatusEffects, Color.Maroon);
+        public ColorMapping Weakness = new("Weakness", PaletteTypes.StatusEffects, Color.RosyBrown);
+        public ColorMapping Nausea = new("Nausea", PaletteTypes.StatusEffects, Color.YellowGreen);
+
         //Cooldowns/Keybinds
         public ColorMapping HotbarCd = new("Keybind Cooldown", PaletteTypes.CooldownsKeybinds, Color.Red);
         public ColorMapping HotbarNotAvailable = new("Keybind Not Available", PaletteTypes.CooldownsKeybinds, Color.Red);
@@ -518,6 +540,7 @@ namespace Chromatics.Models
         
         //Notifications
         public ColorMapping DutyFinderBell = new("Duty Finder Bell", PaletteTypes.Notifications, Color.Red);
+        public ColorMapping CastingSuccess = new("Casting Success", PaletteTypes.Notifications, Color.White);
         public ColorMapping PullCountdownTick = new("Pull Countdown (Tick)", PaletteTypes.Notifications, Color.Turquoise);
         public ColorMapping PullCountdownEmpty = new("Pull Countdown (Empty)", PaletteTypes.Notifications, Color.Black);
         public ColorMapping PullCountdownEngage = new("Pull Countdown (Engage)", PaletteTypes.Notifications, Color.Lime);

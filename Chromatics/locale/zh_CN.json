@@ -982,5 +982,9 @@
   "Focus Target HP": "焦点目标生命值",
   "Focus Target Castbar": "焦点目标施法条",
   "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]": "在选定按键上显示你的焦点目标生命值。\n[支持模式：插值、渐隐]",
-  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "在选定按键上显示你的焦点目标施法进度。\n[支持模式：插值、渐隐]"
+  "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]": "在选定按键上显示你的焦点目标施法进度。\n[支持模式：插值、渐隐]",
+  "Casting Success": "施法成功",
+  "Status Inflicted": "受到状态效果",
+  "Ripple out from the centre of the keyboard when your spell cast completes.": "当你的法术施放完成时，从键盘中央向外扩散涟漪。",
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "当你受到有害状态效果时，让设备产生脉冲效果。颜色遵循状态效果调色板。"
 }

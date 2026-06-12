@@ -112,11 +112,11 @@ namespace Chromatics.ViewModels
         // Categories with no corresponding ColorMapping entries, or whose
         // functionality has not yet been reimplemented on 4.x. Hidden from
         // the dropdown AND filtered out of the All view so the user doesn't
-        // see dead entries.
+        // see dead entries. StatusEffects left this list when the Status
+        // Inflicted effect started reading its colours.
         private static readonly PaletteTypes[] _hiddenCategories =
         {
             PaletteTypes.Abilities,
-            PaletteTypes.StatusEffects,
         };
 
         // Individual entries hidden regardless of category. Pull Countdown

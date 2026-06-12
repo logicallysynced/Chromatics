@@ -285,7 +285,7 @@ namespace Chromatics.Helpers
 
                 var wrapper = new MappingFileV3
                 {
-                    schemaVersion = 6,
+                    schemaVersion = 7,
                     layers = layersSnapshot,
                     deviceLayouts = layoutsSnapshot,
                     deviceBrightness = brightnessSnapshot,
@@ -644,7 +644,7 @@ namespace Chromatics.Helpers
 
                 var wrapper = new MappingFileV3
                 {
-                    schemaVersion = 6,
+                    schemaVersion = 7,
                     layers = layersCopy,
                     deviceLayouts = deviceLayouts != null
                         ? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(deviceLayouts)
