@@ -113,7 +113,7 @@ namespace Chromatics.Layers
                         model.activeBrush?.RemoveAllDecorators();
 
                         var brush = new SolidColorBrush(Color.Transparent);
-                        var ripple = new RippleBrushDecorator(layergroup, surface, LedId.Keyboard_J, 16.0, 2.0, ringColor)
+                        var ripple = new RippleBrushDecorator(layergroup, surface, LedId.Keyboard_J, 12.0, 2.0, ringColor)
                         {
                             IsEnabled = true,
                         };
