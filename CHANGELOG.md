@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.3.11
+## 4.3.12
 
 - Added new dynamic layers for Focus Target HP and Focus Target Castbar.
 - Added new effects for Status Inflicted and Casting Success.
