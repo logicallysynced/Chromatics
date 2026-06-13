@@ -2,10 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.3.9
+## 4.3.10
 
 - Added new dynamic layers for Focus Target HP and Focus Target Castbar.
 - Added new effects for Status Inflicted and Casting Success.
+- Added new status effects category and items to Palette tab.
 - Fixed a bug which caused the Experience Tracker layer to not work with Reaper and Sage.
 - Fixed the Keybinds layer misreading hotbar actions with high action ids.
 - Updated Sharlayan to latest version

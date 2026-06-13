@@ -19,11 +19,12 @@ namespace Chromatics.Layers
         private const long CooldownMs = 5000;
 
         // Status names resolved against the StatusEffects palette category.
-        // The palette doubles as the detrimental whitelist: a status only
-        // fires the pulse when its English name matches an entry here, which
-        // filters out beneficial and neutral statuses without a Lumina sheet
-        // lookup. Keyed lowercase; values are PaletteColorModel fields read
-        // from the ACTIVE palette at trigger time so user edits apply.
+        // Sharlayan 9.1.2's StatusItem.IsDetrimental (Status sheet
+        // StatusCategory == 2) is the trigger gate; this map only supplies
+        // the pulse colour. Keyed lowercase; values are PaletteColorModel
+        // fields read from the ACTIVE palette at trigger time so user edits
+        // apply. Detrimental statuses missing a palette entry fall back to
+        // a fixed crimson so the pulse never silently skips.
         private static readonly Dictionary<string, FieldInfo> _statusPaletteFields = BuildStatusPaletteFields();
 
         private static Dictionary<string, FieldInfo> BuildStatusPaletteFields()
@@ -122,10 +123,11 @@ namespace Chromatics.Layers
                 {
                     var statuses = getCurrentPlayer.Entity.StatusItems;
 
-                    // Latest received wins: scan in list order and keep the
-                    // last new detrimental match, so a burst of simultaneous
-                    // debuffs plays a single pulse in the newest status's
-                    // colour.
+                    // Latest received wins: scan in list order, gate on
+                    // IsDetrimental, and keep the last new match so a burst
+                    // of simultaneous debuffs plays a single pulse in the
+                    // newest status's colour.
+                    bool triggered = false;
                     FieldInfo triggeredField = null;
                     var currentIds = new HashSet<short>();
 
@@ -136,12 +138,13 @@ namespace Chromatics.Layers
 
                         if (!model.statusBaselineSet) continue;
                         if (model.knownStatusIds.Contains(status.StatusID)) continue;
+                        if (!status.IsDetrimental) continue;
 
+                        triggered = true;
                         var name = !string.IsNullOrEmpty(status.StatusNameEnglish) ? status.StatusNameEnglish : status.StatusName;
-                        if (string.IsNullOrEmpty(name)) continue;
-
-                        if (_statusPaletteFields.TryGetValue(name, out var field))
-                            triggeredField = field;
+                        triggeredField = !string.IsNullOrEmpty(name) && _statusPaletteFields.TryGetValue(name, out var field)
+                            ? field
+                            : null;
                     }
 
                     // The first populated tick seeds the baseline without
@@ -151,10 +154,11 @@ namespace Chromatics.Layers
                     model.statusBaselineSet = true;
 
                     long now = Environment.TickCount64;
-                    if (triggeredField != null && now - model.lastTriggerMs >= CooldownMs)
+                    if (triggered && now - model.lastTriggerMs >= CooldownMs)
                     {
-                        var mapping = (ColorMapping)triggeredField.GetValue(_colorPalette);
-                        var ringColor = ColorHelper.ColorToRGBColor(mapping.Color);
+                        var ringColor = triggeredField != null
+                            ? ColorHelper.ColorToRGBColor(((ColorMapping)triggeredField.GetValue(_colorPalette)).Color)
+                            : new Color(220, 20, 60);
 
                         model.activeBrush?.RemoveAllDecorators();
 
