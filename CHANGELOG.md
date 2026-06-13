@@ -2,9 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.3.13
+## 4.3.14
 
 - Fixed LIFX and Hue lights sometimes keeping the last effect colour after Chromatics closed. State capture and restore now retry instead of giving up after one network attempt.
+- Updated Sharlayan to the 9.1.2 stable release.
 
 ## 4.3.12
 

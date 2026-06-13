@@ -10,7 +10,7 @@
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <StartupObject>Chromatics.Program</StartupObject>
-    <Version>4.3.13.0</Version>
+    <Version>4.3.14.0</Version>
     <Authors>Danielle Thompson</Authors>
     <!-- ApplicationManifest is conditional: local Debug + Release builds embed
          app.manifest (no fusion-identity <msix> element) so VS debug runs and
@@ -135,7 +135,7 @@
     <PackageReference Include="RGB.NET.Devices.Wooting" Version="3.2.0" />
     <PackageReference Include="RGB.NET.HID" Version="3.2.0" />
     <PackageReference Include="RGB.NET.Presets" Version="3.2.0" />
-    <PackageReference Include="Sharlayan" Version="9.1.2-prerelease.59" />
+    <PackageReference Include="Sharlayan" Version="9.1.2" />
   </ItemGroup>
 
   <ItemGroup>
