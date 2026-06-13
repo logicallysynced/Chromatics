@@ -187,7 +187,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 
                     if (devices.Count > 0)
                     {
-                        int totalBudgetSec = Math.Min(15, 2 + devices.Count);
+                        // Per-bulb timeout and total budget sized for the
+                        // triple-send restore (three colour + power rounds
+                        // with pacing gaps, roughly half a second per bulb).
+                        int totalBudgetSec = Math.Min(20, 2 + devices.Count * 2);
                         Task.Run(async () =>
                         {
                             await Task.Delay(80).ConfigureAwait(false);
@@ -196,7 +199,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
                                 try
                                 {
                                     var t = d.RestoreOriginalStateAsync();
-                                    var done = await Task.WhenAny(t, Task.Delay(1500)).ConfigureAwait(false);
+                                    var done = await Task.WhenAny(t, Task.Delay(3000)).ConfigureAwait(false);
                                     if (done != t)
                                         Logger.WriteConsole(LoggerTypes.Devices, $"[LIFX] restore timed out for {d.DeviceInfo.DeviceName}");
                                 }

@@ -118,13 +118,21 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 
         // Captures original power + colour. Caller (provider) does this once at
         // start-up so we have something to restore to on disable / app close.
-        // Best-effort: a 500ms timeout keeps a single unreachable bulb from
-        // stalling provider startup for the others.
+        // Three query attempts with escalating timeouts: the query and its
+        // reply are single UDP datagrams, so one lost packet on a busy WLAN
+        // used to leave _original null and the shutdown restore silently
+        // no-opped - the largest contributor to bulbs "forgetting" their
+        // pre-Chromatics state on close.
         public async Task CaptureOriginalStateAsync(bool turnOnIfOff = true, CancellationToken ct = default)
         {
             try
             {
-                var state = await QueryOriginalStateAsync(TimeSpan.FromMilliseconds(500), ct).ConfigureAwait(false);
+                OriginalState state = null;
+                int[] timeoutsMs = [500, 750, 1000];
+                for (int attempt = 0; attempt < timeoutsMs.Length && state == null; attempt++)
+                {
+                    state = await QueryOriginalStateAsync(TimeSpan.FromMilliseconds(timeoutsMs[attempt]), ct).ConfigureAwait(false);
+                }
                 if (state != null)
                 {
                     _original = state;
@@ -201,40 +209,54 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
             if (_original == null) return;
             try
             {
-                // Take _lock so the colour send can't interleave with an
-                // in-flight Update from the trigger thread. RemoveDevice
-                // sets _perDeviceDisable=true before invoking us, so any
-                // queued decorator data that races surface.Detach gets
-                // dropped (no-op Update); the lock here covers the case
-                // where Update was already inside its critical section,
-                // mid-chunk, when the disable fired. Without this, the
-                // restore's per-chunk SetExtendedColorZones packets
-                // interleaved with the decorator's late chunks and
-                // produced "half the strip restored, half left at the
-                // last decorator colour" on chained Beam setups.
-                lock (_lock)
+                // The whole colour + power sequence repeats three times.
+                // Every restore packet is a single fire-and-forget UDP
+                // datagram, so a one-shot send loses the restore whenever
+                // one datagram drops - the dominant cause of bulbs keeping
+                // the last effect colour after Chromatics closes. The sets
+                // are idempotent, so repeats are harmless, and three sends
+                // turn a per-packet loss rate of a few percent into
+                // effectively zero.
+                for (int attempt = 0; attempt < 3; attempt++)
                 {
-                    bool isMultizone = _def.ZoneCount > 1 || _product.IsMultizone;
-                    if (isMultizone && _original.Zones != null && _original.Zones.Length > 0)
+                    // Take _lock so the colour send can't interleave with an
+                    // in-flight Update from the trigger thread. RemoveDevice
+                    // sets _perDeviceDisable=true before invoking us, so any
+                    // queued decorator data that races surface.Detach gets
+                    // dropped (no-op Update); the lock here covers the case
+                    // where Update was already inside its critical section,
+                    // mid-chunk, when the disable fired. Without this, the
+                    // restore's per-chunk SetExtendedColorZones packets
+                    // interleaved with the decorator's late chunks and
+                    // produced "half the strip restored, half left at the
+                    // last decorator colour" on chained Beam setups.
+                    lock (_lock)
                     {
-                        SendExtendedColorZones(_original.Zones, _original.Zones.Length, durationMs: 200);
+                        bool isMultizone = _def.ZoneCount > 1 || _product.IsMultizone;
+                        if (isMultizone && _original.Zones != null && _original.Zones.Length > 0)
+                        {
+                            SendExtendedColorZones(_original.Zones, _original.Zones.Length, durationMs: 200);
+                        }
+                        else
+                        {
+                            SendSetColor(_original.Hue, _original.Saturation, _original.Brightness, _original.Kelvin, durationMs: 200);
+                        }
                     }
-                    else
+
+                    // Brief gap so the bulb finishes the colour transition
+                    // before we toggle power. Done outside the lock so
+                    // shorter-running calls (a one-shot SetColor on a single
+                    // bulb) can release the queue between the colour and
+                    // power packets.
+                    await Task.Delay(50, ct).ConfigureAwait(false);
+
+                    lock (_lock)
                     {
-                        SendSetColor(_original.Hue, _original.Saturation, _original.Brightness, _original.Kelvin, durationMs: 200);
+                        SendSetLightPower(_original.Powered, durationMs: 200);
                     }
-                }
 
-                // Brief gap so the bulb finishes the colour transition
-                // before we toggle power. Done outside the lock so
-                // shorter-running calls (a one-shot SetColor on a single
-                // bulb) can release the queue between the colour and
-                // power packets.
-                await Task.Delay(50, ct).ConfigureAwait(false);
-
-                lock (_lock)
-                {
-                    SendSetLightPower(_original.Powered, durationMs: 200);
+                    if (attempt < 2)
+                        await Task.Delay(120, ct).ConfigureAwait(false);
                 }
             }
             catch { /* swallow — best-effort during teardown */ }

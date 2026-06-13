@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.13
+
+- Fixed LIFX and Hue lights sometimes keeping the last effect colour after Chromatics closed. State capture and restore now retry instead of giving up after one network attempt.
+
 ## 4.3.12
 
 - Added new dynamic layers for Focus Target HP and Focus Target Castbar.
