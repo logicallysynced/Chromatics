@@ -2,10 +2,10 @@
 
 ![Chromatics Logo](http://thejourneynetwork.net/chromatics/chromatics_black_md.png)
 
-[![Github All Releases](https://img.shields.io/github/downloads/logicallysynced/Chromatics/total.svg)](https://github.com/logicallysynced/Chromatics/releases)
-[![Github Latest Releases](https://img.shields.io/github/downloads/logicallysynced/Chromatics/latest/total.svg)](https://github.com/logicallysynced/Chromatics/releases/latest)
-[![Latest Release](https://img.shields.io/github/release/logicallysynced/Chromatics.svg)](https://github.com/logicallysynced/Chromatics/releases/latest)
-[![Discord](https://img.shields.io/discord/334196655131721741.svg)](https://discord.gg/sK47yFE)
+[![Github All Releases](https://img.shields.io/github/downloads/logicallysynced/Chromatics/total.svg?style=flat)](https://github.com/logicallysynced/Chromatics/releases)
+[![Github Latest Releases](https://img.shields.io/github/downloads/logicallysynced/Chromatics/latest/total.svg?style=flat)](https://github.com/logicallysynced/Chromatics/releases/latest)
+[![Latest Release](https://img.shields.io/github/release/logicallysynced/Chromatics.svg?style=flat)](https://github.com/logicallysynced/Chromatics/releases/latest)
+[![Discord](https://img.shields.io/discord/334196655131721741.svg?style=flat)](https://discord.gg/sK47yFE)
 
 [Join Support Discord](https://discord.gg/sK47yFE)
 <br>
