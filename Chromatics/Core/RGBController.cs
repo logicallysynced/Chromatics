@@ -123,6 +123,40 @@ namespace Chromatics.Core
                 : AppSettings.GetSettings().rgbRefreshRate;
         }
 
+        // Runs one provider's load block and turns assembly-load faults into
+        // console guidance instead of a startup crash. Windows App Control
+        // (Smart App Control / WDAC) blocks the unsigned vendor DLLs on some
+        // machines (0x800711C7) - Chromatics signs only its own binaries by
+        // policy, so the RGB.NET / HueApi assemblies are fair game for the
+        // policy. The provider code sits in a lambda on purpose: lambda
+        // bodies compile to their own methods, so a blocked assembly
+        // resolves when the lambda RUNS (inside this try) instead of when
+        // Setup itself is JIT-compiled - the JIT-time fault happens at
+        // Setup's call site, outside every catch, and crashed startup as
+        // CHROMATICS-17 / CHROMATICS-18.
+        private static void TryLoadProviderIsolated(string label, Action load)
+        {
+            try
+            {
+                load();
+            }
+            catch (Exception ex) when (ex is System.IO.FileLoadException or System.IO.FileNotFoundException
+                or BadImageFormatException or TypeInitializationException or TypeLoadException)
+            {
+                var inner = ex is TypeInitializationException { InnerException: not null } tie ? tie.InnerException : ex;
+                bool appControl = inner.HResult == unchecked((int)0x800711C7)
+                    || (inner.Message?.Contains("Application Control", StringComparison.OrdinalIgnoreCase) ?? false);
+
+                Logger.WriteConsole(Enums.LoggerTypes.Error, appControl
+                    ? $"[{label}] Windows App Control blocked a library this provider needs: {inner.Message} To use these devices, allow Chromatics in Windows Security (App & browser control -> Smart App Control) and restart."
+                    : $"[{label}] Provider library failed to load: {inner.Message}");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{label}] LoadDeviceProvider Error: {ex.Message}");
+            }
+        }
+
         public static void Setup()
         {
             try
@@ -155,103 +189,111 @@ namespace Chromatics.Core
             
                 if (appSettings.deviceLogitechEnabled)
                 {
-                    LoadDeviceProvider(LogitechDeviceProvider.Instance);
+                    TryLoadProviderIsolated("Logitech", () => LoadDeviceProvider(LogitechDeviceProvider.Instance));
                 }
-                    
+
 
                 if (appSettings.deviceCorsairEnabled)
                 {
-                    var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-                    var natives = CorsairDeviceProvider.PossibleX64NativePaths;
-                    natives.Add($"{enviroment}\\x64\\CUESDK.dll");
+                    TryLoadProviderIsolated("Corsair", () =>
+                    {
+                        var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+                        var natives = CorsairDeviceProvider.PossibleX64NativePaths;
+                        natives.Add($"{enviroment}\\x64\\CUESDK.dll");
 
-                    Debug.WriteLine($"{enviroment}\\x64\\CUESDK.dll");
+                        Debug.WriteLine($"{enviroment}\\x64\\CUESDK.dll");
 
-                    // Ask iCUE for exclusive lighting control. Without this,
-                    // iCUE keeps painting its own profile in parallel and our
-                    // writes fight the SDK's background animation thread,
-                    // which manifests as flicker or partial colour reverts on
-                    // some boards. Static on RGB.NET's CorsairDeviceProvider
-                    // and read once when the provider is initialised, so set
-                    // it before LoadDeviceProvider runs.
-                    CorsairDeviceProvider.ExclusiveAccess = true;
+                        // Ask iCUE for exclusive lighting control. Without this,
+                        // iCUE keeps painting its own profile in parallel and our
+                        // writes fight the SDK's background animation thread,
+                        // which manifests as flicker or partial colour reverts on
+                        // some boards. Static on RGB.NET's CorsairDeviceProvider
+                        // and read once when the provider is initialised, so set
+                        // it before LoadDeviceProvider runs.
+                        CorsairDeviceProvider.ExclusiveAccess = true;
 
-                    LoadDeviceProvider(CorsairDeviceProvider.Instance);
+                        LoadDeviceProvider(CorsairDeviceProvider.Instance);
+                    });
                 }
-                    
-            
+
+
                 if (appSettings.deviceCoolermasterEnabled)
                 {
-                    LoadDeviceProvider(CoolerMasterDeviceProvider.Instance);
+                    TryLoadProviderIsolated("CoolerMaster", () => LoadDeviceProvider(CoolerMasterDeviceProvider.Instance));
                 }
-                    
-            
+
+
                 if (appSettings.deviceNovationEnabled)
                 {
-                    LoadDeviceProvider(NovationDeviceProvider.Instance);
+                    TryLoadProviderIsolated("Novation", () => LoadDeviceProvider(NovationDeviceProvider.Instance));
                 }
-                    
-            
+
+
                 if (appSettings.deviceRazerEnabled)
                 {
-                    if (AppSettings.GetSettings().showEmulatorDevices)
-                        RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
+                    TryLoadProviderIsolated("Razer", () =>
+                    {
+                        if (AppSettings.GetSettings().showEmulatorDevices)
+                            RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
 
-                    #if DEBUG
-                        RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
-                    #endif
+                        #if DEBUG
+                            RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
+                        #endif
 
-                    LoadDeviceProvider(RazerDeviceProvider.Instance); 
+                        LoadDeviceProvider(RazerDeviceProvider.Instance);
+                    });
                 }
-            
+
                 if (appSettings.deviceAsusEnabled)
                 {
-                    LoadDeviceProvider(AsusDeviceProvider.Instance);
+                    TryLoadProviderIsolated("ASUS", () => LoadDeviceProvider(AsusDeviceProvider.Instance));
                 }
-                    
-                
+
+
                 if (appSettings.deviceMsiEnabled)
                 {
-                    LoadDeviceProvider(MsiDeviceProvider.Instance);
+                    TryLoadProviderIsolated("MSI", () => LoadDeviceProvider(MsiDeviceProvider.Instance));
                 }
-                    
-            
+
+
                 if (appSettings.deviceSteelseriesEnabled)
                 {
-                    LoadDeviceProvider(SteelSeriesDeviceProvider.Instance);
+                    TryLoadProviderIsolated("SteelSeries", () => LoadDeviceProvider(SteelSeriesDeviceProvider.Instance));
                 }
-                    
-            
+
+
                 if (appSettings.deviceWootingEnabled)
                 {
-                    LoadDeviceProvider(WootingDeviceProvider.Instance);
+                    TryLoadProviderIsolated("Wooting", () => LoadDeviceProvider(WootingDeviceProvider.Instance));
                 }
 
                 if (appSettings.deviceOpenRGBEnabled)
                 {
-                    // IP comes from settings.chromatics4 (hidden field — not
-                    // exposed in the UI). Defaults to 127.0.0.1 for the
-                    // local-SDK-server case; users on a multi-machine setup
-                    // can point Chromatics at a remote server by editing
-                    // openRgbServerIp directly.
-                    var ip = string.IsNullOrWhiteSpace(appSettings.openRgbServerIp)
-                        ? "127.0.0.1"
-                        : appSettings.openRgbServerIp.Trim();
-                    var openrgb = new OpenRGBServerDefinition
+                    TryLoadProviderIsolated("OpenRGB", () =>
                     {
-                        Port = 6742,
-                        Ip = ip,
-                        ClientName = "Chromatics"
-                    };
+                        // IP comes from settings.chromatics4 (hidden field — not
+                        // exposed in the UI). Defaults to 127.0.0.1 for the
+                        // local-SDK-server case; users on a multi-machine setup
+                        // can point Chromatics at a remote server by editing
+                        // openRgbServerIp directly.
+                        var ip = string.IsNullOrWhiteSpace(appSettings.openRgbServerIp)
+                            ? "127.0.0.1"
+                            : appSettings.openRgbServerIp.Trim();
+                        var openrgb = new OpenRGBServerDefinition
+                        {
+                            Port = 6742,
+                            Ip = ip,
+                            ClientName = "Chromatics"
+                        };
 
-                    OpenRGBDeviceProvider.Instance.AddDeviceDefinition(openrgb);
-                    LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
-
+                        OpenRGBDeviceProvider.Instance.AddDeviceDefinition(openrgb);
+                        LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
+                    });
                 }
 
                 if (appSettings.deviceHueEnabled)
                 {
-                    try
+                    TryLoadProviderIsolated("Hue", () =>
                     {
                         if (string.IsNullOrEmpty(appSettings.deviceHueBridgeIP))
                         {
@@ -317,19 +359,17 @@ namespace Chromatics.Core
                             LoadDeviceProvider(HueRGBDeviceProvider.Instance);
 
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[HueDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
-                    }
-
+                    });
                 }
 
                 if (appSettings.devicePlayStationEnabled)
                 {
-                    PlayStationProviderHooks.EnsureInstalled();
-                    LoadDeviceProvider(PlayStationDeviceProvider.Instance);
-                    PlayStationProviderHooks.EmitPostLoadHints();
+                    TryLoadProviderIsolated("PlayStation", () =>
+                    {
+                        PlayStationProviderHooks.EnsureInstalled();
+                        LoadDeviceProvider(PlayStationDeviceProvider.Instance);
+                        PlayStationProviderHooks.EmitPostLoadHints();
+                    });
                 }
 
                 if (appSettings.deviceLifxEnabled)
@@ -623,9 +663,24 @@ namespace Chromatics.Core
 
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 
-                _timerUpdateTrigger = new TimerUpdateTrigger();
-                _timerUpdateTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
-                surface.RegisterUpdateTrigger(_timerUpdateTrigger);
+                // TimerUpdateTrigger lives in RGB.NET.Presets.dll, which App
+                // Control policies also block (CHROMATICS-17). Same lambda
+                // isolation as the providers; without a trigger the surface
+                // can't tick, so bail out of setup with lighting disabled
+                // rather than crash.
+                bool triggerReady = false;
+                TryLoadProviderIsolated("RGB.NET.Presets", () =>
+                {
+                    _timerUpdateTrigger = new TimerUpdateTrigger();
+                    _timerUpdateTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
+                    surface.RegisterUpdateTrigger(_timerUpdateTrigger);
+                    triggerReady = true;
+                });
+                if (!triggerReady)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, "RGB lighting is disabled for this session because the device update timer failed to load.");
+                    return;
+                }
 
                 surface.AlignDevices();
                 surface.Updating += Surface_Updating;

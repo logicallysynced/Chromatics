@@ -263,7 +263,21 @@ namespace Chromatics.Views
                             Logger.WriteConsole(LoggerTypes.System, "No layer file found. Defaults will be created per device.");
                         }
                         KeyController.Setup();
-                        RGBController.Setup();
+
+                        // Backstop for assembly-load faults that fire when
+                        // Setup is JIT-compiled (a blocked DLL resolves at
+                        // the call site, before Setup's own catches exist).
+                        // Setup isolates each provider internally; this
+                        // catch stops any residual fault from escaping the
+                        // async void handler and crashing the dispatcher.
+                        try
+                        {
+                            RGBController.Setup();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteConsole(LoggerTypes.Error, $"RGB startup failed: {ex.Message} Lighting is disabled for this session.");
+                        }
                     });
             });
             GameController.Setup();

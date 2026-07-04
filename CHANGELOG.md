@@ -2,12 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.15
+
+- Fixed a startup crash on PCs where Windows App Control or Smart App Control blocks one of the bundled device libraries. Chromatics now starts with that provider disabled, logs which file was blocked, and explains how to allow it.
+
 ## 4.3.14
-
-- Fixed LIFX and Hue lights sometimes keeping the last effect colour after Chromatics closed. State capture and restore now retry instead of giving up after one network attempt.
-- Updated Sharlayan to the 9.1.2 stable release.
-
-## 4.3.12
 
 - Added new dynamic layers for Focus Target HP and Focus Target Castbar.
 - Added new effects for Status Inflicted and Casting Success.
