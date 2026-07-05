@@ -99,4 +99,49 @@ public class NanoleafRestClientTests
         Assert.False(ok);
         Assert.True(sim.On); // never applied
     }
+
+    // An offline controller is an expected state (dead pairing rows,
+    // startup capture retries, watchdog mid-reboot), so every call must
+    // fail soft without a single exception reaching the debugger - the TCP
+    // pre-flight gate keeps HttpClient (which throws HttpRequestException
+    // for unreachable hosts) out of the picture entirely.
+    [Fact]
+    public async Task RestClient_UnreachableController_FailsSoftWithoutThrowing()
+    {
+        int throwsInClient = 0;
+        EventHandler<System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs> recorder = (_, e) =>
+        {
+            if (Environment.StackTrace.Contains("Protocol.NanoleafRestClient"))
+                Interlocked.Increment(ref throwsInClient);
+        };
+
+        int closedPort = GetClosedTcpPort();
+        AppDomain.CurrentDomain.FirstChanceException += recorder;
+        try
+        {
+            var rest = new NanoleafRestClient("127.0.0.1", closedPort, "TOKEN");
+
+            Assert.Null(await NanoleafRestClient.PairAsync("127.0.0.1", closedPort));
+            Assert.Null(await rest.GetStateAsync());
+            Assert.Null(await rest.EnableStreamingAsync());
+            Assert.False(await rest.IsStreamingAsync());
+            Assert.False(await rest.SetOnAsync(true));
+            Assert.Null(await rest.GetOnAsync());
+        }
+        finally
+        {
+            AppDomain.CurrentDomain.FirstChanceException -= recorder;
+        }
+
+        Assert.Equal(0, throwsInClient);
+    }
+
+    private static int GetClosedTcpPort()
+    {
+        var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+        listener.Start();
+        int port = ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+        listener.Stop();
+        return port;
+    }
 }

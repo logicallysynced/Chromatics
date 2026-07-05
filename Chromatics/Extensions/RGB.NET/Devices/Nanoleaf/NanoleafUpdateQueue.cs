@@ -127,7 +127,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
             try
             {
                 var info = await _rest.EnableStreamingAsync(ct).ConfigureAwait(false);
-                if (info == null) return;
+                if (info == null)
+                {
+                    Logger.WriteConsole(LoggerTypes.Devices, $"[Nanoleaf] {_def.Label}: could not enter streaming mode (controller unreachable or refused).", forwardToSentry: false);
+                    return;
+                }
                 if (!IPAddress.TryParse(info.Host, out var addr))
                     addr = _def.Endpoint.Address;
 

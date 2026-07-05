@@ -18,26 +18,44 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
     // Every mutating call retries three times with backoff (the v4.3.13
     // pattern) because a controller under load can drop a request; the data
     // plane (UDP frames) never retries because the next frame self-corrects.
+    //
+    // Every call runs a no-throw TCP reachability check first. An offline
+    // controller is an EXPECTED state (pairing polls against a dead row,
+    // capture retries at startup, the streaming watchdog mid-reboot), and
+    // HttpClient reports it by throwing HttpRequestException - debugger
+    // noise at best, a halt with break-on-thrown enabled. The gate keeps
+    // the expected-failure paths exception-free; HttpClient only runs when
+    // something is actually listening.
     public sealed class NanoleafRestClient
     {
         private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(5) };
+        private static readonly TimeSpan ReachTimeout = TimeSpan.FromSeconds(1);
 
         private readonly string _baseUrl;   // http://host:port
+        private readonly string _host;
+        private readonly int _port;
         private readonly string _token;
 
         public NanoleafRestClient(string host, int port, string token)
         {
             _baseUrl = $"http://{host}:{port}";
+            _host = host;
+            _port = port;
             _token = token;
         }
 
         private string Api => $"{_baseUrl}/api/v1/{_token}";
+
+        private Task<bool> ReachableAsync(CancellationToken ct)
+            => NanoleafTcpCheck.CanConnectAsync(_host, _port, ReachTimeout, ct);
 
         // Pairing: POST /api/v1/new during the controller's pairing window
         // (user held the power button). Returns the auth token, or null if
         // the window isn't open (403 / non-success). No token required.
         public static async Task<string> PairAsync(string host, int port, CancellationToken ct = default)
         {
+            if (!await NanoleafTcpCheck.CanConnectAsync(host, port, ReachTimeout, ct).ConfigureAwait(false)) return null;
+
             try
             {
                 using var resp = await Http.PostAsync($"http://{host}:{port}/api/v1/new", null, ct).ConfigureAwait(false);
@@ -58,6 +76,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
         // failure so callers treat the controller as unreachable.
         public async Task<NanoleafState> GetStateAsync(CancellationToken ct = default)
         {
+            if (!await ReachableAsync(ct).ConfigureAwait(false)) return null;
+
             try
             {
                 using var resp = await Http.GetAsync(Api, ct).ConfigureAwait(false);
@@ -145,6 +165,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
 
         private async Task<string> GetSelectedEffectRawAsync(CancellationToken ct)
         {
+            if (!await ReachableAsync(ct).ConfigureAwait(false)) return null;
+
             try
             {
                 using var resp = await Http.GetAsync($"{Api}/effects/select", ct).ConfigureAwait(false);
@@ -182,6 +204,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
         // panel layout to read one bool, which matters on 50+ panel walls.
         public async Task<bool?> GetOnAsync(CancellationToken ct = default)
         {
+            if (!await ReachableAsync(ct).ConfigureAwait(false)) return null;
+
             try
             {
                 using var resp = await Http.GetAsync($"{Api}/state/on", ct).ConfigureAwait(false);
@@ -203,46 +227,52 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
 
         // ── retry plumbing ──────────────────────────────────────────────
 
+        // Soft-fail on exhaustion (default/false), never throw: callers all
+        // treat a failed call as "controller not cooperating right now".
         private async Task<T> SendWithRetryAsync<T>(HttpMethod method, string url, string json, Func<string, T> parse, CancellationToken ct)
         {
-            Exception last = null;
             for (int attempt = 0; attempt < 3; attempt++)
             {
-                try
+                if (await ReachableAsync(ct).ConfigureAwait(false))
                 {
-                    using var req = new HttpRequestMessage(method, url);
-                    if (json != null) req.Content = new StringContent(json, Encoding.UTF8, "application/json");
-                    using var resp = await Http.SendAsync(req, ct).ConfigureAwait(false);
-                    if (resp.IsSuccessStatusCode)
+                    try
                     {
-                        var body = await resp.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
-                        return parse(body);
+                        using var req = new HttpRequestMessage(method, url);
+                        if (json != null) req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                        using var resp = await Http.SendAsync(req, ct).ConfigureAwait(false);
+                        if (resp.IsSuccessStatusCode)
+                        {
+                            var body = await resp.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
+                            return parse(body);
+                        }
                     }
-                    last = new HttpRequestException($"HTTP {(int)resp.StatusCode}");
-                }
-                catch (Exception ex)
-                {
-                    last = ex;
+                    catch
+                    {
+                        // fall through to retry
+                    }
                 }
                 if (attempt < 2) await Task.Delay(250 * (attempt + 1), ct).ConfigureAwait(false);
             }
-            throw last ?? new HttpRequestException("Nanoleaf request failed");
+            return default;
         }
 
         private async Task<bool> SendWithRetryBoolAsync(HttpMethod method, string url, string json, CancellationToken ct)
         {
             for (int attempt = 0; attempt < 3; attempt++)
             {
-                try
+                if (await ReachableAsync(ct).ConfigureAwait(false))
                 {
-                    using var req = new HttpRequestMessage(method, url);
-                    if (json != null) req.Content = new StringContent(json, Encoding.UTF8, "application/json");
-                    using var resp = await Http.SendAsync(req, ct).ConfigureAwait(false);
-                    if (resp.IsSuccessStatusCode) return true;
-                }
-                catch
-                {
-                    // fall through to retry
+                    try
+                    {
+                        using var req = new HttpRequestMessage(method, url);
+                        if (json != null) req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                        using var resp = await Http.SendAsync(req, ct).ConfigureAwait(false);
+                        if (resp.IsSuccessStatusCode) return true;
+                    }
+                    catch
+                    {
+                        // fall through to retry
+                    }
                 }
                 if (attempt < 2) await Task.Delay(250 * (attempt + 1), ct).ConfigureAwait(false);
             }

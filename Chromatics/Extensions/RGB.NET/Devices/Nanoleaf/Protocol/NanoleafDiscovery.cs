@@ -113,50 +113,19 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
 
         // Manual-IP fallback: a TCP reachability check of the OpenAPI port.
         // An unreachable or wrong IP is this method's EXPECTED outcome, so
-        // it must not throw for it - the first version used HttpClient with
-        // a short timeout, which reports "nothing there" by throwing
-        // TaskCanceledException, and a debugger set to break on thrown
-        // exceptions halts on every failed probe. SocketAsyncEventArgs
-        // reports failure through SocketError instead of throwing. A
-        // successful connect to the dedicated Nanoleaf port is signal
-        // enough for a list row; pairing confirms identity.
+        // it must not throw for it (see NanoleafTcpCheck). A successful
+        // connect to the dedicated Nanoleaf port is signal enough for a
+        // list row; pairing confirms identity.
         public static async Task<NanoleafDiscoveredController> ProbeAsync(string host, int port, TimeSpan timeout, CancellationToken ct = default)
         {
             if (!IPAddress.TryParse(host, out var addr)) return null;
-            if (ct.IsCancellationRequested) return null;
+            if (!await NanoleafTcpCheck.CanConnectAsync(host, port, timeout, ct).ConfigureAwait(false)) return null;
 
-            try
+            return new NanoleafDiscoveredController
             {
-                using var sock = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                using var connectArgs = new SocketAsyncEventArgs { RemoteEndPoint = new IPEndPoint(addr, port) };
-                var completion = new TaskCompletionSource<SocketError>(TaskCreationOptions.RunContinuationsAsynchronously);
-                connectArgs.Completed += (_, e) => completion.TrySetResult(e.SocketError);
-
-                if (!sock.ConnectAsync(connectArgs))
-                    completion.TrySetResult(connectArgs.SocketError);
-
-                var winner = await Task.WhenAny(completion.Task, Task.Delay(timeout)).ConfigureAwait(false);
-                if (winner != completion.Task)
-                {
-                    // Timed out. Abort the attempt, then wait for the aborted
-                    // completion so the args aren't disposed mid-operation.
-                    Socket.CancelConnectAsync(connectArgs);
-                    await Task.WhenAny(completion.Task, Task.Delay(1000)).ConfigureAwait(false);
-                    return null;
-                }
-
-                if (completion.Task.Result != SocketError.Success) return null;
-
-                return new NanoleafDiscoveredController
-                {
-                    Label = host,
-                    Endpoint = new IPEndPoint(addr, port),
-                };
-            }
-            catch
-            {
-                return null;
-            }
+                Label = host,
+                Endpoint = new IPEndPoint(addr, port),
+            };
         }
 
         // The discovery socket, with Windows ICMP-reset reporting turned
