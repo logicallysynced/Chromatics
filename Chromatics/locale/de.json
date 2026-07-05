@@ -998,5 +998,6 @@
   "Pairing timed out. Try again and hold the button until the lights flash.": "Zeitüberschreitung beim Koppeln. Versuchen Sie es erneut und halten Sie die Taste gedrückt, bis die Lichter blinken.",
   "Paired - {0} panels": "Gekoppelt – {0} Panels",
   "Nanoleaf (Beta)": "Nanoleaf (Beta)",
-  "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[BETA] Nanoleaf-Smart-Light-Unterstützung aktivieren/deaktivieren. Koppelt Nanoleaf-Controller (Shapes, Canvas, Elements, Lines, Aurora) über Ihr LAN – jeder Controller erfordert eine einmalige Kopplung per Tastendruck. Essentials-Lampen und -Lightstrips werden nicht unterstützt. Standard: Deaktiviert"
+  "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[BETA] Nanoleaf-Smart-Light-Unterstützung aktivieren/deaktivieren. Koppelt Nanoleaf-Controller (Shapes, Canvas, Elements, Lines, Aurora) über Ihr LAN – jeder Controller erfordert eine einmalige Kopplung per Tastendruck. Essentials-Lampen und -Lightstrips werden nicht unterstützt. Standard: Deaktiviert",
+  "Pairing failed. Try again.": "Kopplung fehlgeschlagen. Versuchen Sie es erneut."
 }

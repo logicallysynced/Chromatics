@@ -101,5 +101,19 @@ public class NanoleafProtocolTests
         // Trailing QTYPE PTR (12) and QCLASS IN (1).
         Assert.Equal(12, q[^3]);
         Assert.Equal(1, q[^1]);
+        // QU bit: responders must unicast the answer to our source port.
+        // Windows' own mDNS service owns port 5353, so a multicast answer
+        // never reaches us.
+        Assert.Equal(0x80, q[^2]);
+    }
+
+    [Fact]
+    public void ContainsServiceLabel_MatchesNanoleafResponsesOnly()
+    {
+        var nanoleaf = System.Text.Encoding.ASCII.GetBytes("xx_nanoleafapi._tcp.localxx");
+        var other = System.Text.Encoding.ASCII.GetBytes("xx_googlecast._tcp.localxx");
+
+        Assert.True(NanoleafDiscovery.ContainsServiceLabel(nanoleaf));
+        Assert.False(NanoleafDiscovery.ContainsServiceLabel(other));
     }
 }

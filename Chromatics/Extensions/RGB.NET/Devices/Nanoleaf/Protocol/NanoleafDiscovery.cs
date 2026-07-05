@@ -36,27 +36,55 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
         // timeout. Callers pair with the manual-IP probe for filtered
         // networks. Only the endpoint + label come from mDNS; the Id and
         // model are resolved by a REST probe at adoption time.
+        //
+        // The query sets the QU (unicast-response) bit, so controllers reply
+        // directly to our ephemeral port. Without it, responders multicast
+        // their answers to port 5353 - which the Windows mDNS service owns,
+        // so we would never see a single reply.
         public static async Task<IReadOnlyList<NanoleafDiscoveredController>> DiscoverAsync(TimeSpan timeout, CancellationToken ct = default)
         {
             var found = new Dictionary<string, NanoleafDiscoveredController>(StringComparer.OrdinalIgnoreCase);
 
             try
             {
-                using var udp = new UdpClient(AddressFamily.InterNetwork);
-                udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-                udp.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
-                udp.JoinMulticastGroup(MulticastAddr);
+                using var udp = CreateDiscoverySocket();
 
                 var query = BuildPtrQuery(ServiceType);
-                await udp.SendAsync(query, query.Length, new IPEndPoint(MulticastAddr, MdnsPort)).ConfigureAwait(false);
+                var target = new IPEndPoint(MulticastAddr, MdnsPort);
+                await udp.SendAsync(query, query.Length, target).ConfigureAwait(false);
 
-                using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-                cts.CancelAfter(timeout);
-                while (!cts.IsCancellationRequested)
+                using var deadline = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                deadline.CancelAfter(timeout);
+                int socketErrors = 0;
+
+                while (!deadline.IsCancellationRequested)
                 {
+                    // 1s receive slices inside the overall deadline: a quiet
+                    // slice re-sends the query (mDNS is lossy; repeat asks
+                    // are standard) instead of blocking until the deadline.
+                    using var slice = CancellationTokenSource.CreateLinkedTokenSource(deadline.Token);
+                    slice.CancelAfter(1000);
+
                     UdpReceiveResult res;
-                    try { res = await udp.ReceiveAsync(cts.Token).ConfigureAwait(false); }
-                    catch (OperationCanceledException) { break; }
+                    try
+                    {
+                        res = await udp.ReceiveAsync(slice.Token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        if (deadline.IsCancellationRequested) break;
+                        try { await udp.SendAsync(query, query.Length, target).ConfigureAwait(false); }
+                        catch (SocketException) { if (++socketErrors >= 5) break; }
+                        continue;
+                    }
+                    catch (SocketException)
+                    {
+                        // Stray ICMP or transient stack error: skip the
+                        // packet, but bail if the socket looks dead so a
+                        // permanent fault can't spin the loop.
+                        if (++socketErrors >= 5) break;
+                        continue;
+                    }
 
                     var ctrl = TryParseResponse(res.Buffer, res.RemoteEndPoint.Address);
                     if (ctrl != null)
@@ -100,6 +128,27 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
             }
         }
 
+        // The discovery socket, with Windows ICMP-reset reporting turned
+        // off. Windows converts ICMP "port unreachable" from any earlier
+        // send into a SocketException on the NEXT receive, and keeps
+        // rethrowing it on every receive after that - one unreachable host
+        // turns the receive loop into a repeated-throw storm. The
+        // SIO_UDP_CONNRESET ioctl disables that reporting for this socket.
+        // Public so the test suite can prove the production config survives
+        // an ICMP reset without throwing.
+        public static UdpClient CreateDiscoverySocket()
+        {
+            var udp = new UdpClient(AddressFamily.InterNetwork);
+            udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            udp.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
+
+            const int SIO_UDP_CONNRESET = unchecked((int)0x9800000C);
+            try { udp.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { 0 }, null); }
+            catch { /* unsupported off-Windows; the receive loop's catch still covers it */ }
+
+            return udp;
+        }
+
         // ── minimal DNS wire helpers ────────────────────────────────────
 
         public static byte[] BuildPtrQuery(string name)
@@ -114,16 +163,17 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
                 body.AddRange(bytes);
             }
             body.Add(0);              // end of name
-            body.AddRange(new byte[] { 0, 12 }); // QTYPE PTR
-            body.AddRange(new byte[] { 0, 1 });  // QCLASS IN
+            body.AddRange(new byte[] { 0, 12 });    // QTYPE PTR
+            // QCLASS IN with the top (QU) bit set: asks responders to reply
+            // unicast to our source port instead of multicasting to 5353.
+            body.AddRange(new byte[] { 0x80, 1 });
             return body.ToArray();
         }
 
         // We don't fully parse the DNS response - stitching SRV/A across
-        // compressed names is fiddly and error-prone. For discovery we only
-        // need the responder's address (any host answering the multicast for
-        // this service type IS a Nanoleaf controller on the standard port),
-        // so we take the source address and the default control port. The
+        // compressed names is fiddly and error-prone. A response with
+        // answers that carries the Nanoleaf service label is enough: the
+        // responder's address is the controller, on the standard port. The
         // adoption pairing step confirms identity via REST.
         private static NanoleafDiscoveredController TryParseResponse(byte[] buffer, IPAddress source)
         {
@@ -131,12 +181,23 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
             // answer count in the header must be > 0 for a real response
             ushort ancount = BinaryPrimitives.ReadUInt16BigEndian(buffer.AsSpan(6, 2));
             if (ancount == 0) return null;
+            if (!ContainsServiceLabel(buffer)) return null;
 
             return new NanoleafDiscoveredController
             {
                 Label = source.ToString(),
                 Endpoint = new IPEndPoint(source, 16021),
             };
+        }
+
+        // DNS name compression can only point backwards, so the first
+        // occurrence of the service name is always spelled out - a literal
+        // scan for the "_nanoleafapi" label is a reliable containment test.
+        private static readonly byte[] ServiceLabel = Encoding.ASCII.GetBytes("_nanoleafapi");
+
+        public static bool ContainsServiceLabel(byte[] buffer)
+        {
+            return buffer.AsSpan().IndexOf(ServiceLabel) >= 0;
         }
     }
 }

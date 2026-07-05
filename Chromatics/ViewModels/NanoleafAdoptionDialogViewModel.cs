@@ -1,3 +1,5 @@
+using Chromatics.Core;
+using Chromatics.Enums;
 using Chromatics.Extensions.RGB.NET.Devices.Nanoleaf;
 using Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol;
 using Chromatics.Localization;
@@ -30,39 +32,60 @@ namespace Chromatics.ViewModels
 
         public NanoleafAdoptionDialogViewModel()
         {
-            AddByIpCommand = new RelayCommand(async () => await AddByIpAsync());
+            // The async lambda runs as async void inside RelayCommand -
+            // faults must stay inside or they crash the app.
+            AddByIpCommand = new RelayCommand(async () =>
+            {
+                try { await AddByIpAsync(); }
+                catch (Exception ex)
+                {
+                    Logger.WriteConsole(LoggerTypes.Error, $"[Nanoleaf] add-by-IP failed: {ex.Message}");
+                }
+            });
             LocalizationService.Instance.PropertyChanged += OnLocaleChanged;
             UpdateStatus();
         }
 
         // Seed already-paired controllers, then run a discovery sweep and
-        // merge in anything new that isn't already listed.
+        // merge in anything new that isn't already listed. IsBusy resets in
+        // finally - a fault anywhere in here must not leave the dialog
+        // spinning forever.
         public async Task StartDiscoveryAsync(IEnumerable<NanoleafAdoptedDevice> alreadyPaired, CancellationToken ct)
         {
-            IsBusy = true;
-            UpdateStatus();
-
-            Controllers.Clear();
-            foreach (var d in alreadyPaired ?? Enumerable.Empty<NanoleafAdoptedDevice>())
-            {
-                Controllers.Add(NanoleafControllerItem.FromPaired(d, this));
-            }
-
             try
             {
-                var found = await NanoleafDiscovery.DiscoverAsync(TimeSpan.FromSeconds(3), ct).ConfigureAwait(true);
-                foreach (var c in found)
-                {
-                    string ip = c.Endpoint?.Address.ToString();
-                    if (ip == null) continue;
-                    if (Controllers.Any(x => x.Ip == ip)) continue;
-                    Controllers.Add(NanoleafControllerItem.FromDiscovered(c, this));
-                }
-            }
-            catch { /* discovery is best-effort */ }
+                IsBusy = true;
+                UpdateStatus();
 
-            IsBusy = false;
-            UpdateStatus();
+                Controllers.Clear();
+                foreach (var d in alreadyPaired ?? Enumerable.Empty<NanoleafAdoptedDevice>())
+                {
+                    if (d == null) continue;
+                    Controllers.Add(NanoleafControllerItem.FromPaired(d, this));
+                }
+
+                try
+                {
+                    var found = await NanoleafDiscovery.DiscoverAsync(TimeSpan.FromSeconds(3), ct).ConfigureAwait(true);
+                    foreach (var c in found)
+                    {
+                        string ip = c.Endpoint?.Address.ToString();
+                        if (ip == null) continue;
+                        if (Controllers.Any(x => x.Ip == ip)) continue;
+                        Controllers.Add(NanoleafControllerItem.FromDiscovered(c, this));
+                    }
+                }
+                catch { /* discovery is best-effort */ }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(LoggerTypes.Error, $"[Nanoleaf] adoption dialog discovery failed: {ex.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+                UpdateStatus();
+            }
         }
 
         private async Task AddByIpAsync()
@@ -72,47 +95,65 @@ namespace Chromatics.ViewModels
             if (Controllers.Any(x => x.Ip == ip)) return;
 
             IsBusy = true;
-            var probe = await NanoleafDiscovery.ProbeAsync(ip, 16021, TimeSpan.FromSeconds(2)).ConfigureAwait(true);
-            IsBusy = false;
-
-            var stub = probe ?? new NanoleafDiscoveredController { Label = ip, Endpoint = new IPEndPoint(IPAddress.Parse(ip), 16021) };
-            Controllers.Add(NanoleafControllerItem.FromDiscovered(stub, this));
-            ManualIp = "";
+            try
+            {
+                var probe = await NanoleafDiscovery.ProbeAsync(ip, 16021, TimeSpan.FromSeconds(2)).ConfigureAwait(true);
+                var stub = probe ?? new NanoleafDiscoveredController { Label = ip, Endpoint = new IPEndPoint(IPAddress.Parse(ip), 16021) };
+                Controllers.Add(NanoleafControllerItem.FromDiscovered(stub, this));
+                ManualIp = "";
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         // Runs the pairing poll for one controller: repeatedly POST /new for
         // ~30 seconds until the controller (in pairing mode) returns a token.
+        // try/finally keeps IsBusy honest and the catch recovers the row -
+        // otherwise a fault mid-poll leaves the button disabled on the
+        // "hold the power button" message with the spinner stuck.
         internal async Task PairAsync(NanoleafControllerItem item)
         {
             item.SetPairing(LocalizationService.Instance["Hold the power button on this controller until it flashes..."]);
             IsBusy = true;
 
-            string token = null;
-            var deadline = DateTime.UtcNow.AddSeconds(30);
-            while (DateTime.UtcNow < deadline && token == null)
-            {
-                token = await NanoleafRestClient.PairAsync(item.Ip, item.Port).ConfigureAwait(true);
-                if (token == null) await Task.Delay(1000).ConfigureAwait(true);
-            }
-
-            IsBusy = false;
-
-            if (token == null)
-            {
-                item.SetPairFailed(LocalizationService.Instance["Pairing timed out. Try again and hold the button until the lights flash."]);
-                return;
-            }
-
-            // Resolve identity + panel count now that we're authorised.
             try
             {
-                var rest = new NanoleafRestClient(item.Ip, item.Port, token);
-                var state = await rest.GetStateAsync().ConfigureAwait(true);
-                item.SetPaired(token, state);
+                string token = null;
+                var deadline = DateTime.UtcNow.AddSeconds(30);
+                while (DateTime.UtcNow < deadline && token == null)
+                {
+                    token = await NanoleafRestClient.PairAsync(item.Ip, item.Port).ConfigureAwait(true);
+                    if (token == null) await Task.Delay(1000).ConfigureAwait(true);
+                }
+
+                if (token == null)
+                {
+                    item.SetPairFailed(LocalizationService.Instance["Pairing timed out. Try again and hold the button until the lights flash."]);
+                    return;
+                }
+
+                // Resolve identity + panel count now that we're authorised.
+                try
+                {
+                    var rest = new NanoleafRestClient(item.Ip, item.Port, token);
+                    var state = await rest.GetStateAsync().ConfigureAwait(true);
+                    item.SetPaired(token, state);
+                }
+                catch
+                {
+                    item.SetPaired(token, null);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                item.SetPaired(token, null);
+                Logger.WriteConsole(LoggerTypes.Error, $"[Nanoleaf] pairing failed for {item.Ip}: {ex.Message}");
+                item.SetPairFailed(LocalizationService.Instance["Pairing failed. Try again."]);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
@@ -226,10 +267,18 @@ namespace Chromatics.ViewModels
 
         private async void OnAction()
         {
-            if (!string.IsNullOrEmpty(AuthToken))
-                _owner.RemovePaired(this);
-            else
-                await _owner.PairAsync(this);
+            try
+            {
+                if (!string.IsNullOrEmpty(AuthToken))
+                    _owner.RemovePaired(this);
+                else
+                    await _owner.PairAsync(this);
+            }
+            catch (Exception ex)
+            {
+                // async void: a fault escaping here would crash the app
+                Logger.WriteConsole(LoggerTypes.Error, $"[Nanoleaf] pair/remove action failed: {ex.Message}");
+            }
         }
 
         internal void SetPairing(string message)

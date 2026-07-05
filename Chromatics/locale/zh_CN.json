@@ -998,5 +998,6 @@
   "Pairing timed out. Try again and hold the button until the lights flash.": "配对超时。请重试并按住按钮，直到灯光闪烁。",
   "Paired - {0} panels": "已配对 - {0} 个面板",
   "Nanoleaf (Beta)": "Nanoleaf（Beta）",
-  "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[BETA] 启用/禁用 Nanoleaf 智能灯支持。通过局域网配对 Nanoleaf 控制器（Shapes、Canvas、Elements、Lines、Aurora）——每个控制器都需要一次性按键配对。不支持 Essentials 灯泡和灯带。默认：禁用"
+  "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[BETA] 启用/禁用 Nanoleaf 智能灯支持。通过局域网配对 Nanoleaf 控制器（Shapes、Canvas、Elements、Lines、Aurora）——每个控制器都需要一次性按键配对。不支持 Essentials 灯泡和灯带。默认：禁用",
+  "Pairing failed. Try again.": "配对失败。请重试。"
 }

@@ -23,10 +23,17 @@ namespace Chromatics.Views
             _vm = new NanoleafAdoptionDialogViewModel();
             DataContext = _vm;
 
+            // Opened / Click handlers are async void: anything that escapes
+            // them takes the whole app down, so faults are logged and held
+            // here as the last line of defence.
             Opened += async (_, __) =>
             {
                 _cts = new CancellationTokenSource();
-                await _vm.StartDiscoveryAsync(alreadyPaired, _cts.Token);
+                try { await _vm.StartDiscoveryAsync(alreadyPaired, _cts.Token); }
+                catch (System.Exception ex)
+                {
+                    Chromatics.Core.Logger.WriteConsole(Chromatics.Enums.LoggerTypes.Error, $"[Nanoleaf] adoption dialog failed to open discovery: {ex.Message}");
+                }
             };
 
             Closed += (_, __) =>
@@ -43,7 +50,11 @@ namespace Chromatics.Views
             _cts = new CancellationTokenSource();
             // Preserve rows already holding a token across the re-run so a
             // fresh sweep doesn't drop the user's paired controllers.
-            await _vm.StartDiscoveryAsync(_vm.GetAdopted(), _cts.Token);
+            try { await _vm.StartDiscoveryAsync(_vm.GetAdopted(), _cts.Token); }
+            catch (System.Exception ex)
+            {
+                Chromatics.Core.Logger.WriteConsole(Chromatics.Enums.LoggerTypes.Error, $"[Nanoleaf] discovery re-run failed: {ex.Message}");
+            }
         }
 
         private void OnCancel(object sender, RoutedEventArgs e)
