@@ -51,47 +51,52 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
 
                 var query = BuildPtrQuery(ServiceType);
                 var target = new IPEndPoint(MulticastAddr, MdnsPort);
-                await udp.SendAsync(query, query.Length, target).ConfigureAwait(false);
-
-                using var deadline = CancellationTokenSource.CreateLinkedTokenSource(ct);
-                deadline.CancelAfter(timeout);
                 int socketErrors = 0;
 
-                while (!deadline.IsCancellationRequested)
+                try { await udp.SendAsync(query, query.Length, target).ConfigureAwait(false); }
+                catch (SocketException) { socketErrors++; /* the 1s resend retries */ }
+
+                // Poll-based loop: nothing here throws on the healthy path.
+                // The first version bounded ReceiveAsync with 1s cancellation
+                // slices, which threw OperationCanceledException every quiet
+                // second as control flow - and a debugger set to break on
+                // thrown exceptions halts on each one, which reads as the
+                // app crashing moments after discovery starts. Available
+                // tells us when a datagram is queued (so the receive below
+                // completes without blocking), 50ms naps pace the loop, and
+                // the query re-sends each quiet second because mDNS is lossy.
+                var sw = System.Diagnostics.Stopwatch.StartNew();
+                long timeoutMs = (long)timeout.TotalMilliseconds;
+                long nextResendMs = 1000;
+
+                while (sw.ElapsedMilliseconds < timeoutMs && !ct.IsCancellationRequested && socketErrors < 5)
                 {
-                    // 1s receive slices inside the overall deadline: a quiet
-                    // slice re-sends the query (mDNS is lossy; repeat asks
-                    // are standard) instead of blocking until the deadline.
-                    using var slice = CancellationTokenSource.CreateLinkedTokenSource(deadline.Token);
-                    slice.CancelAfter(1000);
+                    bool hasData;
+                    try { hasData = udp.Available > 0; }
+                    catch (SocketException) { socketErrors++; continue; }
 
-                    UdpReceiveResult res;
-                    try
+                    if (hasData)
                     {
-                        res = await udp.ReceiveAsync(slice.Token).ConfigureAwait(false);
+                        try
+                        {
+                            var res = await udp.ReceiveAsync().ConfigureAwait(false);
+                            var ctrl = TryParseResponse(res.Buffer, res.RemoteEndPoint.Address);
+                            if (ctrl != null) found[ctrl.Endpoint.ToString()] = ctrl;
+                        }
+                        catch (SocketException) { socketErrors++; }
+                        continue;
                     }
-                    catch (OperationCanceledException)
+
+                    if (sw.ElapsedMilliseconds >= nextResendMs)
                     {
-                        if (deadline.IsCancellationRequested) break;
+                        nextResendMs += 1000;
                         try { await udp.SendAsync(query, query.Length, target).ConfigureAwait(false); }
-                        catch (SocketException) { if (++socketErrors >= 5) break; }
-                        continue;
-                    }
-                    catch (SocketException)
-                    {
-                        // Stray ICMP or transient stack error: skip the
-                        // packet, but bail if the socket looks dead so a
-                        // permanent fault can't spin the loop.
-                        if (++socketErrors >= 5) break;
-                        continue;
+                        catch (SocketException) { socketErrors++; }
                     }
 
-                    var ctrl = TryParseResponse(res.Buffer, res.RemoteEndPoint.Address);
-                    if (ctrl != null)
-                    {
-                        var key = ctrl.Endpoint.ToString();
-                        found[key] = ctrl;
-                    }
+                    // Tokenless nap: user cancellation lands within 50ms via
+                    // the loop condition instead of a thrown exception.
+                    await Task.Delay(50).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)
@@ -142,8 +147,9 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
             udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             udp.Client.Bind(new IPEndPoint(IPAddress.Any, 0));
 
+            // Input is a 4-byte BOOL (FALSE = stop reporting resets).
             const int SIO_UDP_CONNRESET = unchecked((int)0x9800000C);
-            try { udp.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { 0 }, null); }
+            try { udp.Client.IOControl(SIO_UDP_CONNRESET, new byte[] { 0, 0, 0, 0 }, null); }
             catch { /* unsupported off-Windows; the receive loop's catch still covers it */ }
 
             return udp;
