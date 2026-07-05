@@ -1000,5 +1000,7 @@
   "Paired - {0} panels": "페어링됨 - 패널 {0}개",
   "Nanoleaf (Beta)": "Nanoleaf(베타)",
   "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[베타] Nanoleaf 스마트 조명 지원을 활성화/비활성화합니다. LAN을 통해 Nanoleaf 컨트롤러(Shapes, Canvas, Elements, Lines, Aurora)를 페어링합니다. 각 컨트롤러는 한 번의 버튼 누름 페어링이 필요합니다. Essentials 전구 및 스트립은 지원되지 않습니다. 기본값: 비활성화",
-  "Pairing failed. Try again.": "페어링에 실패했습니다. 다시 시도하세요."
+  "Pairing failed. Try again.": "페어링에 실패했습니다. 다시 시도하세요.",
+  "Pair": "페어링",
+  "Remove": "제거"
 }

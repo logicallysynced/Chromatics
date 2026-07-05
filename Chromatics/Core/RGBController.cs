@@ -780,6 +780,15 @@ namespace Chromatics.Core
                         catch { /* best-effort */ }
                     });
                 }
+                else if (device is Extensions.RGB.NET.Devices.Nanoleaf.NanoleafDevice nanoDev)
+                {
+                    nanoDev.SetPerDeviceDisabled(true);
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await nanoDev.RestoreOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
                 else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
                 {
                     // QMK boards have no captured pre-Chromatics state to
@@ -838,6 +847,11 @@ namespace Chromatics.Core
                 else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
                 {
                     hueDev.SetPerDeviceDisabled(false);
+                }
+                else if (device is Extensions.RGB.NET.Devices.Nanoleaf.NanoleafDevice nanoDev)
+                {
+                    nanoDev.ResetCache();
+                    nanoDev.SetPerDeviceDisabled(false);
                 }
                 else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
                 {
@@ -915,6 +929,21 @@ namespace Chromatics.Core
                 // so the bridge powers the bulb on automatically as soon
                 // as the surface.Update flush above lands. No equivalent
                 // power-on call needed.
+
+                // Nanoleaf must re-negotiate extControl streaming over
+                // REST after a re-enable: the disable path restored the
+                // controller to its scene (which exits streaming), and a
+                // controller that started persisted-disabled never entered
+                // streaming at all - either way it ignores UDP frames
+                // until the handshake runs again.
+                if (device is Extensions.RGB.NET.Devices.Nanoleaf.NanoleafDevice nanoDevStream)
+                {
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await nanoDevStream.EnsureStreamingAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
 
                 lock (_activeDevicesLock)
                 {

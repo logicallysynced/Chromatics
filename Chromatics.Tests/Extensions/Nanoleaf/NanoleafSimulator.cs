@@ -124,6 +124,14 @@ public sealed class NanoleafSimulator : IDisposable
             return;
         }
 
+        // GET /state/on
+        if (rest == "/state/on" && req.HttpMethod == "GET")
+        {
+            WriteJson(ctx, 200, new JObject { ["value"] = On });
+            ctx.Response.Close();
+            return;
+        }
+
         // GET /effects/select
         if (rest == "/effects/select" && req.HttpMethod == "GET")
         {

@@ -595,7 +595,7 @@ namespace Chromatics.ViewModels
                     AppSettings.SaveSettings(cur);
                 }));
 
-            // Nanoleaf — OpenAPI panels (Shapes, Canvas, Elements, Lines,
+            // Nanoleaf - OpenAPI panels (Shapes, Canvas, Elements, Lines,
             // Aurora) plus Skylight/4D by conformance. Hue-pattern adoption:
             // the dialog pairs each controller (physical button hold ->
             // token) and supports manual-IP add. Excluded from the first-run

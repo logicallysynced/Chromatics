@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.3.18
+## 4.3.19
 
 - **New:** Nanoleaf smart-light support (Beta). Covers the panel family (Shapes, Canvas, Elements, Lines, Aurora) and other controllers that speak the Nanoleaf OpenAPI. Enable it from Settings → Device Providers and pair each controller with a one-time button press; effects render across the panels at their real physical positions. Essentials bulbs and strips are not supported.
 

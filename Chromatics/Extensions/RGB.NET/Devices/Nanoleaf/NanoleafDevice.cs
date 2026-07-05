@@ -26,6 +26,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
         public void BeginShutdown() => _updateQueue.BeginShutdown();
         public Task CaptureAndStartAsync(bool turnOnIfOff = true) => _updateQueue.CaptureAndStartAsync(turnOnIfOff);
         public Task RestoreOriginalStateAsync() => _updateQueue.RestoreOriginalStateAsync();
+        public Task EnsureStreamingAsync() => _updateQueue.EnsureStreamingAsync();
+        public void ResetCache() => _updateQueue.ResetCache();
         public void SetPerDeviceDisabled(bool disabled) => _updateQueue.SetPerDeviceDisabled(disabled);
         public void SetPerDeviceBrightness(PerDeviceBrightnessCorrection correction) => _updateQueue.SetPerDeviceBrightness(correction);
 

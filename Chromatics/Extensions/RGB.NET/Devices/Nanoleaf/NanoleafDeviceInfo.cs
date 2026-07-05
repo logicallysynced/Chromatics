@@ -7,7 +7,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
         public NanoleafDeviceInfo(NanoleafClientDefinition def)
         {
             Id = def.Id;
-            DeviceName = string.IsNullOrEmpty(def.Label) ? def.Id : def.Label;
+            // Both Label and Id can be empty on a hand-edited settings
+            // entry; a null DeviceName would blow up GenerateDeviceGuid.
+            DeviceName = !string.IsNullOrEmpty(def.Label) ? def.Label
+                       : !string.IsNullOrEmpty(def.Id) ? def.Id
+                       : "Nanoleaf";
             Manufacturer = "Nanoleaf";
             Model = string.IsNullOrEmpty(def.Model) ? "Nanoleaf" : def.Model;
 

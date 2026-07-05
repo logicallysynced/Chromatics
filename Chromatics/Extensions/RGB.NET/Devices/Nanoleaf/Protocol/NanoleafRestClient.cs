@@ -178,10 +178,21 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.Protocol
         }
 
         // Read just the power state, for the restore verify-repair step.
+        // Narrow endpoint on purpose: the all-state GET parses the full
+        // panel layout to read one bool, which matters on 50+ panel walls.
         public async Task<bool?> GetOnAsync(CancellationToken ct = default)
         {
-            var s = await GetStateAsync(ct).ConfigureAwait(false);
-            return s?.On;
+            try
+            {
+                using var resp = await Http.GetAsync($"{Api}/state/on", ct).ConfigureAwait(false);
+                if (!resp.IsSuccessStatusCode) return null;
+                var body = await resp.Content.ReadAsStringAsync(ct).ConfigureAwait(false);
+                return JObject.Parse(body)["value"]?.Value<bool>();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private string HostOnly()

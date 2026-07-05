@@ -25,24 +25,31 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
         private readonly Func<UdpClient> _udpFactory;
         private readonly IReadOnlyList<int> _panelOrder; // LedId.Custom1..N -> panelId
 
+        // Guards the _streamEndpoint/_udp handoff between the watchdog's
+        // re-entry (thread pool) and Update's per-tick snapshot (trigger
+        // thread). Everything else on the hot path is trigger-thread-only.
         private readonly Lock _lock = new();
         private volatile bool _shuttingDown;
         private volatile bool _perDeviceDisable;
+        private volatile bool _watchdogInFlight;
 
         private UdpClient _udp;
         private IPEndPoint _streamEndpoint;
         private NanoleafOriginalState _original;
         private PerDeviceBrightnessCorrection _perDeviceBrightness;
 
-        // Dirty-check: skip a send when nothing changed, but force one at
-        // least once per second so a silent stream can't drop the controller
-        // out of extControl. Tracked in stopwatch ticks to avoid the clock
-        // helpers that are unavailable in some contexts.
+        // Hot-path scratch, allocated once: Update runs at up to 20Hz per
+        // controller, so per-tick Dictionary/List/byte[] churn adds up.
+        // _lastInput doubles as the dirty check; _lastFrame is the encoded
+        // buffer the keep-alive resends. _hasLastInput is volatile so
+        // ResetCache (UI thread, on re-enable) can force a full send
+        // without taking a lock on the trigger thread's path.
+        private readonly Color[] _colorScratch;
+        private readonly (int panelId, byte r, byte g, byte b)[] _lastInput;
+        private volatile bool _hasLastInput;
         private byte[] _lastFrame;
-        private long _lastSendTicks;
-        private long _lastWatchdogTicks;
-        private static readonly long OneSecondTicks = TimeSpan.FromSeconds(1).Ticks;
-        private static readonly long WatchdogIntervalTicks = TimeSpan.FromSeconds(30).Ticks;
+        private long _lastSendMs;
+        private long _lastWatchdogMs;
 
         public NanoleafUpdateQueue(IDeviceUpdateTrigger updateTrigger, NanoleafClientDefinition def, IReadOnlyList<int> panelOrder, Func<UdpClient> udpFactory = null)
             : base(updateTrigger)
@@ -51,16 +58,28 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
             _panelOrder = panelOrder;
             _rest = new NanoleafRestClient(def.Endpoint.Address.ToString(), def.Endpoint.Port, def.AuthToken);
             _udpFactory = udpFactory ?? (() => new UdpClient(0));
+            _colorScratch = new Color[panelOrder.Count];
+            _lastInput = new (int, byte, byte, byte)[panelOrder.Count];
         }
 
         public void BeginShutdown() => _shuttingDown = true;
         public void SetPerDeviceDisabled(bool disabled) => _perDeviceDisable = disabled;
         public void SetPerDeviceBrightness(PerDeviceBrightnessCorrection correction) => _perDeviceBrightness = correction;
 
-        // Capture device-owned state, then enter streaming mode. turnOnIfOff
-        // false for persisted-disabled devices: capture their state but never
-        // wake them (the LIFX subtlety - a woken bulb poisons the next
-        // capture and the disable stops turning it off).
+        // Drop the dirty cache so the next Update sends a full frame even
+        // when the colours match what was on the panels before a disable.
+        public void ResetCache()
+        {
+            _hasLastInput = false;
+            _lastFrame = null;
+        }
+
+        // Capture device-owned state, then enter streaming mode. A
+        // persisted-disabled device gets its state captured for a later
+        // enable but is otherwise left alone: no power-on AND no streaming
+        // handshake, because entering extControl stops whatever scene the
+        // controller is showing - exactly the "never touch it" contract the
+        // Mapping-tab disable promises.
         public async Task CaptureAndStartAsync(bool turnOnIfOff = true, CancellationToken ct = default)
         {
             NanoleafState state = null;
@@ -83,15 +102,23 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                 SelectedEffect = state.SelectedEffect,
             };
 
-            if (turnOnIfOff && !state.On)
+            if (!turnOnIfOff) return;
+
+            if (!state.On)
                 await _rest.SetOnAsync(true, ct).ConfigureAwait(false);
 
-            if (!turnOnIfOff && !state.On)
-            {
-                // Persisted-disabled and off: leave it off, don't stream.
-                return;
-            }
+            await EnterStreamingAsync(ct).ConfigureAwait(false);
+        }
 
+        // Re-enable path (Mapping tab): power the controller on and
+        // re-negotiate extControl. Always re-runs the handshake - after a
+        // disable the restore re-selected the user's scene, which exits
+        // streaming, so a stale _streamEndpoint would mean UDP frames the
+        // firmware ignores.
+        public async Task EnsureStreamingAsync(CancellationToken ct = default)
+        {
+            if (_shuttingDown || _perDeviceDisable) return;
+            await _rest.SetOnAsync(true, ct).ConfigureAwait(false);
             await EnterStreamingAsync(ct).ConfigureAwait(false);
         }
 
@@ -103,9 +130,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                 if (info == null) return;
                 if (!IPAddress.TryParse(info.Host, out var addr))
                     addr = _def.Endpoint.Address;
-                _streamEndpoint = new IPEndPoint(addr, info.Port);
-                _def.StreamEndpoint = _streamEndpoint;
-                _udp ??= _udpFactory();
+
+                lock (_lock)
+                {
+                    _streamEndpoint = new IPEndPoint(addr, info.Port);
+                    _udp ??= _udpFactory();
+                }
             }
             catch (Exception ex)
             {
@@ -115,62 +145,74 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
 
         protected override bool Update(ReadOnlySpan<(object key, Color color)> dataSet)
         {
-            lock (_lock)
+            try
             {
                 if (_shuttingDown || _perDeviceDisable) return true;
-                if (_streamEndpoint == null || _udp == null) return true;
 
-                try
+                IPEndPoint streamEndpoint;
+                UdpClient udp;
+                lock (_lock)
                 {
-                    // Map incoming LedId->Color to panel colours in the fixed
-                    // panelOrder, applying brightness corrections.
-                    var byLed = new Dictionary<LedId, Color>();
-                    foreach (var (key, color) in dataSet)
-                        if (key is LedId led) byLed[led] = color;
+                    streamEndpoint = _streamEndpoint;
+                    udp = _udp;
+                }
+                if (streamEndpoint == null || udp == null) return true;
 
-                    int globalPct = GlobalBrightnessCorrection.Instance.BrightnessPercent;
-                    int perDevicePct = _perDeviceBrightness?.BrightnessPercent ?? 100;
-                    double scale = (globalPct / 100.0) * (perDevicePct / 100.0);
-
-                    var frameInput = new List<(int, byte, byte, byte)>(_panelOrder.Count);
-                    for (int i = 0; i < _panelOrder.Count; i++)
+                int count = _panelOrder.Count;
+                Array.Clear(_colorScratch, 0, count);
+                foreach (var (key, color) in dataSet)
+                {
+                    if (key is LedId led)
                     {
-                        var ledId = (LedId)((int)LedId.Custom1 + i);
-                        Color c = byLed.TryGetValue(ledId, out var col) ? col : new Color(0, 0, 0);
-                        byte r = (byte)Math.Clamp(c.R * 255.0 * scale, 0, 255);
-                        byte g = (byte)Math.Clamp(c.G * 255.0 * scale, 0, 255);
-                        byte b = (byte)Math.Clamp(c.B * 255.0 * scale, 0, 255);
-                        frameInput.Add((_panelOrder[i], r, g, b));
-                    }
-
-                    var frame = NanoleafStreamProtocol.EncodeFrame(frameInput);
-                    long now = Environment.TickCount64 * TimeSpan.TicksPerMillisecond;
-
-                    bool changed = _lastFrame == null || !FramesEqual(_lastFrame, frame);
-                    bool keepAliveDue = now - _lastSendTicks >= OneSecondTicks;
-
-                    if (changed || keepAliveDue)
-                    {
-                        _udp.Send(frame, frame.Length, _streamEndpoint);
-                        _lastFrame = frame;
-                        _lastSendTicks = now;
-                    }
-
-                    // Streaming watchdog on the same tick cadence, off the
-                    // hot path: fire a fire-and-forget REST check every 30s.
-                    if (now - _lastWatchdogTicks >= WatchdogIntervalTicks)
-                    {
-                        _lastWatchdogTicks = now;
-                        _ = WatchdogCheckAsync();
+                        int idx = (int)led - (int)LedId.Custom1;
+                        if (idx >= 0 && idx < count) _colorScratch[idx] = color;
                     }
                 }
-                catch (Exception ex)
+
+                int globalPct = GlobalBrightnessCorrection.Instance.BrightnessPercent;
+                int perDevicePct = _perDeviceBrightness?.BrightnessPercent ?? 100;
+                double scale = (globalPct / 100.0) * (perDevicePct / 100.0);
+
+                bool changed = !_hasLastInput;
+                for (int i = 0; i < count; i++)
                 {
-                    Logger.WriteConsole(LoggerTypes.Devices, $"[Nanoleaf] {_def.Label}: stream send failed ({ex.Message}).", forwardToSentry: false);
+                    var c = _colorScratch[i];
+                    var entry = (_panelOrder[i],
+                        (byte)Math.Clamp(c.R * 255.0 * scale, 0, 255),
+                        (byte)Math.Clamp(c.G * 255.0 * scale, 0, 255),
+                        (byte)Math.Clamp(c.B * 255.0 * scale, 0, 255));
+                    if (_lastInput[i] != entry)
+                    {
+                        changed = true;
+                        _lastInput[i] = entry;
+                    }
+                }
+                _hasLastInput = true;
+
+                long nowMs = Environment.TickCount64;
+                bool keepAliveDue = nowMs - _lastSendMs >= 1000;
+
+                if (changed || keepAliveDue)
+                {
+                    if (changed || _lastFrame == null)
+                        _lastFrame = NanoleafStreamProtocol.EncodeFrame(_lastInput);
+                    udp.Send(_lastFrame, _lastFrame.Length, streamEndpoint);
+                    _lastSendMs = nowMs;
                 }
 
-                return true;
+                if (nowMs - _lastWatchdogMs >= 30_000 && !_watchdogInFlight)
+                {
+                    _lastWatchdogMs = nowMs;
+                    _watchdogInFlight = true;
+                    _ = WatchdogCheckAsync();
+                }
             }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(LoggerTypes.Devices, $"[Nanoleaf] {_def.Label}: stream send failed ({ex.Message}).", forwardToSentry: false);
+            }
+
+            return true;
         }
 
         private async Task WatchdogCheckAsync()
@@ -186,19 +228,20 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                 }
             }
             catch { /* best-effort */ }
+            finally
+            {
+                _watchdogInFlight = false;
+            }
         }
 
-        private static bool FramesEqual(byte[] a, byte[] b)
-        {
-            if (a.Length != b.Length) return false;
-            for (int i = 0; i < a.Length; i++) if (a[i] != b[i]) return false;
-            return true;
-        }
-
-        // Restore device-owned state on close / disable. Exits streaming
-        // (re-selecting the captured scene does this implicitly), re-selects
-        // the scene by name, re-asserts brightness + power with retry, and
-        // verify-repairs the power state (the Hue shape). Best-effort.
+        // Restore device-owned state on close / disable. Re-selecting the
+        // captured scene by name exits extControl; brightness and power are
+        // re-asserted with retry, then the power state is verify-repaired
+        // (the Hue shape). Two capture shapes can't fully restore: a scene
+        // name of "*ExtControl*" means another app owned the panels when we
+        // captured (their live stream is unrecoverable), and an empty name
+        // has no scene to select back - both fall through to the
+        // brightness/power re-assert, which is the best available.
         public async Task RestoreOriginalStateAsync(CancellationToken ct = default)
         {
             if (_original == null) return;
@@ -231,9 +274,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
 
         public override void Dispose()
         {
-            try { _udp?.Close(); } catch { }
-            try { _udp?.Dispose(); } catch { }
-            _udp = null;
+            lock (_lock)
+            {
+                try { _udp?.Close(); } catch { }
+                try { _udp?.Dispose(); } catch { }
+                _udp = null;
+                _streamEndpoint = null;
+            }
             base.Dispose();
         }
     }

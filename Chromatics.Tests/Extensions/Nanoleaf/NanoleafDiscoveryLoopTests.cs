@@ -40,4 +40,51 @@ public class NanoleafDiscoveryLoopTests
 
         Assert.Equal(0, cancellationThrows);
     }
+
+    // A failed manual-IP probe is the expected outcome for a wrong address,
+    // so it must report null without throwing anything - the first version
+    // threw TaskCanceledException from HttpClient.Timeout as its "nothing
+    // there" signal.
+    [Fact]
+    public async Task Probe_UnreachableOrWrongIp_ReturnsNullWithoutThrowing()
+    {
+        int throwsInProbe = 0;
+        EventHandler<FirstChanceExceptionEventArgs> recorder = (_, e) =>
+        {
+            // "<ProbeAsync>" matches only the production state machine; this
+            // test's own frames render as "<Probe_UnreachableOrWrongIp...>".
+            if (Environment.StackTrace.Contains("<ProbeAsync>"))
+                Interlocked.Increment(ref throwsInProbe);
+        };
+
+        AppDomain.CurrentDomain.FirstChanceException += recorder;
+        try
+        {
+            // Refused: loopback port with no listener answers immediately.
+            var refused = await NanoleafDiscovery.ProbeAsync("127.0.0.1", GetClosedTcpPort(), TimeSpan.FromSeconds(2));
+            // Blackhole: TEST-NET-1 is reserved, so the connect times out.
+            var timedOut = await NanoleafDiscovery.ProbeAsync("192.0.2.1", 16021, TimeSpan.FromMilliseconds(500));
+            // Not an IP at all.
+            var invalid = await NanoleafDiscovery.ProbeAsync("not-an-ip", 16021, TimeSpan.FromMilliseconds(100));
+
+            Assert.Null(refused);
+            Assert.Null(timedOut);
+            Assert.Null(invalid);
+        }
+        finally
+        {
+            AppDomain.CurrentDomain.FirstChanceException -= recorder;
+        }
+
+        Assert.Equal(0, throwsInProbe);
+    }
+
+    private static int GetClosedTcpPort()
+    {
+        var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, 0);
+        listener.Start();
+        int port = ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+        listener.Stop();
+        return port;
+    }
 }

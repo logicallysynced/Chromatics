@@ -999,5 +999,7 @@
   "Paired - {0} panels": "Emparejado - {0} paneles",
   "Nanoleaf (Beta)": "Nanoleaf (Beta)",
   "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[BETA] Activa o desactiva la compatibilidad con luces inteligentes Nanoleaf. Empareja controladores Nanoleaf (Shapes, Canvas, Elements, Lines, Aurora) a través de tu red LAN; cada controlador requiere emparejarse una sola vez pulsando un botón. Las bombillas y tiras Essentials no son compatibles. Valor predeterminado: desactivado",
-  "Pairing failed. Try again.": "No se pudo emparejar. Inténtalo de nuevo."
+  "Pairing failed. Try again.": "No se pudo emparejar. Inténtalo de nuevo.",
+  "Pair": "Par",
+  "Remove": "Eliminar"
 }

@@ -254,11 +254,9 @@ namespace Chromatics.ViewModels
         {
             var item = new NanoleafControllerItem(owner)
             {
-                Id = c.Id,
                 Ip = c.Endpoint?.Address.ToString(),
                 Port = c.Endpoint?.Port ?? 16021,
                 Label = string.IsNullOrEmpty(c.Label) ? c.Endpoint?.Address.ToString() : c.Label,
-                Model = c.Model,
             };
             item.SubText = item.Ip;
             item.ActionLabel = LocalizationService.Instance["Pair"];
