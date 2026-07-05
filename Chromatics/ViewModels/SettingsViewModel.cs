@@ -595,6 +595,70 @@ namespace Chromatics.ViewModels
                     AppSettings.SaveSettings(cur);
                 }));
 
+            // Nanoleaf — OpenAPI panels (Shapes, Canvas, Elements, Lines,
+            // Aurora) plus Skylight/4D by conformance. Hue-pattern adoption:
+            // the dialog pairs each controller (physical button hold ->
+            // token) and supports manual-IP add. Excluded from the first-run
+            // wizard because pairing needs the guided dialog.
+            DeviceToggles.Add(new DeviceToggleItem(
+                "Nanoleaf (Beta)",
+                "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled",
+                s.deviceNanoleafEnabled,
+                async () =>
+                {
+                    var cur = AppSettings.GetSettings();
+                    var owner = GetMainWindow();
+
+                    var alreadyPaired = cur.deviceNanoleafAdoptedDevices
+                        ?? new System.Collections.Generic.List<Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafAdoptedDevice>();
+
+                    var dlg = new NanoleafAdoptionDialog(alreadyPaired);
+                    if (owner != null)
+                        await dlg.ShowDialog(owner);
+                    else
+                        dlg.Show();
+
+                    if (!dlg.Saved) return false;
+                    if (dlg.SelectedDevices == null || dlg.SelectedDevices.Count == 0)
+                        return false;
+
+                    cur.deviceNanoleafAdoptedDevices = dlg.SelectedDevices;
+                    cur.deviceNanoleafEnabled = true;
+                    AppSettings.SaveSettings(cur);
+
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance;
+                    Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.UpdateRateHz = cur.nanoleafUpdateRateHz;
+                    prov.ClientDefinitions.Clear();
+                    foreach (var d in cur.deviceNanoleafAdoptedDevices)
+                    {
+                        if (string.IsNullOrEmpty(d.AuthToken) || string.IsNullOrEmpty(d.LastIp)) continue;
+                        System.Net.IPEndPoint ep = null;
+                        if (System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                            ep = new System.Net.IPEndPoint(ip, d.Port > 0 ? d.Port : 16021);
+                        prov.ClientDefinitions.Add(
+                            new Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafClientDefinition(
+                                d.Id, d.Label, ep, d.AuthToken, d.Model, d.Firmware, d.PanelCount));
+                    }
+
+                    // LoadDevices does a REST round-trip per controller;
+                    // background it so the toggle returns promptly.
+                    _ = Task.Run(() => RGBController.LoadDeviceProvider(prov));
+                    return true;
+                },
+                () =>
+                {
+                    var prov = Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance;
+                    if (prov != null)
+                    {
+                        prov.ClientDefinitions.Clear();
+                        RGBController.UnloadDeviceProvider(prov);
+                        prov.Dispose();
+                    }
+                    var cur = AppSettings.GetSettings();
+                    cur.deviceNanoleafEnabled = false;
+                    AppSettings.SaveSettings(cur);
+                }));
+
             // Alienware AlienFX — pure managed HID via HidSharp, no native
             // DLL or Dell driver. Three HID dialects (V4 zone chassis, V5
             // notebook per-key, V8 external per-key) dispatched from one

@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.16
+
+- **New:** Nanoleaf smart-light support (Beta). Covers the panel family (Shapes, Canvas, Elements, Lines, Aurora) and other controllers that speak the Nanoleaf OpenAPI. Enable it from Settings → Device Providers and pair each controller with a one-time button press; effects render across the panels at their real physical positions. Essentials bulbs and strips are not supported.
+
 ## 4.3.15
 
 - Fixed a startup crash on PCs where Windows App Control or Smart App Control blocks one of the bundled device libraries. Chromatics now starts with that provider disabled, logs which file was blocked, and explains how to allow it.

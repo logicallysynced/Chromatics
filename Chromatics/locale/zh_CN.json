@@ -986,5 +986,17 @@
   "Casting Success": "施法成功",
   "Status Inflicted": "受到状态效果",
   "Ripple out from the centre of the keyboard when your spell cast completes.": "当你的法术施放完成时，从键盘中央向外扩散涟漪。",
-  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "当你受到有害状态效果时，让设备产生脉冲效果。颜色遵循状态效果调色板。"
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "当你受到有害状态效果时，让设备产生脉冲效果。颜色遵循状态效果调色板。",
+  "Pair Nanoleaf controllers": "配对 Nanoleaf 控制器",
+  "Pair each Nanoleaf controller Chromatics should control. Pairing a controller needs a physical button press - the dialog will tell you when.": "配对 Chromatics 应控制的每个 Nanoleaf 控制器。配对控制器需要按下实体按钮——对话框会提示你何时按下。",
+  "Controller IP address (if not found automatically)": "控制器 IP 地址（如果未自动找到）",
+  "Add by IP": "通过 IP 添加",
+  "Searching for Nanoleaf controllers on your network...": "正在你的网络中搜索 Nanoleaf 控制器...",
+  "No Nanoleaf controllers found. Check they are powered on and on the same network, or add one by IP below.": "未找到 Nanoleaf 控制器。请检查它们是否已通电并连接到同一网络，或在下方通过 IP 添加一个。",
+  "{0} controller(s) listed.": "已列出 {0} 个控制器。",
+  "Hold the power button on this controller until it flashes...": "按住此控制器上的电源按钮，直到它闪烁...",
+  "Pairing timed out. Try again and hold the button until the lights flash.": "配对超时。请重试并按住按钮，直到灯光闪烁。",
+  "Paired - {0} panels": "已配对 - {0} 个面板",
+  "Nanoleaf (Beta)": "Nanoleaf（Beta）",
+  "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[BETA] 启用/禁用 Nanoleaf 智能灯支持。通过局域网配对 Nanoleaf 控制器（Shapes、Canvas、Elements、Lines、Aurora）——每个控制器都需要一次性按键配对。不支持 Essentials 灯泡和灯带。默认：禁用"
 }

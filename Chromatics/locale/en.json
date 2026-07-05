@@ -1001,5 +1001,17 @@
     "Casting Success":  "Casting Success",
     "Status Inflicted":  "Status Inflicted",
     "Ripple out from the centre of the keyboard when your spell cast completes.":  "Ripple out from the centre of the keyboard when your spell cast completes.",
-    "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.":  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette."
+    "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.":  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.",
+    "Pair Nanoleaf controllers":  "Pair Nanoleaf controllers",
+    "Pair each Nanoleaf controller Chromatics should control. Pairing a controller needs a physical button press - the dialog will tell you when.":  "Pair each Nanoleaf controller Chromatics should control. Pairing a controller needs a physical button press - the dialog will tell you when.",
+    "Controller IP address (if not found automatically)":  "Controller IP address (if not found automatically)",
+    "Add by IP":  "Add by IP",
+    "Searching for Nanoleaf controllers on your network...":  "Searching for Nanoleaf controllers on your network...",
+    "No Nanoleaf controllers found. Check they are powered on and on the same network, or add one by IP below.":  "No Nanoleaf controllers found. Check they are powered on and on the same network, or add one by IP below.",
+    "{0} controller(s) listed.":  "{0} controller(s) listed.",
+    "Hold the power button on this controller until it flashes...":  "Hold the power button on this controller until it flashes...",
+    "Pairing timed out. Try again and hold the button until the lights flash.":  "Pairing timed out. Try again and hold the button until the lights flash.",
+    "Paired - {0} panels":  "Paired - {0} panels",
+    "Nanoleaf (Beta)":  "Nanoleaf (Beta)",
+    "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled":  "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled"
 }

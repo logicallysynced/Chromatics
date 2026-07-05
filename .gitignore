@@ -243,3 +243,5 @@ ModelManifest.xml
 *.snk
 
 .fake
+# Local design notes and ADRs - not part of the repo
+/docs/

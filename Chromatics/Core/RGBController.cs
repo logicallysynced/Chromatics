@@ -402,6 +402,38 @@ namespace Chromatics.Core
                     }
                 }
 
+                if (appSettings.deviceNanoleafEnabled)
+                {
+                    try
+                    {
+                        // Nanoleaf controllers are pre-paired through the
+                        // adoption dialog (Hue pattern), so there's no auto-
+                        // adopt sweep here - we just hydrate the provider
+                        // from the persisted, tokened controller list and
+                        // load. Unreachable controllers are skipped by the
+                        // provider and retried next launch.
+                        var adopted = appSettings.deviceNanoleafAdoptedDevices ?? new List<Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafAdoptedDevice>();
+                        Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.UpdateRateHz = appSettings.nanoleafUpdateRateHz;
+                        Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        foreach (var d in adopted)
+                        {
+                            if (string.IsNullOrEmpty(d.AuthToken) || string.IsNullOrEmpty(d.LastIp)) continue;
+                            System.Net.IPEndPoint ep = null;
+                            if (System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                                ep = new System.Net.IPEndPoint(ip, d.Port > 0 ? d.Port : 16021);
+                            Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafClientDefinition(
+                                    d.Id, d.Label, ep, d.AuthToken, d.Model, d.Firmware, d.PanelCount));
+                        }
+
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[NanoleafDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
                 if (appSettings.deviceYeelightEnabled)
                 {
                     try

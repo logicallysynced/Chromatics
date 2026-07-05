@@ -987,5 +987,17 @@
   "Casting Success": "시전 성공",
   "Status Inflicted": "상태 이상 부여됨",
   "Ripple out from the centre of the keyboard when your spell cast completes.": "주문 시전이 완료되면 키보드 중앙에서 바깥쪽으로 물결 효과가 퍼집니다.",
-  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "해로운 상태 이상 효과를 받으면 기기가 맥동합니다. 색상은 상태 효과 팔레트를 따릅니다."
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "해로운 상태 이상 효과를 받으면 기기가 맥동합니다. 색상은 상태 효과 팔레트를 따릅니다.",
+  "Pair Nanoleaf controllers": "Nanoleaf 컨트롤러 페어링",
+  "Pair each Nanoleaf controller Chromatics should control. Pairing a controller needs a physical button press - the dialog will tell you when.": "Chromatics가 제어할 각 Nanoleaf 컨트롤러를 페어링하세요. 컨트롤러를 페어링하려면 물리적 버튼을 눌러야 합니다. 대화상자에서 누를 시점을 알려줍니다.",
+  "Controller IP address (if not found automatically)": "컨트롤러 IP 주소(자동으로 찾지 못한 경우)",
+  "Add by IP": "IP로 추가",
+  "Searching for Nanoleaf controllers on your network...": "네트워크에서 Nanoleaf 컨트롤러를 검색하는 중...",
+  "No Nanoleaf controllers found. Check they are powered on and on the same network, or add one by IP below.": "Nanoleaf 컨트롤러를 찾을 수 없습니다. 전원이 켜져 있고 같은 네트워크에 있는지 확인하거나, 아래에서 IP로 추가하세요.",
+  "{0} controller(s) listed.": "{0}개의 컨트롤러가 목록에 표시되었습니다.",
+  "Hold the power button on this controller until it flashes...": "이 컨트롤러의 전원 버튼을 표시등이 깜박일 때까지 길게 누르세요...",
+  "Pairing timed out. Try again and hold the button until the lights flash.": "페어링 시간이 초과되었습니다. 다시 시도하고 조명이 깜박일 때까지 버튼을 길게 누르세요.",
+  "Paired - {0} panels": "페어링됨 - 패널 {0}개",
+  "Nanoleaf (Beta)": "Nanoleaf(베타)",
+  "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[베타] Nanoleaf 스마트 조명 지원을 활성화/비활성화합니다. LAN을 통해 Nanoleaf 컨트롤러(Shapes, Canvas, Elements, Lines, Aurora)를 페어링합니다. 각 컨트롤러는 한 번의 버튼 누름 페어링이 필요합니다. Essentials 전구 및 스트립은 지원되지 않습니다. 기본값: 비활성화"
 }

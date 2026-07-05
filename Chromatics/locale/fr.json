@@ -986,5 +986,17 @@
   "Casting Success": "Lancement réussi",
   "Status Inflicted": "Effet de statut infligé",
   "Ripple out from the centre of the keyboard when your spell cast completes.": "Ondulation depuis le centre du clavier lorsque le lancement de votre sort se termine.",
-  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "Fait pulser les périphériques lorsque vous recevez un effet de statut néfaste. Les couleurs suivent la palette des effets de statut."
+  "Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette.": "Fait pulser les périphériques lorsque vous recevez un effet de statut néfaste. Les couleurs suivent la palette des effets de statut.",
+  "Pair Nanoleaf controllers": "Associer les contrôleurs Nanoleaf",
+  "Pair each Nanoleaf controller Chromatics should control. Pairing a controller needs a physical button press - the dialog will tell you when.": "Associez chaque contrôleur Nanoleaf que Chromatics doit contrôler. L’association d’un contrôleur nécessite une pression sur un bouton physique : la boîte de dialogue vous indiquera quand le faire.",
+  "Controller IP address (if not found automatically)": "Adresse IP du contrôleur (si elle n’est pas trouvée automatiquement)",
+  "Add by IP": "Ajouter par adresse IP",
+  "Searching for Nanoleaf controllers on your network...": "Recherche de contrôleurs Nanoleaf sur votre réseau...",
+  "No Nanoleaf controllers found. Check they are powered on and on the same network, or add one by IP below.": "Aucun contrôleur Nanoleaf trouvé. Vérifiez qu’ils sont allumés et sur le même réseau, ou ajoutez-en un par adresse IP ci-dessous.",
+  "{0} controller(s) listed.": "{0} contrôleur(s) répertorié(s).",
+  "Hold the power button on this controller until it flashes...": "Maintenez le bouton d’alimentation de ce contrôleur enfoncé jusqu’à ce qu’il clignote...",
+  "Pairing timed out. Try again and hold the button until the lights flash.": "Le délai d’association a expiré. Réessayez et maintenez le bouton enfoncé jusqu’à ce que les lumières clignotent.",
+  "Paired - {0} panels": "Associé – {0} panneaux",
+  "Nanoleaf (Beta)": "Nanoleaf (bêta)",
+  "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[BÊTA] Active/désactive la prise en charge des éclairages connectés Nanoleaf. Associe les contrôleurs Nanoleaf (Shapes, Canvas, Elements, Lines, Aurora) via votre réseau local ; chaque contrôleur nécessite une association unique par pression sur un bouton. Les ampoules et rubans Essentials ne sont pas pris en charge. Valeur par défaut : désactivé"
 }

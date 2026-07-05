@@ -70,6 +70,13 @@ namespace Chromatics.Models
         public bool qmkOpenRgbHintShown { get; set; } = false;
         public bool deviceYeelightEnabled { get; set; } = false;
         public List<YeelightAdoptedDevice> deviceYeelightAdoptedDevices { get; set; } = new();
+        public bool deviceNanoleafEnabled { get; set; } = false;
+        public List<Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafAdoptedDevice> deviceNanoleafAdoptedDevices { get; set; } = new();
+        // Update rate (frames per second) for the Nanoleaf streaming loop.
+        // Hidden setting - not exposed in the UI. Panels accept far higher,
+        // but 20Hz matches Chromatics' effect fidelity elsewhere while
+        // staying gentle on Wi-Fi. Clamped 1-60 when read.
+        public double nanoleafUpdateRateHz { get; set; } = 20.0;
         public bool deviceAlienwareEnabled { get; set; } = false;
         public List<AlienwareAdoptedDevice> deviceAlienwareAdoptedDevices { get; set; } = new();
         public bool deviceRedragonEnabled { get; set; } = false;
