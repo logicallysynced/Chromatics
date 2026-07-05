@@ -47,6 +47,8 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
             var devices = new List<IRGBDevice>();
             if (ClientDefinitions.Count == 0) return devices;
 
+            bool panelOrderDirty = false;
+
             foreach (var def in ClientDefinitions)
             {
                 if (def.Endpoint == null || string.IsNullOrEmpty(def.AuthToken))
@@ -65,22 +67,36 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                         continue;
                     }
 
-                    // Panels sorted by ascending panelId: stable identity map
-                    // onto LedId.Custom1..N so assignments survive restarts.
-                    var panels = state.Panels.OrderBy(p => p.PanelId).ToList();
-                    if (def.PanelCount != panels.Count)
+                    // Resolve the persisted slot table against the live
+                    // layout: stored panels keep their LedId slot (even as
+                    // tombstones while absent) so layer assignments survive
+                    // physical changes to the wall; new panels append.
+                    var livePanels = state.Panels.OrderBy(p => p.PanelId).ToList();
+                    var liveIds = new HashSet<int>(livePanels.Select(p => p.PanelId));
+                    bool hadStoredOrder = def.PanelOrder is { Count: > 0 };
+                    var (slots, addedIds, missingIds) = NanoleafPanelSlots.Resolve(def.PanelOrder, liveIds);
+
+                    if (hadStoredOrder && (addedIds.Count > 0 || missingIds.Count > 0))
                     {
-                        Logger.WriteConsole(LoggerTypes.Devices, $"[Nanoleaf] {def.Label}: panel count is {panels.Count} (was {def.PanelCount}); re-mapping.");
-                        def.PanelCount = panels.Count;
+                        Logger.WriteConsole(LoggerTypes.Devices,
+                            $"[Nanoleaf] {def.Label}: panel layout changed since last session ({addedIds.Count} added, {missingIds.Count} missing). " +
+                            "Existing panels keep their layer assignments; assign any new panels from the Mappings tab.");
                     }
+
+                    if (!hadStoredOrder || addedIds.Count > 0)
+                    {
+                        def.PanelOrder = new List<int>(slots);
+                        panelOrderDirty = true;
+                    }
+
+                    def.PanelCount = liveIds.Count;
                     if (!string.IsNullOrEmpty(state.Model)) def.Model = state.Model;
                     if (!string.IsNullOrEmpty(state.FirmwareVersion)) def.Firmware = state.FirmwareVersion;
 
-                    var panelOrder = panels.Select(p => p.PanelId).ToList();
                     var trigger = (NanoleafDeviceUpdateTrigger)GetUpdateTrigger();
-                    var queue = new NanoleafUpdateQueue(trigger, def, panelOrder);
+                    var queue = new NanoleafUpdateQueue(trigger, def, slots, liveIds);
                     var info = new NanoleafDeviceInfo(def);
-                    var dev = new NanoleafDevice(info, queue, def, panels);
+                    var dev = new NanoleafDevice(info, queue, def, livePanels, slots);
 
                     var deviceGuid = Chromatics.Helpers.DeviceHelper.GenerateDeviceGuid(info.DeviceName);
                     bool disabled = Chromatics.Layers.MappingLayers.IsDeviceDisabled(deviceGuid);
@@ -96,7 +112,37 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                 }
             }
 
+            if (panelOrderDirty) PersistPanelOrders();
+
             return devices;
+        }
+
+        // Write resolved slot tables back to settings so the next launch
+        // starts from the same panelId-to-LedId map. Matched by controller
+        // Id; best-effort - a failed save just means re-resolving next time.
+        private void PersistPanelOrders()
+        {
+            try
+            {
+                var cur = AppSettings.GetSettings();
+                if (cur.deviceNanoleafAdoptedDevices == null) return;
+
+                bool touched = false;
+                foreach (var def in ClientDefinitions)
+                {
+                    var match = cur.deviceNanoleafAdoptedDevices.Find(a => a.Id == def.Id);
+                    if (match == null) continue;
+                    match.PanelOrder = new List<int>(def.PanelOrder);
+                    match.PanelCount = def.PanelCount;
+                    touched = true;
+                }
+
+                if (touched) AppSettings.SaveSettings(cur);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(LoggerTypes.Devices, $"[Nanoleaf] could not persist panel layout: {ex.Message}", forwardToSentry: false);
+            }
         }
 
         protected override IDeviceUpdateTrigger CreateUpdateTrigger(int id, double updateRateHardLimit)

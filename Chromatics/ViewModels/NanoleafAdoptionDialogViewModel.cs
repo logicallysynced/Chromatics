@@ -177,6 +177,7 @@ namespace Chromatics.ViewModels
                     Model = c.Model,
                     Firmware = c.Firmware,
                     PanelCount = c.PanelCount,
+                    PanelOrder = new List<int>(c.PanelOrder),
                 })
                 .ToList();
         }
@@ -223,6 +224,7 @@ namespace Chromatics.ViewModels
         public string Model { get; private set; }
         public string Firmware { get; private set; }
         public int PanelCount { get; private set; }
+        public List<int> PanelOrder { get; private set; } = new();
 
         public IRelayCommand ActionCommand { get; }
 
@@ -243,6 +245,7 @@ namespace Chromatics.ViewModels
                 Model = d.Model,
                 Firmware = d.Firmware,
                 PanelCount = d.PanelCount,
+                PanelOrder = d.PanelOrder != null ? new List<int>(d.PanelOrder) : new List<int>(),
                 AuthToken = d.AuthToken,
             };
             item.SubText = string.Format(LocalizationService.Instance["Paired - {0} panels"], d.PanelCount);
@@ -300,6 +303,9 @@ namespace Chromatics.ViewModels
                 Model = state.Model;
                 Firmware = state.FirmwareVersion;
                 PanelCount = state.Panels?.Count ?? 0;
+                // Seed the slot table at pairing time so the first provider
+                // load starts from a stable panelId-to-LedId map.
+                PanelOrder = state.Panels?.Select(p => p.PanelId).OrderBy(id => id).ToList() ?? new List<int>();
                 if (!string.IsNullOrEmpty(state.Name)) Label = state.Name;
             }
             SubText = string.Format(LocalizationService.Instance["Paired - {0} panels"], PanelCount);

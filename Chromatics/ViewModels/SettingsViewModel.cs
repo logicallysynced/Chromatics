@@ -637,7 +637,10 @@ namespace Chromatics.ViewModels
                             ep = new System.Net.IPEndPoint(ip, d.Port > 0 ? d.Port : 16021);
                         prov.ClientDefinitions.Add(
                             new Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafClientDefinition(
-                                d.Id, d.Label, ep, d.AuthToken, d.Model, d.Firmware, d.PanelCount));
+                                d.Id, d.Label, ep, d.AuthToken, d.Model, d.Firmware, d.PanelCount)
+                            {
+                                PanelOrder = d.PanelOrder ?? new System.Collections.Generic.List<int>(),
+                            });
                     }
 
                     // LoadDevices does a REST round-trip per controller;

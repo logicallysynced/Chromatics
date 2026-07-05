@@ -23,7 +23,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
         private readonly NanoleafClientDefinition _def;
         private readonly NanoleafRestClient _rest;
         private readonly Func<UdpClient> _udpFactory;
-        private readonly IReadOnlyList<int> _panelOrder; // LedId.Custom1..N -> panelId
+        // Slot table: index n -> panelId at LedId.Custom(n+1). May contain
+        // tombstones (panels that were removed from the wall) - those slots
+        // keep their LedId reserved but are skipped when building frames.
+        private readonly IReadOnlyList<int> _panelOrder;
+        private readonly bool[] _slotLive;
 
         // Guards the _streamEndpoint/_udp handoff between the watchdog's
         // re-entry (thread pool) and Update's per-tick snapshot (trigger
@@ -46,20 +50,32 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
         // without taking a lock on the trigger thread's path.
         private readonly Color[] _colorScratch;
         private readonly (int panelId, byte r, byte g, byte b)[] _lastInput;
+        private readonly (int panelId, byte r, byte g, byte b)[] _frameLive;
         private volatile bool _hasLastInput;
         private byte[] _lastFrame;
         private long _lastSendMs;
         private long _lastWatchdogMs;
 
-        public NanoleafUpdateQueue(IDeviceUpdateTrigger updateTrigger, NanoleafClientDefinition def, IReadOnlyList<int> panelOrder, Func<UdpClient> udpFactory = null)
+        public NanoleafUpdateQueue(IDeviceUpdateTrigger updateTrigger, NanoleafClientDefinition def, IReadOnlyList<int> panelOrder, IReadOnlyCollection<int> livePanelIds, Func<UdpClient> udpFactory = null)
             : base(updateTrigger)
         {
             _def = def;
             _panelOrder = panelOrder;
             _rest = new NanoleafRestClient(def.Endpoint.Address.ToString(), def.Endpoint.Port, def.AuthToken);
             _udpFactory = udpFactory ?? (() => new UdpClient(0));
+
+            var live = livePanelIds as ISet<int> ?? new HashSet<int>(livePanelIds);
+            _slotLive = new bool[panelOrder.Count];
+            int liveCount = 0;
+            for (int i = 0; i < panelOrder.Count; i++)
+            {
+                _slotLive[i] = live.Contains(panelOrder[i]);
+                if (_slotLive[i]) liveCount++;
+            }
+
             _colorScratch = new Color[panelOrder.Count];
             _lastInput = new (int, byte, byte, byte)[panelOrder.Count];
+            _frameLive = new (int, byte, byte, byte)[liveCount];
         }
 
         public void BeginShutdown() => _shuttingDown = true;
@@ -178,8 +194,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                 double scale = (globalPct / 100.0) * (perDevicePct / 100.0);
 
                 bool changed = !_hasLastInput;
+                int liveIdx = 0;
                 for (int i = 0; i < count; i++)
                 {
+                    if (!_slotLive[i]) continue;
                     var c = _colorScratch[i];
                     var entry = (_panelOrder[i],
                         (byte)Math.Clamp(c.R * 255.0 * scale, 0, 255),
@@ -190,6 +208,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                         changed = true;
                         _lastInput[i] = entry;
                     }
+                    _frameLive[liveIdx++] = entry;
                 }
                 _hasLastInput = true;
 
@@ -199,7 +218,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                 if (changed || keepAliveDue)
                 {
                     if (changed || _lastFrame == null)
-                        _lastFrame = NanoleafStreamProtocol.EncodeFrame(_lastInput);
+                        _lastFrame = NanoleafStreamProtocol.EncodeFrame(_frameLive);
                     udp.Send(_lastFrame, _lastFrame.Length, streamEndpoint);
                     _lastSendMs = nowMs;
                 }

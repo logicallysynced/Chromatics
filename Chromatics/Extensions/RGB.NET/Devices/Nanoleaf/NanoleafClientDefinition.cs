@@ -26,5 +26,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
         public string Model { get; set; }
         public string Firmware { get; set; }
         public int PanelCount { get; set; }
+
+        // Persisted slot table (see NanoleafAdoptedDevice.PanelOrder).
+        // Hydrated from settings; the provider re-resolves it against the
+        // live layout on every load and persists any appended panels.
+        public System.Collections.Generic.List<int> PanelOrder { get; set; } = new();
     }
 }

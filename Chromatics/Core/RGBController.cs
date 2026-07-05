@@ -423,7 +423,10 @@ namespace Chromatics.Core
                                 ep = new System.Net.IPEndPoint(ip, d.Port > 0 ? d.Port : 16021);
                             Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance.ClientDefinitions.Add(
                                 new Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafClientDefinition(
-                                    d.Id, d.Label, ep, d.AuthToken, d.Model, d.Firmware, d.PanelCount));
+                                    d.Id, d.Label, ep, d.AuthToken, d.Model, d.Firmware, d.PanelCount)
+                                {
+                                    PanelOrder = d.PanelOrder ?? new List<int>(),
+                                });
                         }
 
                         LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance);
@@ -1183,9 +1186,44 @@ namespace Chromatics.Core
             {
                 var appSettings = AppSettings.GetSettings();
 
+                // The stateful smart-light providers (LIFX, Hue, Nanoleaf)
+                // block in Dispose while restoring each device to its
+                // pre-Chromatics state, with per-provider budgets of up to
+                // ~30s. Disposing them sequentially makes close time
+                // additive across brands, so their disposes are deferred
+                // here and run in parallel under one global ceiling - they
+                // share no sockets, endpoints, or SDKs, and the pacing that
+                // matters (between a provider's own devices) lives inside
+                // each provider's Dispose. Native-SDK providers keep the
+                // original sequential dispose on this thread; some vendor
+                // SDKs are touchy about which thread tears them down.
+                var deferredRestore = new List<IRGBDeviceProvider>();
                 foreach (var deviceProvider in loadedDeviceProviders)
                 {
-                    UnloadDeviceProvider(deviceProvider, false);
+                    bool statefulRestore =
+                        deviceProvider is Extensions.RGB.NET.Devices.LIFX.LifxRGBDeviceProvider
+                        or Extensions.RGB.NET.Devices.Hue.HueRGBDeviceProvider
+                        or Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider;
+
+                    UnloadDeviceProvider(deviceProvider, removeFromList: false, disposeProvider: !statefulRestore);
+                    if (statefulRestore) deferredRestore.Add(deviceProvider);
+                }
+
+                if (deferredRestore.Count > 0)
+                {
+                    var restoreTasks = deferredRestore
+                        .Select(p => System.Threading.Tasks.Task.Run(() =>
+                        {
+                            try { p.Dispose(); }
+                            catch (Exception ex)
+                            {
+                                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Provider dispose error during shutdown: {ex.Message}");
+                            }
+                        }))
+                        .ToArray();
+
+                    if (!System.Threading.Tasks.Task.WaitAll(restoreTasks, TimeSpan.FromSeconds(30)))
+                        Logger.WriteConsole(Enums.LoggerTypes.Devices, "Smart-light restore hit the 30s shutdown ceiling; remaining restores were abandoned.");
                 }
 
                 loadedDeviceProviders.Clear();
@@ -1399,7 +1437,11 @@ namespace Chromatics.Core
             catch { /* diagnostic — never fatal */ }
         }
 
-        public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true)
+        // disposeProvider false lets Unload() defer the blocking Dispose of
+        // the stateful smart-light providers so their restores can run in
+        // parallel; the surface detach and bookkeeping still run here, on
+        // this thread, because the RGB.NET surface is not thread-safe.
+        public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true, bool disposeProvider = true)
         {
             bool anyRemoved = false;
             try
@@ -1445,7 +1487,8 @@ namespace Chromatics.Core
                     if (removeFromList)
                         loadedDeviceProviders.Remove(provider);
 
-                    provider.Dispose();
+                    if (disposeProvider)
+                        provider.Dispose();
                 }
             }
             catch (Exception ex)
