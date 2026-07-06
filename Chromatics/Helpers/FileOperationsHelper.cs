@@ -784,7 +784,9 @@ namespace Chromatics.Helpers
         // ColorMapping.Name is serialised, so stale palette files will restore old names even after
         // the C# initialiser has been updated. This runs on every load (version-independent) so
         // palettes that skipped migration still get corrected names.
-        private static bool NormalizePaletteDisplayNames(PaletteColorModel palette)
+        // Public so the test suite can pin the rename corrections against
+        // simulated old palette files.
+        public static bool NormalizePaletteDisplayNames(PaletteColorModel palette)
         {
             var changed = false;
 
@@ -792,6 +794,21 @@ namespace Chromatics.Helpers
             if (palette.JobNINHuton != null && palette.JobNINHuton.Name != "NIN: Kazematoi")
             {
                 palette.JobNINHuton.Name = "NIN: Kazematoi";
+                changed = true;
+            }
+
+            // 4.3.x status catalogue: two legacy entries renamed to match the
+            // in-game status names now that the Status Effects category is
+            // visible in the Palette tab.
+            if (palette.Bleed != null && palette.Bleed.Name != "Bleeding")
+            {
+                palette.Bleed.Name = "Bleeding";
+                changed = true;
+            }
+
+            if (palette.Infirmary != null && palette.Infirmary.Name != "Infirmity")
+            {
+                palette.Infirmary.Name = "Infirmity";
                 changed = true;
             }
 

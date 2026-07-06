@@ -67,4 +67,26 @@ public class PaletteCompatibilityTests
 
         Assert.True(names.Count > 1000, $"Expected the full detrimental catalogue, found {names.Count}");
     }
+
+    // ColorMapping.Name is persisted, so a palette saved before a rename
+    // restores the old display name over the new initialiser. The load path
+    // corrects known renames via NormalizePaletteDisplayNames - this pins
+    // the 4.3.x status renames alongside the NIN Huton precedent.
+    [Fact]
+    public void NormalizePaletteDisplayNames_CorrectsRenamedStatusEntries()
+    {
+        var palette = new PaletteColorModel();
+        // Simulate deserialising a pre-4.3.x palette file.
+        palette.Bleed.Name = "Bleed";
+        palette.Infirmary.Name = "Infirmary";
+
+        var changed = Chromatics.Helpers.FileOperationsHelper.NormalizePaletteDisplayNames(palette);
+
+        Assert.True(changed);
+        Assert.Equal("Bleeding", palette.Bleed.Name);
+        Assert.Equal("Infirmity", palette.Infirmary.Name);
+
+        // Idempotent on a corrected palette: no rewrite loop on every load.
+        Assert.False(Chromatics.Helpers.FileOperationsHelper.NormalizePaletteDisplayNames(palette));
+    }
 }

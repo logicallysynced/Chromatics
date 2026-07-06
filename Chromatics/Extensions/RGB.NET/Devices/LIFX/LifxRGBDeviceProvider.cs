@@ -187,10 +187,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 
                     if (devices.Count > 0)
                     {
-                        // Per-bulb timeout and total budget sized for the
-                        // triple-send restore (three colour + power rounds
-                        // with pacing gaps, roughly half a second per bulb).
-                        int totalBudgetSec = Math.Min(20, 2 + devices.Count * 2);
+                        // The loop's worst case is ~3.1s per bulb (the 3000ms
+                        // WhenAny timeout plus the 80ms pacing gap), which
+                        // only bites when bulbs are unreachable - exactly
+                        // when restore matters most. The budget must cover
+                        // it, or bulbs late in the list never even start
+                        // restoring before shutdown kills the task. The 30s
+                        // cap matches the global shutdown ceiling in
+                        // RGBController.Unload.
+                        int totalBudgetSec = Math.Min(30, 2 + (int)Math.Ceiling(devices.Count * 3.2));
                         Task.Run(async () =>
                         {
                             await Task.Delay(80).ConfigureAwait(false);

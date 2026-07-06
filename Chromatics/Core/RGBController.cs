@@ -714,6 +714,14 @@ namespace Chromatics.Core
                 if (!triggerReady)
                 {
                     Logger.WriteConsole(Enums.LoggerTypes.Error, "RGB lighting is disabled for this session because the device update timer failed to load.");
+
+                    // Providers loaded above are already registered. Bailing
+                    // with _loaded still false means Unload() no-ops on exit,
+                    // so nothing would restore smart lights or release native
+                    // SDK handles - tear the providers down here instead.
+                    foreach (var p in loadedDeviceProviders.ToList())
+                        UnloadDeviceProvider(p, removeFromList: false);
+                    loadedDeviceProviders.Clear();
                     return;
                 }
 
@@ -1882,13 +1890,27 @@ namespace Chromatics.Core
             _baseLayerEffectRunning = toggle;
         }
 
-        // Returns the LIVE list, not a snapshot — ReactiveWeather, RaidEffect
-        // and CutsceneAnimation register their groups by mutating it from the
-        // game-loop thread. Internal teardown paths snapshot under
-        // _runningEffectsLock so they can't crash on a concurrent mutation.
-        public static List<ListLedGroup> GetRunningEffects()
+        // Registration API for the effect processors (ReactiveWeather,
+        // RaidEffect, CutsceneAnimation), which run on the game-loop thread.
+        // Every mutation of _runningEffects goes through _runningEffectsLock
+        // here - handing out the live list let those processors race the
+        // locked Clear() in StopEffects / LoadDeviceProvider on the UI and
+        // thread-pool sides, which can corrupt List<T> internals.
+        public static void AddRunningEffect(ListLedGroup group)
         {
-            return _runningEffects;
+            if (group == null) return;
+            lock (_runningEffectsLock)
+            {
+                if (!_runningEffects.Contains(group))
+                    _runningEffects.Add(group);
+            }
+        }
+
+        public static void RemoveRunningEffect(ListLedGroup group)
+        {
+            if (group == null) return;
+            lock (_runningEffectsLock)
+                _runningEffects.Remove(group);
         }
 
         public static RGBSurface GetLiveSurfaces()

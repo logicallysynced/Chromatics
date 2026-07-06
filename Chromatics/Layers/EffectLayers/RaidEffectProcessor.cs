@@ -453,9 +453,8 @@ namespace Chromatics.Layers
                 return;
             }
 
-            var runningEffects = RGBController.GetRunningEffects();
 
-            bool applied = ApplyRaidEffect(overlay, zone, palette, currentBgmId, watchingCutscene, eventScenePlayingBgmId, runningEffects, layer);
+            bool applied = ApplyRaidEffect(overlay, zone, palette, currentBgmId, watchingCutscene, eventScenePlayingBgmId, layer);
             if (applied)
             {
                 SuppressBaseLayerGroups(layer.layerID);
@@ -576,19 +575,19 @@ namespace Chromatics.Layers
             overlay.Detach();
         }
 
-        private static void SetEffect(ILedGroupDecorator effect, ListLedGroup layer, List<ListLedGroup> runningEffects)
+        private static void SetEffect(ILedGroupDecorator effect, ListLedGroup layer)
         {
-            if (runningEffects.Contains(layer)) runningEffects.Remove(layer);
+            RGBController.RemoveRunningEffect(layer);
 
             layer.RemoveAllDecorators();
             layer.AddDecorator(effect);
 
-            runningEffects.Add(layer);
+            RGBController.AddRunningEffect(layer);
         }
 
-        private void SetLinearGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, List<ListLedGroup> runningEffects, int layerID)
+        private void SetLinearGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, int layerID)
         {
-            if (runningEffects.Contains(layer)) runningEffects.Remove(layer);
+            RGBController.RemoveRunningEffect(layer);
 
             layer.RemoveAllDecorators();
             gradient.WrapGradient = true;
@@ -596,13 +595,13 @@ namespace Chromatics.Layers
 
             layer.Brush = new TextureBrush(new LinearGradientTexture(boundry, gradient));
 
-            runningEffects.Add(layer);
+            RGBController.AddRunningEffect(layer);
             _gradientEffects[layerID].Add(gradient);
         }
 
-        private void SetRadialGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, List<ListLedGroup> runningEffects, int layerID)
+        private void SetRadialGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, int layerID)
         {
-            if (runningEffects.Contains(layer)) runningEffects.Remove(layer);
+            RGBController.RemoveRunningEffect(layer);
 
             layer.RemoveAllDecorators();
             gradient.WrapGradient = true;
@@ -610,7 +609,7 @@ namespace Chromatics.Layers
 
             layer.Brush = new TextureBrush(new ConicalGradientTexture(boundry, gradient));
 
-            runningEffects.Add(layer);
+            RGBController.AddRunningEffect(layer);
             _gradientEffects[layerID].Add(gradient);
         }
 
@@ -618,7 +617,7 @@ namespace Chromatics.Layers
         // was applied (and the overlay should be attached), false otherwise.
         // Cases moved verbatim from ReactiveWeatherProcessor.SetReactiveWeather
         // so existing in-game behaviour is preserved.
-        private bool ApplyRaidEffect(ListLedGroup layer, string zone, PaletteColorModel _colorPalette, uint currentBgmId, bool watchingCutscene, ushort eventScenePlayingBgmId, List<ListLedGroup> runningEffects, IMappingLayer masterlayer)
+        private bool ApplyRaidEffect(ListLedGroup layer, string zone, PaletteColorModel _colorPalette, uint currentBgmId, bool watchingCutscene, ushort eventScenePlayingBgmId, IMappingLayer masterlayer)
         {
             // Each base layer has its own per-device overlay (`layer`), so
             // every case-body's "should I build?" check is per-overlay
@@ -654,7 +653,7 @@ namespace Chromatics.Layers
                                 var starfield = new BPMStarfieldDecorator(layer, 6, 360, 2000, animationCol, surface, 1, false, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(starfield, layer, runningEffects);
+                                SetEffect(starfield, layer);
                                 break;
                             }
                         }
@@ -673,7 +672,7 @@ namespace Chromatics.Layers
                         var starfield = new BPMFastStarfieldDecorator(layer, layer.Count() / 6, 198, 80, animationCol, surface, 2.0, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        SetEffect(starfield, layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -704,7 +703,7 @@ namespace Chromatics.Layers
                             new GradientStop(0.95f, animationCol3));
 
                         var gradientMove = new MoveGradientDecorator(surface, 180, true);
-                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), masterlayer.layerID);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -729,7 +728,7 @@ namespace Chromatics.Layers
                             new GradientStop(0.95f, animationCol3));
 
                         var gradientMove = new MoveBPMGradientDecorator(surface, 125 / 4, true);
-                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), masterlayer.layerID);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -743,7 +742,7 @@ namespace Chromatics.Layers
                         var arenaLightShow = new ArenaLightShowDecorator(layer, 20, 3.0, 1.0, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(arenaLightShow, layer, runningEffects);
+                        SetEffect(arenaLightShow, layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -768,7 +767,7 @@ namespace Chromatics.Layers
                             new GradientStop(0.95f, animationCol3));
 
                         var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, 27, DiagonalDirection.TopLeftToBottomRight);
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), masterlayer.layerID);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -782,7 +781,7 @@ namespace Chromatics.Layers
                         var bpmArenaLightShow = new BPMPWMDecorator(layer, 162, 1.0, animationCol, 0.10, 4, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(bpmArenaLightShow, layer, runningEffects);
+                        SetEffect(bpmArenaLightShow, layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -796,7 +795,7 @@ namespace Chromatics.Layers
                         var arenaLightShow = new ArenaLightShowDecorator(layer, 20, 3.0, 1.0, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(arenaLightShow, layer, runningEffects);
+                        SetEffect(arenaLightShow, layer);
                         RaidEffectState.raidEffectsRunning = true;
                         masterlayer.requestUpdate = true;
                         return true;
@@ -811,7 +810,7 @@ namespace Chromatics.Layers
                         var ripple = new BPMRippleDecorator(layer, 60, 2, 5, colors, surface, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(ripple, layer, runningEffects);
+                        SetEffect(ripple, layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -825,7 +824,7 @@ namespace Chromatics.Layers
                         var chase = new BPMChaseDecorator(layer, 160, 5, colors, surface, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(chase, layer, runningEffects);
+                        SetEffect(chase, layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -839,7 +838,7 @@ namespace Chromatics.Layers
                         var ripple = new BPMRippleDecorator(layer, 178, 2, 2, colors, surface, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(ripple, layer, runningEffects);
+                        SetEffect(ripple, layer);
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
                     }
@@ -871,7 +870,7 @@ namespace Chromatics.Layers
                                 var pulse = new BPMCircularPulseEffect(layer, 164, 4, 12, 2, colors, surface, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(pulse, layer, runningEffects);
+                                SetEffect(pulse, layer);
                                 break;
                             }
                             default: //20149
@@ -881,7 +880,7 @@ namespace Chromatics.Layers
                                 var starfield = new BPMStarfieldDecorator(layer, layer.Count() / 6, 272, 500, animationCol, surface, 2, false, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(starfield, layer, runningEffects);
+                                SetEffect(starfield, layer);
                                 break;
                             }
                         }
@@ -898,7 +897,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM9KeyHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM9KeyHighlight2.Color) };
                         var heartbeat = new BPMHeartbeatEffect(layer, 47, 2, colors, surface, baseCol);
 
-                        SetEffect(heartbeat, layer, runningEffects);
+                        SetEffect(heartbeat, layer);
 
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -911,7 +910,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM10KeyHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM10KeyHighlight2.Color) };
                         var pulse = new BPMCircularPulseEffect(layer, 180, 4, 6, 2, colors, surface, baseCol);
 
-                        SetEffect(pulse, layer, runningEffects);
+                        SetEffect(pulse, layer);
 
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -924,7 +923,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11KeyHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11KeyHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11KeyHighlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectM11KeyHighlight4.Color) };
                         var spinner = new BPMSpinnerEffect(layer, 135, 4, 180, colors, surface, baseCol);
 
-                        SetEffect(spinner, layer, runningEffects);
+                        SetEffect(spinner, layer);
 
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -937,7 +936,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectHoRHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectHoRHighlight2.Color) };
                         var matrix = new BPMMatrixEffect(layer, 110, 2, 0.5, 8, colors, surface, MatrixEffect.MatrixDirection.Left, baseCol);
 
-                        SetEffect(matrix, layer, runningEffects);
+                        SetEffect(matrix, layer);
 
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -951,7 +950,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronHighlight2.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronHighlight3.Color), ColorHelper.ColorToRGBColor(_colorPalette.RaidEffectNecronHighlight4.Color) };
                         var laser = new BPMLaserEffect(layer, 160, 8, 3.5, colors, surface, LaserEffect.LaserDirection.RandomDiagonal, baseCol);
 
-                        SetEffect(laser, layer, runningEffects);
+                        SetEffect(laser, layer);
 
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -969,7 +968,7 @@ namespace Chromatics.Layers
 
                         var gradientMove = new MoveBPMDiagonalGradientDecorator(surface, 27, DiagonalDirection.Random);
 
-                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, masterlayer.layerID);
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), masterlayer.layerID);
 
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -986,7 +985,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { animationCol1, animationCol2, animationCol3 };
                         var strike = new BPMThunderstrikeEffect(layer, 175, 4, 0.5, colors, surface, baseCol);
 
-                        SetEffect(strike, layer, runningEffects);
+                        SetEffect(strike, layer);
 
                         RaidEffectState.raidEffectsRunning = true;
                         return true;
@@ -1078,7 +1077,7 @@ namespace Chromatics.Layers
                                         var rAnimCol = new Color[] { new Color(255, 255, 255) };
                                         var rStarfield = new BPMStarfieldDecorator(layer, 6, 360, 2000, rAnimCol, surface, 1, false, rBaseCol);
                                         layer.Brush = new SolidColorBrush(rBaseCol);
-                                        SetEffect(rStarfield, layer, runningEffects);
+                                        SetEffect(rStarfield, layer);
                                     }
                                     else if (elapsed < flashAt + ArcadiaState.FlashDurationSec)
                                     {
@@ -1108,7 +1107,7 @@ namespace Chromatics.Layers
                                         var rColors = new Color[] { new Color(255, 220, 180), new Color(0, 255, 43) };
                                         var rStrike = new BPMThunderstrikeEffect(layer, 360, 4, 0.6, rColors, surface, rBaseCol);
                                         layer.Brush = new SolidColorBrush(rBaseCol);
-                                        SetEffect(rStrike, layer, runningEffects);
+                                        SetEffect(rStrike, layer);
                                         ArcadiaState.layersFlashed.Add(lid);
                                         ArcadiaState.layersPostFlashApplied.Add(lid);
                                     }
@@ -1149,7 +1148,7 @@ namespace Chromatics.Layers
                                 var starfield = new BPMStarfieldDecorator(layer, 6, 360, 2000, animationCol, surface, 1, false, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(starfield, layer, runningEffects);
+                                SetEffect(starfield, layer);
                                 break;
                             }
                             case ArcadiaState.Phase2BgmId:
@@ -1166,7 +1165,7 @@ namespace Chromatics.Layers
                                 var pulse = new BPMCircularPulseEffect(layer, 165, 4, 12, 1, colors, surface, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(pulse, layer, runningEffects);
+                                SetEffect(pulse, layer);
 
 
                                 break;
@@ -1267,7 +1266,7 @@ namespace Chromatics.Layers
                             var strike = new BPMThunderstrikeEffect(layer, 360, 4, 0.6, colors, surface, baseCol);
 
                             layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(strike, layer, runningEffects);
+                            SetEffect(strike, layer);
 
                             ArcadiaState.layersPostFlashApplied.Add(lid);
                             return true;
@@ -1302,7 +1301,7 @@ namespace Chromatics.Layers
                                 var pulse = new BPMCircularPulseEffect(layer, 164, 4, 12, 2, colors, surface, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(pulse, layer, runningEffects);
+                                SetEffect(pulse, layer);
                                 break;
                             }
                             default: //230
@@ -1312,7 +1311,7 @@ namespace Chromatics.Layers
                                 var starfield = new BPMStarfieldDecorator(layer, layer.Count() / 6, 272, 500, animationCol, surface, 2, false, baseCol);
 
                                 layer.Brush = new SolidColorBrush(baseCol);
-                                SetEffect(starfield, layer, runningEffects);
+                                SetEffect(starfield, layer);
                                 break;
                             }
                         }

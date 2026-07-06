@@ -42,7 +42,6 @@ namespace Chromatics.Layers
 
             // Do not apply if layer/effect is disabled
             var effectSettings = RGBController.GetEffectsSettings();
-            var runningEffects = RGBController.GetRunningEffects();
 
             CutsceneAnimationEffectModel model;
 
@@ -119,8 +118,7 @@ namespace Chromatics.Layers
                     model.activeGradient?.RemoveAllDecorators();
                     model.activeGradient = null;
 
-                    if (runningEffects.Contains(layergroup))
-                        runningEffects.Remove(layergroup);
+                    RGBController.RemoveRunningEffect(layergroup);
 
                     layergroup.Brush = new SolidColorBrush(Color.Transparent);
                     layergroup.Detach();
@@ -166,10 +164,7 @@ namespace Chromatics.Layers
                 {
                     if (inCutscene && !inInstance)
                     {
-                        if (runningEffects.Contains(layergroup))
-                        {
-                            runningEffects.Remove(layergroup);
-                        }
+                        RGBController.RemoveRunningEffect(layergroup);
 
                         layergroup.RemoveAllDecorators();
                         // Tear down any previous gradient's decorator chain
@@ -185,7 +180,7 @@ namespace Chromatics.Layers
                         layergroup.Brush = new TextureBrush(new LinearGradientTexture(new Size(100, 100), animationGradient));
                         if (layergroup.Surface == null) layergroup.Attach(surface);
 
-                        runningEffects.Add(layergroup);
+                        RGBController.AddRunningEffect(layergroup);
                     }
                     else
                     {
@@ -196,8 +191,7 @@ namespace Chromatics.Layers
                             model.activeGradient = null;
                             layergroup.Brush = new SolidColorBrush(Color.Transparent);
 
-                            if (runningEffects.Contains(layergroup))
-                                runningEffects.Remove(layergroup);
+                            RGBController.RemoveRunningEffect(layergroup);
                         }
                     }
 
