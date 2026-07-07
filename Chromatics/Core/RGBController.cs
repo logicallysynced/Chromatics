@@ -134,28 +134,11 @@ namespace Chromatics.Core
         // Setup itself is JIT-compiled - the JIT-time fault happens at
         // Setup's call site, outside every catch, and crashed startup as
         // CHROMATICS-17 / CHROMATICS-18.
+        // Thin wrapper over the shared guard so the provider blocks below
+        // stay readable. The lambda-isolation rule is documented on
+        // Helpers.AssemblyLoadGuard.
         private static void TryLoadProviderIsolated(string label, Action load)
-        {
-            try
-            {
-                load();
-            }
-            catch (Exception ex) when (ex is System.IO.FileLoadException or System.IO.FileNotFoundException
-                or BadImageFormatException or TypeInitializationException or TypeLoadException)
-            {
-                var inner = ex is TypeInitializationException { InnerException: not null } tie ? tie.InnerException : ex;
-                bool appControl = inner.HResult == unchecked((int)0x800711C7)
-                    || (inner.Message?.Contains("Application Control", StringComparison.OrdinalIgnoreCase) ?? false);
-
-                Logger.WriteConsole(Enums.LoggerTypes.Error, appControl
-                    ? $"[{label}] Windows App Control blocked a library this provider needs: {inner.Message} To use these devices, allow Chromatics in Windows Security (App & browser control -> Smart App Control) and restart."
-                    : $"[{label}] Provider library failed to load: {inner.Message}");
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteConsole(Enums.LoggerTypes.Error, $"[{label}] LoadDeviceProvider Error: {ex.Message}");
-            }
-        }
+            => Helpers.AssemblyLoadGuard.TryRun(label, load);
 
         public static void Setup()
         {
@@ -719,9 +702,7 @@ namespace Chromatics.Core
                     // with _loaded still false means Unload() no-ops on exit,
                     // so nothing would restore smart lights or release native
                     // SDK handles - tear the providers down here instead.
-                    foreach (var p in loadedDeviceProviders.ToList())
-                        UnloadDeviceProvider(p, removeFromList: false);
-                    loadedDeviceProviders.Clear();
+                    TeardownLoadedProviders();
                     return;
                 }
 
@@ -737,6 +718,19 @@ namespace Chromatics.Core
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"RGBController Setup Error: {ex.Message}");
+
+                // Same leak as the trigger bail-out above: any throw after
+                // the provider blocks (AlignDevices, event hookup) leaves
+                // _loaded false, so Unload() would no-op and the loaded
+                // providers would never restore devices or release SDKs.
+                if (!_loaded)
+                {
+                    try { TeardownLoadedProviders(); }
+                    catch (Exception teardownEx)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"Provider teardown after Setup failure also failed: {teardownEx.Message}");
+                    }
+                }
             }
         }
 
@@ -1186,6 +1180,49 @@ namespace Chromatics.Core
             */
         }
 
+        // Shared provider teardown for every exit path: normal Unload, the
+        // Setup trigger bail-out, and Setup's outer catch. Detach and
+        // bookkeeping run sequentially on this thread (the surface is not
+        // thread-safe), then the stateful smart-light providers (LIFX, Hue,
+        // Nanoleaf) dispose in parallel under one 30s ceiling - each blocks
+        // in Dispose while restoring its devices, so sequential disposal
+        // makes the wait additive across brands. Native-SDK providers keep
+        // the sequential dispose; some vendor SDKs are touchy about which
+        // thread tears them down.
+        private static void TeardownLoadedProviders()
+        {
+            var deferredRestore = new List<IRGBDeviceProvider>();
+            foreach (var deviceProvider in loadedDeviceProviders)
+            {
+                bool statefulRestore =
+                    deviceProvider is Extensions.RGB.NET.Devices.LIFX.LifxRGBDeviceProvider
+                    or Extensions.RGB.NET.Devices.Hue.HueRGBDeviceProvider
+                    or Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider;
+
+                UnloadDeviceProvider(deviceProvider, removeFromList: false, disposeProvider: !statefulRestore);
+                if (statefulRestore) deferredRestore.Add(deviceProvider);
+            }
+
+            if (deferredRestore.Count > 0)
+            {
+                var restoreTasks = deferredRestore
+                    .Select(p => System.Threading.Tasks.Task.Run(() =>
+                    {
+                        try { p.Dispose(); }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteConsole(Enums.LoggerTypes.Error, $"Provider dispose error during shutdown: {ex.Message}");
+                        }
+                    }))
+                    .ToArray();
+
+                if (!System.Threading.Tasks.Task.WaitAll(restoreTasks, TimeSpan.FromSeconds(30)))
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices, "Smart-light restore hit the 30s shutdown ceiling; remaining restores were abandoned.");
+            }
+
+            loadedDeviceProviders.Clear();
+        }
+
         public static void Unload()
         {
             if (!_loaded) return;
@@ -1194,47 +1231,7 @@ namespace Chromatics.Core
             {
                 var appSettings = AppSettings.GetSettings();
 
-                // The stateful smart-light providers (LIFX, Hue, Nanoleaf)
-                // block in Dispose while restoring each device to its
-                // pre-Chromatics state, with per-provider budgets of up to
-                // ~30s. Disposing them sequentially makes close time
-                // additive across brands, so their disposes are deferred
-                // here and run in parallel under one global ceiling - they
-                // share no sockets, endpoints, or SDKs, and the pacing that
-                // matters (between a provider's own devices) lives inside
-                // each provider's Dispose. Native-SDK providers keep the
-                // original sequential dispose on this thread; some vendor
-                // SDKs are touchy about which thread tears them down.
-                var deferredRestore = new List<IRGBDeviceProvider>();
-                foreach (var deviceProvider in loadedDeviceProviders)
-                {
-                    bool statefulRestore =
-                        deviceProvider is Extensions.RGB.NET.Devices.LIFX.LifxRGBDeviceProvider
-                        or Extensions.RGB.NET.Devices.Hue.HueRGBDeviceProvider
-                        or Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider;
-
-                    UnloadDeviceProvider(deviceProvider, removeFromList: false, disposeProvider: !statefulRestore);
-                    if (statefulRestore) deferredRestore.Add(deviceProvider);
-                }
-
-                if (deferredRestore.Count > 0)
-                {
-                    var restoreTasks = deferredRestore
-                        .Select(p => System.Threading.Tasks.Task.Run(() =>
-                        {
-                            try { p.Dispose(); }
-                            catch (Exception ex)
-                            {
-                                Logger.WriteConsole(Enums.LoggerTypes.Error, $"Provider dispose error during shutdown: {ex.Message}");
-                            }
-                        }))
-                        .ToArray();
-
-                    if (!System.Threading.Tasks.Task.WaitAll(restoreTasks, TimeSpan.FromSeconds(30)))
-                        Logger.WriteConsole(Enums.LoggerTypes.Devices, "Smart-light restore hit the 30s shutdown ceiling; remaining restores were abandoned.");
-                }
-
-                loadedDeviceProviders.Clear();
+                TeardownLoadedProviders();
 
                 // Stop and dispose of the update trigger. Previously this only called
                 // Stop(), which left the trigger's internal timer and its handle alive.

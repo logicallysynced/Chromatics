@@ -279,22 +279,34 @@ namespace Chromatics
             if (appSettings.ffxivExpansion.HasValue && appSettings.ffxivExpansion >= 7.0)
                 return;
 
-            appSettings.ffxivExpansion = 7.0;
-
-            var active = RGBController.GetActivePalette();
-            var defaults = new PaletteColorModel();
-
-            foreach (var p in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
+            // Touching RGBController fires its static constructor, whose
+            // field initialisers construct the RGB.NET surface - on App
+            // Control machines that DLL can be blocked (CHROMATICS-19), and
+            // this runs before RGBController.Setup's own guards exist. The
+            // migration body stays inside the lambda so its JIT-time load
+            // fault lands in the guard, and the expansion marker only
+            // advances on success so a blocked machine retries after the
+            // user allows the library.
+            bool migrated = AssemblyLoadGuard.TryRun("Palette migration", () =>
             {
-                if (p.Name != "MenuBase" && p.Name != "MenuHighlight1" &&
-                    p.Name != "MenuHighlight2" && p.Name != "MenuHighlight3") continue;
+                var active = RGBController.GetActivePalette();
+                var defaults = new PaletteColorModel();
 
-                var mapping = (ColorMapping)p.GetValue(defaults);
-                var newMapping = new ColorMapping(mapping.Name, mapping.Type, mapping.Color);
-                p.SetValue(active, newMapping);
-            }
+                foreach (var p in typeof(PaletteColorModel).GetFields(BindingFlags.Public | BindingFlags.Instance))
+                {
+                    if (p.Name != "MenuBase" && p.Name != "MenuHighlight1" &&
+                        p.Name != "MenuHighlight2" && p.Name != "MenuHighlight3") continue;
 
-            RGBController.SaveColorPalette();
+                    var mapping = (ColorMapping)p.GetValue(defaults);
+                    var newMapping = new ColorMapping(mapping.Name, mapping.Type, mapping.Color);
+                    p.SetValue(active, newMapping);
+                }
+
+                RGBController.SaveColorPalette();
+            });
+
+            if (migrated)
+                appSettings.ffxivExpansion = 7.0;
         }
 
         public static AppBuilder BuildAvaloniaApp()

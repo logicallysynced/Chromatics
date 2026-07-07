@@ -187,24 +187,28 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 
                     if (devices.Count > 0)
                     {
-                        // The loop's worst case is ~3.1s per bulb (the 3000ms
-                        // WhenAny timeout plus the 80ms pacing gap), which
-                        // only bites when bulbs are unreachable - exactly
-                        // when restore matters most. The budget must cover
-                        // it, or bulbs late in the list never even start
-                        // restoring before shutdown kills the task. The 30s
-                        // cap matches the global shutdown ceiling in
-                        // RGBController.Unload.
-                        int totalBudgetSec = Math.Min(30, 2 + (int)Math.Ceiling(devices.Count * 3.2));
+                        // Budget derived from the loop's own constants so
+                        // they can't drift apart. The per-bulb worst case
+                        // (timeout + pacing) only bites when bulbs are
+                        // unreachable - exactly when restore matters most.
+                        // The 30s cap matches the global shutdown ceiling in
+                        // RGBController.Unload, which means fleets of 9+
+                        // all-unreachable bulbs can still lose the tail of
+                        // the list; reachable bulbs restore in well under a
+                        // second each, so real setups fit comfortably.
+                        const int perBulbTimeoutMs = 3000;
+                        const int pacingMs = 80;
+                        int worstCaseMs = pacingMs + devices.Count * (perBulbTimeoutMs + pacingMs);
+                        int totalBudgetSec = Math.Min(30, 2 + (worstCaseMs + 999) / 1000);
                         Task.Run(async () =>
                         {
-                            await Task.Delay(80).ConfigureAwait(false);
+                            await Task.Delay(pacingMs).ConfigureAwait(false);
                             foreach (var d in devices)
                             {
                                 try
                                 {
                                     var t = d.RestoreOriginalStateAsync();
-                                    var done = await Task.WhenAny(t, Task.Delay(3000)).ConfigureAwait(false);
+                                    var done = await Task.WhenAny(t, Task.Delay(perBulbTimeoutMs)).ConfigureAwait(false);
                                     if (done != t)
                                         Logger.WriteConsole(LoggerTypes.Devices, $"[LIFX] restore timed out for {d.DeviceInfo.DeviceName}");
                                 }
@@ -212,7 +216,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
                                 {
                                     Logger.WriteConsole(LoggerTypes.Devices, $"[LIFX] restore failed for {d.DeviceInfo.DeviceName}: {ex.Message}");
                                 }
-                                await Task.Delay(80).ConfigureAwait(false);
+                                await Task.Delay(pacingMs).ConfigureAwait(false);
                             }
                         }).Wait(TimeSpan.FromSeconds(totalBudgetSec));
                     }

@@ -89,4 +89,22 @@ public class PaletteCompatibilityTests
         // Idempotent on a corrected palette: no rewrite loop on every load.
         Assert.False(Chromatics.Helpers.FileOperationsHelper.NormalizePaletteDisplayNames(palette));
     }
+
+    // A genuinely old palette carries every stale name at once. All renames
+    // must be corrected in a single pass - this pins against a future edit
+    // that returns after the first match.
+    [Fact]
+    public void NormalizePaletteDisplayNames_CorrectsAllRenamesTogether()
+    {
+        var palette = new PaletteColorModel();
+        palette.JobNINHuton.Name = "NIN: Huton";
+        palette.Bleed.Name = "Bleed";
+        palette.Infirmary.Name = "Infirmary";
+
+        Assert.True(Chromatics.Helpers.FileOperationsHelper.NormalizePaletteDisplayNames(palette));
+
+        Assert.Equal("NIN: Kazematoi", palette.JobNINHuton.Name);
+        Assert.Equal("Bleeding", palette.Bleed.Name);
+        Assert.Equal("Infirmity", palette.Infirmary.Name);
+    }
 }

@@ -53,30 +53,48 @@ namespace Chromatics.Core
             // every startup until they fix or remove the bad value.
             ValidateIpFields(_settings);
 
-            ApplyGlobalBrightnessIsolated(_settings.globalbrightness);
+            DedupeAdoptedDeviceLists(_settings);
+
+            // GlobalBrightnessCorrection implements an RGB.NET interface, so
+            // referencing it forces RGB.NET.Core.dll to load at JIT time. On
+            // App Control machines that DLL can be blocked (CHROMATICS-19).
+            // The reference must stay inside the lambda: a lambda body is a
+            // separate method whose JIT failure surfaces at the guarded
+            // invocation, whereas a reference in Startup's own body faults
+            // while Startup itself compiles, before any catch exists.
+            var brightness = _settings.globalbrightness;
+            AssemblyLoadGuard.TryRun("Global brightness", () =>
+            {
+                Chromatics.Extensions.RGB.NET.ColorCorrections.GlobalBrightnessCorrection.Instance.BrightnessPercent = brightness;
+            });
         }
 
-        // GlobalBrightnessCorrection implements an RGB.NET interface, so any
-        // method referencing it forces RGB.NET.Core.dll to load when the JIT
-        // compiles that method. On machines where App Control blocks that
-        // DLL (CHROMATICS-19), a direct reference in Startup faults settings
-        // load itself. NoInlining keeps the reference out of Startup's JIT;
-        // the catch turns the block into a warning instead of a dead app -
-        // RGBController.Setup carries its own guards for the rest.
-        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        private static void ApplyGlobalBrightnessIsolated(int brightnessPercent)
+        // A device persisted twice in an adopted list crashes dictionary
+        // builds downstream and hydrates two IRGBDevice instances for one
+        // physical bulb (CHROMATICS-1C). Healing once at load, keyed by each
+        // provider's identity field with the newest entry winning, covers
+        // every consumer; the next save persists the deduplicated lists.
+        private static void DedupeAdoptedDeviceLists(SettingsModel settings)
         {
-            try
-            {
-                Chromatics.Extensions.RGB.NET.ColorCorrections.GlobalBrightnessCorrection.Instance.BrightnessPercent = brightnessPercent;
-            }
-            catch (Exception ex) when (ex is System.IO.FileLoadException
-                                        or System.IO.FileNotFoundException
-                                        or BadImageFormatException
-                                        or TypeInitializationException)
-            {
-                Logger.WriteConsole(LoggerTypes.Error, $"Global brightness could not be applied because a lighting library failed to load: {ex.Message}");
-            }
+            if (settings.deviceLifxAdoptedDevices is { Count: > 1 })
+                settings.deviceLifxAdoptedDevices = settings.deviceLifxAdoptedDevices
+                    .GroupBy(d => d.Mac, StringComparer.OrdinalIgnoreCase)
+                    .Select(g => g.Last()).ToList();
+
+            if (settings.deviceHueAdoptedDevices is { Count: > 1 })
+                settings.deviceHueAdoptedDevices = settings.deviceHueAdoptedDevices
+                    .GroupBy(d => d.LightId)
+                    .Select(g => g.Last()).ToList();
+
+            if (settings.deviceYeelightAdoptedDevices is { Count: > 1 })
+                settings.deviceYeelightAdoptedDevices = settings.deviceYeelightAdoptedDevices
+                    .GroupBy(d => d.Id, StringComparer.OrdinalIgnoreCase)
+                    .Select(g => g.Last()).ToList();
+
+            if (settings.deviceNanoleafAdoptedDevices is { Count: > 1 })
+                settings.deviceNanoleafAdoptedDevices = settings.deviceNanoleafAdoptedDevices
+                    .GroupBy(d => d.Id, StringComparer.OrdinalIgnoreCase)
+                    .Select(g => g.Last()).ToList();
         }
 
         // settings.chromatics4 fields that hold an IP address. Anything the
