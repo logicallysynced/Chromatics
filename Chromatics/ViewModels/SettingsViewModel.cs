@@ -294,8 +294,13 @@ namespace Chromatics.ViewModels
 
                     // Step 2: adoption dialog (pick which bulbs Chromatics
                     // controls). Pre-checks bulbs the user previously adopted.
+                    // GroupBy tolerates a bulb persisted twice in settings -
+                    // a plain ToDictionary throws on the duplicate key and
+                    // the toggle's async path turns that into an app crash
+                    // (CHROMATICS-1C).
                     var alreadyAdopted = (cur.deviceHueAdoptedDevices ?? new System.Collections.Generic.List<HueAdoptedDevice>())
-                        .ToDictionary(d => d.LightId, d => d);
+                        .GroupBy(d => d.LightId)
+                        .ToDictionary(g => g.Key, g => g.Last());
 
                     var adoptDlg = new HueAdoptionDialog(cur.deviceHueBridgeIP, cur.deviceHueBridgeClientKey, alreadyAdopted);
                     if (owner != null) await adoptDlg.ShowDialog(owner);
@@ -345,8 +350,10 @@ namespace Chromatics.ViewModels
                     var cur = AppSettings.GetSettings();
                     var owner = GetMainWindow();
 
+                    // GroupBy tolerates duplicate persisted entries (CHROMATICS-1C).
                     var alreadyAdopted = (cur.deviceLifxAdoptedDevices ?? new System.Collections.Generic.List<LifxAdoptedDevice>())
-                        .ToDictionary(d => d.Mac, d => d, StringComparer.OrdinalIgnoreCase);
+                        .GroupBy(d => d.Mac, StringComparer.OrdinalIgnoreCase)
+                        .ToDictionary(g => g.Key, g => g.Last(), StringComparer.OrdinalIgnoreCase);
 
                     var dlg = new LifxAdoptionDialog(alreadyAdopted);
                     if (owner != null)
@@ -536,8 +543,12 @@ namespace Chromatics.ViewModels
                     var cur = AppSettings.GetSettings();
                     var owner = GetMainWindow();
 
+                    // GroupBy tolerates duplicate persisted entries - the
+                    // crash site of CHROMATICS-1C was exactly this line with
+                    // a Yeelight bulb saved twice.
                     var alreadyAdopted = (cur.deviceYeelightAdoptedDevices ?? new System.Collections.Generic.List<YeelightAdoptedDevice>())
-                        .ToDictionary(d => d.Id, d => d, StringComparer.OrdinalIgnoreCase);
+                        .GroupBy(d => d.Id, StringComparer.OrdinalIgnoreCase)
+                        .ToDictionary(g => g.Key, g => g.Last(), StringComparer.OrdinalIgnoreCase);
 
                     var dlg = new YeelightAdoptionDialog(alreadyAdopted);
                     if (owner != null)

@@ -53,7 +53,30 @@ namespace Chromatics.Core
             // every startup until they fix or remove the bad value.
             ValidateIpFields(_settings);
 
-            Chromatics.Extensions.RGB.NET.ColorCorrections.GlobalBrightnessCorrection.Instance.BrightnessPercent = _settings.globalbrightness;
+            ApplyGlobalBrightnessIsolated(_settings.globalbrightness);
+        }
+
+        // GlobalBrightnessCorrection implements an RGB.NET interface, so any
+        // method referencing it forces RGB.NET.Core.dll to load when the JIT
+        // compiles that method. On machines where App Control blocks that
+        // DLL (CHROMATICS-19), a direct reference in Startup faults settings
+        // load itself. NoInlining keeps the reference out of Startup's JIT;
+        // the catch turns the block into a warning instead of a dead app -
+        // RGBController.Setup carries its own guards for the rest.
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        private static void ApplyGlobalBrightnessIsolated(int brightnessPercent)
+        {
+            try
+            {
+                Chromatics.Extensions.RGB.NET.ColorCorrections.GlobalBrightnessCorrection.Instance.BrightnessPercent = brightnessPercent;
+            }
+            catch (Exception ex) when (ex is System.IO.FileLoadException
+                                        or System.IO.FileNotFoundException
+                                        or BadImageFormatException
+                                        or TypeInitializationException)
+            {
+                Logger.WriteConsole(LoggerTypes.Error, $"Global brightness could not be applied because a lighting library failed to load: {ex.Message}");
+            }
         }
 
         // settings.chromatics4 fields that hold an IP address. Anything the

@@ -3,6 +3,7 @@ using Avalonia.Interactivity;
 using Chromatics.Extensions.RGB.NET.Devices.LIFX;
 using Chromatics.Models;
 using Chromatics.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -50,8 +51,11 @@ namespace Chromatics.Views
             // not in the dict get re-added by discovery as fresh entries
             // with IsSelected=false, exactly matching their state before
             // the re-run.
+            // GroupBy tolerates duplicate row macs (CHROMATICS-1C class).
             var preserved = _vm.Bulbs
                 .Where(b => b.IsSelected)
+                .GroupBy(b => b.Mac, StringComparer.OrdinalIgnoreCase)
+                .Select(g => g.Last())
                 .ToDictionary(
                     b => b.Mac,
                     b => new LifxAdoptedDevice
@@ -59,7 +63,8 @@ namespace Chromatics.Views
                         Mac = b.Mac, Label = b.Label,
                         LastIp = b.IsOnline ? b.IpDisplay : null,
                         ProductId = b.ProductId, ZoneCount = b.ZoneCount,
-                    });
+                    },
+                    StringComparer.OrdinalIgnoreCase);
             await _vm.StartDiscoveryAsync(preserved, _cts.Token);
         }
 

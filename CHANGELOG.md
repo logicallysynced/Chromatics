@@ -2,11 +2,12 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.3.22
+## 4.3.23
 
 - **New:** Nanoleaf smart-light support (Beta). Covers the panel family (Shapes, Canvas, Elements, Lines, Aurora) and other controllers that speak the Nanoleaf OpenAPI. Enable it from Settings → Device Providers and pair each controller with a one-time button press; effects render across the panels at their real physical positions. Layer assignments stay with their panels if you add or remove panels from the wall later. Essentials bulbs and strips are not supported.
 - Chromatics now closes faster when several smart-light brands are enabled: LIFX, Hue, and Nanoleaf devices restore their original state in parallel instead of one brand at a time.
-- Fixed a startup crash on PCs where Windows App Control or Smart App Control blocks one of the bundled device libraries. Chromatics now starts with that provider disabled, logs which file was blocked, and explains how to allow it.
+- Fixed a startup crash on PCs where Windows App Control or Smart App Control blocks one of the bundled device libraries. Chromatics now starts with that provider disabled, logs which file was blocked, and explains how to allow it. This also covers the case where the core lighting library itself is blocked during settings load.
+- Fixed a crash when opening the Hue, LIFX, or Yeelight device picker with the same bulb saved twice in settings.
 
 ## 4.3.14
 

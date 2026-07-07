@@ -46,8 +46,11 @@ namespace Chromatics.Views
             // StartDiscoveryAsync seeds everything in `alreadyAdopted` as
             // IsSelected=true, so passing the full list (including bulbs
             // the user just unchecked) would resurrect their checks.
+            // GroupBy tolerates duplicate row ids (CHROMATICS-1C class).
             var preserved = _vm.Bulbs
                 .Where(b => b.IsSelected)
+                .GroupBy(b => b.Id)
+                .Select(g => g.Last())
                 .ToDictionary(
                     b => b.Id,
                     b => new YeelightAdoptedDevice
