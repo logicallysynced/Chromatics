@@ -137,7 +137,7 @@ namespace Chromatics.Layers
                 };
 
                 var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
+                _layergroups[layer.layerID] = lg;
 
                 layergroup.Brush = weather_brush;
                 layergroup.Detach();
@@ -239,21 +239,19 @@ namespace Chromatics.Layers
         }
 
 
-        private static void SetEffect(ILedGroupDecorator effect, ListLedGroup layer, List<ListLedGroup> runningEffects)
+        private static void SetEffect(ILedGroupDecorator effect, ListLedGroup layer)
         {
-            if (runningEffects.Contains(layer))
-                runningEffects.Remove(layer);
+            RGBController.RemoveRunningEffect(layer);
 
             layer.RemoveAllDecorators();
             layer.AddDecorator(effect);
 
-            runningEffects.Add(layer);
+            RGBController.AddRunningEffect(layer);
         }
 
-        private static void SetLinearGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, List<ListLedGroup> runningEffects, HashSet<LinearGradient> _gradientEffects)
+        private static void SetLinearGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, HashSet<LinearGradient> _gradientEffects)
         {
-            if (runningEffects.Contains(layer))
-                runningEffects.Remove(layer);
+            RGBController.RemoveRunningEffect(layer);
 
             layer.RemoveAllDecorators();
             gradient.WrapGradient = true;
@@ -261,13 +259,12 @@ namespace Chromatics.Layers
 
             layer.Brush = new TextureBrush(new LinearGradientTexture(boundry, gradient));
 
-            runningEffects.Add(layer);
+            RGBController.AddRunningEffect(layer);
             _gradientEffects.Add(gradient);
         }
-        private static void SetRadialGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, List<ListLedGroup> runningEffects, HashSet<LinearGradient> _gradientEffects)
+        private static void SetRadialGradientEffect(LinearGradient gradient, IGradientDecorator effect, ListLedGroup layer, Size boundry, HashSet<LinearGradient> _gradientEffects)
         {
-            if (runningEffects.Contains(layer))
-                runningEffects.Remove(layer);
+            RGBController.RemoveRunningEffect(layer);
 
             layer.RemoveAllDecorators();
             gradient.WrapGradient = true;
@@ -275,16 +272,14 @@ namespace Chromatics.Layers
 
             layer.Brush = new TextureBrush(new ConicalGradientTexture(boundry, gradient));
 
-            runningEffects.Add(layer);
+            RGBController.AddRunningEffect(layer);
             _gradientEffects.Add(gradient);
         }
 
         private static void StopEffects(ListLedGroup layer, HashSet<LinearGradient> _gradientEffects)
         {
-            var runningEffects = RGBController.GetRunningEffects();
 
-            if (runningEffects.Contains(layer))
-                runningEffects.Remove(layer);
+            RGBController.RemoveRunningEffect(layer);
 
             foreach(var gradient in _gradientEffects)
             {
@@ -297,7 +292,6 @@ namespace Chromatics.Layers
         private static bool SetReactiveWeather(IMappingLayer masterlayer, ListLedGroup layer, string zone, string weather, SolidColorBrush weather_brush, PaletteColorModel _colorPalette, RGBSurface surface, Led[] ledArray, HashSet<LinearGradient> _gradientEffects, bool inInstance, Guid deviceGuid)
         {
             var effectSettings = RGBController.GetEffectsSettings();
-            var runningEffects = RGBController.GetRunningEffects();
             var reactiveWeatherEffects = effectSettings.effect_reactiveweather
                                          && MappingLayers.IsDeviceEffectsEnabled(deviceGuid);
             var color = GetWeatherColor(weather, _colorPalette);
@@ -317,7 +311,7 @@ namespace Chromatics.Layers
                             var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 900, animationCol, surface, false, baseCol);
 
                             layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(starfield, layer, runningEffects);
+                            SetEffect(starfield, layer);
 
                             return true;
                         }
@@ -335,7 +329,7 @@ namespace Chromatics.Layers
                             var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 800, animationCol, surface, false, baseCol);
 
                             layer.Brush = new SolidColorBrush(baseCol);
-                            SetEffect(starfield, layer, runningEffects);
+                            SetEffect(starfield, layer);
 
                             return true;
                         }
@@ -356,7 +350,7 @@ namespace Chromatics.Layers
                             var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 500, starfieldCol, surface, false, baseCol);
                             layer.Brush = new SolidColorBrush(baseCol);
 
-                            SetEffect(starfield, layer, runningEffects);
+                            SetEffect(starfield, layer);
 
                             return true;
                         }
@@ -385,9 +379,9 @@ namespace Chromatics.Layers
 
                             var gradientMove = new MoveGradientDecorator(surface, 120, true);
 
-                            SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+                            SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), _gradientEffects);
 
-                            runningEffects.Add(layer);
+                            RGBController.AddRunningEffect(layer);
 
                             return true;
                         }
@@ -417,7 +411,7 @@ namespace Chromatics.Layers
                         var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 200, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        SetEffect(starfield, layer);
 
                         return true;
                     }
@@ -434,7 +428,7 @@ namespace Chromatics.Layers
                         var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 100, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        SetEffect(starfield, layer);
 
                         return true;
                     }
@@ -452,7 +446,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 180, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), _gradientEffects);
 
                         return true;
                     }
@@ -470,7 +464,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 220, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), _gradientEffects);
 
                         return true;
                     }
@@ -489,7 +483,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 220, false);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), _gradientEffects);
 
                         return true;
                     }
@@ -504,7 +498,7 @@ namespace Chromatics.Layers
                         var storms = new StrobeDecorator(layer, 10 * 1000, 100, true, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(storms, layer, runningEffects);
+                        SetEffect(storms, layer);
 
                         return true;
                     }
@@ -518,7 +512,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 200, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), _gradientEffects);
 
                         return true;
                     }
@@ -536,7 +530,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.35, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 100, true);
 
-                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), _gradientEffects);
 
                         return true;
                     }
@@ -553,7 +547,7 @@ namespace Chromatics.Layers
                         var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 40, 1500, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        SetEffect(starfield, layer);
 
                         return true;
                     }
@@ -570,7 +564,7 @@ namespace Chromatics.Layers
                         var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 200, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        SetEffect(starfield, layer);
 
                         return true;
                     }
@@ -589,7 +583,7 @@ namespace Chromatics.Layers
 
                         var gradientMove = new MoveGradientDecorator(surface, 80, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(50, 50), runningEffects, _gradientEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(50, 50), _gradientEffects);
 
                         return true;
                     }
@@ -617,7 +611,7 @@ namespace Chromatics.Layers
 
                         var gradientMove = new MoveGradientDecorator(surface, 120, true);
 
-                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+                        SetRadialGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), _gradientEffects);
 
                         return true;
 
@@ -648,7 +642,7 @@ namespace Chromatics.Layers
                         var pulse = new CircularPulseEffect(layer, 6, 12, 0.5, 2, colors, surface, baseCol);
 
                         //layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(pulse, layer, runningEffects);
+                        SetEffect(pulse, layer);
 
                         return true;
                     }
@@ -670,7 +664,7 @@ namespace Chromatics.Layers
                         var colors = new Color[] { animationCol1, animationCol2, animationCol3 };
                         var pulse = new CircularPulseEffect(layer, 6, 12, 0.5, 2, colors, surface, baseCol);
 
-                        SetEffect(pulse, layer, runningEffects);
+                        SetEffect(pulse, layer);
                         return true;
                     }
                     else
@@ -686,7 +680,7 @@ namespace Chromatics.Layers
                         var animationCol = new Color[] { ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxHighlight1.Color), ColorHelper.ColorToRGBColor(_colorPalette.WeatherGravitationalFluxHighlight2.Color) };
                         var heartbeat = new BPMHeartbeatEffect(layer, 36, 2, animationCol, surface, baseCol);
 
-                        SetEffect(heartbeat, layer, runningEffects);
+                        SetEffect(heartbeat, layer);
 
                         return true;
                     }
@@ -704,7 +698,7 @@ namespace Chromatics.Layers
                         var starfield = new StarfieldDecorator(layer, (layer.Count() / 4), 20, 900, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        SetEffect(starfield, layer);
 
                         return true;
                     }
@@ -722,7 +716,7 @@ namespace Chromatics.Layers
                         var starfield = new StarfieldDecorator(layer, 10, 20, 900, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        SetEffect(starfield, layer);
 
                         return true;
                     }
@@ -741,7 +735,7 @@ namespace Chromatics.Layers
                         var animationGradient = new LinearGradient(new GradientStop((float)0, baseCol), new GradientStop((float)0.25, animationCol), new GradientStop((float)0.75, baseCol), new GradientStop((float)1, animationCol));
                         var gradientMove = new MoveGradientDecorator(surface, 200, true);
 
-                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), runningEffects, _gradientEffects);
+                        SetLinearGradientEffect(animationGradient, gradientMove, layer, new Size(100, 100), _gradientEffects);
 
                         return true;
                     }
@@ -759,7 +753,7 @@ namespace Chromatics.Layers
                         var starfield = new StarfieldDecorator(layer, 10, 20, 900, animationCol, surface, false, baseCol);
 
                         layer.Brush = new SolidColorBrush(baseCol);
-                        SetEffect(starfield, layer, runningEffects);
+                        SetEffect(starfield, layer);
 
                         return true;
                     }
@@ -777,7 +771,7 @@ namespace Chromatics.Layers
                         
                         var spinner = new BPMSpinnerEffect(layer, 32, 1, 180, animationCol, surface, baseCol);
 
-                        SetEffect(spinner, layer, runningEffects);
+                        SetEffect(spinner, layer);
 
                         return true;
                     }

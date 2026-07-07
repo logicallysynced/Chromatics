@@ -230,7 +230,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                         foreach (var d in devices)
                             d.BeginShutdown();
 
-                        int totalBudgetSec = Math.Min(20, 2 + devices.Count);
+                        // Per-bulb budget covers the retried PUTs plus the
+                        // verify GET and a possible repair PUT (worst case a
+                        // few seconds when the bridge is shedding load).
+                        int totalBudgetSec = Math.Min(30, 2 + devices.Count * 4);
                         Task.Run(async () =>
                         {
                             // Step 2: brief grace window so any Update() that was already
@@ -241,14 +244,14 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
 
                             // Step 3: sequential restore with pacing — Hue bridge throttles
                             // concurrent CLIP v2 PUTs and will silently drop most of them
-                            // when fired in parallel. Each bulb sends 2 PUTs (colour +
-                            // power), so the per-bulb budget is 2.5s.
+                            // when fired in parallel. Sequential with a short pacing delay
+                            // matches the bridge's request budget and gets every bulb.
                             foreach (var d in devices)
                             {
                                 try
                                 {
                                     var restore = d.RestoreOriginalStateAsync();
-                                    var completed = await Task.WhenAny(restore, Task.Delay(2500)).ConfigureAwait(false);
+                                    var completed = await Task.WhenAny(restore, Task.Delay(5000)).ConfigureAwait(false);
                                     if (completed != restore)
                                         Logger.WriteConsole(Enums.LoggerTypes.Devices, $"[Hue] Restore timed out for {d.DeviceInfo.DeviceName}");
                                 }

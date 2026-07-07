@@ -129,21 +129,35 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // whatever they had pre-adoption.
         private Light _capturedLight;
 
-        // Best-effort snapshot of the bulb's current state before the trigger
-        // ramps up. Failures are logged but non-fatal — the worst case is the
-        // bulb gets turned off on disable instead of being restored.
+        // Snapshot of the bulb's current state before the trigger ramps up.
+        // Three GET attempts with backoff: a single failed GET at adoption
+        // (bridge busy during the provider's burst of per-bulb calls) used
+        // to leave _capturedLight null, which made the shutdown restore a
+        // silent no-op for that bulb. Failures after the retries are logged
+        // but non-fatal.
         public async Task CaptureOriginalStateAsync(CancellationToken ct = default)
         {
             if (_light == null || _client == null) return;
-            try
+            for (int attempt = 0; attempt < 3; attempt++)
             {
-                var resp = await _client.Light.GetByIdAsync(_light.Id).ConfigureAwait(false);
-                if (resp == null || resp.Data == null || resp.Data.Count == 0) return;
-                _capturedLight = resp.Data[0];
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteConsole(LoggerTypes.Devices, $"[Hue] {_light?.Metadata?.Name ?? ""}: failed to capture original state ({ex.Message}).");
+                try
+                {
+                    var resp = await _client.Light.GetByIdAsync(_light.Id).ConfigureAwait(false);
+                    if (resp?.Data is { Count: > 0 })
+                    {
+                        _capturedLight = resp.Data[0];
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (attempt == 2)
+                    {
+                        Logger.WriteConsole(LoggerTypes.Devices, $"[Hue] {_light?.Metadata?.Name ?? ""}: failed to capture original state ({ex.Message}).");
+                        return;
+                    }
+                }
+                await Task.Delay(300 * (attempt + 1), ct).ConfigureAwait(false);
             }
         }
 
@@ -152,7 +166,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
         // Two sequential updates: colour + brightness first, power as a
         // separate call so the bridge processes the visual change before
         // toggling on/off (a single combined update with on=false sometimes
-        // skips the colour change entirely on certain firmware).
+        // skips the colour change entirely on certain firmware). Each PUT
+        // retries up to three times: the bridge silently sheds CLIP v2
+        // calls under load, and a single dropped PUT used to leave the bulb
+        // at the last effect colour. A verify GET afterwards re-sends the
+        // power state when the bridge accepted the PUT but didn't apply it.
         public async Task RestoreOriginalStateAsync(CancellationToken ct = default)
         {
             if (_light == null || _client == null || _capturedLight == null) return;
@@ -165,21 +183,53 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                     ColorTemperature = _capturedLight.ColorTemperature,
                     Dynamics = new Dynamics { Duration = FadeDurationMs },
                 };
-                await _client.Light.UpdateAsync(_light.Id, update).ConfigureAwait(false);
+                await PutWithRetryAsync(update, ct).ConfigureAwait(false);
 
                 if (_capturedLight.On != null)
                 {
+                    await Task.Delay(100, ct).ConfigureAwait(false);
                     var powerUpdate = new UpdateLight
                     {
                         On = _capturedLight.On,
                         Dynamics = new Dynamics { Duration = FadeDurationMs },
                     };
-                    await _client.Light.UpdateAsync(_light.Id, powerUpdate).ConfigureAwait(false);
+                    await PutWithRetryAsync(powerUpdate, ct).ConfigureAwait(false);
+
+                    // Verify + repair: read the light back and re-assert power
+                    // if the bridge dropped the PUT after acknowledging it.
+                    await Task.Delay(250, ct).ConfigureAwait(false);
+                    try
+                    {
+                        var check = await _client.Light.GetByIdAsync(_light.Id).ConfigureAwait(false);
+                        var liveOn = check?.Data is { Count: > 0 } ? check.Data[0].On?.IsOn : null;
+                        if (liveOn != null && liveOn != _capturedLight.On.IsOn)
+                        {
+                            await PutWithRetryAsync(powerUpdate, ct).ConfigureAwait(false);
+                        }
+                    }
+                    catch { /* verification is best-effort */ }
                 }
             }
             catch (Exception ex)
             {
                 Logger.WriteConsole(LoggerTypes.Devices, $"[Hue] {_light?.Metadata?.Name ?? ""}: failed to restore original state ({ex.Message}).");
+            }
+        }
+
+        private async Task PutWithRetryAsync(UpdateLight update, CancellationToken ct)
+        {
+            for (int attempt = 0; attempt < 3; attempt++)
+            {
+                try
+                {
+                    await _client.Light.UpdateAsync(_light.Id, update).ConfigureAwait(false);
+                    return;
+                }
+                catch
+                {
+                    if (attempt == 2) throw;
+                    await Task.Delay(250 * (attempt + 1), ct).ConfigureAwait(false);
+                }
             }
         }
 

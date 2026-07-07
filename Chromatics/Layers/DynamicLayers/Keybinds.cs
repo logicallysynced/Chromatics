@@ -22,6 +22,7 @@ namespace Chromatics.Layers
     {
         private static KeybindsProcessor _instance;
         private Dictionary<Led, ListLedGroup> _localgroups = new Dictionary<Led, ListLedGroup>();
+        private readonly Dictionary<string, Color> _specialActionColors = new Dictionary<string, Color>(19);
         private SolidColorBrush keybind_cd_brush;
         private SolidColorBrush keybind_na_brush;
         private SolidColorBrush keybind_outranged_brush;
@@ -81,29 +82,28 @@ namespace Chromatics.Layers
 
                 UpdateBrushColors(layer, _colorPalette);
 
-                // Define special action colors
-                var specialActionColors = new Dictionary<string, Color>
-                {
-                    {"Map", ColorHelper.ColorToRGBColor(_colorPalette.KeybindMap.Color)},
-                    {"Aether Currents", ColorHelper.ColorToRGBColor(_colorPalette.KeybindAetherCurrents.Color)},
-                    {"Signs", ColorHelper.ColorToRGBColor(_colorPalette.KeybindSigns.Color)},
-                    {"Waymarks", ColorHelper.ColorToRGBColor(_colorPalette.KeybindWaymarks.Color)},
-                    {"Record Ready Check", ColorHelper.ColorToRGBColor(_colorPalette.KeybindRecordReadyCheck.Color)},
-                    {"Ready Check", ColorHelper.ColorToRGBColor(_colorPalette.KeybindReadyCheck.Color)},
-                    {"Countdown", ColorHelper.ColorToRGBColor(_colorPalette.KeybindCountdown.Color)},
-                    {"Emotes", ColorHelper.ColorToRGBColor(_colorPalette.KeybindEmotes.Color)},
-                    {"Linkshells", ColorHelper.ColorToRGBColor(_colorPalette.KeybindLinkshells.Color)},
-                    {"Cross-world Linkshell", ColorHelper.ColorToRGBColor(_colorPalette.KeybindCrossWorldLS.Color)},
-                    {"Contacts", ColorHelper.ColorToRGBColor(_colorPalette.KeybindContacts.Color)},
-                    {"Sprint", ColorHelper.ColorToRGBColor(_colorPalette.KeybindSprint.Color)},
-                    {"Teleport", ColorHelper.ColorToRGBColor(_colorPalette.KeybindTeleport.Color)},
-                    {"Return", ColorHelper.ColorToRGBColor(_colorPalette.KeybindReturn.Color)},
-                    {"Limit Break", ColorHelper.ColorToRGBColor(_colorPalette.KeybindLimitBreak.Color)},
-                    {"Duty Action", ColorHelper.ColorToRGBColor(_colorPalette.KeybindDutyAction.Color)},
-                    {"Repair", ColorHelper.ColorToRGBColor(_colorPalette.KeybindRepair.Color)},
-                    {"Dig", ColorHelper.ColorToRGBColor(_colorPalette.KeybindDig.Color)},
-                    {"Inventory", ColorHelper.ColorToRGBColor(_colorPalette.KeybindInventory.Color)}
-                };
+                // Repopulate the reusable special-action color map for this tick
+                _specialActionColors.Clear();
+                _specialActionColors["Map"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindMap.Color);
+                _specialActionColors["Aether Currents"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindAetherCurrents.Color);
+                _specialActionColors["Signs"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindSigns.Color);
+                _specialActionColors["Waymarks"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindWaymarks.Color);
+                _specialActionColors["Record Ready Check"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindRecordReadyCheck.Color);
+                _specialActionColors["Ready Check"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindReadyCheck.Color);
+                _specialActionColors["Countdown"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindCountdown.Color);
+                _specialActionColors["Emotes"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindEmotes.Color);
+                _specialActionColors["Linkshells"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindLinkshells.Color);
+                _specialActionColors["Cross-world Linkshell"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindCrossWorldLS.Color);
+                _specialActionColors["Contacts"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindContacts.Color);
+                _specialActionColors["Sprint"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindSprint.Color);
+                _specialActionColors["Teleport"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindTeleport.Color);
+                _specialActionColors["Return"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindReturn.Color);
+                _specialActionColors["Limit Break"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindLimitBreak.Color);
+                _specialActionColors["Duty Action"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindDutyAction.Color);
+                _specialActionColors["Repair"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindRepair.Color);
+                _specialActionColors["Dig"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindDig.Color);
+                _specialActionColors["Inventory"] = ColorHelper.ColorToRGBColor(_colorPalette.KeybindInventory.Color);
+                var specialActionColors = _specialActionColors;
 
                 InitializeLedGroups(ledArray, layer.zindex);
 
@@ -128,7 +128,7 @@ namespace Chromatics.Layers
                 }
                 else
                 {
-                    _layergroups.Add(layer.layerID, lg);
+                    _layergroups[layer.layerID] = lg;
                 }
             }
 

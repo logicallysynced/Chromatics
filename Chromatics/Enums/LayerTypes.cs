@@ -69,7 +69,11 @@ namespace Chromatics.Enums
         [LayerDisplay(Name = "Job Classes Highlight", Description = "Displays different colours across selected keys depending on the character's current class.\nUses highlight layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         JobClassesHighlight = 14,
         [LayerDisplay(Name = "Reactive Weather Highlight", Description = "Displays different colours across selected keys depending on current weather.\nUses highlight layer colours.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
-        ReactiveWeatherHighlight = 15
+        ReactiveWeatherHighlight = 15,
+        [LayerDisplay(Name = "Focus Target HP", Description = "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
+        FocusTargetHP = 16,
+        [LayerDisplay(Name = "Focus Target Castbar", Description = "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
+        FocusTargetCastbar = 17
     };
     public enum EffectLayerType
     {
@@ -83,6 +87,10 @@ namespace Chromatics.Enums
         GoldSaucerVegas = 3,
         [LayerDisplay(Name="Cutscene Animation", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         CutsceneAnimation = 4,
+        [LayerDisplay(Name="Casting Success", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        CastingSuccess = 5,
+        [LayerDisplay(Name="Status Inflicted", Description = "", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        StatusInflicted = 6,
     };
 
     public enum LayerModes

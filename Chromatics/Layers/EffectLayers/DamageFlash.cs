@@ -15,15 +15,6 @@ namespace Chromatics.Layers
 {
     public class DamageFlashProcessor : LayerProcessor
     {
-        // ZIndex floor used while a flash is mid-envelope. Sits above
-        // RaidEffectHighlightProcessor's overlay (600) and the raid base
-        // overlay (500) so the flash punches through during raid effects;
-        // stays below CutsceneAnimationProcessor (1000) so cutscenes still
-        // mask gameplay alerts. When no flash is active the user-configured
-        // layer.zindex is used so DamageFlash composes normally with the
-        // rest of the layer stack.
-        private const int FlashPriorityZIndex = 700;
-
         private static DamageFlashProcessor _instance;
         private static Dictionary<int, DamageFlashEffectModel> layerProcessorModel = new Dictionary<int, DamageFlashEffectModel>();
         private bool _disposed = false;
@@ -73,52 +64,31 @@ namespace Chromatics.Layers
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
 
-            ListLedGroup layergroup;
-            var ledArray = GetLedArray(layer);
-
-            if (_layergroups.ContainsKey(layer.layerID))
+            // Own group at the top of the effect z-order: the flash is the
+            // "you're dying" signal, so it composites over the bell, the
+            // cutscene gradient, and every raid overlay. Idle brush stays
+            // Color.Transparent, which Color+ short-circuits to a no-op, so
+            // the pin has no visible effect outside a flash event. Rebuilt
+            // whenever the generic cleanup in GameController evicted it from
+            // the live registry so LED reassignments are picked up.
+            ListLedGroup layergroup = model.layergroup;
+            bool registered = layergroup != null
+                && _layergroups.TryGetValue(layer.layerID, out var registeredGroups)
+                && Array.IndexOf(registeredGroups, layergroup) >= 0;
+            if (!registered)
             {
-                layergroup = _layergroups[layer.layerID].FirstOrDefault();
-            }
-            else
-            {
-                // Pinned at FlashPriorityZIndex so the flash brush always wins over
-                // RaidEffectHighlightProcessor (600) and gradient raid overlays
-                // (set at the base layer's zindex, but re-asserted to 500 each
-                // tick by RaidEffectProcessor — sort order is undefined). When
-                // idle the brush stays Color.Transparent, which Color+ short-
-                // circuits to a no-op, so this has no visible effect outside a
-                // flash event regardless of where the user put the layer.
-                layergroup = new ListLedGroup(surface, ledArray)
+                layergroup?.RemoveAllDecorators();
+                layergroup?.Detach();
+                layergroup = new ListLedGroup(surface, GetLedArray(layer))
                 {
-                    ZIndex = FlashPriorityZIndex,
+                    ZIndex = EffectZIndex.DamageFlash,
                 };
-
-                var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
                 layergroup.Detach();
+                model.layergroup = layergroup;
+                RGBController.RegisterLiveLayerGroup(layer.layerID, layergroup);
             }
 
             var highlight_col = ColorHelper.ColorToRGBColor(_colorPalette.DamageFlashAnimation.Color);
-            // Opacity 1.0 so peak-envelope renders at full alpha. RGB.NET's
-            // Led.Color setter alpha-blends via Color+, so a 0.5 default would
-            // only produce a ~50% tint over a bright raid decorator write —
-            // visually swamped. ShotFlashDecorator modulates A through its
-            // ADSR envelope, ramping in/out smoothly.
-            var highlight_brush = new SolidColorBrush(highlight_col)
-            {
-                Opacity = 1.0f
-            };
-
-            var flash = new ShotFlashDecorator(surface)
-            {
-                IsEnabled = true,
-                Order = 100,
-                Attack = 0.15f,
-                Release = 0.15f,
-                Sustain = 0.1f,
-                Repetitions = 1
-            };
 
             // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
@@ -144,6 +114,26 @@ namespace Chromatics.Layers
                         const float autoAttackThreshold = 0.015f;
                         if (damageRatio >= autoAttackThreshold)
                         {
+                            // Opacity 1.0 so peak-envelope renders at full alpha. RGB.NET's
+                            // Led.Color setter alpha-blends via Color+, so a 0.5 default would
+                            // only produce a ~50% tint over a bright raid decorator write —
+                            // visually swamped. ShotFlashDecorator modulates A through its
+                            // ADSR envelope, ramping in/out smoothly.
+                            var highlight_brush = new SolidColorBrush(highlight_col)
+                            {
+                                Opacity = 1.0f
+                            };
+
+                            var flash = new ShotFlashDecorator(surface)
+                            {
+                                IsEnabled = true,
+                                Order = 100,
+                                Attack = 0.15f,
+                                Release = 0.15f,
+                                Sustain = 0.1f,
+                                Repetitions = 1
+                            };
+
                             // Scale flash opacity depending on how much damage taken. More damage = brighter flash
                             if (effectSettings.effect_damageflash_scaledamage)
                             {
@@ -152,7 +142,7 @@ namespace Chromatics.Layers
 
                                 var minOpacity = effectSettings.effect_damageflash_min_flash;
                                 if (minOpacity > 1) minOpacity = 1;
-                                if (minOpacity < 1) minOpacity = 0;
+                                if (minOpacity < 0) minOpacity = 0;
 
                                 var opacity = Math.Max((float)minOpacity, (float)damageRatio);
                                 highlight_brush.Opacity = opacity;
@@ -219,6 +209,7 @@ namespace Chromatics.Layers
             public Actor.Job currentJob { get; set; }
             public bool wasDisabled { get; set; }
             public SolidColorBrush activeBrush { get; set; }
+            public ListLedGroup layergroup { get; set; }
             public bool init { get; set; }
         }
     }

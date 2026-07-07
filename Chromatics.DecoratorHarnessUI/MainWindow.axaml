@@ -228,6 +228,34 @@
                                 <TextBlock Text="Wedge (degrees)"/>
                                 <NumericUpDown Value="{Binding ParamWedgeDegrees}" Minimum="5" Maximum="180" Increment="5" FormatString="0"/>
                             </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowFanCount}">
+                                <TextBlock Text="Fans"/>
+                                <NumericUpDown Value="{Binding ParamFanCount}" Minimum="1" Maximum="16" FormatString="0"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowTwist}">
+                                <TextBlock Text="Spiral Twist"/>
+                                <NumericUpDown Value="{Binding ParamTwist}" Minimum="-2" Maximum="2" Increment="0.1" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowOpacity}">
+                                <TextBlock Text="Opacity (0-1)"/>
+                                <NumericUpDown Value="{Binding ParamOpacity}" Minimum="0" Maximum="1" Increment="0.05" FormatString="0.##"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowStartKey}">
+                                <TextBlock Text="Starting Key"/>
+                                <ComboBox ItemsSource="{Binding StartKeys}" SelectedItem="{Binding ParamStartKey}" Width="130"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="200" IsVisible="{Binding ShowSnowDir}">
+                                <TextBlock Text="Snow Direction"/>
+                                <ComboBox ItemsSource="{Binding SnowDirections}" SelectedItem="{Binding ParamSnowDir}" Width="190"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowOneShot}">
+                                <TextBlock Text="One Shot"/>
+                                <ToggleSwitch IsChecked="{Binding ParamOneShot}" OnContent="On" OffContent="Off"/>
+                            </StackPanel>
+                            <StackPanel Spacing="2" Margin="0,0,8,4" Width="140" IsVisible="{Binding ShowWireDir}">
+                                <TextBlock Text="Pillar Mode"/>
+                                <ComboBox ItemsSource="{Binding WireframeDirections}" SelectedItem="{Binding ParamWireDir}" Width="130"/>
+                            </StackPanel>
                         </WrapPanel>
 
                         <Separator Margin="0,4"/>

@@ -53,24 +53,26 @@ namespace Chromatics.Layers
             var _colorPalette = RGBController.GetActivePalette();
             var _layergroups = RGBController.GetLiveLayerGroups();
 
-            ListLedGroup layergroup;
-            var ledArray = GetLedArray(layer);
-
-            if (_layergroups.ContainsKey(layer.layerID))
+            // Own group, pinned at the bell's slot in the effect z-order so a
+            // simultaneous damage flash composites above it instead of
+            // stealing the brush. Rebuilt whenever the generic cleanup in
+            // GameController evicted it from the live registry (requestUpdate,
+            // type switch, layer reset) so LED reassignments are picked up.
+            ListLedGroup layergroup = model.layergroup;
+            bool registered = layergroup != null
+                && _layergroups.TryGetValue(layer.layerID, out var registeredGroups)
+                && Array.IndexOf(registeredGroups, layergroup) >= 0;
+            if (!registered)
             {
-                layergroup = _layergroups[layer.layerID].FirstOrDefault();
-                layergroup.ZIndex = layer.zindex;
-            }
-            else
-            {
-                layergroup = new ListLedGroup(surface, ledArray)
+                layergroup?.RemoveAllDecorators();
+                layergroup?.Detach();
+                layergroup = new ListLedGroup(surface, GetLedArray(layer))
                 {
-                    ZIndex = layer.zindex,
+                    ZIndex = EffectZIndex.DutyFinderBell,
                 };
-
-                var lg = new ListLedGroup[] { layergroup };
-                _layergroups.Add(layer.layerID, lg);
                 layergroup.Detach();
+                model.layergroup = layergroup;
+                RGBController.RegisterLiveLayerGroup(layer.layerID, layergroup);
             }
 
             if (!layer.Enabled || !effectSettings.effect_dfbell || !MappingLayers.IsDeviceEffectsEnabled(layer.deviceGuid))
@@ -79,7 +81,6 @@ namespace Chromatics.Layers
                 {
                     model.activeBrush.RemoveAllDecorators();
                     layergroup.Brush = new SolidColorBrush(Color.Transparent);
-                    layergroup.ZIndex = 2000;
                     model.wasPopped = false;
                     model.activeBrush = null;
                 }
@@ -182,6 +183,7 @@ namespace Chromatics.Layers
             public bool wasPopped { get; set; }
             public bool wasDisabled { get; set; }
             public SolidColorBrush activeBrush { get; set; }
+            public ListLedGroup layergroup { get; set; }
             public bool init { get; set; }
         }
     }

@@ -52,6 +52,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
         private readonly int _inputReportByteLength;
         private readonly int _payloadOutBytes;
 
+        // Pre-allocated output buffer for the VIA path. Only ever written on
+        // the update thread (inside _lock), so no additional synchronisation
+        // is needed.
+        private byte[] _outBuf;
+
         #endregion
 
         #region Constructors
@@ -67,6 +72,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             _ledIndexByLedId = new Dictionary<LedId, int>(def.Layout.Count);
             for (int i = 0; i < def.Layout.Count; i++)
                 _ledIndexByLedId[def.Layout[i].PreferredLedId] = def.Layout[i].FirmwareIndex;
+            _outBuf = new byte[_outputReportByteLength];
         }
 
         #endregion
@@ -124,6 +130,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
 
         protected override bool Update(ReadOnlySpan<(object key, Color color)> dataSet)
         {
+            // For OpenRGB-QMK, dirty chunks are collected inside the lock
+            // and sent outside it so that ResetCache / BeginShutdown don't
+            // block behind the 1ms inter-chunk pacing sleeps.
+            OpenRgbPendingWrite pending = default;
             lock (_lock)
             {
                 if (_shuttingDown || _perDeviceDisable) return true;
@@ -136,11 +146,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                     double brightnessScale = (globalPct / 100.0) * (perDevicePct / 100.0);
 
                     if (_def.Protocol == QmkRawHidProtocolMode.OpenRgbQmk)
-                        SendOpenRgbQmkFrame(dataSet, brightnessScale);
+                    {
+                        pending = CollectOpenRgbQmkChunks(dataSet, brightnessScale);
+                        // Fall through to send pending packets outside the lock.
+                    }
                     else
+                    {
                         SendViaFrame(dataSet, brightnessScale);
-
-                    return true;
+                        return true;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -148,6 +162,30 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                     return false;
                 }
             }
+
+            if (pending.Packets == null) return true;
+
+            for (int i = 0; i < pending.Packets.Length; i++)
+            {
+                if (_shuttingDown || _perDeviceDisable) return true;
+                if (i > 0) Thread.Sleep(1);
+                WritePayload(pending.Packets[i]);
+            }
+
+            if (pending.LogFirst)
+                Logger.WriteVerbose(
+                    $"[QMK] {_def.Product}: first paint frame — {pending.Packets.Length} SET_LEDS packet(s), {pending.ChunkSize} LEDs/packet, first LED RGB = ({pending.FirstR}, {pending.FirstG}, {pending.FirstB}).");
+
+            return true;
+        }
+
+        // Deferred write descriptor for the OpenRGB-QMK chunked path.
+        private struct OpenRgbPendingWrite
+        {
+            public byte[][] Packets;
+            public int ChunkSize;
+            public bool LogFirst;
+            public byte FirstR, FirstG, FirstB;
         }
 
         // ── VIA path (Tier 1: single representative colour) ──────────
@@ -163,7 +201,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
             if (hash == _lastViaHsbHash) return;
             _lastViaHsbHash = hash;
 
-            byte[] outBuf = new byte[_outputReportByteLength];
+            byte[] outBuf = _outBuf;
 
             ViaProtocol.BuildSetRgbMatrixEffect(new Span<byte>(outBuf, 1, _payloadOutBytes), ViaProtocol.Effect_SolidColor);
             WritePayload(outBuf);
@@ -177,10 +215,15 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
 
         // ── OpenRGB-QMK path (Tier 2: per-LED) ───────────────────────
 
-        private void SendOpenRgbQmkFrame(ReadOnlySpan<(object key, Color color)> dataSet, double brightnessScale)
+        // Collect all dirty-chunk packets under the caller's lock. The actual
+        // I/O + inter-chunk pacing happens in Update() after the lock is
+        // released, keeping ResetCache / BeginShutdown from blocking behind
+        // the sleep loop.
+        private OpenRgbPendingWrite CollectOpenRgbQmkChunks(
+            ReadOnlySpan<(object key, Color color)> dataSet, double brightnessScale)
         {
             int total = _def.LedCount;
-            if (total <= 0) return;
+            if (total <= 0) return default;
 
             if (_ledBytes == null) _ledBytes = new byte[total * 3];
 
@@ -215,31 +258,42 @@ namespace Chromatics.Extensions.RGB.NET.Devices.QmkRawHid
                 dirty[idx / chunkSize] = true;
             }
 
-            byte[] outBuf = new byte[_outputReportByteLength];
-            bool first = true;
-            int packetsSent = 0;
+            int dirtyCount = 0;
+            for (int c = 0; c < chunkCount; c++)
+                if (dirty[c]) dirtyCount++;
+
+            if (dirtyCount == 0) return default;
+
+            bool logFirst = !_firstFrameLogged;
+            if (logFirst) _firstFrameLogged = true;
+
+            // Build the pre-filled packet array under the lock. Each packet
+            // is a separate byte[] so the caller can send them with arbitrary
+            // pacing without holding the lock or re-entering it.
+            byte[][] packets = new byte[dirtyCount][];
+            int pIdx = 0;
             for (int c = 0; c < chunkCount; c++)
             {
                 if (!dirty[c]) continue;
-                if (!first) Thread.Sleep(1);
-                first = false;
-
                 int start = c * chunkSize;
                 int count = Math.Min(chunkSize, total - start);
+                byte[] pkt = new byte[_outputReportByteLength];
                 OpenRgbQmkProtocol.BuildDirectModeSetLeds(
-                    new Span<byte>(outBuf, 1, _payloadOutBytes),
+                    new Span<byte>(pkt, 1, _payloadOutBytes),
                     (byte)start, (byte)count,
                     new ReadOnlySpan<byte>(_ledBytes, start * 3, count * 3));
-                WritePayload(outBuf);
-                packetsSent++;
+                packets[pIdx++] = pkt;
             }
 
-            if (!_firstFrameLogged && packetsSent > 0)
+            return new OpenRgbPendingWrite
             {
-                _firstFrameLogged = true;
-                Logger.WriteVerbose(
-                    $"[QMK] {_def.Product}: first paint frame — {packetsSent} SET_LEDS packet(s), {chunkSize} LEDs/packet, first LED RGB = ({_ledBytes[0]}, {_ledBytes[1]}, {_ledBytes[2]}).");
-            }
+                Packets   = packets,
+                ChunkSize = chunkSize,
+                LogFirst  = logFirst,
+                FirstR    = _ledBytes[0],
+                FirstG    = _ledBytes[1],
+                FirstB    = _ledBytes[2],
+            };
         }
 
         private bool _firstFrameLogged;

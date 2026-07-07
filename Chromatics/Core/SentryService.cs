@@ -221,119 +221,127 @@ namespace Chromatics.Core
             // Interval is every 60s — enough to populate the Performance tab
             // and provide profile samples without eating quota.
             _heartbeatTimer?.Dispose();
-            _heartbeatTimer = new System.Threading.Timer(_ =>
+            _heartbeatTimer = new System.Threading.Timer(
+                _ => _ = RunHeartbeatAsync(),
+                null,
+                TimeSpan.FromSeconds(HeartbeatInitialDelaySeconds),
+                TimeSpan.FromSeconds(HeartbeatIntervalSeconds));
+        }
+
+        private static async System.Threading.Tasks.Task RunHeartbeatAsync()
+        {
+            try
             {
+                if (!SentrySdk.IsEnabled) return;
+                // Consent gate: no telemetry during normal runtime when
+                // opted out. Transactions are also dropped by
+                // BeforeSendTransaction, but skipping the work entirely
+                // saves the allocation + profiler overhead.
+                var s = _settings;
+                if (s != null && !s.enableCrashReports) return;
+
+                // NOTE: requires the Sentry project's "Filter out health
+                // check transactions" inbound filter to be DISABLED.
+                // That filter regex-matches transaction names containing
+                // health / heart / ping / alive / ready and silently
+                // drops the entire envelope server-side regardless of
+                // transaction shape, scope binding, or measurements.
+                // If app.heartbeat events stop arriving, check that
+                // filter first (Project Settings → Inbound Filters).
+                var tx = SentrySdk.StartTransaction("app.heartbeat", "task");
+                tx.Description = "Periodic process-metrics heartbeat";
+
+                // Bind to the active scope so the transaction inherits
+                // the scope's tags (channel/language/admin from
+                // ApplySettings) and so any breadcrumbs / spans
+                // generated inside `work` automatically attach. Mirrors
+                // RunInstrumented's pattern (which is what app.startup
+                // uses).
+                SentrySdk.ConfigureScope(scope => scope.Transaction = tx);
+
+                var span = tx.StartChild("metrics.collect", "collect process metrics");
                 try
                 {
-                    if (!SentrySdk.IsEnabled) return;
-                    // Consent gate: no telemetry during normal runtime when
-                    // opted out. Transactions are also dropped by
-                    // BeforeSendTransaction, but skipping the work entirely
-                    // saves the allocation + profiler overhead.
-                    var s = _settings;
-                    if (s != null && !s.enableCrashReports) return;
+                    using var p = System.Diagnostics.Process.GetCurrentProcess();
 
-                    // NOTE: requires the Sentry project's "Filter out health
-                    // check transactions" inbound filter to be DISABLED.
-                    // That filter regex-matches transaction names containing
-                    // health / heart / ping / alive / ready and silently
-                    // drops the entire envelope server-side regardless of
-                    // transaction shape, scope binding, or measurements.
-                    // If app.heartbeat events stop arriving, check that
-                    // filter first (Project Settings → Inbound Filters).
-                    var tx = SentrySdk.StartTransaction("app.heartbeat", "task");
-                    tx.Description = "Periodic process-metrics heartbeat";
+                    long workingSetMb = p.WorkingSet64 / 1024 / 1024;
+                    long privateMb = p.PrivateMemorySize64 / 1024 / 1024;
+                    long managedHeapMb = GC.GetTotalMemory(forceFullCollection: false) / 1024 / 1024;
+                    int gc0 = GC.CollectionCount(0);
+                    int gc1 = GC.CollectionCount(1);
+                    int gc2 = GC.CollectionCount(2);
+                    int threads = p.Threads.Count;
 
-                    // Bind to the active scope so the transaction inherits
-                    // the scope's tags (channel/language/admin from
-                    // ApplySettings) and so any breadcrumbs / spans
-                    // generated inside `work` automatically attach. Mirrors
-                    // RunInstrumented's pattern (which is what app.startup
-                    // uses).
-                    SentrySdk.ConfigureScope(scope => scope.Transaction = tx);
+                    // Measurements: numeric, unit-aware values that
+                    // Sentry plots as time series in the transaction
+                    // detail view and that are queryable via
+                    // `measurements.<name>:>=<value>` in the Trace
+                    // Explorer. Proper primitive for "stat that varies
+                    // per transaction" — the ingest-side equivalent of
+                    // a Prometheus gauge.
+                    tx.SetMeasurement("working_set_mb", workingSetMb, MeasurementUnit.Information.Megabyte);
+                    tx.SetMeasurement("private_memory_mb", privateMb, MeasurementUnit.Information.Megabyte);
+                    tx.SetMeasurement("managed_heap_mb", managedHeapMb, MeasurementUnit.Information.Megabyte);
+                    tx.SetMeasurement("gc_gen0", gc0, MeasurementUnit.None);
+                    tx.SetMeasurement("gc_gen1", gc1, MeasurementUnit.None);
+                    tx.SetMeasurement("gc_gen2", gc2, MeasurementUnit.None);
+                    tx.SetMeasurement("thread_count", threads, MeasurementUnit.None);
 
-                    var span = tx.StartChild("metrics.collect", "collect process metrics");
-                    try
+                    // Span data: same numeric values mirrored on the
+                    // child span so the event-detail "Additional Data"
+                    // panel surfaces them in-place rather than only via
+                    // the Measurements section.
+                    span.SetData("working_set_mb", workingSetMb);
+                    span.SetData("private_memory_mb", privateMb);
+                    span.SetData("managed_heap_mb", managedHeapMb);
+                    span.SetData("gc_gen0", gc0);
+                    span.SetData("gc_gen1", gc1);
+                    span.SetData("gc_gen2", gc2);
+                    span.SetData("thread_count", threads);
+
+                    // CPU usage: percent of a single core used since the
+                    // last heartbeat. Divided by core count so 100% = one
+                    // core fully saturated, capped across many-core
+                    // machines. First sample is 0 (no baseline delta).
+                    var now = DateTime.UtcNow;
+                    var cpuTime = p.TotalProcessorTime;
+                    if (_lastSampleTime != DateTime.MinValue)
                     {
-                        using var p = System.Diagnostics.Process.GetCurrentProcess();
-
-                        long workingSetMb = p.WorkingSet64 / 1024 / 1024;
-                        long privateMb = p.PrivateMemorySize64 / 1024 / 1024;
-                        long managedHeapMb = GC.GetTotalMemory(forceFullCollection: false) / 1024 / 1024;
-                        int gc0 = GC.CollectionCount(0);
-                        int gc1 = GC.CollectionCount(1);
-                        int gc2 = GC.CollectionCount(2);
-                        int threads = p.Threads.Count;
-
-                        // Measurements: numeric, unit-aware values that
-                        // Sentry plots as time series in the transaction
-                        // detail view and that are queryable via
-                        // `measurements.<name>:>=<value>` in the Trace
-                        // Explorer. Proper primitive for "stat that varies
-                        // per transaction" — the ingest-side equivalent of
-                        // a Prometheus gauge.
-                        tx.SetMeasurement("working_set_mb", workingSetMb, MeasurementUnit.Information.Megabyte);
-                        tx.SetMeasurement("private_memory_mb", privateMb, MeasurementUnit.Information.Megabyte);
-                        tx.SetMeasurement("managed_heap_mb", managedHeapMb, MeasurementUnit.Information.Megabyte);
-                        tx.SetMeasurement("gc_gen0", gc0, MeasurementUnit.None);
-                        tx.SetMeasurement("gc_gen1", gc1, MeasurementUnit.None);
-                        tx.SetMeasurement("gc_gen2", gc2, MeasurementUnit.None);
-                        tx.SetMeasurement("thread_count", threads, MeasurementUnit.None);
-
-                        // Span data: same numeric values mirrored on the
-                        // child span so the event-detail "Additional Data"
-                        // panel surfaces them in-place rather than only via
-                        // the Measurements section.
-                        span.SetData("working_set_mb", workingSetMb);
-                        span.SetData("private_memory_mb", privateMb);
-                        span.SetData("managed_heap_mb", managedHeapMb);
-                        span.SetData("gc_gen0", gc0);
-                        span.SetData("gc_gen1", gc1);
-                        span.SetData("gc_gen2", gc2);
-                        span.SetData("thread_count", threads);
-
-                        // CPU usage: percent of a single core used since the
-                        // last heartbeat. Divided by core count so 100% = one
-                        // core fully saturated, capped across many-core
-                        // machines. First sample is 0 (no baseline delta).
-                        var now = DateTime.UtcNow;
-                        var cpuTime = p.TotalProcessorTime;
-                        if (_lastSampleTime != DateTime.MinValue)
+                        var cpuDelta = (cpuTime - _lastProcessorTime).TotalMilliseconds;
+                        var wallDelta = (now - _lastSampleTime).TotalMilliseconds;
+                        if (wallDelta > 0)
                         {
-                            var cpuDelta = (cpuTime - _lastProcessorTime).TotalMilliseconds;
-                            var wallDelta = (now - _lastSampleTime).TotalMilliseconds;
-                            if (wallDelta > 0)
-                            {
-                                var cores = Math.Max(1, Environment.ProcessorCount);
-                                var cpuPct = Math.Round(Math.Clamp((cpuDelta / (wallDelta * cores)) * 100.0, 0, 100), 1);
-                                tx.SetMeasurement("cpu_percent", cpuPct, MeasurementUnit.Fraction.Percent);
-                                span.SetData("cpu_percent", cpuPct);
-                            }
+                            var cores = Math.Max(1, Environment.ProcessorCount);
+                            var cpuPct = Math.Round(Math.Clamp((cpuDelta / (wallDelta * cores)) * 100.0, 0, 100), 1);
+                            tx.SetMeasurement("cpu_percent", cpuPct, MeasurementUnit.Fraction.Percent);
+                            span.SetData("cpu_percent", cpuPct);
                         }
-                        _lastProcessorTime = cpuTime;
-                        _lastSampleTime = now;
-
-                        // Wall-clock duration similar to app.startup (~1.5s).
-                        // Runs on the thread pool — zero impact on UI.
-                        System.Threading.Thread.Sleep(1500);
                     }
-                    catch { /* non-critical */ }
-                    span.Finish(SpanStatus.Ok);
-                    tx.Finish(SpanStatus.Ok);
+                    _lastProcessorTime = cpuTime;
+                    _lastSampleTime = now;
 
-                    // Detach the transaction from scope so subsequent
-                    // unrelated events don't inherit a stale trace context.
-                    SentrySdk.ConfigureScope(scope => scope.Transaction = null);
-
-                    // Force-flush so the envelope leaves the process now
-                    // rather than sitting in the SDK's background queue.
-                    // For a 1/min cadence on an app that the user might
-                    // close at any moment, an explicit flush guarantees
-                    // each tick reaches the backend.
-                    try { SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).GetAwaiter().GetResult(); } catch { }
+                    // Keep the transaction span open ~1.5s so the profiler
+                    // collects samples comparable to app.startup duration.
+                    // Uses async delay so the thread-pool thread is released
+                    // during the wait rather than blocked.
+                    await System.Threading.Tasks.Task.Delay(1500).ConfigureAwait(false);
                 }
-                catch { /* heartbeat must never throw */ }
-            }, null, TimeSpan.FromSeconds(HeartbeatInitialDelaySeconds), TimeSpan.FromSeconds(HeartbeatIntervalSeconds));
+                catch { /* non-critical */ }
+                span.Finish(SpanStatus.Ok);
+                tx.Finish(SpanStatus.Ok);
+
+                // Detach the transaction from scope so subsequent
+                // unrelated events don't inherit a stale trace context.
+                SentrySdk.ConfigureScope(scope => scope.Transaction = null);
+
+                // Force-flush so the envelope leaves the process now
+                // rather than sitting in the SDK's background queue.
+                // For a 1/min cadence on an app that the user might
+                // close at any moment, an explicit flush guarantees
+                // each tick reaches the backend.
+                try { await SentrySdk.FlushAsync(TimeSpan.FromSeconds(2)).ConfigureAwait(false); } catch { }
+            }
+            catch { /* heartbeat must never throw */ }
         }
 
         /// <summary>

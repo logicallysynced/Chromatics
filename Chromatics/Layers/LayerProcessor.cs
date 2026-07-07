@@ -31,7 +31,8 @@ namespace Chromatics.Layers
                 return Array.Empty<Led>();
             }
 
-            return device.Where(led => layer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledSet = new HashSet<LedId>(layer.deviceLeds.Values);
+            return device.Where(led => ledSet.Contains(led.Id)).ToArray();
         }
 
         internal Led[] GetLedSortedArray(IMappingLayer layer)
@@ -59,7 +60,8 @@ namespace Chromatics.Layers
                 return Array.Empty<Led>();
             }
 
-            return device.Where(led => baseLayer.deviceLeds.Any(v => v.Value.Equals(led.Id))).ToArray();
+            var ledSet = new HashSet<LedId>(baseLayer.deviceLeds.Values);
+            return device.Where(led => ledSet.Contains(led.Id)).ToArray();
         }
 
         internal IRGBDevice GetDevice(IMappingLayer layer)
@@ -169,24 +171,13 @@ namespace Chromatics.Layers
 
 
 
-    public static class BaseLayerProcessorFactory
-    {
-        private static readonly Dictionary<BaseLayerType, LayerProcessor> layerProcessors = new Dictionary<BaseLayerType, LayerProcessor>
-        {
-            { BaseLayerType.Static, StaticProcessor.Instance },
-            { BaseLayerType.ReactiveWeather, ReactiveWeatherProcessor.Instance },
-            { BaseLayerType.BattleStance, BaseBattleStanceProcessor.Instance },
-            { BaseLayerType.JobClasses, JobClassesProcessor.Instance },
-            { BaseLayerType.ScreenCapture, ScreenCaptureProcessor.Instance },
-        };
-
-        public static Dictionary<BaseLayerType, LayerProcessor> GetProcessors()
-        {
-            return layerProcessors;
-        }
-    }
-
-
+    // The matching BaseLayerProcessorFactory and DynamicLayerProcessorFactory
+    // maps were deleted: nothing called them, and their static initialisers
+    // eagerly built every processor singleton while the entries drifted out
+    // of date (missing AudioVisualizer, JobGaugeC, the focus-target layers).
+    // GameController dispatches base + dynamic layers through
+    // LayerProcessorFactory.GetProcessor instead. EffectLayerProcessorFactory
+    // stays - GameController iterates its map for effect-layer dispatch.
     public static class EffectLayerProcessorFactory
     {
         private static readonly Dictionary<EffectLayerType, LayerProcessor> layerProcessors = new Dictionary<EffectLayerType, LayerProcessor>
@@ -195,7 +186,9 @@ namespace Chromatics.Layers
             { EffectLayerType.DutyFinderBell, DutyFinderBellProcessor.Instance },
             { EffectLayerType.DamageFlash, DamageFlashProcessor.Instance },
             { EffectLayerType.GoldSaucerVegas, GoldSaucerVegasProcessor.Instance },
-            { EffectLayerType.CutsceneAnimation, CutsceneAnimationProcessor.Instance }
+            { EffectLayerType.CutsceneAnimation, CutsceneAnimationProcessor.Instance },
+            { EffectLayerType.CastingSuccess, CastingSuccessProcessor.Instance },
+            { EffectLayerType.StatusInflicted, StatusInflictedProcessor.Instance }
         };
 
         public static Dictionary<EffectLayerType, LayerProcessor> GetProcessors()
@@ -203,35 +196,6 @@ namespace Chromatics.Layers
             return layerProcessors;
         }
     }
-
-
-    public static class DynamicLayerProcessorFactory
-    {
-        private static readonly Dictionary<DynamicLayerType, LayerProcessor> layerProcessors = new Dictionary<DynamicLayerType, LayerProcessor>
-        {
-            { DynamicLayerType.None, NoneProcessor.Instance },
-            { DynamicLayerType.Highlight, HighlightProcessor.Instance },
-            { DynamicLayerType.Keybinds, KeybindsProcessor.Instance },
-            { DynamicLayerType.EnmityTracker, EnmityTrackerProcessor.Instance },
-            { DynamicLayerType.TargetHP, TargetHPProcessor.Instance },
-            { DynamicLayerType.TargetCastbar, TargetCastbarProcessor.Instance },
-            { DynamicLayerType.HPTracker, HPTrackerProcessor.Instance },
-            { DynamicLayerType.MPTracker, MPTrackerProcessor.Instance },
-            { DynamicLayerType.JobGaugeA, JobGaugeAProcessor.Instance },
-            { DynamicLayerType.JobGaugeB, JobGaugeBProcessor.Instance },
-            { DynamicLayerType.ExperienceTracker, ExperienceTrackerProcessor.Instance },
-            { DynamicLayerType.BattleStance, DynamicBattleStanceProcessor.Instance },
-            { DynamicLayerType.Castbar, CastbarProcessor.Instance },
-            { DynamicLayerType.JobClassesHighlight, JobClassesHighlightProcessor.Instance },
-            { DynamicLayerType.ReactiveWeatherHighlight, ReactiveWeatherHighlightProcessor.Instance }
-        };
-
-        public static Dictionary<DynamicLayerType, LayerProcessor> GetProcessors()
-        {
-            return layerProcessors;
-        }
-    }
-
 
 
 }

@@ -328,6 +328,8 @@ namespace Chromatics.ViewModels.Mapping
 
         public void RefreshLayers()
         {
+            foreach (var item in Layers)
+                item.Dispose();
             Layers.Clear();
             if (SelectedDevice == null) return;
 
@@ -378,6 +380,7 @@ namespace Chromatics.ViewModels.Mapping
 
             if (_selectedLayerIdForDisplay == layerId) _selectedLayerIdForDisplay = -1;
 
+            vm.Dispose();
             Layers.Remove(vm);
             MappingLayers.RemoveLayer(layerId);
             MappingLayers.SaveMappings();

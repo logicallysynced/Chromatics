@@ -20,11 +20,7 @@ namespace Chromatics.Helpers
 
         public static int GetMaxCpuUsage()
         {
-            var counter = new PerformanceCounter("Memory", "Available Mbytes");
-            var memUsage = counter.NextValue();
-            var maxCpuUsage = (int)(100 - memUsage);
-            _maxCpuUsage = maxCpuUsage;
-
+            _maxCpuUsage = (int)_cpuCounter.NextValue();
             return _maxCpuUsage;
         }
     }

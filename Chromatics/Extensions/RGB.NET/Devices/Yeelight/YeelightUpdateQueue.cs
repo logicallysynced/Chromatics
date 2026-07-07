@@ -25,6 +25,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight
         // dropped while the user has the bulb disabled in the Mapping tab.
         private volatile bool _perDeviceDisable;
 
+        // Latches after the first failed send is surfaced so a bulb that
+        // stays unreachable doesn't repeat the device error every retry
+        // interval. Cleared by the next successful send.
+        private bool _sendFaultSurfaced;
+
         private PerDeviceBrightnessCorrection _perDeviceBrightness;
 
         // Throttle: Yeelight LAN protocol caps outbound commands at 60 per
@@ -157,7 +162,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight
                             byte r = (byte)((_lastSentRgbMain >> 16) & 0xFF);
                             byte g = (byte)((_lastSentRgbMain >> 8) & 0xFF);
                             byte b = (byte)(_lastSentRgbMain & 0xFF);
-                            _ = _connection.SetRgbAsync(r, g, b);
+                            _connection.SetRgbAsync(r, g, b).ContinueWith(t =>
+                            {
+                                if (t.IsCompletedSuccessfully)
+                                    lock (_lock) _sendFaultSurfaced = false;
+                                else
+                                    SurfaceSendFault(t.Exception);
+                            }, TaskContinuationOptions.ExecuteSynchronously);
                         }
                     }
                     return true;
@@ -210,9 +221,28 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight
             return YeelightDevice.LightChannel.MainLight;
         }
 
+        // Surfaces a failed send through the provider error path, at most
+        // once per outage so a bulb that stays unreachable doesn't repeat
+        // the error every retry interval.
+        private void SurfaceSendFault(AggregateException ex)
+        {
+            lock (_lock)
+            {
+                if (_sendFaultSurfaced) return;
+                _sendFaultSurfaced = true;
+            }
+            if (ex != null)
+                YeelightRGBDeviceProvider.Instance?.Throw(ex.InnerException ?? ex);
+        }
+
         // Send one channel (main or bg). Returns through `sent` whether any
         // network traffic actually fired; caller uses this for the keep-alive
         // and lastSendMs bookkeeping.
+        //
+        // Dedup state is only updated on successful I/O: the ContinueWith
+        // continuations write the new value on success, or reset the cached
+        // value on failure so the next frame retries. Both paths surface
+        // exceptions through the provider error route without blocking.
         private void SendChannel(Color color, double brightnessScale, bool isBackground,
                                  ref uint lastSentRgb, ref int lastSentBrightness, out bool sent)
         {
@@ -226,16 +256,62 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight
 
             if (changedRgb)
             {
-                if (isBackground) _ = _connection.SetBackgroundRgbAsync(r, g, b);
-                else              _ = _connection.SetRgbAsync(r, g, b);
-                lastSentRgb = packed;
+                Task rgbTask = isBackground
+                    ? _connection.SetBackgroundRgbAsync(r, g, b)
+                    : _connection.SetRgbAsync(r, g, b);
+                uint capturedPacked = packed;
+                rgbTask.ContinueWith(t =>
+                {
+                    if (t.IsCompletedSuccessfully)
+                    {
+                        lock (_lock)
+                        {
+                            if (isBackground) _lastSentRgbBg    = capturedPacked;
+                            else              _lastSentRgbMain   = capturedPacked;
+                            _sendFaultSurfaced = false;
+                        }
+                    }
+                    else
+                    {
+                        // Reset so the next frame retries rather than silently
+                        // skipping a colour the bulb never received.
+                        lock (_lock)
+                        {
+                            if (isBackground) _lastSentRgbBg    = uint.MaxValue;
+                            else              _lastSentRgbMain   = uint.MaxValue;
+                        }
+                        SurfaceSendFault(t.Exception);
+                    }
+                }, TaskContinuationOptions.ExecuteSynchronously);
                 sent = true;
             }
             if (changedBright)
             {
-                if (isBackground) _ = _connection.SetBackgroundBrightnessAsync(brightnessPct);
-                else              _ = _connection.SetBrightnessAsync(brightnessPct);
-                lastSentBrightness = brightnessPct;
+                Task brightTask = isBackground
+                    ? _connection.SetBackgroundBrightnessAsync(brightnessPct)
+                    : _connection.SetBrightnessAsync(brightnessPct);
+                int capturedBrightness = brightnessPct;
+                brightTask.ContinueWith(t =>
+                {
+                    if (t.IsCompletedSuccessfully)
+                    {
+                        lock (_lock)
+                        {
+                            if (isBackground) _lastSentBrightnessBg   = capturedBrightness;
+                            else              _lastSentBrightnessMain  = capturedBrightness;
+                            _sendFaultSurfaced = false;
+                        }
+                    }
+                    else
+                    {
+                        lock (_lock)
+                        {
+                            if (isBackground) _lastSentBrightnessBg   = -1;
+                            else              _lastSentBrightnessMain  = -1;
+                        }
+                        SurfaceSendFault(t.Exception);
+                    }
+                }, TaskContinuationOptions.ExecuteSynchronously);
                 sent = true;
             }
         }

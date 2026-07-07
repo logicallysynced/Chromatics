@@ -120,7 +120,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight.Protocol
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
                 cts.CancelAfter(acceptTimeout);
 
-                Task<TcpClient> acceptTask = listener.AcceptTcpClientAsync();
+                Task<TcpClient> acceptTask = listener.AcceptTcpClientAsync(cts.Token).AsTask();
                 Task winner = await Task.WhenAny(acceptTask, Task.Delay(acceptTimeout, cts.Token)).ConfigureAwait(false);
 
                 if (winner == acceptTask && acceptTask.IsCompletedSuccessfully)
@@ -130,6 +130,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight.Protocol
                     _musicStream = _musicClient.GetStream();
                     return true;
                 }
+
+                // Accept lost the race — observe the task and discard any
+                // late-arriving connection so the socket isn't leaked.
+                _ = acceptTask.ContinueWith(
+                    t => { try { t.Result?.Dispose(); } catch { /* discard */ } },
+                    TaskContinuationOptions.OnlyOnRanToCompletion);
 
                 // Reverse connect didn't happen in time. Tell the bulb to
                 // turn Music Mode back off so we don't sit in a half-state.

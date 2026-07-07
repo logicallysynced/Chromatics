@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Chromatics.ViewModels
 {
-    public partial class LifxAdoptionDialogViewModel : ViewModelBase
+    public partial class LifxAdoptionDialogViewModel : ViewModelBase, IDisposable
     {
         // Discovered + already-adopted bulbs are merged into a single list,
         // pre-checked for any MAC that's already adopted. The dialog reads
@@ -43,6 +43,11 @@ namespace Chromatics.ViewModels
                 StatusText = LocalizationService.Instance["No LIFX devices found. Check that they are powered on and connected to the same network."];
             else
                 StatusText = string.Format(LocalizationService.Instance["{0} LIFX device(s) found."], Bulbs.Count);
+        }
+
+        public void Dispose()
+        {
+            LocalizationService.Instance.PropertyChanged -= OnLocaleChanged;
         }
 
         // Run discovery, merging results with the supplied list of already-

@@ -35,6 +35,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon
         private volatile bool _perDeviceDisable;
         private bool _initialized;
 
+        // Pre-allocated staging buffer for HID feature reports. HidSharp's
+        // SetFeature requires a byte[]; we copy the stackalloc span into this
+        // buffer instead of allocating a new array on every write.
+        private readonly byte[] _featureReportBuffer = new byte[RedragonMouseProtocol.ReportLength];
+
         private PerDeviceBrightnessCorrection _perDeviceBrightness;
 
         // Last frame's RGB triplet. Used to skip the two-report HID write
@@ -166,16 +171,16 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Redragon
             return SendFeatureReport(buf);
         }
 
-        // HidSharp's SetFeature wants a byte[]. Allocate once per write —
-        // single-LED firmware writes are infrequent enough that pooling
-        // would be overkill. Returns false on any I/O failure so the
-        // caller can short-circuit the rest of the frame.
+        // HidSharp's SetFeature wants a byte[]. Copy into _featureReportBuffer
+        // to avoid a heap allocation on every write.
+        // Returns false on any I/O failure so the caller can short-circuit
+        // the rest of the frame.
         private bool SendFeatureReport(ReadOnlySpan<byte> buf)
         {
-            byte[] arr = buf.ToArray();
+            buf.CopyTo(_featureReportBuffer);
             try
             {
-                _stream.SetFeature(arr);
+                _stream.SetFeature(_featureReportBuffer);
                 return true;
             }
             catch (System.IO.IOException ex)

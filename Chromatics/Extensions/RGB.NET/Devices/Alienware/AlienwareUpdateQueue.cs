@@ -6,6 +6,7 @@ using HidSharp;
 using RGB.NET.Core;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Color = RGB.NET.Core.Color;
 
@@ -36,6 +37,16 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
         // V8 announce/data sequencing uses an incrementing batch counter
         // per frame.
         private byte _v8BatchCounter;
+
+        // Reused per-frame dirty-index list. Cleared at the start of each
+        // Update() call. Safe to reuse because Update() runs serially
+        // under _lock on the trigger thread.
+        private readonly List<int> _dirty = new();
+
+        // Reused colour-grouping dictionary for the V4 zone send path.
+        // Cleared on each SendV4Frame call to avoid per-frame dictionary
+        // allocation. Safe because SendV4Frame runs serially under _lock.
+        private readonly Dictionary<uint, List<byte>> _v4ByColor = new();
 
         #endregion
 
@@ -109,8 +120,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
 
                     // Patch dirty lights into the per-light cache. Track
                     // the dirty index list so we only resend lights whose
-                    // value changed.
-                    var dirty = new List<int>(dataSet.Length);
+                    // value changed. _dirty is a pre-allocated reusable
+                    // field; it is safe because Update() runs serially
+                    // under _lock on the trigger thread.
+                    _dirty.Clear();
                     foreach (var (key, color) in dataSet)
                     {
                         int idx = ResolveLightIndex(key);
@@ -123,21 +136,21 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
                         _ledBytes[off]     = r;
                         _ledBytes[off + 1] = g;
                         _ledBytes[off + 2] = b;
-                        dirty.Add(idx);
+                        _dirty.Add(idx);
                     }
 
-                    if (dirty.Count == 0) return true;
+                    if (_dirty.Count == 0) return true;
 
                     switch (_def.ApiVersion)
                     {
                         case AlienwareApiVersion.PerKeyV5:
-                            SendV5Frame(dirty);
+                            SendV5Frame(_dirty);
                             break;
                         case AlienwareApiVersion.PerKeyV8:
-                            SendV8Frame(dirty);
+                            SendV8Frame(_dirty);
                             break;
                         case AlienwareApiVersion.ZoneV4:
-                            SendV4Frame(dirty);
+                            SendV4Frame(_dirty);
                             break;
                         default:
                             // Unknown version — silent no-op so we don't
@@ -258,15 +271,17 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
 
             // Group dirty lights by colour so lights sharing a colour go
             // out in one HID write rather than N. Common case for static
-            // overlays / single-colour layers.
-            var byColor = new Dictionary<uint, List<byte>>();
+            // overlays / single-colour layers. Reuse _v4ByColor to avoid
+            // per-frame dictionary allocation. Safe because SendV4Frame
+            // runs serially under _lock on the trigger thread.
+            _v4ByColor.Clear();
             foreach (int idx in dirty)
             {
                 int off = idx * 3;
                 byte r = _ledBytes[off], g = _ledBytes[off + 1], b = _ledBytes[off + 2];
                 uint packed = (uint)((r << 16) | (g << 8) | b);
-                if (!byColor.TryGetValue(packed, out var list))
-                    byColor[packed] = list = new List<byte>(dirty.Count);
+                if (!_v4ByColor.TryGetValue(packed, out var list))
+                    _v4ByColor[packed] = list = new List<byte>(dirty.Count);
                 list.Add((byte)idx);
             }
 
@@ -274,18 +289,19 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
             // (ReportLength=34 minus 8-byte header). Split colour groups
             // larger than that across multiple writes.
             const int maxIdsPerWrite = 34 - 8;
-            foreach (var kvp in byColor)
+            foreach (var kvp in _v4ByColor)
             {
                 byte r = (byte)((kvp.Key >> 16) & 0xFF);
                 byte g = (byte)((kvp.Key >> 8) & 0xFF);
                 byte b = (byte)(kvp.Key & 0xFF);
                 var ids = kvp.Value;
+                var idsSpan = CollectionsMarshal.AsSpan(ids);
                 for (int start = 0; start < ids.Count; start += maxIdsPerWrite)
                 {
                     int chunk = Math.Min(maxIdsPerWrite, ids.Count - start);
                     AlienwareZoneV4Protocol.BuildSetColor(
                         buffer, r, g, b,
-                        new ReadOnlySpan<byte>(ids.GetRange(start, chunk).ToArray()));
+                        idsSpan.Slice(start, chunk));
                     WriteOutputReport(buffer);
                 }
             }

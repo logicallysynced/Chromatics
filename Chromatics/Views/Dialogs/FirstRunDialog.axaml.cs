@@ -153,8 +153,10 @@ namespace Chromatics.Views.Dialogs
                 _hueBridgeIp = bridgeDlg.BridgeIp;
                 _hueBridgeKey = string.IsNullOrEmpty(bridgeDlg.BridgeKey) ? s.deviceHueBridgeClientKey : bridgeDlg.BridgeKey;
 
+                // GroupBy tolerates a light persisted twice (CHROMATICS-1C class).
                 var alreadyAdopted = (s.deviceHueAdoptedDevices ?? new List<HueAdoptedDevice>())
-                    .ToDictionary(d => d.LightId, d => d);
+                    .GroupBy(d => d.LightId)
+                    .ToDictionary(g => g.Key, g => g.Last());
 
                 var adoptDlg = new HueAdoptionDialog(_hueBridgeIp ?? "", _hueBridgeKey ?? "", alreadyAdopted);
                 await adoptDlg.ShowDialog(this);

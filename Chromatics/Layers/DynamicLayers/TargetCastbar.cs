@@ -36,6 +36,8 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
+            if (_disposed) return;
+
             TargetCastbarDynamicModel model;
 
             if (!layerProcessorModel.ContainsKey(layer.layerID))
@@ -78,10 +80,11 @@ namespace Chromatics.Layers
                 var full_col = ColorHelper.ColorToRGBColor(_colorPalette.TargetCastbar.Color);
                 var empty_col = ColorHelper.ColorToRGBColor(_colorPalette.TargetCastbarEmpty.Color); // Bleed layer
 
-                model.full_brush = model.full_brush ?? new SolidColorBrush(full_col);
-                model.empty_brush = layer.allowBleed
-                    ? new SolidColorBrush(Color.Transparent)
-                    : new SolidColorBrush(empty_col);
+                model.full_brush ??= new SolidColorBrush(full_col);
+                model.full_brush.Color = full_col;
+
+                model.empty_brush ??= new SolidColorBrush(layer.allowBleed ? Color.Transparent : empty_col);
+                model.empty_brush.Color = layer.allowBleed ? Color.Transparent : empty_col;
 
                 // Check if layer mode has changed
                 if (model._currentMode != layer.layerModes)
@@ -149,7 +152,7 @@ namespace Chromatics.Layers
                 }
                 else
                 {
-                    _layergroups.Add(layer.layerID, lg);
+                    _layergroups[layer.layerID] = lg;
                 }
             }
 

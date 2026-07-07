@@ -285,7 +285,7 @@ namespace Chromatics.Helpers
 
                 var wrapper = new MappingFileV3
                 {
-                    schemaVersion = 5,
+                    schemaVersion = 7,
                     layers = layersSnapshot,
                     deviceLayouts = layoutsSnapshot,
                     deviceBrightness = brightnessSnapshot,
@@ -644,7 +644,7 @@ namespace Chromatics.Helpers
 
                 var wrapper = new MappingFileV3
                 {
-                    schemaVersion = 5,
+                    schemaVersion = 7,
                     layers = layersCopy,
                     deviceLayouts = deviceLayouts != null
                         ? new Dictionary<Guid, Dictionary<RGB.NET.Core.LedId, DeviceKeyPosition>>(deviceLayouts)
@@ -714,19 +714,7 @@ namespace Chromatics.Helpers
 
             try
             {
-                using (var sw = new StreamWriter(path, false))
-                {
-                    var serializer = new JsonSerializer
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    };
-
-                    serializer.Serialize(sw, palette);
-                    sw.WriteLine();
-                    sw.Close();
-                }
-
-
+                WriteJsonAtomic(path, palette);
             }
             catch (Exception ex)
             {
@@ -782,6 +770,9 @@ namespace Chromatics.Helpers
 
             // v1 -> v2: Dawntrail job-gauge additions. Newly added ColorMapping fields come from
             // their initialisers automatically, so there is no per-field remap required here.
+            // v2 -> v3: full detrimental status catalogue + focus-target + Casting Success
+            // entries. Same mechanism - initialisers supply the new fields, this re-save
+            // persists them.
             // Future palette-schema transitions should branch on `from` and mutate the model in
             // place before the final version bump below.
 
@@ -793,7 +784,9 @@ namespace Chromatics.Helpers
         // ColorMapping.Name is serialised, so stale palette files will restore old names even after
         // the C# initialiser has been updated. This runs on every load (version-independent) so
         // palettes that skipped migration still get corrected names.
-        private static bool NormalizePaletteDisplayNames(PaletteColorModel palette)
+        // Public so the test suite can pin the rename corrections against
+        // simulated old palette files.
+        public static bool NormalizePaletteDisplayNames(PaletteColorModel palette)
         {
             var changed = false;
 
@@ -801,6 +794,21 @@ namespace Chromatics.Helpers
             if (palette.JobNINHuton != null && palette.JobNINHuton.Name != "NIN: Kazematoi")
             {
                 palette.JobNINHuton.Name = "NIN: Kazematoi";
+                changed = true;
+            }
+
+            // 4.3.x status catalogue: two legacy entries renamed to match the
+            // in-game status names now that the Status Effects category is
+            // visible in the Palette tab.
+            if (palette.Bleed != null && palette.Bleed.Name != "Bleeding")
+            {
+                palette.Bleed.Name = "Bleeding";
+                changed = true;
+            }
+
+            if (palette.Infirmary != null && palette.Infirmary.Name != "Infirmity")
+            {
+                palette.Infirmary.Name = "Infirmity";
                 changed = true;
             }
 
@@ -911,19 +919,7 @@ namespace Chromatics.Helpers
 
             try
             {
-                using (var sw = new StreamWriter(path, false))
-                {
-                    var serializer = new JsonSerializer
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    };
-
-                    serializer.Serialize(sw, palette);
-                    sw.WriteLine();
-                    sw.Close();
-                }
-
-
+                WriteJsonAtomic(path, palette);
             }
             catch (Exception ex)
             {
@@ -973,19 +969,7 @@ namespace Chromatics.Helpers
 
             try
             {
-                using (var sw = new StreamWriter(path, false))
-                {
-                    var serializer = new JsonSerializer
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    };
-
-                    serializer.Serialize(sw, settings);
-                    sw.WriteLine();
-                    sw.Close();
-                }
-
-
+                WriteJsonAtomic(path, settings);
             }
             catch (Exception ex)
             {

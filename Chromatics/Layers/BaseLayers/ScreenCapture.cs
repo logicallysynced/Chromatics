@@ -39,7 +39,7 @@ namespace Chromatics.Layers
             else
             {
                 layergroup = new ListLedGroup(surface, ledArray) { ZIndex = layer.zindex };
-                _layergroups.Add(layer.layerID, new[] { layergroup });
+                _layergroups[layer.layerID] = new[] { layergroup };
                 layergroup.Detach();
             }
 

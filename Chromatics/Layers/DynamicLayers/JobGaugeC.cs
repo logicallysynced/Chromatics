@@ -103,23 +103,28 @@ namespace Chromatics.Layers
                     {
                         var currentVal_Interpolate = LinearInterpolation.Interpolate<double>(jobGauge.currentValue, jobGauge.minValue, jobGauge.maxValue, 0, countKeys + jobGauge.offset);
 
-                        var ledGroups = new List<ListLedGroup>();
-
-                        for (int i = 0; i < countKeys; i++)
+                        // Only rebuild groups when the interpolated position or a forced update changes
+                        if (currentVal_Interpolate != model._interpolateValue || layer.requestUpdate)
                         {
-                            var ledGroup = new ListLedGroup(surface, ledArray[i])
+                            var ledGroups = new List<ListLedGroup>();
+
+                            for (int i = 0; i < countKeys; i++)
                             {
-                                ZIndex = layer.zindex,
-                            };
+                                var ledGroup = new ListLedGroup(surface, ledArray[i])
+                                {
+                                    ZIndex = layer.zindex,
+                                };
 
-                            ledGroup.Detach();
+                                ledGroup.Detach();
 
-                            ledGroup.Brush = i <= currentVal_Interpolate ? model.highlight_brush : model.empty_brush;
-                            ledGroups.Add(ledGroup);
+                                ledGroup.Brush = i <= currentVal_Interpolate ? model.highlight_brush : model.empty_brush;
+                                ledGroups.Add(ledGroup);
+                            }
+
+                            DetachAndClearGroups(model._localgroups);
+                            model._localgroups = ledGroups;
+                            model._interpolateValue = currentVal_Interpolate;
                         }
-
-                        DetachAndClearGroups(model._localgroups);
-                        model._localgroups = ledGroups;
                     }
                     else if (layer.layerModes == Enums.LayerModes.Fade)
                     {
@@ -150,7 +155,7 @@ namespace Chromatics.Layers
                 }
                 else
                 {
-                    _layergroups.Add(layer.layerID, lg);
+                    _layergroups[layer.layerID] = lg;
                 }
             }
 
@@ -269,7 +274,7 @@ namespace Chromatics.Layers
                     // Draw cycle. Full-fill on the active colour; negative when no card is held.
                     {
                         var hasCard = container.Astrologian.CurrentArcana != AstrologianCard.None
-                                      || container.Astrologian.DrawnCards.Count > 0;
+                                      || container.Astrologian.DrawnCards.Length > 0;
 
                         jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobASTNegative.Color);
                         jobGauge.minValue = 0;
@@ -437,7 +442,7 @@ namespace Chromatics.Layers
             public SolidColorBrush empty_brush { get; set; }
             public SolidColorBrush highlight_brush { get; set; }
             public LayerModes _currentMode { get; set; }
-            public int _interpolateValue { get; set; } = -1;
+            public double _interpolateValue { get; set; } = -1;
             public Color _faderValue { get; set; }
             public Actor.Job _currentJob { get; set; }
             public bool init { get; set; }

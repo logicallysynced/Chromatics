@@ -90,9 +90,9 @@ namespace Chromatics.Helpers
                         return ColorHelper.ColorToRGBColor(colorPalette.JobCPTHighlight.Color);
                 case Actor.Job.BSM:
                     if (!highlight)
-                        return ColorHelper.ColorToRGBColor(colorPalette.JobBLMBase.Color);
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobBSMBase.Color);
                     else
-                        return ColorHelper.ColorToRGBColor(colorPalette.JobBLMHighlight.Color);
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobBSMHighlight.Color);
                 case Actor.Job.ARM:
                     if (!highlight)
                         return ColorHelper.ColorToRGBColor(colorPalette.JobARMBase.Color);

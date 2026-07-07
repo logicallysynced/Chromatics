@@ -13,6 +13,7 @@ namespace Chromatics.Layers
     {
         private static DynamicBattleStanceProcessor _instance;
         private bool _disposed = false;
+        private readonly Dictionary<int, SolidColorBrush> _brushCache = new Dictionary<int, SolidColorBrush>();
 
         // Private constructor to prevent direct instantiation
         private DynamicBattleStanceProcessor() { }
@@ -65,7 +66,7 @@ namespace Chromatics.Layers
                 };
 
                 var lg = new ListLedGroup[] { updatedLayerGroup };
-                _layergroups.Add(layer.layerID, lg);
+                _layergroups[layer.layerID] = lg;
                 updatedLayerGroup.Detach();
             }
 
@@ -77,7 +78,16 @@ namespace Chromatics.Layers
 
             // Process data from FFXIV
             var _memoryHandler = GameController.GetGameData();
-            var brush = new SolidColorBrush(engaged_color);
+
+            if (!_brushCache.TryGetValue(layer.layerID, out var brush))
+            {
+                brush = new SolidColorBrush(engaged_color);
+                _brushCache[layer.layerID] = brush;
+            }
+            else
+            {
+                brush.Color = engaged_color;
+            }
 
             if (_memoryHandler?.Reader != null && _memoryHandler.Reader.CanGetActors())
             {
@@ -105,6 +115,7 @@ namespace Chromatics.Layers
             {
                 if (disposing)
                 {
+                    _brushCache.Clear();
                     var _layergroups = RGBController.GetLiveLayerGroups();
                     if (_layergroups != null)
                     {

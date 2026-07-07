@@ -1,0 +1,34 @@
+using RGB.NET.Core;
+
+namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
+{
+    public class NanoleafDeviceInfo : IRGBDeviceInfo
+    {
+        public NanoleafDeviceInfo(NanoleafClientDefinition def)
+        {
+            Id = def.Id;
+            // Both Label and Id can be empty on a hand-edited settings
+            // entry; a null DeviceName would blow up GenerateDeviceGuid.
+            DeviceName = !string.IsNullOrEmpty(def.Label) ? def.Label
+                       : !string.IsNullOrEmpty(def.Id) ? def.Id
+                       : "Nanoleaf";
+            Manufacturer = "Nanoleaf";
+            Model = string.IsNullOrEmpty(def.Model) ? "Nanoleaf" : def.Model;
+
+            // A wall of panels is a 2D matrix so grid-aware effects engage;
+            // a single panel or a 4D-style strip degrades to LedStripe. The
+            // provider passes the resolved panel count, so one panel reads
+            // as a controller.
+            DeviceType = def.PanelCount > 2 ? RGBDeviceType.LedMatrix
+                       : def.PanelCount == 2 ? RGBDeviceType.LedStripe
+                       : RGBDeviceType.LedController;
+        }
+
+        public string Id { get; }
+        public RGBDeviceType DeviceType { get; }
+        public string DeviceName { get; }
+        public string Manufacturer { get; }
+        public string Model { get; }
+        public object LayoutMetadata { get; set; }
+    }
+}

@@ -1,5 +1,6 @@
 using Chromatics.Core;
 using Chromatics.Enums;
+using Chromatics.Localization;
 using System.Collections.ObjectModel;
 
 namespace Chromatics.ViewModels
@@ -35,6 +36,20 @@ namespace Chromatics.ViewModels
                 "avares://Chromatics/Resources/sword.png",
                 e.effect_damageflash,
                 v => { e.effect_damageflash = v; RGBController.SaveEffectsSettings(); }));
+
+            Toggles.Add(new EffectToggleItem(
+                LocalizationService.Instance["Casting Success"],
+                LocalizationService.Instance["Ripple out from the centre of the keyboard when your spell cast completes."],
+                "avares://Chromatics/Resources/cast.png",
+                e.effect_castingsuccess,
+                v => { e.effect_castingsuccess = v; RGBController.SaveEffectsSettings(); }));
+
+            Toggles.Add(new EffectToggleItem(
+                LocalizationService.Instance["Status Inflicted"],
+                LocalizationService.Instance["Pulse devices when you receive a harmful status effect. Colours follow the Status Effects palette."],
+                "avares://Chromatics/Resources/debuff.png",
+                e.effect_statusinflicted,
+                v => { e.effect_statusinflicted = v; RGBController.SaveEffectsSettings(); }));
 
             Toggles.Add(new EffectToggleItem(
                 "Startup Animation",

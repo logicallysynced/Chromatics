@@ -75,144 +75,152 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
         protected override void Update(double deltaTime)
         {
-            // increment the Timing variable
-            Timing += deltaTime;
-
-            var minBrightness = 0;
-            var maxBrightness = 1;
-
-            if (Timing >= startDelay)
+            if (fadingInLeds == null || fadingOutLeds == null) return;
+            try
             {
-                var availableLeds = ledGroup.Where(led => !fadingInLeds.ContainsKey(led) && !fadingOutLeds.ContainsKey(led));
+                // increment the Timing variable
+                Timing += deltaTime;
 
-                foreach (var led in availableLeds)
+                var minBrightness = 0;
+                var maxBrightness = 1;
+
+                if (Timing >= startDelay)
                 {
-                    
-                    fadingInLeds.TryAdd(led, baseColor);
+                    var availableLeds = ledGroup.Where(led => !fadingInLeds.ContainsKey(led) && !fadingOutLeds.ContainsKey(led));
 
-                    var colorIndex = random.Next(colors.Length);
-
-                    if (!currentColors.ContainsKey(led))
-                        currentColors.Add(led, colors[colorIndex]);
-
-                    
-                }
-
-                // Update startDelay to be a few milliseconds earlier than the current interval
-                if (!oneshot)
-                {
-                    if (randomise)
+                    foreach (var led in availableLeds)
                     {
-                        var rng = GetRandomStartTime();
 
-                        if (GetRandomBoolean(0.35))
+                        fadingInLeds.TryAdd(led, baseColor);
+
+                        var colorIndex = random.Next(colors.Length);
+
+                        if (!currentColors.ContainsKey(led))
+                            currentColors.Add(led, colors[colorIndex]);
+
+
+                    }
+
+                    // Update startDelay to be a few milliseconds earlier than the current interval
+                    if (!oneshot)
+                    {
+                        if (randomise)
                         {
-                            startDelay = Timing + (fadeSpeed / 1000);
+                            var rng = GetRandomStartTime();
+
+                            if (GetRandomBoolean(0.35))
+                            {
+                                startDelay = Timing + (fadeSpeed / 1000);
+                            }
+                            else
+                            {
+                                startDelay = Timing + (rng / 1000);
+                            }
+
+
                         }
                         else
                         {
-                            startDelay = Timing + (rng / 1000);
+                            startDelay = Timing + (interval / 1000);
                         }
+                    }
 
-                    
+                }
+
+                foreach (var led in fadingInLeds)
+                {
+                    // check if the current brightness of the LED is already stored in the dictionary
+                    if (!currentBrightness.ContainsKey(led.Key))
+                    {
+                        // if not, add the current brightness of the LED to the dictionary
+                        currentBrightness.Add(led.Key, minBrightness);
+                    }
+
+                    // increment the current brightness of the LED
+                    currentBrightness[led.Key] += (float)(deltaTime * (maxBrightness - minBrightness) / (fadeSpeed / 1000));
+
+                    // check if the current brightness of the LED has reached the max brightness
+                    if (currentBrightness[led.Key] >= maxBrightness)
+                    {
+                        // if it has, add the LED to the list of fading out LEDs
+                        fadingOutLeds.TryAdd(led.Key, currentColors[led.Key]);
+
+                        // remove the LED from the list of fading in LEDs
+                        fadingInLeds.TryRemove(led);
                     }
                     else
                     {
-                        startDelay = Timing + (interval / 1000);
+                        // if not, choose a random color from the passed in color array
+
+
+                        var lerpAmount = Map(currentBrightness[led.Key], minBrightness, maxBrightness, 0, 1);
+                        var color = Lerp(baseColor, currentColors[led.Key], lerpAmount);
+                        fadingInLeds[led.Key] = color;
+
                     }
                 }
-                
-            }
 
-            foreach (var led in fadingInLeds)
-            {
-                // check if the current brightness of the LED is already stored in the dictionary
-                if (!currentBrightness.ContainsKey(led.Key))
+                // iterate through the list of fading out LEDs
+                foreach (var led in fadingOutLeds)
                 {
-                    // if not, add the current brightness of the LED to the dictionary
-                    currentBrightness.Add(led.Key, minBrightness);
+                    // check if the current brightness of the LED is already stored in the dictionary
+                    if (!currentBrightness.ContainsKey(led.Key))
+                    {
+                        // if not, add the current brightness of the LED to the dictionary
+                        currentBrightness.Add(led.Key, maxBrightness);
+                    }
+
+                    // decrement the current brightness of the LED
+                    currentBrightness[led.Key] -= (float)(deltaTime * (maxBrightness - minBrightness) / (fadeSpeed / 1000));
+
+                    // check if the current brightness of the LED has reached the min brightness
+                    if (currentBrightness[led.Key] <= minBrightness)
+                    {
+                        // if it has, remove the LED from the list of fading out LEDs
+                        fadingOutLeds.TryRemove(led);
+                        currentBrightness.Remove(led.Key);
+                        currentColors.Remove(led.Key);
+                        startTimes.Remove(led.Key);
+
+                        if (fadingInLeds.ContainsKey(led.Key))
+                            fadingInLeds.TryRemove(led);
+                    }
+                    else
+                    {
+                        // if not, set the LED's color to the base color with the current brightness
+                        var lerpAmount = Map(currentBrightness[led.Key], minBrightness, maxBrightness, 0, 1);
+                        var color = Lerp(baseColor, currentColors[led.Key], lerpAmount);
+                        fadingOutLeds[led.Key] = color;
+
+                    }
                 }
 
-                // increment the current brightness of the LED
-                currentBrightness[led.Key] += (float)(deltaTime * (maxBrightness - minBrightness) / (fadeSpeed / 1000));
 
-                // check if the current brightness of the LED has reached the max brightness
-                if (currentBrightness[led.Key] >= maxBrightness)
+                foreach (var led in ledGroup)
                 {
-                    // if it has, add the LED to the list of fading out LEDs
-                    fadingOutLeds.TryAdd(led.Key, currentColors[led.Key]);
-
-                    // remove the LED from the list of fading in LEDs
-                    fadingInLeds.TryRemove(led);
-                }
-                else
-                {
-                    // if not, choose a random color from the passed in color array
-                    
-                    
-                    var lerpAmount = Map(currentBrightness[led.Key], minBrightness, maxBrightness, 0, 1);
-                    var color = Lerp(baseColor, currentColors[led.Key], lerpAmount);
-                    fadingInLeds[led.Key] = color;
+                    if (fadingInLeds.ContainsKey(led))
+                    {
+                        led.Color = fadingInLeds[led];
+                    }
+                    else if (fadingOutLeds.ContainsKey(led))
+                    {
+                        led.Color = fadingOutLeds[led];
+                    }
+                    else
+                    {
+                        led.Color = baseColor;
+                    }
 
                 }
-            }
 
-            // iterate through the list of fading out LEDs
-            foreach (var led in fadingOutLeds)
-            {
-                // check if the current brightness of the LED is already stored in the dictionary
-                if (!currentBrightness.ContainsKey(led.Key))
+                if (fadingOutLeds.Count == 0 && oneshot)
                 {
-                    // if not, add the current brightness of the LED to the dictionary
-                    currentBrightness.Add(led.Key, maxBrightness);
-                }
-
-                // decrement the current brightness of the LED
-                currentBrightness[led.Key] -= (float)(deltaTime * (maxBrightness - minBrightness) / (fadeSpeed / 1000));
-
-                // check if the current brightness of the LED has reached the min brightness
-                if (currentBrightness[led.Key] <= minBrightness)
-                {
-                    // if it has, remove the LED from the list of fading out LEDs
-                    fadingOutLeds.TryRemove(led);
-                    currentBrightness.Remove(led.Key);
-                    currentColors.Remove(led.Key);
-                    startTimes.Remove(led.Key);
-
-                    if (fadingInLeds.ContainsKey(led.Key))
-                        fadingInLeds.TryRemove(led);
-                }
-                else
-                {
-                    // if not, set the LED's color to the base color with the current brightness
-                    var lerpAmount = Map(currentBrightness[led.Key], minBrightness, maxBrightness, 0, 1);
-                    var color = Lerp(baseColor, currentColors[led.Key], lerpAmount);
-                    fadingOutLeds[led.Key] = color;
-
+                    Detach();
                 }
             }
-
-
-            foreach (var led in ledGroup)
+            catch (Exception ex)
             {
-                if (fadingInLeds.ContainsKey(led))
-                {
-                    led.Color = fadingInLeds[led];
-                }
-                else if (fadingOutLeds.ContainsKey(led))
-                {
-                    led.Color = fadingOutLeds[led];
-                } 
-                else
-                {
-                    led.Color = baseColor;
-                }
-                    
-            }
-
-            if (fadingOutLeds.Count == 0 && oneshot)
-            {
-                Detach();
+                Debug.WriteLine($"Exception: {ex.Message}");
             }
         }
 

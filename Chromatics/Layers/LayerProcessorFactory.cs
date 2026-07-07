@@ -80,6 +80,8 @@ namespace Chromatics.Layers
                 EffectLayerType.DamageFlash => DamageFlashProcessor.Instance,
                 EffectLayerType.GoldSaucerVegas => GoldSaucerVegasProcessor.Instance,
                 EffectLayerType.CutsceneAnimation => CutsceneAnimationProcessor.Instance,
+                EffectLayerType.CastingSuccess => CastingSuccessProcessor.Instance,
+                EffectLayerType.StatusInflicted => StatusInflictedProcessor.Instance,
                 _ => throw new ArgumentException("Unknown EffectLayerType")
             };
         }
@@ -104,6 +106,8 @@ namespace Chromatics.Layers
                 DynamicLayerType.Castbar => CastbarProcessor.Instance,
                 DynamicLayerType.JobClassesHighlight => JobClassesHighlightProcessor.Instance,
                 DynamicLayerType.ReactiveWeatherHighlight => ReactiveWeatherHighlightProcessor.Instance,
+                DynamicLayerType.FocusTargetHP => FocusTargetHPProcessor.Instance,
+                DynamicLayerType.FocusTargetCastbar => FocusTargetCastbarProcessor.Instance,
                 _ => throw new ArgumentException("Unknown DynamicLayerType")
             };
         }

@@ -49,6 +49,7 @@ namespace Chromatics.Core
         private static readonly System.Threading.Lock _devicesLock = new();
         private static Dictionary<Guid, IRGBDevice> _devices = new Dictionary<Guid, IRGBDevice>();
 
+        private static readonly System.Threading.Lock _activeDevicesLock = new();
         private static Dictionary<IRGBDevice, bool> _activeDevices = new Dictionary<IRGBDevice, bool>();
 
         // Per-device brightness corrections, keyed by the device GUID stamped in
@@ -73,7 +74,11 @@ namespace Chromatics.Core
         private static readonly Dictionary<string, Dictionary<Guid, ListLedGroup>> _taggedEffectsByDevice = new();
         private static readonly System.Threading.Lock _taggedEffectsLock = new();
 
-        private static Dictionary<int, ListLedGroup[]> _layergroups = new Dictionary<int, ListLedGroup[]>();
+        // ConcurrentDictionary because the game-loop thread mutates this while
+        // RaidEffectProcessor / GoldSaucerVegas read it from the RGB.NET timer
+        // thread via surface.Updating.
+        private static readonly System.Collections.Concurrent.ConcurrentDictionary<int, ListLedGroup[]> _layergroups
+            = new System.Collections.Concurrent.ConcurrentDictionary<int, ListLedGroup[]>();
 
         private static List<Led> _layergroupledcollection = new List<Led>();
 
@@ -81,6 +86,7 @@ namespace Chromatics.Core
 
         private static EffectTypesModel _effects = new EffectTypesModel();
 
+        private static readonly System.Threading.Lock _runningEffectsLock = new();
         private static List<ListLedGroup> _runningEffects = new List<ListLedGroup>();
 
         private static bool _baseLayerEffectRunning;
@@ -117,6 +123,23 @@ namespace Chromatics.Core
                 : AppSettings.GetSettings().rgbRefreshRate;
         }
 
+        // Runs one provider's load block and turns assembly-load faults into
+        // console guidance instead of a startup crash. Windows App Control
+        // (Smart App Control / WDAC) blocks the unsigned vendor DLLs on some
+        // machines (0x800711C7) - Chromatics signs only its own binaries by
+        // policy, so the RGB.NET / HueApi assemblies are fair game for the
+        // policy. The provider code sits in a lambda on purpose: lambda
+        // bodies compile to their own methods, so a blocked assembly
+        // resolves when the lambda RUNS (inside this try) instead of when
+        // Setup itself is JIT-compiled - the JIT-time fault happens at
+        // Setup's call site, outside every catch, and crashed startup as
+        // CHROMATICS-17 / CHROMATICS-18.
+        // Thin wrapper over the shared guard so the provider blocks below
+        // stay readable. The lambda-isolation rule is documented on
+        // Helpers.AssemblyLoadGuard.
+        private static void TryLoadProviderIsolated(string label, Action load)
+            => Helpers.AssemblyLoadGuard.TryRun(label, load);
+
         public static void Setup()
         {
             try
@@ -149,103 +172,111 @@ namespace Chromatics.Core
             
                 if (appSettings.deviceLogitechEnabled)
                 {
-                    LoadDeviceProvider(LogitechDeviceProvider.Instance);
+                    TryLoadProviderIsolated("Logitech", () => LoadDeviceProvider(LogitechDeviceProvider.Instance));
                 }
-                    
+
 
                 if (appSettings.deviceCorsairEnabled)
                 {
-                    var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
-                    var natives = CorsairDeviceProvider.PossibleX64NativePaths;
-                    natives.Add($"{enviroment}\\x64\\CUESDK.dll");
+                    TryLoadProviderIsolated("Corsair", () =>
+                    {
+                        var enviroment = new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName;
+                        var natives = CorsairDeviceProvider.PossibleX64NativePaths;
+                        natives.Add($"{enviroment}\\x64\\CUESDK.dll");
 
-                    Debug.WriteLine($"{enviroment}\\x64\\CUESDK.dll");
+                        Debug.WriteLine($"{enviroment}\\x64\\CUESDK.dll");
 
-                    // Ask iCUE for exclusive lighting control. Without this,
-                    // iCUE keeps painting its own profile in parallel and our
-                    // writes fight the SDK's background animation thread,
-                    // which manifests as flicker or partial colour reverts on
-                    // some boards. Static on RGB.NET's CorsairDeviceProvider
-                    // and read once when the provider is initialised, so set
-                    // it before LoadDeviceProvider runs.
-                    CorsairDeviceProvider.ExclusiveAccess = true;
+                        // Ask iCUE for exclusive lighting control. Without this,
+                        // iCUE keeps painting its own profile in parallel and our
+                        // writes fight the SDK's background animation thread,
+                        // which manifests as flicker or partial colour reverts on
+                        // some boards. Static on RGB.NET's CorsairDeviceProvider
+                        // and read once when the provider is initialised, so set
+                        // it before LoadDeviceProvider runs.
+                        CorsairDeviceProvider.ExclusiveAccess = true;
 
-                    LoadDeviceProvider(CorsairDeviceProvider.Instance);
+                        LoadDeviceProvider(CorsairDeviceProvider.Instance);
+                    });
                 }
-                    
-            
+
+
                 if (appSettings.deviceCoolermasterEnabled)
                 {
-                    LoadDeviceProvider(CoolerMasterDeviceProvider.Instance);
+                    TryLoadProviderIsolated("CoolerMaster", () => LoadDeviceProvider(CoolerMasterDeviceProvider.Instance));
                 }
-                    
-            
+
+
                 if (appSettings.deviceNovationEnabled)
                 {
-                    LoadDeviceProvider(NovationDeviceProvider.Instance);
+                    TryLoadProviderIsolated("Novation", () => LoadDeviceProvider(NovationDeviceProvider.Instance));
                 }
-                    
-            
+
+
                 if (appSettings.deviceRazerEnabled)
                 {
-                    if (AppSettings.GetSettings().showEmulatorDevices)
-                        RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
+                    TryLoadProviderIsolated("Razer", () =>
+                    {
+                        if (AppSettings.GetSettings().showEmulatorDevices)
+                            RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
 
-                    #if DEBUG
-                        RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
-                    #endif
+                        #if DEBUG
+                            RazerDeviceProvider.Instance.LoadEmulatorDevices = RazerEndpointType.All;
+                        #endif
 
-                    LoadDeviceProvider(RazerDeviceProvider.Instance); 
+                        LoadDeviceProvider(RazerDeviceProvider.Instance);
+                    });
                 }
-            
+
                 if (appSettings.deviceAsusEnabled)
                 {
-                    LoadDeviceProvider(AsusDeviceProvider.Instance);
+                    TryLoadProviderIsolated("ASUS", () => LoadDeviceProvider(AsusDeviceProvider.Instance));
                 }
-                    
-                
+
+
                 if (appSettings.deviceMsiEnabled)
                 {
-                    LoadDeviceProvider(MsiDeviceProvider.Instance);
+                    TryLoadProviderIsolated("MSI", () => LoadDeviceProvider(MsiDeviceProvider.Instance));
                 }
-                    
-            
+
+
                 if (appSettings.deviceSteelseriesEnabled)
                 {
-                    LoadDeviceProvider(SteelSeriesDeviceProvider.Instance);
+                    TryLoadProviderIsolated("SteelSeries", () => LoadDeviceProvider(SteelSeriesDeviceProvider.Instance));
                 }
-                    
-            
+
+
                 if (appSettings.deviceWootingEnabled)
                 {
-                    LoadDeviceProvider(WootingDeviceProvider.Instance);
+                    TryLoadProviderIsolated("Wooting", () => LoadDeviceProvider(WootingDeviceProvider.Instance));
                 }
 
                 if (appSettings.deviceOpenRGBEnabled)
                 {
-                    // IP comes from settings.chromatics4 (hidden field — not
-                    // exposed in the UI). Defaults to 127.0.0.1 for the
-                    // local-SDK-server case; users on a multi-machine setup
-                    // can point Chromatics at a remote server by editing
-                    // openRgbServerIp directly.
-                    var ip = string.IsNullOrWhiteSpace(appSettings.openRgbServerIp)
-                        ? "127.0.0.1"
-                        : appSettings.openRgbServerIp.Trim();
-                    var openrgb = new OpenRGBServerDefinition
+                    TryLoadProviderIsolated("OpenRGB", () =>
                     {
-                        Port = 6742,
-                        Ip = ip,
-                        ClientName = "Chromatics"
-                    };
+                        // IP comes from settings.chromatics4 (hidden field — not
+                        // exposed in the UI). Defaults to 127.0.0.1 for the
+                        // local-SDK-server case; users on a multi-machine setup
+                        // can point Chromatics at a remote server by editing
+                        // openRgbServerIp directly.
+                        var ip = string.IsNullOrWhiteSpace(appSettings.openRgbServerIp)
+                            ? "127.0.0.1"
+                            : appSettings.openRgbServerIp.Trim();
+                        var openrgb = new OpenRGBServerDefinition
+                        {
+                            Port = 6742,
+                            Ip = ip,
+                            ClientName = "Chromatics"
+                        };
 
-                    OpenRGBDeviceProvider.Instance.AddDeviceDefinition(openrgb);
-                    LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
-
+                        OpenRGBDeviceProvider.Instance.AddDeviceDefinition(openrgb);
+                        LoadDeviceProvider(OpenRGBDeviceProvider.Instance);
+                    });
                 }
 
                 if (appSettings.deviceHueEnabled)
                 {
-                    try
+                    TryLoadProviderIsolated("Hue", () =>
                     {
                         if (string.IsNullOrEmpty(appSettings.deviceHueBridgeIP))
                         {
@@ -311,19 +342,17 @@ namespace Chromatics.Core
                             LoadDeviceProvider(HueRGBDeviceProvider.Instance);
 
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[HueDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
-                    }
-
+                    });
                 }
 
                 if (appSettings.devicePlayStationEnabled)
                 {
-                    PlayStationProviderHooks.EnsureInstalled();
-                    LoadDeviceProvider(PlayStationDeviceProvider.Instance);
-                    PlayStationProviderHooks.EmitPostLoadHints();
+                    TryLoadProviderIsolated("PlayStation", () =>
+                    {
+                        PlayStationProviderHooks.EnsureInstalled();
+                        LoadDeviceProvider(PlayStationDeviceProvider.Instance);
+                        PlayStationProviderHooks.EmitPostLoadHints();
+                    });
                 }
 
                 if (appSettings.deviceLifxEnabled)
@@ -353,6 +382,41 @@ namespace Chromatics.Core
                     catch (Exception ex)
                     {
                         Logger.WriteConsole(Enums.LoggerTypes.Error, $"[LifxDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
+                    }
+                }
+
+                if (appSettings.deviceNanoleafEnabled)
+                {
+                    try
+                    {
+                        // Nanoleaf controllers are pre-paired through the
+                        // adoption dialog (Hue pattern), so there's no auto-
+                        // adopt sweep here - we just hydrate the provider
+                        // from the persisted, tokened controller list and
+                        // load. Unreachable controllers are skipped by the
+                        // provider and retried next launch.
+                        var adopted = appSettings.deviceNanoleafAdoptedDevices ?? new List<Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafAdoptedDevice>();
+                        Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.UpdateRateHz = appSettings.nanoleafUpdateRateHz;
+                        Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance.ClientDefinitions.Clear();
+                        foreach (var d in adopted)
+                        {
+                            if (string.IsNullOrEmpty(d.AuthToken) || string.IsNullOrEmpty(d.LastIp)) continue;
+                            System.Net.IPEndPoint ep = null;
+                            if (System.Net.IPAddress.TryParse(d.LastIp, out var ip))
+                                ep = new System.Net.IPEndPoint(ip, d.Port > 0 ? d.Port : 16021);
+                            Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance.ClientDefinitions.Add(
+                                new Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafClientDefinition(
+                                    d.Id, d.Label, ep, d.AuthToken, d.Model, d.Firmware, d.PanelCount)
+                                {
+                                    PanelOrder = d.PanelOrder ?? new List<int>(),
+                                });
+                        }
+
+                        LoadDeviceProvider(Chromatics.Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider.Instance);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"[NanoleafDeviceProvider] LoadDeviceProvider Error: {ex.Message}");
                     }
                 }
 
@@ -617,9 +681,30 @@ namespace Chromatics.Core
 
                 if (appSettings.rgbRefreshRate <= 0) appSettings.rgbRefreshRate = 0.05;
 
-                _timerUpdateTrigger = new TimerUpdateTrigger();
-                _timerUpdateTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
-                surface.RegisterUpdateTrigger(_timerUpdateTrigger);
+                // TimerUpdateTrigger lives in RGB.NET.Presets.dll, which App
+                // Control policies also block (CHROMATICS-17). Same lambda
+                // isolation as the providers; without a trigger the surface
+                // can't tick, so bail out of setup with lighting disabled
+                // rather than crash.
+                bool triggerReady = false;
+                TryLoadProviderIsolated("RGB.NET.Presets", () =>
+                {
+                    _timerUpdateTrigger = new TimerUpdateTrigger();
+                    _timerUpdateTrigger.UpdateFrequency = appSettings.rgbRefreshRate;
+                    surface.RegisterUpdateTrigger(_timerUpdateTrigger);
+                    triggerReady = true;
+                });
+                if (!triggerReady)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.Error, "RGB lighting is disabled for this session because the device update timer failed to load.");
+
+                    // Providers loaded above are already registered. Bailing
+                    // with _loaded still false means Unload() no-ops on exit,
+                    // so nothing would restore smart lights or release native
+                    // SDK handles - tear the providers down here instead.
+                    TeardownLoadedProviders();
+                    return;
+                }
 
                 surface.AlignDevices();
                 surface.Updating += Surface_Updating;
@@ -633,6 +718,19 @@ namespace Chromatics.Core
             catch (Exception ex)
             {
                 Logger.WriteConsole(Enums.LoggerTypes.Error, $"RGBController Setup Error: {ex.Message}");
+
+                // Same leak as the trigger bail-out above: any throw after
+                // the provider blocks (AlignDevices, event hookup) leaves
+                // _loaded false, so Unload() would no-op and the loaded
+                // providers would never restore devices or release SDKs.
+                if (!_loaded)
+                {
+                    try { TeardownLoadedProviders(); }
+                    catch (Exception teardownEx)
+                    {
+                        Logger.WriteConsole(Enums.LoggerTypes.Error, $"Provider teardown after Setup failure also failed: {teardownEx.Message}");
+                    }
+                }
             }
         }
 
@@ -687,6 +785,15 @@ namespace Chromatics.Core
                         catch { /* best-effort */ }
                     });
                 }
+                else if (device is Extensions.RGB.NET.Devices.Nanoleaf.NanoleafDevice nanoDev)
+                {
+                    nanoDev.SetPerDeviceDisabled(true);
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await nanoDev.RestoreOriginalStateAsync(); }
+                        catch { /* best-effort */ }
+                    });
+                }
                 else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
                 {
                     // QMK boards have no captured pre-Chromatics state to
@@ -700,14 +807,12 @@ namespace Chromatics.Core
 
                 surface.Detach(device);
 
-
-                if (_activeDevices.ContainsKey(device))
+                lock (_activeDevicesLock)
                 {
-                    _activeDevices[device] = false;
-                }
-                else
-                {
-                    _activeDevices.Add(device, false);
+                    if (_activeDevices.ContainsKey(device))
+                        _activeDevices[device] = false;
+                    else
+                        _activeDevices.Add(device, false);
                 }
 
             }
@@ -747,6 +852,11 @@ namespace Chromatics.Core
                 else if (device is Extensions.RGB.NET.Devices.Hue.HueDevice hueDev)
                 {
                     hueDev.SetPerDeviceDisabled(false);
+                }
+                else if (device is Extensions.RGB.NET.Devices.Nanoleaf.NanoleafDevice nanoDev)
+                {
+                    nanoDev.ResetCache();
+                    nanoDev.SetPerDeviceDisabled(false);
                 }
                 else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
                 {
@@ -825,13 +935,27 @@ namespace Chromatics.Core
                 // as the surface.Update flush above lands. No equivalent
                 // power-on call needed.
 
-                if (_activeDevices.ContainsKey(device))
+                // Nanoleaf must re-negotiate extControl streaming over
+                // REST after a re-enable: the disable path restored the
+                // controller to its scene (which exits streaming), and a
+                // controller that started persisted-disabled never entered
+                // streaming at all - either way it ignores UDP frames
+                // until the handshake runs again.
+                if (device is Extensions.RGB.NET.Devices.Nanoleaf.NanoleafDevice nanoDevStream)
                 {
-                    _activeDevices[device] = true;
+                    System.Threading.Tasks.Task.Run(async () =>
+                    {
+                        try { await nanoDevStream.EnsureStreamingAsync(); }
+                        catch { /* best-effort */ }
+                    });
                 }
-                else
+
+                lock (_activeDevicesLock)
                 {
-                    _activeDevices.Add(device, true);
+                    if (_activeDevices.ContainsKey(device))
+                        _activeDevices[device] = true;
+                    else
+                        _activeDevices.Add(device, true);
                 }
 
             }
@@ -974,13 +1098,12 @@ namespace Chromatics.Core
                     Logger.WriteConsole(Enums.LoggerTypes.Devices, $"Found {device.DeviceInfo.Manufacturer} {device.DeviceInfo.DeviceType}: {device.DeviceInfo.DeviceName}.");
                 #endif
 
-                if (_activeDevices.ContainsKey(device))
+                lock (_activeDevicesLock)
                 {
-                    _activeDevices[device] = !isDisabled;
-                }
-                else
-                {
-                    _activeDevices.Add(device, !isDisabled);
+                    if (_activeDevices.ContainsKey(device))
+                        _activeDevices[device] = !isDisabled;
+                    else
+                        _activeDevices.Add(device, !isDisabled);
                 }
 
                 // Hot-plug into a running startup animation: rebuild the
@@ -1031,13 +1154,12 @@ namespace Chromatics.Core
                         _devices.Remove(guid);
                 }
 
-                if (_activeDevices.ContainsKey(device))
+                lock (_activeDevicesLock)
                 {
-                    _activeDevices[device] = false;
-                }
-                else
-                {
-                    _activeDevices.Add(device, false);
+                    if (_activeDevices.ContainsKey(device))
+                        _activeDevices[device] = false;
+                    else
+                        _activeDevices.Add(device, false);
                 }
 
                 DeviceConnectionChanged?.Invoke(null, EventArgs.Empty);
@@ -1058,6 +1180,49 @@ namespace Chromatics.Core
             */
         }
 
+        // Shared provider teardown for every exit path: normal Unload, the
+        // Setup trigger bail-out, and Setup's outer catch. Detach and
+        // bookkeeping run sequentially on this thread (the surface is not
+        // thread-safe), then the stateful smart-light providers (LIFX, Hue,
+        // Nanoleaf) dispose in parallel under one 30s ceiling - each blocks
+        // in Dispose while restoring its devices, so sequential disposal
+        // makes the wait additive across brands. Native-SDK providers keep
+        // the sequential dispose; some vendor SDKs are touchy about which
+        // thread tears them down.
+        private static void TeardownLoadedProviders()
+        {
+            var deferredRestore = new List<IRGBDeviceProvider>();
+            foreach (var deviceProvider in loadedDeviceProviders)
+            {
+                bool statefulRestore =
+                    deviceProvider is Extensions.RGB.NET.Devices.LIFX.LifxRGBDeviceProvider
+                    or Extensions.RGB.NET.Devices.Hue.HueRGBDeviceProvider
+                    or Extensions.RGB.NET.Devices.Nanoleaf.NanoleafRGBDeviceProvider;
+
+                UnloadDeviceProvider(deviceProvider, removeFromList: false, disposeProvider: !statefulRestore);
+                if (statefulRestore) deferredRestore.Add(deviceProvider);
+            }
+
+            if (deferredRestore.Count > 0)
+            {
+                var restoreTasks = deferredRestore
+                    .Select(p => System.Threading.Tasks.Task.Run(() =>
+                    {
+                        try { p.Dispose(); }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteConsole(Enums.LoggerTypes.Error, $"Provider dispose error during shutdown: {ex.Message}");
+                        }
+                    }))
+                    .ToArray();
+
+                if (!System.Threading.Tasks.Task.WaitAll(restoreTasks, TimeSpan.FromSeconds(30)))
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices, "Smart-light restore hit the 30s shutdown ceiling; remaining restores were abandoned.");
+            }
+
+            loadedDeviceProviders.Clear();
+        }
+
         public static void Unload()
         {
             if (!_loaded) return;
@@ -1066,12 +1231,7 @@ namespace Chromatics.Core
             {
                 var appSettings = AppSettings.GetSettings();
 
-                foreach (var deviceProvider in loadedDeviceProviders)
-                {
-                    UnloadDeviceProvider(deviceProvider, false);
-                }
-
-                loadedDeviceProviders.Clear();
+                TeardownLoadedProviders();
 
                 // Stop and dispose of the update trigger. Previously this only called
                 // Stop(), which left the trigger's internal timer and its handle alive.
@@ -1194,10 +1354,13 @@ namespace Chromatics.Core
                             hueDev.SetPerDeviceDisabled(true);
                         else if (device is Extensions.RGB.NET.Devices.QmkRawHid.QmkRawHidDevice qmkDev)
                             qmkDev.SetPerDeviceDisabled(true);
-                        if (_activeDevices.ContainsKey(device))
-                            _activeDevices[device] = false;
-                        else
-                            _activeDevices.Add(device, false);
+                        lock (_activeDevicesLock)
+                        {
+                            if (_activeDevices.ContainsKey(device))
+                                _activeDevices[device] = false;
+                            else
+                                _activeDevices.Add(device, false);
+                        }
                     }
 
                     if (_loaded)
@@ -1279,7 +1442,11 @@ namespace Chromatics.Core
             catch { /* diagnostic — never fatal */ }
         }
 
-        public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true)
+        // disposeProvider false lets Unload() defer the blocking Dispose of
+        // the stateful smart-light providers so their restores can run in
+        // parallel; the surface detach and bookkeeping still run here, on
+        // this thread, because the RGB.NET surface is not thread-safe.
+        public static void UnloadDeviceProvider(IRGBDeviceProvider provider, bool removeFromList = true, bool disposeProvider = true)
         {
             bool anyRemoved = false;
             try
@@ -1314,7 +1481,8 @@ namespace Chromatics.Core
                                 _devices.Remove(key);
                         }
 
-                        _activeDevices.Remove(device);
+                        lock (_activeDevicesLock)
+                            _activeDevices.Remove(device);
                         anyRemoved = true;
                     }
 
@@ -1324,7 +1492,8 @@ namespace Chromatics.Core
                     if (removeFromList)
                         loadedDeviceProviders.Remove(provider);
 
-                    provider.Dispose();
+                    if (disposeProvider)
+                        provider.Dispose();
                 }
             }
             catch (Exception ex)
@@ -1469,7 +1638,8 @@ namespace Chromatics.Core
                     if (_taggedEffectsByDevice.TryGetValue(tag, out var byDevice))
                         byDevice.Remove(deviceGuid);
                 }
-                _runningEffects.Remove(existing);
+                lock (_runningEffectsLock)
+                    _runningEffects.Remove(existing);
                 try { existing.RemoveAllDecorators(); } catch { }
                 try { existing.Detach(); } catch { }
             }
@@ -1496,7 +1666,7 @@ namespace Chromatics.Core
             };
             var gradient = new RainbowGradient();
             var ledgroup = new ListLedGroup(surface);
-            ledgroup.ZIndex = 1000;
+            ledgroup.ZIndex = EffectZIndex.StartupAnimation;
             foreach (var led in device) ledgroup.AddLed(led);
             gradient.AddDecorator(move);
 
@@ -1549,7 +1719,7 @@ namespace Chromatics.Core
                 var gradient = new RainbowGradient();
                 var ledgroup = new ListLedGroup(surface);
 
-                ledgroup.ZIndex = 1000;
+                ledgroup.ZIndex = EffectZIndex.StartupAnimation;
                 foreach (var led in device)
                 {
                     ledgroup.AddLed(led);
@@ -1578,7 +1748,14 @@ namespace Chromatics.Core
                 SetIdleUpdateRate(false);
             }
 
-            foreach (var effects in _runningEffects)
+            List<ListLedGroup> snapshot;
+            lock (_runningEffectsLock)
+            {
+                snapshot = new List<ListLedGroup>(_runningEffects);
+                _runningEffects.Clear();
+            }
+
+            foreach (var effects in snapshot)
             {
                 foreach (var decorator in effects.Decorators)
                 {
@@ -1588,8 +1765,6 @@ namespace Chromatics.Core
                 effects.RemoveAllDecorators();
                 effects.Detach();
             }
-
-            _runningEffects.Clear();
 
             // Clear all tagged-effect lists too. The groups they pointed at
             // are now detached (above), so any future StopTaggedEffects(tag)
@@ -1630,7 +1805,8 @@ namespace Chromatics.Core
                     byDevice[deviceGuid] = group;
                 }
             }
-            _runningEffects.Add(group);
+            lock (_runningEffectsLock)
+                _runningEffects.Add(group);
         }
 
         // Tear down ONLY the groups registered under `tag` — used when the
@@ -1691,11 +1867,14 @@ namespace Chromatics.Core
             // Force a render so the black hits hardware before we detach.
             try { surface?.Update(); } catch { }
 
-            foreach (var g in snapshot)
+            lock (_runningEffectsLock)
             {
-                g.Detach();
-                _runningEffects.Remove(g);
+                foreach (var g in snapshot)
+                    _runningEffects.Remove(g);
             }
+
+            foreach (var g in snapshot)
+                g.Detach();
         }
 
         public static bool IsBaseLayerEffectRunning()
@@ -1708,9 +1887,27 @@ namespace Chromatics.Core
             _baseLayerEffectRunning = toggle;
         }
 
-        public static List<ListLedGroup> GetRunningEffects()
+        // Registration API for the effect processors (ReactiveWeather,
+        // RaidEffect, CutsceneAnimation), which run on the game-loop thread.
+        // Every mutation of _runningEffects goes through _runningEffectsLock
+        // here - handing out the live list let those processors race the
+        // locked Clear() in StopEffects / LoadDeviceProvider on the UI and
+        // thread-pool sides, which can corrupt List<T> internals.
+        public static void AddRunningEffect(ListLedGroup group)
         {
-            return _runningEffects;
+            if (group == null) return;
+            lock (_runningEffectsLock)
+            {
+                if (!_runningEffects.Contains(group))
+                    _runningEffects.Add(group);
+            }
+        }
+
+        public static void RemoveRunningEffect(ListLedGroup group)
+        {
+            if (group == null) return;
+            lock (_runningEffectsLock)
+                _runningEffects.Remove(group);
         }
 
         public static RGBSurface GetLiveSurfaces()
@@ -1726,7 +1923,8 @@ namespace Chromatics.Core
 
         public static Dictionary<IRGBDevice, bool> GetActiveDevices()
         {
-            return _activeDevices;
+            lock (_activeDevicesLock)
+                return new Dictionary<IRGBDevice, bool>(_activeDevices);
         }
 
         public static List<IRGBDeviceProvider> GetDeviceProviders()
@@ -1739,26 +1937,45 @@ namespace Chromatics.Core
             return _layergroupledcollection;
         }
 
-        public static Dictionary<int, ListLedGroup[]> GetLiveLayerGroups()
+        public static System.Collections.Concurrent.ConcurrentDictionary<int, ListLedGroup[]> GetLiveLayerGroups()
         {
             return _layergroups;
         }
 
+        // Appends a group to a layer's live-group registration without
+        // displacing groups other processors registered under the same id.
+        // The effect-layer processors each own one group per layerID, and
+        // the requestUpdate / type-switch cleanup in GameController detaches
+        // all of them through this one registry entry.
+        public static void RegisterLiveLayerGroup(int layerID, ListLedGroup group)
+        {
+            if (group == null) return;
+            _layergroups.AddOrUpdate(layerID,
+                _ => new[] { group },
+                (_, existing) =>
+                {
+                    if (Array.IndexOf(existing, group) >= 0) return existing;
+                    var next = new ListLedGroup[existing.Length + 1];
+                    existing.CopyTo(next, 0);
+                    next[existing.Length] = group;
+                    return next;
+                });
+        }
+
         public static void RemoveLayerGroup(int targetId)
         {
-            if (_layergroups.ContainsKey(targetId))
+            // Remove before detaching so the timer-thread readers never see a
+            // half-detached group set.
+            if (_layergroups.TryRemove(targetId, out var removedGroups))
             {
-                foreach (var layer in _layergroups[targetId])
+                foreach (var layer in removedGroups)
                 {
                     layer.RemoveAllDecorators();
                     layer.Detach();
 
-                    if (_runningEffects.Contains(layer))
+                    lock (_runningEffectsLock)
                         _runningEffects.Remove(layer);
                 }
-                
-                _layergroups.Remove(targetId);
-                               
             }
         }
 
@@ -1778,7 +1995,8 @@ namespace Chromatics.Core
                 mapping.Value.requestUpdate = true;
             }
 
-            _runningEffects.Clear();
+            lock (_runningEffectsLock)
+                _runningEffects.Clear();
             _layergroups.Clear();
             _layergroupledcollection.Clear();
         }

@@ -37,6 +37,7 @@ namespace Chromatics.Views
             {
                 _cts?.Cancel();
                 _cts?.Dispose();
+                _vm.Dispose();
             };
         }
 

@@ -395,6 +395,8 @@ namespace Chromatics.Layers
             var (tempLayers, tempDeviceLayouts, tempDeviceBrightness, tempDisabledDevices) = FileOperationsHelper.LoadLayerMappings();
             if (tempLayers == null) return false;
 
+            SanitizeLayerTypeIndexes(tempLayers);
+
             // Device layout overrides live in a separate top-level field in the
             // V3 file, so they come through as-is without going near the layer
             // migration path. Always replace wholesale — partial merges would
@@ -484,12 +486,46 @@ namespace Chromatics.Layers
             return true;
         }
 
+        // Resets any layer whose layerTypeindex this build doesn't recognise.
+        // A layers.chromatics4 written by a newer Chromatics can carry layer
+        // positions beyond this build's enums (the 4.3.3 focus-target dynamic
+        // layers at positions 16 / 17 are the first case). Without the reset
+        // the stored position flows into GameController's
+        // (DynamicLayerType)layer.layerTypeindex cast and
+        // LayerProcessorFactory throws "Unknown DynamicLayerType" on every
+        // frame. Resetting to position 0 (None for dynamic layers) keeps the
+        // rest of the file loadable and shows the layer as None in the
+        // Mappings tab for the user to reassign.
+        private static void SanitizeLayerTypeIndexes(ConcurrentDictionary<int, Layer> layers)
+        {
+            if (layers == null) return;
+            foreach (var layer in layers.Values)
+            {
+                bool known = layer.rootLayerType switch
+                {
+                    LayerType.BaseLayer => Enum.IsDefined(typeof(BaseLayerType), layer.layerTypeindex),
+                    LayerType.DynamicLayer => Enum.IsDefined(typeof(DynamicLayerType), layer.layerTypeindex),
+                    LayerType.EffectLayer => Enum.IsDefined(typeof(EffectLayerType), layer.layerTypeindex),
+                    _ => false
+                };
+
+                if (!known)
+                {
+                    Logger.WriteConsole(Enums.LoggerTypes.System,
+                        $"Layer {layer.layerID} uses layer type {layer.layerTypeindex}, which this version of Chromatics doesn't support. The layer was reset to None.");
+                    layer.layerTypeindex = 0;
+                    layer.requestUpdate = true;
+                }
+            }
+        }
+
         public static bool ImportMappings(ConcurrentDictionary<int, Layer> importedLayer = null, bool empty = false)
         {
             var layers = importedLayer;
 
             if (layers != null)
             {
+                SanitizeLayerTypeIndexes(layers);
 
 
                 var migratedLayers = new Dictionary<int, Layer>();
@@ -658,9 +694,17 @@ namespace Chromatics.Layers
     //   v5: + disabledDevices (set of GUIDs the user disabled in the
     //       Mapping tab; persisted across launches so the device stays
     //       detached from the surface until re-enabled)
+    //   v6: no shape change. Marks files that can carry the focus-target
+    //       dynamic layer positions (16 / 17) added in 4.3.3, paired with
+    //       the SanitizeLayerTypeIndexes guard that resets unknown
+    //       positions on load / import.
+    //   v7: no shape change. Marks files that can carry the Casting
+    //       Success / Status Inflicted effect layer values (5 / 6) added
+    //       with the 4.3.x Effects-tab additions. Same
+    //       SanitizeLayerTypeIndexes guard covers them.
     public class MappingFileV3
     {
-        public int schemaVersion { get; set; } = 5;
+        public int schemaVersion { get; set; } = 7;
         public ConcurrentDictionary<int, Layer> layers { get; set; } = new ConcurrentDictionary<int, Layer>();
         public Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> deviceLayouts { get; set; }
             = new Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();

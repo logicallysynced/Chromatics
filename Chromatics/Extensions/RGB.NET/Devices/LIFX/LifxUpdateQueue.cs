@@ -6,6 +6,7 @@ using Chromatics.Models;
 using RGB.NET.Core;
 using System;
 using System.Buffers.Binary;
+using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -117,13 +118,21 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 
         // Captures original power + colour. Caller (provider) does this once at
         // start-up so we have something to restore to on disable / app close.
-        // Best-effort: a 500ms timeout keeps a single unreachable bulb from
-        // stalling provider startup for the others.
+        // Three query attempts with escalating timeouts: the query and its
+        // reply are single UDP datagrams, so one lost packet on a busy WLAN
+        // used to leave _original null and the shutdown restore silently
+        // no-opped - the largest contributor to bulbs "forgetting" their
+        // pre-Chromatics state on close.
         public async Task CaptureOriginalStateAsync(bool turnOnIfOff = true, CancellationToken ct = default)
         {
             try
             {
-                var state = await QueryOriginalStateAsync(TimeSpan.FromMilliseconds(500), ct).ConfigureAwait(false);
+                OriginalState state = null;
+                int[] timeoutsMs = [500, 750, 1000];
+                for (int attempt = 0; attempt < timeoutsMs.Length && state == null; attempt++)
+                {
+                    state = await QueryOriginalStateAsync(TimeSpan.FromMilliseconds(timeoutsMs[attempt]), ct).ConfigureAwait(false);
+                }
                 if (state != null)
                 {
                     _original = state;
@@ -200,40 +209,54 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
             if (_original == null) return;
             try
             {
-                // Take _lock so the colour send can't interleave with an
-                // in-flight Update from the trigger thread. RemoveDevice
-                // sets _perDeviceDisable=true before invoking us, so any
-                // queued decorator data that races surface.Detach gets
-                // dropped (no-op Update); the lock here covers the case
-                // where Update was already inside its critical section,
-                // mid-chunk, when the disable fired. Without this, the
-                // restore's per-chunk SetExtendedColorZones packets
-                // interleaved with the decorator's late chunks and
-                // produced "half the strip restored, half left at the
-                // last decorator colour" on chained Beam setups.
-                lock (_lock)
+                // The whole colour + power sequence repeats three times.
+                // Every restore packet is a single fire-and-forget UDP
+                // datagram, so a one-shot send loses the restore whenever
+                // one datagram drops - the dominant cause of bulbs keeping
+                // the last effect colour after Chromatics closes. The sets
+                // are idempotent, so repeats are harmless, and three sends
+                // turn a per-packet loss rate of a few percent into
+                // effectively zero.
+                for (int attempt = 0; attempt < 3; attempt++)
                 {
-                    bool isMultizone = _def.ZoneCount > 1 || _product.IsMultizone;
-                    if (isMultizone && _original.Zones != null && _original.Zones.Length > 0)
+                    // Take _lock so the colour send can't interleave with an
+                    // in-flight Update from the trigger thread. RemoveDevice
+                    // sets _perDeviceDisable=true before invoking us, so any
+                    // queued decorator data that races surface.Detach gets
+                    // dropped (no-op Update); the lock here covers the case
+                    // where Update was already inside its critical section,
+                    // mid-chunk, when the disable fired. Without this, the
+                    // restore's per-chunk SetExtendedColorZones packets
+                    // interleaved with the decorator's late chunks and
+                    // produced "half the strip restored, half left at the
+                    // last decorator colour" on chained Beam setups.
+                    lock (_lock)
                     {
-                        SendExtendedColorZones(_original.Zones, _original.Zones.Length, durationMs: 200);
+                        bool isMultizone = _def.ZoneCount > 1 || _product.IsMultizone;
+                        if (isMultizone && _original.Zones != null && _original.Zones.Length > 0)
+                        {
+                            SendExtendedColorZones(_original.Zones, _original.Zones.Length, durationMs: 200);
+                        }
+                        else
+                        {
+                            SendSetColor(_original.Hue, _original.Saturation, _original.Brightness, _original.Kelvin, durationMs: 200);
+                        }
                     }
-                    else
+
+                    // Brief gap so the bulb finishes the colour transition
+                    // before we toggle power. Done outside the lock so
+                    // shorter-running calls (a one-shot SetColor on a single
+                    // bulb) can release the queue between the colour and
+                    // power packets.
+                    await Task.Delay(50, ct).ConfigureAwait(false);
+
+                    lock (_lock)
                     {
-                        SendSetColor(_original.Hue, _original.Saturation, _original.Brightness, _original.Kelvin, durationMs: 200);
+                        SendSetLightPower(_original.Powered, durationMs: 200);
                     }
-                }
 
-                // Brief gap so the bulb finishes the colour transition
-                // before we toggle power. Done outside the lock so
-                // shorter-running calls (a one-shot SetColor on a single
-                // bulb) can release the queue between the colour and
-                // power packets.
-                await Task.Delay(50, ct).ConfigureAwait(false);
-
-                lock (_lock)
-                {
-                    SendSetLightPower(_original.Powered, durationMs: 200);
+                    if (attempt < 2)
+                        await Task.Delay(120, ct).ConfigureAwait(false);
                 }
             }
             catch { /* swallow — best-effort during teardown */ }
@@ -241,6 +264,11 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 
         protected override bool Update(ReadOnlySpan<(object key, Color color)> dataSet)
         {
+            // Multizone extended chunks are collected inside the lock and
+            // sent outside it so that ResetCache (called from the Avalonia
+            // UI thread on device re-enable) doesn't wait behind the
+            // Thread.Sleep(30) pacing that sits between each chunk.
+            List<byte[]> deferredChunks = null;
             lock (_lock)
             {
                 if (_shuttingDown || _perDeviceDisable) return true;
@@ -260,18 +288,22 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
 
                     if (isMultizone)
                     {
-                        SendMultizoneFrame(dataSet, brightnessScale);
+                        // Collect packets inside the lock (patching _strip),
+                        // but send them below outside the lock so ResetCache
+                        // on the UI thread doesn't block behind the 30ms sleeps.
+                        deferredChunks = CollectMultizoneChunks(dataSet, brightnessScale);
+                        // Fall through to post-lock send.
                     }
                     else if (_product.IsMatrix)
                     {
                         SendMatrixFrame(dataSet, brightnessScale);
+                        return true;
                     }
                     else
                     {
                         SendSingleColorFrame(dataSet, brightnessScale);
+                        return true;
                     }
-
-                    return true;
                 }
                 catch (Exception ex)
                 {
@@ -279,6 +311,28 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
                     return false;
                 }
             }
+
+            // Send dirty chunks with 30ms inter-chunk pacing outside _lock.
+            // Sparse updates (1-2 zones change in starfield) dirty 1 chunk →
+            // 1 packet, no sleep. Dense updates (gradient sweep) dirty all
+            // chunks → 30ms pacing keeps them under the firmware burst-drop
+            // threshold (6ms wasn't enough; 30ms × 3 = 90ms total send time
+            // leaves the trigger thread ~10ms of slack within a 100ms budget).
+            if (deferredChunks == null || deferredChunks.Count == 0) return true;
+
+            bool firstSent = true;
+            foreach (var chunk in deferredChunks)
+            {
+                if (!firstSent)
+                {
+                    if (_shuttingDown || _perDeviceDisable) return true;
+                    Thread.Sleep(30);
+                }
+                firstSent = false;
+                if (_shuttingDown || _perDeviceDisable) return true;
+                SendPacket(chunk);
+            }
+            return true;
         }
 
         private void SendSingleColorFrame(ReadOnlySpan<(object key, Color color)> dataSet, double brightnessScale)
@@ -319,7 +373,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
         private byte[] _strip;       // persistent zone HSBK state, [zoneCount * 8] bytes
         private int _stripZones;     // cached zone count for _strip's allocation
 
-        private void SendMultizoneFrame(ReadOnlySpan<(object key, Color color)> dataSet, double brightnessScale)
+        // Builds the per-chunk packets for a multizone frame and returns them
+        // for deferred sending outside _lock. The _strip state is patched
+        // here (inside the lock) so the persistent zone cache stays consistent.
+        // Returns null when the legacy (non-extended) path is used — legacy
+        // packets are sent immediately inside the lock because that path has
+        // no inter-chunk sleep.
+        private List<byte[]> CollectMultizoneChunks(ReadOnlySpan<(object key, Color color)> dataSet, double brightnessScale)
         {
             int zones = _def.ZoneCount > 0 ? _def.ZoneCount : 1;
             if (_strip == null || _stripZones != zones)
@@ -354,34 +414,29 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
             }
 
             // Devices flagged as non-extended in the catalog use legacy
-            // SetColorZones (run-length-encoded over the full strip).
+            // SetColorZones (run-length-encoded over the full strip). That
+            // path sends multiple small packets without any inter-packet
+            // sleep so it can stay inside the lock.
             if (_product.IsMultizone && !_product.IsExtendedMultizone)
             {
                 bool anyDirty = false;
                 foreach (var d in chunkDirty) if (d) { anyDirty = true; break; }
                 if (anyDirty) SendLegacyMultizoneFrame(_strip, zones);
-                return;
+                return null;
             }
 
-            // Send each dirty chunk, paced. Sparse updates (1-2 zones
-            // change in starfield) typically dirty 1 chunk → 1 packet, no
-            // pacing. Dense updates (gradient sweep) dirty all chunks →
-            // 30ms pacing keeps them under the firmware's burst-drop
-            // threshold (6ms wasn't enough; 30ms × 3 = 90ms total send
-            // time leaves the trigger thread ~10ms of slack within a 100ms
-            // budget).
-            bool firstSent = true;
+            // Build each dirty chunk's packet while we still hold _lock
+            // (so _strip can't be reset mid-build). Return the list for
+            // paced sending outside _lock in Update().
+            var packets = new List<byte[]>(chunkCount);
             for (int c = 0; c < chunkCount; c++)
             {
                 if (!chunkDirty[c]) continue;
-
-                if (!firstSent) Thread.Sleep(30);
-                firstSent = false;
-
                 int start = c * ChunkSize;
                 int count = Math.Min(ChunkSize, zones - start);
-                SendExtendedChunk(_strip, start, count, durationMs: 150);
+                packets.Add(BuildExtendedChunkPacket(_strip, start, count, durationMs: 150));
             }
+            return packets;
         }
 
         private static int ZoneIndexFromKey(object key)
@@ -394,7 +449,7 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
             };
         }
 
-        private void SendExtendedChunk(byte[] frame, int start, int count, uint durationMs)
+        private byte[] BuildExtendedChunkPacket(byte[] frame, int start, int count, uint durationMs)
         {
             byte[] payload = new byte[8 + count * 8];
             BinaryPrimitives.WriteUInt32LittleEndian(payload.AsSpan(0, 4), durationMs);
@@ -402,9 +457,12 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
             BinaryPrimitives.WriteUInt16LittleEndian(payload.AsSpan(5, 2), (ushort)start);
             payload[7] = (byte)count;
             Array.Copy(frame, start * 8, payload, 8, count * 8);
+            return BuildPacket(LifxMessageTypes.SetExtendedColorZones, payload);
+        }
 
-            byte[] packet = BuildPacket(LifxMessageTypes.SetExtendedColorZones, payload);
-            SendPacket(packet);
+        private void SendExtendedChunk(byte[] frame, int start, int count, uint durationMs)
+        {
+            SendPacket(BuildExtendedChunkPacket(frame, start, count, durationMs));
         }
 
         // Legacy SetColorZones path: one packet per run of consecutive
