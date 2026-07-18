@@ -1001,7 +1001,7 @@
   "Nanoleaf (Beta)": "Nanoleaf（ベータ）",
   "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[ベータ] Nanoleaf スマートライトのサポートを有効/無効にします。LAN 経由で Nanoleaf コントローラー（Shapes、Canvas、Elements、Lines、Aurora）をペアリングします。各コントローラーでは初回のみボタン押下によるペアリングが必要です。Essentials の電球およびライトストリップには対応していません。デフォルト: 無効",
   "Pairing failed. Try again.": "ペアリングに失敗しました。もう一度お試しください。",
-  "Pair": "ペア",
+  "Pair": "ペアリング",
   "Remove": "削除",
   "Lower the RGB refresh rate while FFXIV is not running.": "FFXIVが実行されていない間、RGBのリフレッシュレートを下げます。",
   "The configured refresh rate resumes when Chromatics attaches to FFXIV. Default: Enabled": "ChromaticsがFFXIVに接続すると、設定されたリフレッシュレートに戻ります。デフォルト：有効",
