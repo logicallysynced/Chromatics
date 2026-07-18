@@ -96,15 +96,32 @@ namespace Chromatics.Helpers
             RGBDeviceType sourceType,
             IRGBDevice dest)
         {
+            if (usedSourceLedIds == null || dest == null) return new Dictionary<LedId, LedId>();
+
+            return ComputeDefaultMappingForLayer(
+                usedSourceLedIds,
+                sourceType,
+                dest.DeviceInfo.DeviceType,
+                dest.OrderBy(l => (int)l.Id).Select(l => l.Id).ToList());
+        }
+
+        // Device-free core so the mapping rules stay unit-testable -
+        // IRGBDevice takes a full device stack to construct, which keeps
+        // the rules out of reach of plain xUnit otherwise.
+        public static Dictionary<LedId, LedId> ComputeDefaultMappingForLayer(
+            IReadOnlyCollection<LedId> usedSourceLedIds,
+            RGBDeviceType sourceType,
+            RGBDeviceType destType,
+            IReadOnlyList<LedId> destLedIdsOrdered)
+        {
             var map = new Dictionary<LedId, LedId>();
-            if (usedSourceLedIds == null || dest == null) return map;
+            if (usedSourceLedIds == null || destLedIdsOrdered == null) return map;
             if (usedSourceLedIds.Count == 0) return map;
 
-            var destLeds = dest.OrderBy(l => (int)l.Id).ToList();
-            var destIds = new HashSet<LedId>(destLeds.Select(l => l.Id));
+            var destIds = new HashSet<LedId>(destLedIdsOrdered);
 
             bool keyboardPair = sourceType == RGBDeviceType.Keyboard
-                             && dest.DeviceInfo.DeviceType == RGBDeviceType.Keyboard;
+                             && destType == RGBDeviceType.Keyboard;
 
             if (keyboardPair)
             {
@@ -115,10 +132,10 @@ namespace Chromatics.Helpers
             }
 
             var orderedSource = usedSourceLedIds.OrderBy(id => (int)id).ToList();
-            int n = Math.Min(orderedSource.Count, destLeds.Count);
+            int n = Math.Min(orderedSource.Count, destLedIdsOrdered.Count);
             var positionalFallback = new Dictionary<LedId, LedId>();
             for (int i = 0; i < n; i++)
-                positionalFallback[orderedSource[i]] = destLeds[i].Id;
+                positionalFallback[orderedSource[i]] = destLedIdsOrdered[i];
 
             foreach (var ledId in usedSourceLedIds)
             {

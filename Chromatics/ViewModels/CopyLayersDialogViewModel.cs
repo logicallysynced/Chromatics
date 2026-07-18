@@ -85,7 +85,26 @@ namespace Chromatics.ViewModels
                           ?? Devices.FirstOrDefault();
         }
 
-        partial void OnHideUnavailableChanged(bool value) => RebuildDeviceList();
+        partial void OnHideUnavailableChanged(bool value)
+        {
+            var before = SelectedSource;
+            RebuildDeviceList();
+
+            // A surviving selection means OnSelectedSourceChanged never
+            // fired, which would leave the destination list stale against
+            // the new filter - disabled devices lingering after hiding
+            // them, or missing after showing them again.
+            if (ReferenceEquals(before, SelectedSource))
+            {
+                RebuildDestinationOptions();
+                if (SelectedDestination == null
+                    || !AvailableDestinations.Any(d => d.DeviceId == SelectedDestination.DeviceId))
+                {
+                    SelectedDestination = AvailableDestinations.FirstOrDefault();
+                }
+                RebuildLayerRows();
+            }
+        }
 
         public ObservableCollection<DeviceItem> Devices { get; } = new();
         public ObservableCollection<DeviceItem> AvailableDestinations { get; } = new();
