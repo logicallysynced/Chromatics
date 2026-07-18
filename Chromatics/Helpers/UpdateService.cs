@@ -21,6 +21,32 @@ namespace Chromatics.Helpers
         private const string StableFeedUrl = "https://chromaticsffxiv.com/chromatics4/update/stable/";
         private const string BetaFeedUrl   = "https://chromaticsffxiv.com/chromatics4/update/beta/";
 
+        // The update dialog prepends its own "## {version}" heading per
+        // release, but notes embedded by older publishes start with the
+        // version's changelog heading themselves and run to the end of
+        // CHANGELOG.md - rendering both doubled the version line and
+        // stacked older sections into every entry. Trim each release's
+        // notes to just its own bullets: drop a leading heading that names
+        // this version (any of the changelog heading shapes, 4-part
+        // tolerated), then cut at the next "## " section. New publishes
+        // embed bullets only, so this is a no-op for them.
+        public static string TrimNotesToOwnSection(string notes, string version)
+        {
+            if (string.IsNullOrWhiteSpace(notes)) return string.Empty;
+            var text = notes.Trim();
+
+            var ownHeading = new System.Text.RegularExpressions.Regex(
+                @"^##\s+\[?v?" + System.Text.RegularExpressions.Regex.Escape(version) + @"(\.0)?\]?[^\n]*\r?\n?");
+            text = ownHeading.Replace(text, string.Empty, 1).TrimStart();
+
+            var nextSection = System.Text.RegularExpressions.Regex.Match(
+                text, @"^##\s+\S", System.Text.RegularExpressions.RegexOptions.Multiline);
+            if (nextSection.Success)
+                text = text[..nextSection.Index].TrimEnd();
+
+            return text;
+        }
+
         // Marker file that ships inside the nupkg for real beta builds only.
         // Stable releases (including any a beta install migrates to) never have it,
         // so after a beta→stable migration the title drops the [BETA] suffix cleanly.

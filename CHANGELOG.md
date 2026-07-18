@@ -2,10 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.3.26
+## 4.3.27
 
-- Layers saved for a disabled or disconnected devices can now be copied to another device.
+- Layers saved for a disabled or disconnected device can now be copied to another device.
 - New setting under Settings → General: lower the RGB refresh rate while FFXIV is not running.
+- Fixed the update prompt showing the newest version's heading twice in its changelog.
 
 ## 4.3.24
 
