@@ -84,6 +84,52 @@ namespace Chromatics.Helpers
             return map;
         }
 
+        // Overload for a source device that is disabled or no longer
+        // connected: its layers survive in layers.chromatics4 but there is
+        // no IRGBDevice to enumerate. The layer's own LedId set stands in
+        // for the device - identity match where the destination has the
+        // same LedId, ordinal fallback otherwise (Nth used source LedId ->
+        // Nth destination LED). The user can correct any row from the
+        // per-layer mapping expander as usual.
+        public static Dictionary<LedId, LedId> ComputeDefaultMappingForLayer(
+            IReadOnlyCollection<LedId> usedSourceLedIds,
+            RGBDeviceType sourceType,
+            IRGBDevice dest)
+        {
+            var map = new Dictionary<LedId, LedId>();
+            if (usedSourceLedIds == null || dest == null) return map;
+            if (usedSourceLedIds.Count == 0) return map;
+
+            var destLeds = dest.OrderBy(l => (int)l.Id).ToList();
+            var destIds = new HashSet<LedId>(destLeds.Select(l => l.Id));
+
+            bool keyboardPair = sourceType == RGBDeviceType.Keyboard
+                             && dest.DeviceInfo.DeviceType == RGBDeviceType.Keyboard;
+
+            if (keyboardPair)
+            {
+                foreach (var ledId in usedSourceLedIds)
+                    if (destIds.Contains(ledId))
+                        map[ledId] = ledId;
+                return map;
+            }
+
+            var orderedSource = usedSourceLedIds.OrderBy(id => (int)id).ToList();
+            int n = Math.Min(orderedSource.Count, destLeds.Count);
+            var positionalFallback = new Dictionary<LedId, LedId>();
+            for (int i = 0; i < n; i++)
+                positionalFallback[orderedSource[i]] = destLeds[i].Id;
+
+            foreach (var ledId in usedSourceLedIds)
+            {
+                if (destIds.Contains(ledId))
+                    map[ledId] = ledId;
+                else if (positionalFallback.TryGetValue(ledId, out var fallback))
+                    map[ledId] = fallback;
+            }
+            return map;
+        }
+
         // One copy operation. The view-model passes a list of these
         // into Apply; each represents "copy this source layer onto
         // the destination with this LedId mapping".

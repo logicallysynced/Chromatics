@@ -115,13 +115,24 @@ namespace Chromatics.Core
 
         private const double IdleUpdateFrequency = 0.05; // 20 Hz
 
+        // Tracks the last requested state so the Settings toggle can
+        // re-apply the rate without knowing whether the game is attached.
+        private static bool _idleRateRequested;
+
         private static void SetIdleUpdateRate(bool idle)
         {
+            _idleRateRequested = idle;
             if (_timerUpdateTrigger == null) return;
-            _timerUpdateTrigger.UpdateFrequency = idle
+
+            var settings = AppSettings.GetSettings();
+            _timerUpdateTrigger.UpdateFrequency = idle && settings.idleRefreshWhenDisconnected
                 ? IdleUpdateFrequency
-                : AppSettings.GetSettings().rgbRefreshRate;
+                : settings.rgbRefreshRate;
         }
+
+        // Called when the user flips the idle-refresh setting so the change
+        // lands immediately instead of on the next connect or disconnect.
+        public static void ReapplyIdleUpdateRate() => SetIdleUpdateRate(_idleRateRequested);
 
         // Runs one provider's load block and turns assembly-load faults into
         // console guidance instead of a startup crash. Windows App Control

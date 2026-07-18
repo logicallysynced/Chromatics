@@ -1002,5 +1002,12 @@
   "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[ベータ] Nanoleaf スマートライトのサポートを有効/無効にします。LAN 経由で Nanoleaf コントローラー（Shapes、Canvas、Elements、Lines、Aurora）をペアリングします。各コントローラーでは初回のみボタン押下によるペアリングが必要です。Essentials の電球およびライトストリップには対応していません。デフォルト: 無効",
   "Pairing failed. Try again.": "ペアリングに失敗しました。もう一度お試しください。",
   "Pair": "ペア",
-  "Remove": "削除"
+  "Remove": "削除",
+  "Lower the RGB refresh rate while FFXIV is not running.": "FFXIVが実行されていない間、RGBのリフレッシュレートを下げます。",
+  "The configured refresh rate resumes when Chromatics attaches to FFXIV. Default: Enabled": "ChromaticsがFFXIVに接続すると、設定されたリフレッシュレートに戻ります。デフォルト：有効",
+  "Hide devices that are disabled or not connected.": "無効化されている、または接続されていないデバイスを非表示にします。",
+  "not connected": "未接続",
+  "disabled": "無効",
+  "This device is not connected. Its saved layers can still be copied.": "このデバイスは接続されていません。保存済みのレイヤーは引き続きコピーできます。",
+  "This device is disabled on the Mappings tab. Its saved layers can still be copied.": "このデバイスは「マッピング」タブで無効化されています。保存済みのレイヤーは引き続きコピーできます。"
 }

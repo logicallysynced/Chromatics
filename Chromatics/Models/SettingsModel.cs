@@ -29,6 +29,10 @@ namespace Chromatics.Models
         public bool showEmulatorDevices { get; set; } = false;
         public KeyboardLocalization keyboardLayout { get; set; } = KeyboardLocalization.qwerty;
         public double rgbRefreshRate { get; set; } = 0.05;
+        // Drop the surface tick rate to the idle rate while FFXIV is not
+        // connected; the configured rate resumes on attach. Off means the
+        // configured rate runs at all times.
+        public bool idleRefreshWhenDisconnected { get; set; } = true;
         public int globalbrightness { get; set; } = 100;
         public double criticalHpPercentage { get; set; } = 20.0;
         public int screenCaptureTopLeftOffsetX { get; set; } = 0;

@@ -2,6 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.25
+
+- Layers saved for a disabled or disconnected device can now be copied to another device. The copy dialog lists these devices with a label showing their state, and a checkbox hides them if you prefer a shorter list.
+- New setting under Settings → General: lower the RGB refresh rate while FFXIV is not running. Enabled by default; turn it off to keep your configured refresh rate at all times.
+
 ## 4.3.24
 
 - **New:** Nanoleaf smart-light support (Beta). Covers the panel family (Shapes, Canvas, Elements, Lines, Aurora) and other controllers that speak the Nanoleaf OpenAPI. Enable it from Settings → Device Providers and pair each controller with a one-time button press; effects render across the panels at their real physical positions. Layer assignments stay with their panels if you add or remove panels from the wall later. Essentials bulbs and strips are not supported.

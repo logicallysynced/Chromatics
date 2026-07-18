@@ -59,6 +59,7 @@ namespace Chromatics.ViewModels
             _enableCrashReports = s.enableCrashReports;
             _dynamicLightingBypassConflictCheck = s.dynamicLightingBypassConflictCheck;
             _closeWithGame = s.closeWithGame;
+            _idleRefreshWhenDisconnected = s.idleRefreshWhenDisconnected;
             _globalBrightness = s.globalbrightness;
 
             foreach (var t in Enum.GetValues(typeof(Theme)).Cast<Theme>())
@@ -1189,6 +1190,22 @@ namespace Chromatics.ViewModels
                     var s = AppSettings.GetSettings();
                     s.closeWithGame = value;
                     AppSettings.SaveSettings(s);
+                }
+            }
+        }
+
+        private bool _idleRefreshWhenDisconnected;
+        public bool IdleRefreshWhenDisconnected
+        {
+            get => _idleRefreshWhenDisconnected;
+            set
+            {
+                if (SetProperty(ref _idleRefreshWhenDisconnected, value))
+                {
+                    var s = AppSettings.GetSettings();
+                    s.idleRefreshWhenDisconnected = value;
+                    AppSettings.SaveSettings(s);
+                    RGBController.ReapplyIdleUpdateRate();
                 }
             }
         }

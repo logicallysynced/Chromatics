@@ -32,6 +32,9 @@
                     <CheckBox Content="{loc:Tr Key='Close Chromatics when FFXIV closes.'}"
                               IsChecked="{Binding CloseWithGame, Mode=TwoWay}"
                               ToolTip.Tip="{loc:Tr Key='Default: Disabled'}" />
+                    <CheckBox Content="{loc:Tr Key='Lower the RGB refresh rate while FFXIV is not running.'}"
+                              IsChecked="{Binding IdleRefreshWhenDisconnected, Mode=TwoWay}"
+                              ToolTip.Tip="{loc:Tr Key='The configured refresh rate resumes when Chromatics attaches to FFXIV. Default: Enabled'}" />
                 </StackPanel>
             </HeaderedContentControl>
 
