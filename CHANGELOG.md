@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.28
+
+- Added a Black layer type, available as both a base layer and a dynamic layer. It holds the whole device or the selected keys at black (#000000), which is handy for keeping parts of a device dark.
+
 ## 4.3.27
 
 - Layers saved for a disabled or disconnected device can now be copied to another device.

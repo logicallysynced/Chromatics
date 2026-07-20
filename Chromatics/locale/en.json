@@ -1023,5 +1023,8 @@
     "not connected":  "not connected",
     "disabled":  "disabled",
     "This device is not connected. Its saved layers can still be copied.":  "This device is not connected. Its saved layers can still be copied.",
-    "This device is disabled on the Mappings tab. Its saved layers can still be copied.":  "This device is disabled on the Mappings tab. Its saved layers can still be copied."
+    "This device is disabled on the Mappings tab. Its saved layers can still be copied.":  "This device is disabled on the Mappings tab. Its saved layers can still be copied.",
+    "Black":  "Black",
+    "Sets the entire base layer to black (#000000). Keys stay dark unless a higher layer paints over them.":  "Sets the entire base layer to black (#000000). Keys stay dark unless a higher layer paints over them.",
+    "Sets the selected keys to black (#000000).":  "Sets the selected keys to black (#000000)."
 }
