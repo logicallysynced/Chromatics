@@ -2,6 +2,10 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.29
+
+- The idle refresh-rate setting now follows the actual game-connection state, so the refresh rate can no longer stay lowered once FFXIV is running (or when the setting is turned off).
+
 ## 4.3.28
 
 - Added a Black layer type, available as both a base layer and a dynamic layer.

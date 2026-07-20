@@ -115,24 +115,26 @@ namespace Chromatics.Core
 
         private const double IdleUpdateFrequency = 0.05; // 20 Hz
 
-        // Tracks the last requested state so the Settings toggle can
-        // re-apply the rate without knowing whether the game is attached.
-        private static bool _idleRateRequested;
-
-        private static void SetIdleUpdateRate(bool idle)
+        // Sets the surface tick rate from live state: the idle rate applies
+        // only while the setting is on AND the game is genuinely detached.
+        // Derived from GameController.IsGameConnected rather than a flag the
+        // callers pass, because RunStartupEffects (which used to pass
+        // idle:true) also runs on device hot-plug and re-enable while the
+        // game is connected - trusting the flag throttled mid-game. With
+        // the setting off, idle is always false, so the configured rate
+        // runs in every state.
+        public static void ApplyUpdateRate()
         {
-            _idleRateRequested = idle;
             if (_timerUpdateTrigger == null) return;
 
             var settings = AppSettings.GetSettings();
-            _timerUpdateTrigger.UpdateFrequency = idle && settings.idleRefreshWhenDisconnected
-                ? IdleUpdateFrequency
-                : settings.rgbRefreshRate;
+            bool idle = settings.idleRefreshWhenDisconnected && !GameController.IsGameConnected();
+            _timerUpdateTrigger.UpdateFrequency = idle ? IdleUpdateFrequency : settings.rgbRefreshRate;
         }
 
         // Called when the user flips the idle-refresh setting so the change
         // lands immediately instead of on the next connect or disconnect.
-        public static void ReapplyIdleUpdateRate() => SetIdleUpdateRate(_idleRateRequested);
+        public static void ReapplyIdleUpdateRate() => ApplyUpdateRate();
 
         // Runs one provider's load block and turns assembly-load faults into
         // console guidance instead of a startup crash. Windows App Control
@@ -1697,9 +1699,11 @@ namespace Chromatics.Core
 
         public static void RunStartupEffects()
         {
-            // Drop the surface to the idle tick rate whether or not the startup
-            // animation is enabled — nothing game-driven is running either way.
-            SetIdleUpdateRate(true);
+            // Re-evaluate the surface tick rate. ApplyUpdateRate reads the
+            // live connection state, so this is a no-op when the game is
+            // already attached (device re-enable / hot-plug mid-game) and
+            // only idles when genuinely disconnected with the setting on.
+            ApplyUpdateRate();
 
             if (!_effects.effect_startupanimation) return;
 
@@ -1756,7 +1760,9 @@ namespace Chromatics.Core
         {
             if (gameFirstConnected)
             {
-                SetIdleUpdateRate(false);
+                // Game just attached (gameConnected is already true here),
+                // so this restores the configured rate.
+                ApplyUpdateRate();
             }
 
             List<ListLedGroup> snapshot;

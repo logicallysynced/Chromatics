@@ -1011,5 +1011,7 @@
   "This device is disabled on the Mappings tab. Its saved layers can still be copied.": "Este dispositivo está desactivado en la pestaña Asignaciones. Sus capas guardadas aún se pueden copiar.",
   "Black": "Negro",
   "Sets the entire base layer to black (#000000). Keys stay dark unless a higher layer paints over them.": "Establece toda la capa base en negro (#000000). Las teclas permanecen oscuras a menos que una capa superior las pinte por encima.",
-  "Sets the selected keys to black (#000000).": "Establece las teclas seleccionadas en negro (#000000)."
+  "Sets the selected keys to black (#000000).": "Establece las teclas seleccionadas en negro (#000000).",
+  "Sets the entire base layer to black. Keys stay dark unless a higher layer paints over them.": "Establece toda la capa base en negro. Las teclas permanecen oscuras a menos que una capa superior pinte sobre ellas.",
+  "Sets the selected keys to black.": "Establece las teclas seleccionadas en negro."
 }
