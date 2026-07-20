@@ -4,10 +4,7 @@ All notable changes to Chromatics are documented here.
 
 ## 4.3.28
 
-- Added a Black layer type, available as both a base layer and a dynamic layer. It holds the whole device or the selected keys at black (#000000), which is handy for keeping parts of a device dark.
-
-## 4.3.27
-
+- Added a Black layer type, available as both a base layer and a dynamic layer.
 - Layers saved for a disabled or disconnected device can now be copied to another device.
 - New setting under Settings → General: lower the RGB refresh rate while FFXIV is not running.
 - Fixed the update prompt showing the newest version's heading twice in its changelog.
