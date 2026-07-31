@@ -44,6 +44,7 @@ namespace Chromatics.Core
         // before a connection was ever established.
         private static int activeProcessId = -1;
         private static bool gameConnected;
+        private static int _consecutiveTickFaults;
         private static bool gameSetup;
         private static bool _isInGame;
         private static bool _onTitle;
@@ -293,7 +294,11 @@ namespace Chromatics.Core
                 var loopToken = _GameLoopCancellationTokenSource.Token;
                 Task.Run(() => GameLoop(loopToken))
                     .ContinueWith(
-                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameLoop faulted: {t.Exception?.GetBaseException()?.Message}"),
+                        // Full exception detail, not just the message - the
+                        // CHROMATICS-1D report arrived stackless because this
+                        // logged GetBaseException().Message alone, which made
+                        // the fault undiagnosable.
+                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameLoop faulted: {t.Exception?.GetBaseException()}"),
                         TaskContinuationOptions.OnlyOnFaulted);
             }
         }
@@ -358,7 +363,44 @@ namespace Chromatics.Core
             {
                 if (IsGameRunning())
                 {
-                    GameProcessLayers();
+                    try
+                    {
+                        GameProcessLayers();
+                        _consecutiveTickFaults = 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        // One bad tick must not kill lighting for the whole
+                        // session. GDI+ reports many non-memory failures as
+                        // OutOfMemoryException (CHROMATICS-1D hit that shape
+                        // with 25GB of RAM free), and the old path let the
+                        // exception fault the task - the continuation logged
+                        // only the message, so there was no stack to diagnose
+                        // and no lighting until an app restart. Log the full
+                        // exception (the console forwarder carries it to
+                        // Sentry with the stack) and keep ticking. Ten
+                        // consecutive failures means the fault is persistent:
+                        // fall back to the disconnect path so the reconnect
+                        // loop takes over cleanly instead of a dead task.
+                        _consecutiveTickFaults++;
+                        Logger.WriteConsole(LoggerTypes.Error,
+                            $"GameLoop tick failed ({_consecutiveTickFaults} consecutive): {ex}");
+
+                        if (_consecutiveTickFaults >= 10)
+                        {
+                            Logger.WriteConsole(LoggerTypes.Error,
+                                "GameLoop is failing persistently; dropping the game connection to recover.");
+                            _consecutiveTickFaults = 0;
+                            gameConnected = false;
+                            _isInGame = false;
+                            _onTitle = false;
+
+                            if (!_isShuttingDown)
+                                StopGameLoop(true);
+
+                            break;
+                        }
+                    }
                 }
                 else
                 {

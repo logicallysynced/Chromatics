@@ -2,6 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.30
+
+- Added support for FFXIV patch 7.55.
+- Lighting no longer stops for the rest of the session when a single game-data read fails. Chromatics now retries, and reconnects to the game if the failures persist.
+
 ## 4.3.29
 
 - Added a Black layer type, available as both a base layer and a dynamic layer.
