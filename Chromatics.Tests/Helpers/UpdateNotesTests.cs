@@ -59,4 +59,42 @@ public class UpdateNotesTests
         Assert.Equal(string.Empty, UpdateService.TrimNotesToOwnSection("   ", "4.3.26"));
         Assert.Equal(string.Empty, UpdateService.TrimNotesToOwnSection(null, "4.3.26"));
     }
+
+    [Fact]
+    public void VersionPrefix_DoesNotStripALongerVersionsHeading()
+    {
+        // "4.3.2" is a numeric prefix of "4.3.26" - the heading must
+        // survive so another release's bullets are never adopted.
+        var notes = "## 4.3.26\n\n- Bullet from 4.3.26.";
+
+        var trimmed = UpdateService.TrimNotesToOwnSection(notes, "4.3.2");
+
+        Assert.StartsWith("## 4.3.26", trimmed);
+        Assert.Contains("- Bullet from 4.3.26.", trimmed);
+    }
+
+    [Fact]
+    public void WrongLeadingHeading_KeepsItsSection_InsteadOfWipingToEmpty()
+    {
+        // A mislabelled feed asset: the heading names a different version.
+        // The entry must keep that heading and its bullets; only sections
+        // after it get cut.
+        var notes = "## 4.3.30\n\n- Bullet A.\n\n## 4.3.29\n\n- Bullet B.";
+
+        var trimmed = UpdateService.TrimNotesToOwnSection(notes, "4.3.29");
+
+        Assert.StartsWith("## 4.3.30", trimmed.Replace("\r\n", "\n"));
+        Assert.Contains("- Bullet A.", trimmed);
+        Assert.DoesNotContain("- Bullet B.", trimmed);
+    }
+
+    [Fact]
+    public void LeadingHorizontalRule_IsStripped()
+    {
+        var notes = "---\n\n- Bullet.";
+
+        var trimmed = UpdateService.TrimNotesToOwnSection(notes, "4.3.26");
+
+        Assert.Equal("- Bullet.", trimmed);
+    }
 }

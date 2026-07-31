@@ -35,14 +35,33 @@ namespace Chromatics.Helpers
             if (string.IsNullOrWhiteSpace(notes)) return string.Empty;
             var text = notes.Trim();
 
+            // Leading horizontal rules would double up with the separator
+            // the dialog inserts between entries.
+            text = System.Text.RegularExpressions.Regex.Replace(
+                text, @"\A(?:-{3,}[ \t]*\r?\n)+", string.Empty).TrimStart();
+
+            // \b keeps a version from matching its own numeric prefix -
+            // without it, "4.3.2" strips a "## 4.3.26" heading and adopts
+            // that release's bullets.
             var ownHeading = new System.Text.RegularExpressions.Regex(
-                @"^##\s+\[?v?" + System.Text.RegularExpressions.Regex.Escape(version) + @"(\.0)?\]?[^\n]*\r?\n?");
+                @"^##\s+\[?v?" + System.Text.RegularExpressions.Regex.Escape(version) + @"(\.0)?\b\]?[^\n]*\r?\n?");
             text = ownHeading.Replace(text, string.Empty, 1).TrimStart();
 
-            var nextSection = System.Text.RegularExpressions.Regex.Match(
-                text, @"^##\s+\S", System.Text.RegularExpressions.RegexOptions.Multiline);
-            if (nextSection.Success)
-                text = text[..nextSection.Index].TrimEnd();
+            // Cut trailing sections, but never at position zero: a leading
+            // heading still present here names a DIFFERENT version
+            // (mislabelled asset), and cutting at zero would wipe the whole
+            // entry to empty. Keep that heading with its own section and cut
+            // at the one after it.
+            foreach (System.Text.RegularExpressions.Match section in
+                System.Text.RegularExpressions.Regex.Matches(
+                    text, @"^##\s+\S", System.Text.RegularExpressions.RegexOptions.Multiline))
+            {
+                if (section.Index > 0)
+                {
+                    text = text[..section.Index].TrimEnd();
+                    break;
+                }
+            }
 
             return text;
         }

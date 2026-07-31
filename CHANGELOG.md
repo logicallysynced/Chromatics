@@ -2,7 +2,7 @@
 
 All notable changes to Chromatics are documented here.
 
-## 4.3.30
+## 4.3.31
 
 - Added support for FFXIV patch 7.55.
 - Lighting no longer stops for the rest of the session when a single game-data read fails. Chromatics now retries, and reconnects to the game if the failures persist.
@@ -11,7 +11,7 @@ All notable changes to Chromatics are documented here.
 
 - Added a Black layer type, available as both a base layer and a dynamic layer.
 - Layers saved for a disabled or disconnected device can now be copied to another device.
-- New setting under Settings → General: lower the RGB refresh rate while FFXIV is not running.
+- New setting under Settings → General: lower the RGB refresh rate while FFXIV is not running. With the setting off, your configured refresh rate now applies in every state.
 - Fixed the update prompt showing the newest version's heading twice in its changelog.
 
 ## 4.3.24

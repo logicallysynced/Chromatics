@@ -1010,8 +1010,6 @@
   "This device is not connected. Its saved layers can still be copied.": "此设备未连接。仍可复制其已保存的图层。",
   "This device is disabled on the Mappings tab. Its saved layers can still be copied.": "此设备已在“映射”选项卡中禁用。仍可复制其已保存的图层。",
   "Black": "黑色",
-  "Sets the entire base layer to black (#000000). Keys stay dark unless a higher layer paints over them.": "将整个基础层设置为黑色 (#000000)。除非更高层覆盖绘制，否则按键会保持暗色。",
-  "Sets the selected keys to black (#000000).": "将选中的按键设置为黑色 (#000000)。",
   "Sets the entire base layer to black. Keys stay dark unless a higher layer paints over them.": "将整个基础层设置为黑色。除非更高层覆盖绘制，否则按键会保持暗色。",
   "Sets the selected keys to black.": "将选定的按键设置为黑色。"
 }

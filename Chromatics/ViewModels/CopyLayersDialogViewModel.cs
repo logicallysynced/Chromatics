@@ -323,36 +323,17 @@ namespace Chromatics.ViewModels
         };
 
         // CLAUDE.md note: `layer.layerTypeindex` for Dynamic layers is the
-        // ComboBox position in _dynamicLayerOrder, NOT the enum value. The
-        // first 10 positions coincide with the enum by accident; from
-        // position 10 onward they diverge. Use the official order array
-        // GameController consumes.
-        private static readonly DynamicLayerType[] _dynamicLayerOrder =
-        {
-            DynamicLayerType.None,
-            DynamicLayerType.Highlight,
-            DynamicLayerType.Keybinds,
-            DynamicLayerType.EnmityTracker,
-            DynamicLayerType.TargetHP,
-            DynamicLayerType.TargetCastbar,
-            DynamicLayerType.HPTracker,
-            DynamicLayerType.MPTracker,
-            DynamicLayerType.JobGaugeA,
-            DynamicLayerType.JobGaugeB,
-            DynamicLayerType.JobGaugeC,
-            DynamicLayerType.ExperienceTracker,
-            DynamicLayerType.BattleStance,
-            DynamicLayerType.Castbar,
-            DynamicLayerType.JobClassesHighlight,
-            DynamicLayerType.ReactiveWeatherHighlight,
-            DynamicLayerType.FocusTargetHP,
-            DynamicLayerType.FocusTargetCastbar,
-        };
-
+        // ComboBox position in the dynamic-layer order, NOT the enum value.
+        // The first 10 positions coincide with the enum by accident; from
+        // position 10 onward they diverge. This reads the ONE order array
+        // (owned by LayerItemViewModel, consumed by GameController's cast) -
+        // a private copy here silently missed the Black addition and showed
+        // Black layers as "None" in this dialog.
         private static DynamicLayerType DynamicLayerTypeFromComboIndex(int index)
         {
-            if (index < 0 || index >= _dynamicLayerOrder.Length) return DynamicLayerType.None;
-            return _dynamicLayerOrder[index];
+            var order = Mapping.LayerItemViewModel.DynamicLayerOrder;
+            if (index < 0 || index >= order.Count) return DynamicLayerType.None;
+            return order[index];
         }
 
         public sealed class DeviceItem

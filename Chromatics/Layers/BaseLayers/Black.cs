@@ -15,6 +15,10 @@ namespace Chromatics.Layers
         private bool _disposed = false;
 
         private static readonly Color BlackColor = new Color(0, 0, 0);
+        // The colour never changes, so one brush serves every tick and
+        // every layer - the per-tick allocation the Static template does
+        // is churn for nothing here.
+        private static readonly SolidColorBrush BlackBrush = new SolidColorBrush(BlackColor);
 
         private BlackBaseProcessor() { }
 
@@ -64,8 +68,7 @@ namespace Chromatics.Layers
                 }
             }
 
-            var brush = new SolidColorBrush(BlackColor);
-            layergroup.Brush = brush;
+            layergroup.Brush = BlackBrush;
             _init = true;
             layer.requestUpdate = false;
         }
