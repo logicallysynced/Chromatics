@@ -702,9 +702,12 @@ namespace Chromatics.Layers
     //       Success / Status Inflicted effect layer values (5 / 6) added
     //       with the 4.3.x Effects-tab additions. Same
     //       SanitizeLayerTypeIndexes guard covers them.
+    //   v8: no shape change. Marks files that can carry the Black layer
+    //       positions (base 6 / dynamic 18) added in 4.3.28. Same
+    //       SanitizeLayerTypeIndexes guard covers them.
     public class MappingFileV3
     {
-        public int schemaVersion { get; set; } = 7;
+        public int schemaVersion { get; set; } = 8;
         public ConcurrentDictionary<int, Layer> layers { get; set; } = new ConcurrentDictionary<int, Layer>();
         public Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>> deviceLayouts { get; set; }
             = new Dictionary<Guid, Dictionary<LedId, DeviceKeyPosition>>();

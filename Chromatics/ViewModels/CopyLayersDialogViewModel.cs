@@ -31,22 +31,80 @@ namespace Chromatics.ViewModels
 
             foreach (var (guid, device) in _connectedDevices)
             {
-                Devices.Add(new DeviceItem
+                _allDevices.Add(new DeviceItem
                 {
                     DeviceId = guid,
                     Name = device.DeviceInfo?.DeviceName ?? "Device",
                     DeviceType = device.DeviceInfo?.DeviceType ?? RGBDeviceType.Unknown,
+                    IsPresent = true,
+                    IsDisabled = MappingLayers.IsDeviceDisabled(guid),
                 });
             }
 
-            SelectedSource = Devices.FirstOrDefault(d => d.DeviceId == initialSourceGuid)
-                          ?? Devices.FirstOrDefault();
-            RebuildDestinationOptions();
-            SelectedDestination = AvailableDestinations.FirstOrDefault();
+            // Devices that only exist in layers.chromatics4: their provider
+            // is off or the hardware is gone, but their saved layers are
+            // still copyable. Names aren't persisted with layers, so the
+            // label is the device type plus a slice of its id.
+            foreach (var group in MappingLayers.GetLayers().Values
+                         .Where(l => l.deviceGuid != Guid.Empty && !_connectedDevices.ContainsKey(l.deviceGuid))
+                         .GroupBy(l => l.deviceGuid))
+            {
+                var sample = group.First();
+                _allDevices.Add(new DeviceItem
+                {
+                    DeviceId = group.Key,
+                    Name = $"{sample.deviceType} {group.Key.ToString("N")[..8]}",
+                    DeviceType = sample.deviceType,
+                    IsPresent = false,
+                });
+            }
+
+            RebuildDeviceList(initialSourceGuid);
+            if (SelectedDestination == null)
+                SelectedDestination = AvailableDestinations.FirstOrDefault();
             RebuildLayerRows();
         }
 
         private readonly IReadOnlyDictionary<Guid, IRGBDevice> _connectedDevices;
+        private readonly List<DeviceItem> _allDevices = new();
+
+        // Rebuilds the visible source list from the master list, honouring
+        // the hide filter and keeping the current selection when it
+        // survives the filter.
+        private void RebuildDeviceList(Guid? preferredGuid = null)
+        {
+            var keep = preferredGuid ?? SelectedSource?.DeviceId;
+            Devices.Clear();
+            foreach (var d in _allDevices)
+            {
+                if (HideUnavailable && (!d.IsPresent || d.IsDisabled)) continue;
+                Devices.Add(d);
+            }
+
+            SelectedSource = Devices.FirstOrDefault(d => d.DeviceId == keep)
+                          ?? Devices.FirstOrDefault();
+        }
+
+        partial void OnHideUnavailableChanged(bool value)
+        {
+            var before = SelectedSource;
+            RebuildDeviceList();
+
+            // A surviving selection means OnSelectedSourceChanged never
+            // fired, which would leave the destination list stale against
+            // the new filter - disabled devices lingering after hiding
+            // them, or missing after showing them again.
+            if (ReferenceEquals(before, SelectedSource))
+            {
+                RebuildDestinationOptions();
+                if (SelectedDestination == null
+                    || !AvailableDestinations.Any(d => d.DeviceId == SelectedDestination.DeviceId))
+                {
+                    SelectedDestination = AvailableDestinations.FirstOrDefault();
+                }
+                RebuildLayerRows();
+            }
+        }
 
         public ObservableCollection<DeviceItem> Devices { get; } = new();
         public ObservableCollection<DeviceItem> AvailableDestinations { get; } = new();
@@ -66,6 +124,9 @@ namespace Chromatics.ViewModels
         [ObservableProperty] private string _summaryText;
         [ObservableProperty] private bool _hasNoLayers;
         [ObservableProperty] private bool _canCopy;
+        [ObservableProperty] private bool _hideUnavailable;
+        [ObservableProperty] private bool _sourceUnavailable;
+        [ObservableProperty] private string _sourceUnavailableText;
 
         public void SelectAll()
         {
@@ -84,6 +145,14 @@ namespace Chromatics.ViewModels
 
         partial void OnSelectedSourceChanged(DeviceItem value)
         {
+            SourceUnavailable = value != null && (!value.IsPresent || value.IsDisabled);
+            SourceUnavailableText = value == null ? ""
+                : !value.IsPresent
+                    ? LocalizationService.Instance["This device is not connected. Its saved layers can still be copied."]
+                : value.IsDisabled
+                    ? LocalizationService.Instance["This device is disabled on the Mappings tab. Its saved layers can still be copied."]
+                : "";
+
             RebuildDestinationOptions();
             if (SelectedDestination == null
                 || !AvailableDestinations.Any(d => d.DeviceId == SelectedDestination.DeviceId))
@@ -105,6 +174,9 @@ namespace Chromatics.ViewModels
             foreach (var d in Devices)
             {
                 if (d.DeviceId == SelectedSource.DeviceId) continue;
+                // A destination needs a live IRGBDevice for its LED list;
+                // mappings-file-only devices are sources only.
+                if (!d.IsPresent) continue;
                 if (!LayerCopier.IsCopyAllowed(SelectedSource.DeviceType, d.DeviceType)) continue;
                 AvailableDestinations.Add(d);
             }
@@ -119,7 +191,9 @@ namespace Chromatics.ViewModels
 
             HasNoLayers = false;
             if (SelectedSource == null || SelectedDestination == null) { UpdateSummary(); return; }
-            if (!_connectedDevices.TryGetValue(SelectedSource.DeviceId, out var src)) { UpdateSummary(); return; }
+            // src stays null for a mappings-file-only source; the copy runs
+            // off the layer data alone via the type-based default mapping.
+            _connectedDevices.TryGetValue(SelectedSource.DeviceId, out var src);
             if (!_connectedDevices.TryGetValue(SelectedDestination.DeviceId, out var dst)) { UpdateSummary(); return; }
 
             AvailableDestLedIds.Clear();
@@ -153,7 +227,9 @@ namespace Chromatics.ViewModels
             foreach (var layer in sourceLayers)
             {
                 var usedSourceLedIds = layer.deviceLeds?.Values.Distinct().ToList() ?? new List<LedId>();
-                var defaultMap = LayerCopier.ComputeDefaultMappingForLayer(usedSourceLedIds, src, dst);
+                var defaultMap = src != null
+                    ? LayerCopier.ComputeDefaultMappingForLayer(usedSourceLedIds, src, dst)
+                    : LayerCopier.ComputeDefaultMappingForLayer(usedSourceLedIds, SelectedSource.DeviceType, dst);
 
                 var row = new LayerCopyRow
                 {
@@ -247,36 +323,17 @@ namespace Chromatics.ViewModels
         };
 
         // CLAUDE.md note: `layer.layerTypeindex` for Dynamic layers is the
-        // ComboBox position in _dynamicLayerOrder, NOT the enum value. The
-        // first 10 positions coincide with the enum by accident; from
-        // position 10 onward they diverge. Use the official order array
-        // GameController consumes.
-        private static readonly DynamicLayerType[] _dynamicLayerOrder =
-        {
-            DynamicLayerType.None,
-            DynamicLayerType.Highlight,
-            DynamicLayerType.Keybinds,
-            DynamicLayerType.EnmityTracker,
-            DynamicLayerType.TargetHP,
-            DynamicLayerType.TargetCastbar,
-            DynamicLayerType.HPTracker,
-            DynamicLayerType.MPTracker,
-            DynamicLayerType.JobGaugeA,
-            DynamicLayerType.JobGaugeB,
-            DynamicLayerType.JobGaugeC,
-            DynamicLayerType.ExperienceTracker,
-            DynamicLayerType.BattleStance,
-            DynamicLayerType.Castbar,
-            DynamicLayerType.JobClassesHighlight,
-            DynamicLayerType.ReactiveWeatherHighlight,
-            DynamicLayerType.FocusTargetHP,
-            DynamicLayerType.FocusTargetCastbar,
-        };
-
+        // ComboBox position in the dynamic-layer order, NOT the enum value.
+        // The first 10 positions coincide with the enum by accident; from
+        // position 10 onward they diverge. This reads the ONE order array
+        // (owned by LayerItemViewModel, consumed by GameController's cast) -
+        // a private copy here silently missed the Black addition and showed
+        // Black layers as "None" in this dialog.
         private static DynamicLayerType DynamicLayerTypeFromComboIndex(int index)
         {
-            if (index < 0 || index >= _dynamicLayerOrder.Length) return DynamicLayerType.None;
-            return _dynamicLayerOrder[index];
+            var order = Mapping.LayerItemViewModel.DynamicLayerOrder;
+            if (index < 0 || index >= order.Count) return DynamicLayerType.None;
+            return order[index];
         }
 
         public sealed class DeviceItem
@@ -284,7 +341,19 @@ namespace Chromatics.ViewModels
             public Guid DeviceId { get; init; }
             public string Name { get; init; }
             public RGBDeviceType DeviceType { get; init; }
-            public override string ToString() => Name;
+
+            // Present = an IRGBDevice exists right now. A device that only
+            // survives in layers.chromatics4 (provider off, hardware gone)
+            // is a valid copy SOURCE but never a destination.
+            public bool IsPresent { get; init; } = true;
+            public bool IsDisabled { get; init; }
+
+            public string DisplayLabel =>
+                !IsPresent ? $"{Name} ({LocalizationService.Instance["not connected"]})"
+                : IsDisabled ? $"{Name} ({LocalizationService.Instance["disabled"]})"
+                : Name;
+
+            public override string ToString() => DisplayLabel;
         }
 
         public partial class LayerCopyRow : ObservableObject

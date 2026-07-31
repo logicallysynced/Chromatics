@@ -67,6 +67,7 @@ namespace Chromatics.Layers
                 BaseLayerType.JobClasses => JobClassesProcessor.Instance,
                 BaseLayerType.ScreenCapture => ScreenCaptureProcessor.Instance,
                 BaseLayerType.AudioVisualizer => AudioVisualizerBaseProcessor.Instance,
+                BaseLayerType.Black => BlackBaseProcessor.Instance,
                 _ => throw new ArgumentException("Unknown BaseLayerType")
             };
         }
@@ -108,6 +109,7 @@ namespace Chromatics.Layers
                 DynamicLayerType.ReactiveWeatherHighlight => ReactiveWeatherHighlightProcessor.Instance,
                 DynamicLayerType.FocusTargetHP => FocusTargetHPProcessor.Instance,
                 DynamicLayerType.FocusTargetCastbar => FocusTargetCastbarProcessor.Instance,
+                DynamicLayerType.Black => BlackProcessor.Instance,
                 _ => throw new ArgumentException("Unknown DynamicLayerType")
             };
         }

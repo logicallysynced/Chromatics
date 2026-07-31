@@ -1000,6 +1000,16 @@
   "Nanoleaf (Beta)": "Nanoleaf (bêta)",
   "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[BÊTA] Active/désactive la prise en charge des éclairages connectés Nanoleaf. Associe les contrôleurs Nanoleaf (Shapes, Canvas, Elements, Lines, Aurora) via votre réseau local ; chaque contrôleur nécessite une association unique par pression sur un bouton. Les ampoules et rubans Essentials ne sont pas pris en charge. Valeur par défaut : désactivé",
   "Pairing failed. Try again.": "Échec de l’appairage. Réessayez.",
-  "Pair": "Paire",
-  "Remove": "Supprimer"
+  "Pair": "Appairer",
+  "Remove": "Supprimer",
+  "Lower the RGB refresh rate while FFXIV is not running.": "Réduire le taux de rafraîchissement RVB lorsque FFXIV n’est pas en cours d’exécution.",
+  "The configured refresh rate resumes when Chromatics attaches to FFXIV. Default: Enabled": "Le taux de rafraîchissement configuré reprend lorsque Chromatics se connecte à FFXIV. Par défaut : activé",
+  "Hide devices that are disabled or not connected.": "Masquer les périphériques désactivés ou non connectés.",
+  "not connected": "non connecté",
+  "disabled": "désactivé",
+  "This device is not connected. Its saved layers can still be copied.": "Ce périphérique n’est pas connecté. Ses calques enregistrés peuvent toujours être copiés.",
+  "This device is disabled on the Mappings tab. Its saved layers can still be copied.": "Ce périphérique est désactivé dans l’onglet Mappages. Ses calques enregistrés peuvent toujours être copiés.",
+  "Black": "Noir",
+  "Sets the entire base layer to black. Keys stay dark unless a higher layer paints over them.": "Définit toute la couche de base en noir. Les touches restent sombres sauf si une couche supérieure les recouvre.",
+  "Sets the selected keys to black.": "Définit les touches sélectionnées en noir."
 }

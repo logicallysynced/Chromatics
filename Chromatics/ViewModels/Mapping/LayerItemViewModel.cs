@@ -285,7 +285,13 @@ namespace Chromatics.ViewModels.Mapping
             DynamicLayerType.ReactiveWeatherHighlight,
             DynamicLayerType.FocusTargetHP,
             DynamicLayerType.FocusTargetCastbar,
+            DynamicLayerType.Black,
         ];
+
+        // The single source of the position-to-type mapping. Anything that
+        // needs to translate a persisted layerTypeindex must read THIS list;
+        // a private copy drifts the first time a layer type is added.
+        internal static IReadOnlyList<DynamicLayerType> DynamicLayerOrder => _dynamicLayerOrder;
 
         private static IReadOnlyList<LayerTypeOption> BuildTypeOptions(LayerType layerType) => layerType switch
         {

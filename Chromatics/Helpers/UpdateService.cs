@@ -21,6 +21,51 @@ namespace Chromatics.Helpers
         private const string StableFeedUrl = "https://chromaticsffxiv.com/chromatics4/update/stable/";
         private const string BetaFeedUrl   = "https://chromaticsffxiv.com/chromatics4/update/beta/";
 
+        // The update dialog prepends its own "## {version}" heading per
+        // release, but notes embedded by older publishes start with the
+        // version's changelog heading themselves and run to the end of
+        // CHANGELOG.md - rendering both doubled the version line and
+        // stacked older sections into every entry. Trim each release's
+        // notes to just its own bullets: drop a leading heading that names
+        // this version (any of the changelog heading shapes, 4-part
+        // tolerated), then cut at the next "## " section. New publishes
+        // embed bullets only, so this is a no-op for them.
+        public static string TrimNotesToOwnSection(string notes, string version)
+        {
+            if (string.IsNullOrWhiteSpace(notes)) return string.Empty;
+            var text = notes.Trim();
+
+            // Leading horizontal rules would double up with the separator
+            // the dialog inserts between entries.
+            text = System.Text.RegularExpressions.Regex.Replace(
+                text, @"\A(?:-{3,}[ \t]*\r?\n)+", string.Empty).TrimStart();
+
+            // \b keeps a version from matching its own numeric prefix -
+            // without it, "4.3.2" strips a "## 4.3.26" heading and adopts
+            // that release's bullets.
+            var ownHeading = new System.Text.RegularExpressions.Regex(
+                @"^##\s+\[?v?" + System.Text.RegularExpressions.Regex.Escape(version) + @"(\.0)?\b\]?[^\n]*\r?\n?");
+            text = ownHeading.Replace(text, string.Empty, 1).TrimStart();
+
+            // Cut trailing sections, but never at position zero: a leading
+            // heading still present here names a DIFFERENT version
+            // (mislabelled asset), and cutting at zero would wipe the whole
+            // entry to empty. Keep that heading with its own section and cut
+            // at the one after it.
+            foreach (System.Text.RegularExpressions.Match section in
+                System.Text.RegularExpressions.Regex.Matches(
+                    text, @"^##\s+\S", System.Text.RegularExpressions.RegexOptions.Multiline))
+            {
+                if (section.Index > 0)
+                {
+                    text = text[..section.Index].TrimEnd();
+                    break;
+                }
+            }
+
+            return text;
+        }
+
         // Marker file that ships inside the nupkg for real beta builds only.
         // Stable releases (including any a beta install migrates to) never have it,
         // so after a beta→stable migration the title drops the [BETA] suffix cleanly.

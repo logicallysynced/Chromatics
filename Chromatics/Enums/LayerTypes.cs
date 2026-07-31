@@ -35,6 +35,8 @@ namespace Chromatics.Enums
         ScreenCapture = 4,
         [LayerDisplay(Name = "Audio Visualizer (Beta)", Description = "Spectrum analyser base layer that reacts to game audio output. Displays frequency bars across keyboard columns.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
         AudioVisualizer = 5,
+        [LayerDisplay(Name = "Black", Description = "Sets the entire base layer to black. Keys stay dark unless a higher layer paints over them.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        Black = 6,
     };
     public enum DynamicLayerType
     {
@@ -73,7 +75,9 @@ namespace Chromatics.Enums
         [LayerDisplay(Name = "Focus Target HP", Description = "Shows your focus target's HP across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
         FocusTargetHP = 16,
         [LayerDisplay(Name = "Focus Target Castbar", Description = "Shows your focus target's cast progress across selected keys.\n[Supported Modes: Interpolate, Fade]", LayerTypeCompatibility = new LayerModes[]{ LayerModes.Interpolate, LayerModes.Fade })]
-        FocusTargetCastbar = 17
+        FocusTargetCastbar = 17,
+        [LayerDisplay(Name = "Black", Description = "Sets the selected keys to black.", LayerTypeCompatibility = new LayerModes[]{ LayerModes.None })]
+        Black = 18
     };
     public enum EffectLayerType
     {

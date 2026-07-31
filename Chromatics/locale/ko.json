@@ -1002,5 +1002,15 @@
   "[BETA] Enable/disable Nanoleaf smart-light support. Pairs Nanoleaf controllers (Shapes, Canvas, Elements, Lines, Aurora) over your LAN - each controller needs a one-time button-press pairing. Essentials bulbs and strips are not supported. Default: Disabled": "[베타] Nanoleaf 스마트 조명 지원을 활성화/비활성화합니다. LAN을 통해 Nanoleaf 컨트롤러(Shapes, Canvas, Elements, Lines, Aurora)를 페어링합니다. 각 컨트롤러는 한 번의 버튼 누름 페어링이 필요합니다. Essentials 전구 및 스트립은 지원되지 않습니다. 기본값: 비활성화",
   "Pairing failed. Try again.": "페어링에 실패했습니다. 다시 시도하세요.",
   "Pair": "페어링",
-  "Remove": "제거"
+  "Remove": "제거",
+  "Lower the RGB refresh rate while FFXIV is not running.": "FFXIV가 실행 중이 아닐 때 RGB 새로 고침 빈도를 낮춥니다.",
+  "The configured refresh rate resumes when Chromatics attaches to FFXIV. Default: Enabled": "Chromatics가 FFXIV에 연결되면 설정된 새로 고침 빈도로 돌아갑니다. 기본값: 활성화됨",
+  "Hide devices that are disabled or not connected.": "비활성화되었거나 연결되지 않은 장치를 숨깁니다.",
+  "not connected": "연결되지 않음",
+  "disabled": "비활성화됨",
+  "This device is not connected. Its saved layers can still be copied.": "이 장치는 연결되어 있지 않습니다. 저장된 레이어는 계속 복사할 수 있습니다.",
+  "This device is disabled on the Mappings tab. Its saved layers can still be copied.": "이 장치는 매핑 탭에서 비활성화되어 있습니다. 저장된 레이어는 계속 복사할 수 있습니다.",
+  "Black": "검정",
+  "Sets the entire base layer to black. Keys stay dark unless a higher layer paints over them.": "전체 기본 레이어를 검은색으로 설정합니다. 상위 레이어가 그 위에 칠하지 않는 한 키는 어두운 상태로 유지됩니다.",
+  "Sets the selected keys to black.": "선택한 키를 검은색으로 설정합니다."
 }

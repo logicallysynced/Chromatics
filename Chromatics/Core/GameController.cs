@@ -44,6 +44,7 @@ namespace Chromatics.Core
         // before a connection was ever established.
         private static int activeProcessId = -1;
         private static bool gameConnected;
+        private static int _consecutiveTickFaults;
         private static bool gameSetup;
         private static bool _isInGame;
         private static bool _onTitle;
@@ -187,7 +188,7 @@ namespace Chromatics.Core
                 RGBController.RunStartupEffects();
                 Task.Run(() => GameConnectionLoop(_GameConnectionCancellationTokenSource.Token))
                     .ContinueWith(
-                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop faulted: {t.Exception?.GetBaseException()?.Message}"),
+                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop faulted: {t.Exception?.GetBaseException()}"),
                         TaskContinuationOptions.OnlyOnFaulted);
             }
 
@@ -293,7 +294,11 @@ namespace Chromatics.Core
                 var loopToken = _GameLoopCancellationTokenSource.Token;
                 Task.Run(() => GameLoop(loopToken))
                     .ContinueWith(
-                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameLoop faulted: {t.Exception?.GetBaseException()?.Message}"),
+                        // Full exception detail, not just the message - the
+                        // CHROMATICS-1D report arrived stackless because this
+                        // logged GetBaseException().Message alone, which made
+                        // the fault undiagnosable.
+                        t => Logger.WriteConsole(LoggerTypes.Error, $"GameLoop faulted: {t.Exception?.GetBaseException()}"),
                         TaskContinuationOptions.OnlyOnFaulted);
             }
         }
@@ -339,7 +344,7 @@ namespace Chromatics.Core
                     RGBController.RunStartupEffects();
                     Task.Run(() => GameConnectionLoop(reconnectToken))
                         .ContinueWith(
-                            t => Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop (reconnect) faulted: {t.Exception?.GetBaseException()?.Message}"),
+                            t => Logger.WriteConsole(LoggerTypes.Error, $"GameConnectionLoop (reconnect) faulted: {t.Exception?.GetBaseException()}"),
                             TaskContinuationOptions.OnlyOnFaulted);
                 }
             }
@@ -354,30 +359,76 @@ namespace Chromatics.Core
 
         private static async Task GameLoop(CancellationToken cancellationToken)
         {
+            // Fresh loop, fresh strike count - the field is static, so a
+            // count carried over from a previous session would trip the
+            // persistent-failure fallback early on reconnect.
+            _consecutiveTickFaults = 0;
+
             while (!cancellationToken.IsCancellationRequested && !_isShuttingDown)
             {
-                if (IsGameRunning())
+                // One bad iteration must not kill lighting for the whole
+                // session. The try covers the WHOLE body - IsGameRunning's
+                // process enumeration and the disconnect branch included -
+                // because the CHROMATICS-1D fault escaped the task from
+                // outside GameProcessLayers (whose own catch now rethrows
+                // here so this is the single fault-policy point). GDI+
+                // reports many non-memory failures as OutOfMemoryException;
+                // that report hit exactly that shape with 25GB of RAM free.
+                // The first and final failures forward to Sentry with the
+                // full stack; interim retries only log locally. Ten
+                // consecutive failures means the fault is persistent: fall
+                // back to the disconnect path so the reconnect loop takes
+                // over cleanly instead of a dead task.
+                try
                 {
-                    GameProcessLayers();
-                }
-                else
-                {
-                    gameConnected = false;
-                    _isInGame = false;
-                    _onTitle = false;
-
-                    Logger.WriteConsole(LoggerTypes.FFXIV, @"Lost connection to FFXIV. Will attempt to reconnect.");
-
-                    if (AppSettings.GetSettings().closeWithGame)
+                    if (IsGameRunning())
                     {
-                        Logger.WriteConsole(LoggerTypes.FFXIV, "Closing Chromatics (Close with Game is enabled).");
-                        OnGameExited?.Invoke();
+                        GameProcessLayers();
+                        _consecutiveTickFaults = 0;
                     }
+                    else
+                    {
+                        gameConnected = false;
+                        _isInGame = false;
+                        _onTitle = false;
+                        _consecutiveTickFaults = 0;
 
-                    if (!_isShuttingDown)
-                        StopGameLoop(true);
+                        Logger.WriteConsole(LoggerTypes.FFXIV, @"Lost connection to FFXIV. Will attempt to reconnect.");
 
-                    break;
+                        if (AppSettings.GetSettings().closeWithGame)
+                        {
+                            Logger.WriteConsole(LoggerTypes.FFXIV, "Closing Chromatics (Close with Game is enabled).");
+                            OnGameExited?.Invoke();
+                        }
+
+                        if (!_isShuttingDown)
+                            StopGameLoop(true);
+
+                        break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _consecutiveTickFaults++;
+                    bool givingUp = _consecutiveTickFaults >= 10;
+                    Logger.WriteConsole(LoggerTypes.Error,
+                        $"GameLoop tick failed ({_consecutiveTickFaults} consecutive): {ex}",
+                        forwardToSentry: givingUp || _consecutiveTickFaults == 1);
+
+                    if (givingUp)
+                    {
+                        Logger.WriteConsole(LoggerTypes.Error,
+                            "GameLoop is failing persistently; dropping the game connection to recover.");
+                        _consecutiveTickFaults = 0;
+                        gameConnected = false;
+                        _isInGame = false;
+                        _onTitle = false;
+
+                        if (!_isShuttingDown)
+                            StopGameLoop(true);
+
+                        break;
+                    }
                 }
 
                 if (cancellationToken.IsCancellationRequested || _isShuttingDown)
@@ -750,11 +801,15 @@ namespace Chromatics.Core
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Debug.WriteLine is [Conditional("DEBUG")], so the call compiles
-                // away in Release while still referencing `ex` for the analyzer.
-                Debug.WriteLine($"Exception: {ex.Message}");
+                // Rethrow so GameLoop's per-tick handler - the single fault
+                // policy point - counts, logs the full exception, and decides
+                // between retry and reconnect. Swallowing here hid every
+                // processing fault in Release builds (the old Debug.WriteLine
+                // compiles away), which is how CHROMATICS-1D class failures
+                // stayed invisible until one escaped and killed the task.
+                throw;
             }
 
 

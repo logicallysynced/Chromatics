@@ -69,12 +69,20 @@ namespace Chromatics.Views.Dialogs
             var sb = new StringBuilder();
             for (int i = 0; i < versions.Count; i++)
             {
-                if (i > 0) sb.AppendLine().AppendLine("---").AppendLine();
+                // TrimNotesToOwnSection keeps each entry to its own bullets:
+                // notes from older publishes carry their own version heading
+                // plus every older section, which doubled the version line
+                // and repeated content across entries.
+                var body = UpdateService.TrimNotesToOwnSection(
+                    versions[i].Notes, versions[i].Version.ToString());
+                if (string.IsNullOrWhiteSpace(body)) continue;
+
+                if (sb.Length > 0) sb.AppendLine().AppendLine("---").AppendLine();
                 sb.Append("## ").AppendLine(versions[i].Version.ToString());
                 sb.AppendLine();
-                sb.AppendLine(versions[i].Notes.Trim());
+                sb.AppendLine(body);
             }
-            return sb.ToString();
+            return sb.Length > 0 ? sb.ToString() : "(No release notes provided.)";
         }
 
         private async void OnInstall(object sender, RoutedEventArgs e)
