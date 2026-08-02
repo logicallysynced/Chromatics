@@ -2,6 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.33
+
+- Fixed lighting stopping for the rest of the session when the Screen Capture base layer was in use and you returned to the title or character select screen.
+- Yeelight, LIFX, Nanoleaf, and Alienware lights that are switched off or off the network at startup now log as device notices instead of errors.
+
 ## 4.3.32
 
 - Improved the accuracy and speed of game-data reads on FFXIV patch 7.55, including inventory, chat log, job gauges, and player stats.

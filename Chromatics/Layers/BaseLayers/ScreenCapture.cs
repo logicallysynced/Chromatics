@@ -16,15 +16,31 @@ namespace Chromatics.Layers
 {
     public class ScreenCaptureProcessor : LayerProcessor
     {
-        private static readonly ScreenCaptureProcessor _instance = new();
+        private static ScreenCaptureProcessor _instance;
         private static ScreenCaptureExtension _screenCapture;
 
         private ScreenCaptureProcessor() { }
 
-        public static ScreenCaptureProcessor Instance => _instance;
+        // Rebuilt on demand rather than held in a readonly field: DisposeAll
+        // runs every time the player returns to the title screen and nulls
+        // the cached surface, so the processor has to be replaceable or every
+        // later tick attaches its group to a dead surface.
+        public static ScreenCaptureProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ScreenCaptureProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
+            if (surface == null) return;
+
             if (RGBController.IsBaseLayerEffectRunning()) return;
 
             var _layergroups = RGBController.GetLiveLayerGroups();
@@ -109,6 +125,7 @@ namespace Chromatics.Layers
                 _screenCapture = null;
             }
             base.Dispose(disposing);
+            _instance = null;
         }
     }
 }

@@ -108,7 +108,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Nanoleaf
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteConsole(LoggerTypes.Error, $"[Nanoleaf] failed to set up {def.Label}: {ex.Message}");
+                    bool unreachable = Chromatics.Helpers.NetworkFailureHelper.IsUnreachable(ex);
+                    Logger.WriteConsole(unreachable ? LoggerTypes.Devices : LoggerTypes.Error,
+                        $"[Nanoleaf] failed to set up {def.Label}: {ex.Message}",
+                        forwardToSentry: !unreachable);
                 }
             }
 

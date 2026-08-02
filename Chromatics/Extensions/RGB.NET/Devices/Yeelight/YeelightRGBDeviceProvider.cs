@@ -129,8 +129,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Yeelight
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteConsole(LoggerTypes.Error,
-                        $"[Yeelight] failed to set up {def.Label}: {ex.Message}");
+                    bool unreachable = Chromatics.Helpers.NetworkFailureHelper.IsUnreachable(ex);
+                    Logger.WriteConsole(unreachable ? LoggerTypes.Devices : LoggerTypes.Error,
+                        $"[Yeelight] failed to set up {def.Label}: {ex.Message}",
+                        forwardToSentry: !unreachable);
                 }
             }
 

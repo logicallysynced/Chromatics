@@ -116,8 +116,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Alienware
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteConsole(LoggerTypes.Error,
-                        $"[Alienware] failed to set up {def.Product}: {ex.Message}");
+                    bool unreachable = Chromatics.Helpers.NetworkFailureHelper.IsUnreachable(ex);
+                    Logger.WriteConsole(unreachable ? LoggerTypes.Devices : LoggerTypes.Error,
+                        $"[Alienware] failed to set up {def.Product}: {ex.Message}",
+                        forwardToSentry: !unreachable);
                 }
             }
 
