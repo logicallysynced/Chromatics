@@ -39,7 +39,10 @@ namespace Chromatics.Layers
 
         public override void Process(IMappingLayer layer)
         {
-            if (surface == null) return;
+            // Read once: Dispose runs from the UI thread at app exit and nulls
+            // the field mid-tick, so a second read here would attach to null.
+            var activeSurface = surface;
+            if (activeSurface == null) return;
 
             if (RGBController.IsBaseLayerEffectRunning()) return;
 
@@ -54,7 +57,7 @@ namespace Chromatics.Layers
             }
             else
             {
-                layergroup = new ListLedGroup(surface, ledArray) { ZIndex = layer.zindex };
+                layergroup = new ListLedGroup(activeSurface, ledArray) { ZIndex = layer.zindex };
                 _layergroups[layer.layerID] = new[] { layergroup };
                 layergroup.Detach();
             }
@@ -74,7 +77,7 @@ namespace Chromatics.Layers
                     : new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
             }
 
-            layergroup.Attach(surface);
+            layergroup.Attach(activeSurface);
             _init = true;
             layer.requestUpdate = false;
         }
