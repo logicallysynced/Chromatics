@@ -1315,13 +1315,22 @@ namespace Chromatics.Core
                     showErrors = true;
 #endif
 
+                    provider.DevicesChanged += DevicesChanged;
+
+                    var initError = LoadProviderWithDiagnostics(provider);
+
+                    // Subscribed after the load so start-up failures are
+                    // reported once, by the probe, with the provider named.
+                    // This handler covers runtime errors from here on, and
+                    // stays behind the user's preference — a load failure is
+                    // actionable and reports either way.
                     if (showErrors)
                         provider.Exception += deviceExceptionEventHandler;
 
-                    provider.DevicesChanged += DevicesChanged;
-
-                    surface.Load(provider);
                     loadedDeviceProviders.Add(provider);
+
+                    if (initError != null)
+                        loadError ??= initError;
 
                     // Warn the user when a freshly-loaded provider gives us
                     // devices whose hardware/SDK can't accept per-LED writes
@@ -1419,6 +1428,69 @@ namespace Chromatics.Core
                 return false;
             }
 
+        }
+
+        // Stand-in for surface.Load(provider) that reports what went wrong
+        // instead of swallowing it, without changing which failures are fatal.
+        //
+        // RGB.NET's Load calls Initialize(throwExceptions: false), and its
+        // Throw() only rethrows when that flag is set — otherwise it raises
+        // the Exception event and returns to the caller, which carries on.
+        // A provider whose native SDK is missing or refused to start ends up
+        // reporting success: the HID scan still lists the hardware, so the
+        // devices show up in the Mapping tab and never light. Nothing reaches
+        // the console tab and nothing reaches our caller.
+        //
+        // Initializing with throwExceptions: true lets the probe below decide
+        // per exception. Non-critical ones keep today's behaviour exactly
+        // (logged, provider keeps going); critical ones abort the provider and
+        // are returned to the caller. Either way the exception is caught here,
+        // so one bad provider never stops the others from loading.
+        private static Exception LoadProviderWithDiagnostics(IRGBDeviceProvider provider)
+        {
+            Exception captured = null;
+            var label = provider.GetType().Name;
+
+            void Probe(object sender, ExceptionEventArgs args)
+            {
+                captured ??= args.Exception;
+                args.Throw = args.IsCritical;
+            }
+
+            provider.Exception += Probe;
+            try
+            {
+                if (!provider.IsInitialized)
+                    provider.Initialize(RGBDeviceType.All, throwExceptions: true);
+            }
+            catch (Exception ex)
+            {
+                captured ??= ex;
+            }
+            finally
+            {
+                provider.Exception -= Probe;
+            }
+
+            surface?.Attach(provider.Devices);
+
+            if (captured != null)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error,
+                    $"[{label}] failed to start: {captured.Message}", forwardToSentry: false);
+                LogLogitechSdkHintIfNeeded(captured);
+            }
+            else if (provider.Devices.Count == 0)
+            {
+                // Loaded without complaint and handed us nothing. Benign for
+                // the smart-light providers when the user owns no bulbs, but
+                // for an SDK provider it usually means the vendor software
+                // isn't running, so say so rather than leave a dead toggle.
+                Logger.WriteConsole(Enums.LoggerTypes.Devices,
+                    $"[{label}] loaded but reported no devices.", forwardToSentry: false);
+            }
+
+            return captured;
         }
 
         // Surface a one-time console warning per provider load when devices
