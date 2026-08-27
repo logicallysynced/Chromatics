@@ -244,12 +244,7 @@ namespace Chromatics.Views
             // the loaded-module list, freezing the UI and tab switching.
             // Version in the first console line so a user pasting their log
             // tells us which build they're on without being asked.
-            var startupVersion = typeof(MainWindow).Assembly.GetName().Version;
-            var versionLabel = startupVersion == null
-                ? "(unknown version)"
-                : $"{startupVersion.Major}.{startupVersion.Minor}.{startupVersion.Build}{(UpdateService.IsBetaChannel() ? " [BETA]" : string.Empty)}";
-
-            Logger.WriteConsole(LoggerTypes.System, $"Chromatics {versionLabel} is starting up..");
+            Logger.WriteConsole(LoggerTypes.System, $"Chromatics {VersionHelper.DisplayVersion} is starting up..");
 
             await Task.Run(() =>
             {

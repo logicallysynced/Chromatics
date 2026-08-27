@@ -1453,7 +1453,18 @@ namespace Chromatics.Core
 
             void Probe(object sender, ExceptionEventArgs args)
             {
-                captured ??= args.Exception;
+                // Only a critical exception means the provider failed. RGB.NET
+                // also raises this event per device from GetLoadedDevices, with
+                // isCritical false, when one device of many fails to add - the
+                // load carries on and the rest attach normally. Treating those
+                // as the verdict reported a working provider as failed and
+                // handed the caller a load error it should not have had.
+                if (args.IsCritical)
+                    captured ??= args.Exception;
+                else
+                    Logger.WriteConsole(Enums.LoggerTypes.Devices,
+                        $"[{label}] a device was skipped: {args.Exception.Message}", forwardToSentry: false);
+
                 args.Throw = args.IsCritical;
             }
 

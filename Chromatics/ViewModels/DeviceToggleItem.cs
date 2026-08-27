@@ -88,9 +88,25 @@ namespace Chromatics.ViewModels
                 // finalizer rethrows as a crash (CHROMATICS-1G, a vendor DLL
                 // blocked by App Control). Report it and put the toggle back
                 // where the user found it.
-                Core.Logger.WriteConsole(Enums.LoggerTypes.Error,
-                    $"[{Label}] could not be turned {(value ? "on" : "off")}: {ex.Message}");
-                Commit(!value);
+                //
+                // Reported here rather than in each provider's delegate: only
+                // the MakeDeviceToggle providers route through the guard, so
+                // the hand-built toggles (Logitech, OpenRGB, Hue, LIFX and the
+                // rest) would otherwise show a raw loader message instead of
+                // the App Control guidance.
+                if (!Helpers.AssemblyLoadGuard.TryReportLoadFailure(Label, ex))
+                    Core.Logger.WriteConsole(Enums.LoggerTypes.Error,
+                        $"[{Label}] could not be turned {(value ? "on" : "off")}: {ex.Message}");
+
+                // Guarded: a subscriber throwing on the property-changed
+                // notification would escape this catch and land right back in
+                // the unobserved-task crash the method exists to prevent.
+                try { Commit(!value); }
+                catch (Exception commitEx)
+                {
+                    Core.Logger.WriteConsole(Enums.LoggerTypes.Error,
+                        $"[{Label}] could not be restored to its previous state: {commitEx.Message}");
+                }
             }
         }
 

@@ -284,11 +284,22 @@ namespace Chromatics.Views.Dialogs
                 // App Control blocking RGB.NET.Core took the whole handler down
                 // instead of the probe (CHROMATICS-1N).
                 Exception? loadError = null;
-                Helpers.AssemblyLoadGuard.TryRun("Logitech", () =>
+                bool probeRan = Helpers.AssemblyLoadGuard.TryRun("Logitech", () =>
                 {
                     RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance, out var probeError);
                     loadError = probeError;
                 });
+
+                // The guard swallowing the fault leaves loadError null, so
+                // without this the wizard would save Logitech as enabled for a
+                // provider whose library never loaded - the exact outcome this
+                // probe exists to prevent. The guard has already told the user
+                // what happened, so just untick and carry on.
+                if (!probeRan)
+                {
+                    TileLogitech.IsChecked = false;
+                    UpdateContinueState();
+                }
 
                 if (loadError != null
                     && loadError.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase))
