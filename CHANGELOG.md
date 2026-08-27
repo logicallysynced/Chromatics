@@ -2,6 +2,12 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.35
+
+- Fixed a crash when turning a device provider on or off if Windows App Control had blocked that provider's library. The toggle now returns to its previous position and explains what happened.
+- Fixed a crash on the Continue button of the first-run wizard for the same reason.
+- Chromatics no longer reports App Control blocks and Hue bridge address problems as application errors, since both are settings on your machine or network rather than faults in Chromatics.
+
 ## 4.3.34
 
 - The console tab now shows which version of Chromatics you are running at startup.

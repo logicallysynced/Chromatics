@@ -29,9 +29,14 @@ namespace Chromatics.Helpers
                 bool appControl = inner.HResult == unchecked((int)0x800711C7)
                     || (inner.Message?.Contains("Application Control", StringComparison.OrdinalIgnoreCase) ?? false);
 
+                // An App Control block is the machine's policy doing its job,
+                // not a fault in Chromatics, so the user hears about it but
+                // Sentry doesn't. A load failure with any other cause could
+                // be a packaging mistake and still reports.
                 Core.Logger.WriteConsole(Enums.LoggerTypes.Error, appControl
                     ? $"[{label}] Windows App Control blocked a library this feature needs: {inner.Message} To use it, allow Chromatics in Windows Security (App & browser control -> Smart App Control) and restart."
-                    : $"[{label}] A library failed to load: {inner.Message}");
+                    : $"[{label}] A library failed to load: {inner.Message}",
+                    forwardToSentry: !appControl);
                 return false;
             }
             catch (Exception ex)

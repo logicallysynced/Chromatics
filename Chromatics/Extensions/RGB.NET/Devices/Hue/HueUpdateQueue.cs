@@ -392,8 +392,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                 var now = DateTime.UtcNow;
                 if (now - _lastJsonErrorLog < ErrorLogInterval) return;
                 _lastJsonErrorLog = now;
+                // A bridge answering with HTML instead of JSON means the address
+                // now points at something else - a router page, a captive
+                // portal, or a reassigned DHCP lease. That is the user's
+                // network, so it stays out of Sentry (CHROMATICS-1J).
                 Logger.WriteConsole(LoggerTypes.Error,
-                    $"[Hue] JSON Exception (suppressed for {ErrorLogInterval.TotalSeconds:F0}s): {message}");
+                    $"[Hue] JSON Exception (suppressed for {ErrorLogInterval.TotalSeconds:F0}s): {message}",
+                    forwardToSentry: false);
             }
         }
 
