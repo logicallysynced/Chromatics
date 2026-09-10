@@ -6,8 +6,6 @@ All notable changes to Chromatics are documented here.
 
 - Added support for FFXIV patch 7.56.
 - **New:** BST support.
-- Added Palette colours for 25 Occult Crescent and Forked Tower status effects, and for the Lyrical Catharsis, Auroral Flares, and Floracane weather.
-- Fixed the Firestorms and Umbral Duststorms weather colours never applying, so those weathers lit as unknown no matter what you set them to.
 - Minor bug fixes.
 - Updated backend dependencies.
 

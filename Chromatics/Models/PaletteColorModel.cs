@@ -1644,6 +1644,23 @@ namespace Chromatics.Models
         public ColorMapping WeatherUmbralDuststormsBase = new("Umbral Duststorms (Base)", PaletteTypes.ReactiveWeather, Color.Sienna);
         public ColorMapping WeatherUmbralDuststormsHighlight = new("Umbral Duststorms (Highlight)", PaletteTypes.ReactiveWeather, Color.SandyBrown);
 
+        // Newtonsoft keys palette files on the field name, so the rename above
+        // would drop whatever colour the user had saved under the old spelling.
+        // These carry it across. Setter-only on purpose: the value is read from
+        // an existing file and never written back, so the old key retires the
+        // first time the palette is saved.
+        [Newtonsoft.Json.JsonProperty("WeatherUmbralDuststormBase")]
+        private ColorMapping LegacyWeatherUmbralDuststormBase
+        {
+            set { if (value != null) WeatherUmbralDuststormsBase = value; }
+        }
+
+        [Newtonsoft.Json.JsonProperty("WeatherUmbralDuststormHighlight")]
+        private ColorMapping LegacyWeatherUmbralDuststormHighlight
+        {
+            set { if (value != null) WeatherUmbralDuststormsHighlight = value; }
+        }
+
         public ColorMapping WeatherUmbralLevinBase = new("Umbral Levin (Base)", PaletteTypes.ReactiveWeather, Color.Indigo);
         public ColorMapping WeatherUmbralLevinHighlight = new("Umbral Levin (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumOrchid);
 
@@ -1658,6 +1675,19 @@ namespace Chromatics.Models
 
         public ColorMapping WeatherFirestormsBase = new("Firestorms (Base)", PaletteTypes.ReactiveWeather, Color.OliveDrab);
         public ColorMapping WeatherFirestormsHighlight = new("Firestorms (Highlight)", PaletteTypes.ReactiveWeather, Color.YellowGreen);
+
+        [Newtonsoft.Json.JsonProperty("WeatherFirestormBase")]
+        private ColorMapping LegacyWeatherFirestormBase
+        {
+            set { if (value != null) WeatherFirestormsBase = value; }
+        }
+
+        [Newtonsoft.Json.JsonProperty("WeatherFirestormHighlight")]
+        private ColorMapping LegacyWeatherFirestormHighlight
+        {
+            set { if (value != null) WeatherFirestormsHighlight = value; }
+        }
+
         public ColorMapping WeatherLyricalCatharsisBase = new("Lyrical Catharsis (Base)", PaletteTypes.ReactiveWeather, Color.MediumOrchid);
         public ColorMapping WeatherLyricalCatharsisHighlight = new("Lyrical Catharsis (Highlight)", PaletteTypes.ReactiveWeather, Color.Violet);
         public ColorMapping WeatherAuroralFlaresBase = new("Auroral Flares (Base)", PaletteTypes.ReactiveWeather, Color.MediumSpringGreen);
