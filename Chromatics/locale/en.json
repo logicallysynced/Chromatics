@@ -1059,5 +1059,7 @@
     "Firestorms (Base)":  "Firestorms (Base)",
     "Firestorms (Highlight)":  "Firestorms (Highlight)",
     "Umbral Duststorms (Base)":  "Umbral Duststorms (Base)",
-    "Umbral Duststorms (Highlight)":  "Umbral Duststorms (Highlight)"
+    "Umbral Duststorms (Highlight)":  "Umbral Duststorms (Highlight)",
+    "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.":  "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.",
+    "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.":  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job."
 }

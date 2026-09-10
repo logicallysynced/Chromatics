@@ -1045,5 +1045,7 @@
   "Firestorms (Base)": "火炎嵐（基本）",
   "Firestorms (Highlight)": "火炎嵐（ハイライト）",
   "Umbral Duststorms (Base)": "影の砂嵐（基本）",
-  "Umbral Duststorms (Highlight)": "影の砂嵐（ハイライト）"
+  "Umbral Duststorms (Highlight)": "影の砂嵐（ハイライト）",
+  "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "青魔道士にはジョブゲージがないため、このレイヤーは暗いままです。このジョブには別のレイヤータイプを選択してください。",
+  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "魔獣使いにはジョブゲージがないため、このレイヤーは暗いままです。このジョブには別のレイヤータイプを選択してください。"
 }

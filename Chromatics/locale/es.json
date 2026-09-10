@@ -1044,5 +1044,7 @@
   "Firestorms (Base)": "Tormentas de fuego (base)",
   "Firestorms (Highlight)": "Tormentas de fuego (resaltado)",
   "Umbral Duststorms (Base)": "Tormentas de polvo sombrías (base)",
-  "Umbral Duststorms (Highlight)": "Tormentas de polvo sombrías (resaltado)"
+  "Umbral Duststorms (Highlight)": "Tormentas de polvo sombrías (resaltado)",
+  "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "El Mago Azul no tiene indicador de job, por lo que esta capa permanece oscura. Elige otro tipo de capa para este job.",
+  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "El Maestro de Bestias no tiene indicador de job, por lo que esta capa permanece oscura. Elige otro tipo de capa para este job."
 }

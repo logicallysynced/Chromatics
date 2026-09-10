@@ -1044,5 +1044,7 @@
   "Firestorms (Base)": "Tempêtes de feu (base)",
   "Firestorms (Highlight)": "Tempêtes de feu (surbrillance)",
   "Umbral Duststorms (Base)": "Tempêtes de poussière ombrales (base)",
-  "Umbral Duststorms (Highlight)": "Tempêtes de poussière ombrales (surbrillance)"
+  "Umbral Duststorms (Highlight)": "Tempêtes de poussière ombrales (surbrillance)",
+  "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "Le Mage bleu n’a pas de jauge de job, ce calque reste donc sombre. Choisissez un autre type de calque pour ce job.",
+  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "Le Belluaire n’a pas de jauge de job, ce calque reste donc sombre. Choisissez un autre type de calque pour ce job."
 }

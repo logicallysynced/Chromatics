@@ -1045,5 +1045,7 @@
   "Firestorms (Base)": "화염폭풍 (기본)",
   "Firestorms (Highlight)": "화염폭풍 (하이라이트)",
   "Umbral Duststorms (Base)": "암영 먼지폭풍 (기본)",
-  "Umbral Duststorms (Highlight)": "암영 먼지폭풍 (하이라이트)"
+  "Umbral Duststorms (Highlight)": "암영 먼지폭풍 (하이라이트)",
+  "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "청마도사에는 직업 게이지가 없으므로 이 레이어는 어둡게 유지됩니다. 이 직업에는 다른 레이어 유형을 선택하세요.",
+  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "비스트마스터에는 직업 게이지가 없으므로 이 레이어는 어둡게 유지됩니다. 이 직업에는 다른 레이어 유형을 선택하세요."
 }

@@ -1044,5 +1044,7 @@
   "Firestorms (Base)": "火焰风暴（基础）",
   "Firestorms (Highlight)": "火焰风暴（高光）",
   "Umbral Duststorms (Base)": "暗影尘暴（基础）",
-  "Umbral Duststorms (Highlight)": "暗影尘暴（高光）"
+  "Umbral Duststorms (Highlight)": "暗影尘暴（高光）",
+  "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "青魔法师没有职业量谱，因此此图层会保持暗淡。请为该职业选择另一种图层类型。",
+  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "驯兽师没有职业量谱，因此此图层会保持暗淡。请为该职业选择另一种图层类型。"
 }
