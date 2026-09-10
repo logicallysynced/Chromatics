@@ -5,9 +5,11 @@ All notable changes to Chromatics are documented here.
 ## 4.4.0
 
 - Added support for FFXIV patch 7.56.
-- **New:** Beastmaster support. BST gets its own base and highlight colours in the Palette tab, and the Experience Tracker layer follows its levelling. Like Blue Mage, Beastmaster has no job gauge, so the Job Gauge layers stay blank for it.
-- Chromatics no longer closes with a crash dialog when a smart light or SDK server refuses a connection in the background. The device is named in the console tab and the rest of your lighting carries on.
-- Updated Avalonia, NAudio, Sentry, the Hue libraries, and the rest of the bundled components to their current releases.
+- **New:** BST support.
+- Added Palette colours for 25 Occult Crescent and Forked Tower status effects, and for the Lyrical Catharsis, Auroral Flares, and Floracane weather.
+- Fixed the Firestorms and Umbral Duststorms weather colours never applying, so those weathers lit as unknown no matter what you set them to.
+- Minor bug fixes.
+- Updated backend dependencies.
 
 ## 4.3.36
 

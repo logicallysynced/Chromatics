@@ -1313,6 +1313,35 @@ namespace Chromatics.Models
         public ColorMapping StatusWesterlyWinds = new("Westerly Winds", PaletteTypes.StatusEffects, Color.FromArgb(255, 255, 255));
         public ColorMapping StatusStrungUp = new("Strung Up", PaletteTypes.StatusEffects, Color.FromArgb(221, 255, 255));
 
+        // Occult Crescent and Forked Tower statuses from the 7.5x patches.
+        // Detrimental statuses without an entry here still pulse, but fall
+        // back to a fixed crimson instead of a colour the user can set.
+        public ColorMapping StatusFireWeakness = new("Fire Weakness", PaletteTypes.StatusEffects, Color.OrangeRed);
+        public ColorMapping StatusIceWeakness = new("Ice Weakness", PaletteTypes.StatusEffects, Color.LightSkyBlue);
+        public ColorMapping StatusLightningWeakness = new("Lightning Weakness", PaletteTypes.StatusEffects, Color.Gold);
+        public ColorMapping StatusWindWeakness = new("Wind Weakness", PaletteTypes.StatusEffects, Color.PaleGreen);
+        public ColorMapping StatusOccultToad = new("Occult Toad", PaletteTypes.StatusEffects, Color.MediumSeaGreen);
+        public ColorMapping StatusGrowingDread = new("Growing Dread", PaletteTypes.StatusEffects, Color.DarkSlateBlue);
+        public ColorMapping StatusGrowingPanic = new("Growing Panic", PaletteTypes.StatusEffects, Color.BlueViolet);
+        public ColorMapping StatusWitsEnd = new("Wit's End", PaletteTypes.StatusEffects, Color.Orchid);
+        public ColorMapping StatusElementaryDeficiency = new("Elementary Deficiency", PaletteTypes.StatusEffects, Color.MediumVioletRed);
+        public ColorMapping StatusSeedsSown = new("Seeds Sown", PaletteTypes.StatusEffects, Color.OliveDrab);
+        public ColorMapping StatusUnseenForce = new("Unseen Force", PaletteTypes.StatusEffects, Color.DimGray);
+        public ColorMapping StatusLetterlocked = new("Letterlocked", PaletteTypes.StatusEffects, Color.SlateGray);
+        public ColorMapping StatusCrypticCommunications = new("Cryptic Communications", PaletteTypes.StatusEffects, Color.LightSlateGray);
+        public ColorMapping StatusInterestCaptured = new("Interest Captured", PaletteTypes.StatusEffects, Color.Firebrick);
+        public ColorMapping StatusCrucibleItemPenalty = new("Crucible Item Penalty", PaletteTypes.StatusEffects, Color.Brown);
+        public ColorMapping StatusAllEvens = new("All Evens", PaletteTypes.StatusEffects, Color.Goldenrod);
+        public ColorMapping StatusAllOdds = new("All Odds", PaletteTypes.StatusEffects, Color.DarkGoldenrod);
+        public ColorMapping StatusAllPrime = new("All Prime", PaletteTypes.StatusEffects, Color.Peru);
+        public ColorMapping StatusAllThree = new("All Three", PaletteTypes.StatusEffects, Color.Chocolate);
+        public ColorMapping StatusGreenNoiseEasterly = new("Green Noise: Easterly", PaletteTypes.StatusEffects, Color.MediumSeaGreen);
+        public ColorMapping StatusGreenNoiseWesterly = new("Green Noise: Westerly", PaletteTypes.StatusEffects, Color.SeaGreen);
+        public ColorMapping StatusBlueNoiseEasterly = new("Blue Noise: Easterly", PaletteTypes.StatusEffects, Color.CornflowerBlue);
+        public ColorMapping StatusBlueNoiseWesterly = new("Blue Noise: Westerly", PaletteTypes.StatusEffects, Color.RoyalBlue);
+        public ColorMapping StatusEasterlyReprise = new("Easterly Reprise", PaletteTypes.StatusEffects, Color.PowderBlue);
+        public ColorMapping StatusWesterlyReprise = new("Westerly Reprise", PaletteTypes.StatusEffects, Color.LightSteelBlue);
+
         //Cooldowns/Keybinds
         public ColorMapping HotbarCd = new("Keybind Cooldown", PaletteTypes.CooldownsKeybinds, Color.Red);
         public ColorMapping HotbarNotAvailable = new("Keybind Not Available", PaletteTypes.CooldownsKeybinds, Color.Red);
@@ -1609,8 +1638,11 @@ namespace Chromatics.Models
         public ColorMapping WeatherUmbralFlareBase = new("Umbral Flare (Base)", PaletteTypes.ReactiveWeather, Color.DarkRed);
         public ColorMapping WeatherUmbralFlareHighlight = new("Umbral Flare (Highlight)", PaletteTypes.ReactiveWeather, Color.OrangeRed);
 
-        public ColorMapping WeatherUmbralDuststormBase = new("Umbral Duststorm (Base)", PaletteTypes.ReactiveWeather, Color.Sienna);
-        public ColorMapping WeatherUmbralDuststormHighlight = new("Umbral Duststorm (Highlight)", PaletteTypes.ReactiveWeather, Color.SandyBrown);
+        // Plural to match the game's weather name. GetWeatherColor builds the
+        // field name from that name verbatim, so the singular spelling never
+        // resolved and this weather painted as Unknown.
+        public ColorMapping WeatherUmbralDuststormsBase = new("Umbral Duststorms (Base)", PaletteTypes.ReactiveWeather, Color.Sienna);
+        public ColorMapping WeatherUmbralDuststormsHighlight = new("Umbral Duststorms (Highlight)", PaletteTypes.ReactiveWeather, Color.SandyBrown);
 
         public ColorMapping WeatherUmbralLevinBase = new("Umbral Levin (Base)", PaletteTypes.ReactiveWeather, Color.Indigo);
         public ColorMapping WeatherUmbralLevinHighlight = new("Umbral Levin (Highlight)", PaletteTypes.ReactiveWeather, Color.MediumOrchid);
@@ -1624,8 +1656,14 @@ namespace Chromatics.Models
         public ColorMapping WeatherDeliriumBase = new("Delirium (Base)", PaletteTypes.ReactiveWeather, Color.PeachPuff);
         public ColorMapping WeatherDeliriumHighlight = new("Delirium (Highlight)", PaletteTypes.ReactiveWeather, Color.OldLace);
 
-        public ColorMapping WeatherFirestormBase = new("Firestorm (Base)", PaletteTypes.ReactiveWeather, Color.OliveDrab);
-        public ColorMapping WeatherFirestormHighlight = new("Firestorm (Highlight)", PaletteTypes.ReactiveWeather, Color.YellowGreen);
+        public ColorMapping WeatherFirestormsBase = new("Firestorms (Base)", PaletteTypes.ReactiveWeather, Color.OliveDrab);
+        public ColorMapping WeatherFirestormsHighlight = new("Firestorms (Highlight)", PaletteTypes.ReactiveWeather, Color.YellowGreen);
+        public ColorMapping WeatherLyricalCatharsisBase = new("Lyrical Catharsis (Base)", PaletteTypes.ReactiveWeather, Color.MediumOrchid);
+        public ColorMapping WeatherLyricalCatharsisHighlight = new("Lyrical Catharsis (Highlight)", PaletteTypes.ReactiveWeather, Color.Violet);
+        public ColorMapping WeatherAuroralFlaresBase = new("Auroral Flares (Base)", PaletteTypes.ReactiveWeather, Color.MediumSpringGreen);
+        public ColorMapping WeatherAuroralFlaresHighlight = new("Auroral Flares (Highlight)", PaletteTypes.ReactiveWeather, Color.Aquamarine);
+        public ColorMapping WeatherFloracaneBase = new("Floracane (Base)", PaletteTypes.ReactiveWeather, Color.ForestGreen);
+        public ColorMapping WeatherFloracaneHighlight = new("Floracane (Highlight)", PaletteTypes.ReactiveWeather, Color.YellowGreen);
 
         public ColorMapping WeatherSpectralCurrentBase = new("Spectral Current (Base)", PaletteTypes.ReactiveWeather, Color.Turquoise);
         public ColorMapping WeatherSpectralCurrentHighlight = new("Spectral Current (Highlight)", PaletteTypes.ReactiveWeather, Color.Cyan);
