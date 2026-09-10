@@ -125,7 +125,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteConsole(LoggerTypes.Error, $"[LIFX] failed to set up {def.Label}: {ex.Message}");
+                    bool unreachable = Chromatics.Helpers.NetworkFailureHelper.IsUnreachable(ex);
+                    Logger.WriteConsole(unreachable ? LoggerTypes.Devices : LoggerTypes.Error,
+                        $"[LIFX] failed to set up {def.Label}: {ex.Message}",
+                        forwardToSentry: !unreachable);
                 }
             }
 
@@ -162,7 +165,10 @@ namespace Chromatics.Extensions.RGB.NET.Devices.LIFX
             }
             catch (Exception ex)
             {
-                Logger.WriteConsole(LoggerTypes.Error, $"[LIFX] discovery sweep failed: {ex.Message}");
+                bool unreachable = Chromatics.Helpers.NetworkFailureHelper.IsUnreachable(ex);
+                Logger.WriteConsole(unreachable ? LoggerTypes.Devices : LoggerTypes.Error,
+                    $"[LIFX] discovery sweep failed: {ex.Message}",
+                    forwardToSentry: !unreachable);
             }
 
             return result;

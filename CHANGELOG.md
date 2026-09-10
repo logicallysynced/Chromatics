@@ -2,6 +2,32 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.3.36
+
+- Updated to Sharlayan 9.2.1.
+- A device provider that loses one device during start-up no longer reports the whole provider as failed. The skipped device is named and the rest of that provider's devices load as normal.
+- The first-run wizard no longer saves a provider as enabled when App Control blocked its library.
+
+## 4.3.35
+
+- Fixed a crash when turning a device provider on or off if Windows App Control had blocked that provider's library. The toggle now returns to its previous position and explains what happened.
+- Fixed a crash on the Continue button of the first-run wizard for the same reason.
+- Chromatics no longer reports App Control blocks and Hue bridge address problems as application errors, since both are settings on your machine or network rather than faults in Chromatics.
+
+## 4.3.34
+
+- The console tab now shows which version of Chromatics you are running at startup.
+- A device provider that fails to start now says so in the console tab, naming the provider and the reason. Providers that fail no longer look like they loaded, and the rest of your devices carry on loading as normal.
+
+## 4.3.33
+
+- Fixed lighting stopping for the rest of the session when the Screen Capture base layer was in use and you returned to the title or character select screen.
+- Yeelight, LIFX, Nanoleaf, and Alienware lights that are switched off or off the network at startup now log as device notices instead of errors.
+
+## 4.3.32
+
+- Improved the accuracy and speed of game-data reads on FFXIV patch 7.55, including inventory, chat log, job gauges, and player stats.
+
 ## 4.3.31
 
 - Added support for FFXIV patch 7.55.

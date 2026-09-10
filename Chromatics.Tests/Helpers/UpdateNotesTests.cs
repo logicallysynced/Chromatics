@@ -57,7 +57,7 @@ public class UpdateNotesTests
     {
         Assert.Equal(string.Empty, UpdateService.TrimNotesToOwnSection("", "4.3.26"));
         Assert.Equal(string.Empty, UpdateService.TrimNotesToOwnSection("   ", "4.3.26"));
-        Assert.Equal(string.Empty, UpdateService.TrimNotesToOwnSection(null, "4.3.26"));
+        Assert.Equal(string.Empty, UpdateService.TrimNotesToOwnSection(null!, "4.3.26"));
     }
 
     [Fact]

@@ -16,15 +16,34 @@ namespace Chromatics.Layers
 {
     public class ScreenCaptureProcessor : LayerProcessor
     {
-        private static readonly ScreenCaptureProcessor _instance = new();
+        private static ScreenCaptureProcessor _instance;
         private static ScreenCaptureExtension _screenCapture;
 
         private ScreenCaptureProcessor() { }
 
-        public static ScreenCaptureProcessor Instance => _instance;
+        // Rebuilt on demand rather than held in a readonly field: DisposeAll
+        // runs every time the player returns to the title screen and nulls
+        // the cached surface, so the processor has to be replaceable or every
+        // later tick attaches its group to a dead surface.
+        public static ScreenCaptureProcessor Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new ScreenCaptureProcessor();
+                }
+                return _instance;
+            }
+        }
 
         public override void Process(IMappingLayer layer)
         {
+            // Read once: Dispose runs from the UI thread at app exit and nulls
+            // the field mid-tick, so a second read here would attach to null.
+            var activeSurface = surface;
+            if (activeSurface == null) return;
+
             if (RGBController.IsBaseLayerEffectRunning()) return;
 
             var _layergroups = RGBController.GetLiveLayerGroups();
@@ -38,7 +57,7 @@ namespace Chromatics.Layers
             }
             else
             {
-                layergroup = new ListLedGroup(surface, ledArray) { ZIndex = layer.zindex };
+                layergroup = new ListLedGroup(activeSurface, ledArray) { ZIndex = layer.zindex };
                 _layergroups[layer.layerID] = new[] { layergroup };
                 layergroup.Detach();
             }
@@ -58,7 +77,7 @@ namespace Chromatics.Layers
                     : new SolidColorBrush(ColorHelper.ColorToRGBColor(System.Drawing.Color.Black));
             }
 
-            layergroup.Attach(surface);
+            layergroup.Attach(activeSurface);
             _init = true;
             layer.requestUpdate = false;
         }
@@ -109,6 +128,7 @@ namespace Chromatics.Layers
                 _screenCapture = null;
             }
             base.Dispose(disposing);
+            _instance = null;
         }
     }
 }

@@ -278,11 +278,34 @@ namespace Chromatics.Views.Dialogs
             // just produce zero devices), so this probe is Logitech-only.
             if (TileLogitech.IsChecked == true)
             {
-                RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance, out var loadError);
+                // The provider reference has to sit inside the lambda. A vendor
+                // type named in this method's own body resolves while OnContinue
+                // is being JIT-compiled, which is before any try here exists, so
+                // App Control blocking RGB.NET.Core took the whole handler down
+                // instead of the probe (CHROMATICS-1N).
+                Exception? loadError = null;
+                bool probeRan = Helpers.AssemblyLoadGuard.TryRun("Logitech", () =>
+                {
+                    RGBController.LoadDeviceProvider(LogitechDeviceProvider.Instance, out var probeError);
+                    loadError = probeError;
+                });
+
+                // The guard swallowing the fault leaves loadError null, so
+                // without this the wizard would save Logitech as enabled for a
+                // provider whose library never loaded - the exact outcome this
+                // probe exists to prevent. The guard has already told the user
+                // what happened, so just untick and carry on.
+                if (!probeRan)
+                {
+                    TileLogitech.IsChecked = false;
+                    UpdateContinueState();
+                }
+
                 if (loadError != null
                     && loadError.Message.Contains("Failed to initialize Logitech-SDK", StringComparison.OrdinalIgnoreCase))
                 {
-                    try { RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance); } catch { /* best-effort */ }
+                    Helpers.AssemblyLoadGuard.TryRun("Logitech",
+                        () => RGBController.UnloadDeviceProvider(LogitechDeviceProvider.Instance));
                     TileLogitech.IsChecked = false;
                     UpdateContinueState();
                     await Views.Dialogs.DialogService.ShowAsync(

@@ -242,7 +242,9 @@ namespace Chromatics.Views
             // SetWindowsHookEx path touches Process.MainModule, which blocks
             // for hundreds of ms to seconds on Windows while the OS resolves
             // the loaded-module list, freezing the UI and tab switching.
-            Logger.WriteConsole(LoggerTypes.System, "Chromatics is starting up..");
+            // Version in the first console line so a user pasting their log
+            // tells us which build they're on without being asked.
+            Logger.WriteConsole(LoggerTypes.System, $"Chromatics {VersionHelper.DisplayVersion} is starting up..");
 
             await Task.Run(() =>
             {

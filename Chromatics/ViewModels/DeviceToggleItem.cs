@@ -71,33 +71,56 @@ namespace Chromatics.ViewModels
 
         private async Task SetIsEnabledAsync(bool value)
         {
-            if (value)
+            try
             {
-                var accepted = await _enableAsync();
-                _suspendCommit = true;
-                try
+                if (value)
+                    Commit(await _enableAsync());
+                else
                 {
-                    _isEnabled = accepted;
-                    OnPropertyChanged(nameof(IsEnabled));
-                }
-                finally
-                {
-                    _suspendCommit = false;
+                    _disable();
+                    Commit(false);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                _disable();
-                _suspendCommit = true;
-                try
+                // The property setter starts this task and never awaits it, so
+                // anything escaping here becomes an UnobservedTaskException the
+                // finalizer rethrows as a crash (CHROMATICS-1G, a vendor DLL
+                // blocked by App Control). Report it and put the toggle back
+                // where the user found it.
+                //
+                // Reported here rather than in each provider's delegate: only
+                // the MakeDeviceToggle providers route through the guard, so
+                // the hand-built toggles (Logitech, OpenRGB, Hue, LIFX and the
+                // rest) would otherwise show a raw loader message instead of
+                // the App Control guidance.
+                if (!Helpers.AssemblyLoadGuard.TryReportLoadFailure(Label, ex))
+                    Core.Logger.WriteConsole(Enums.LoggerTypes.Error,
+                        $"[{Label}] could not be turned {(value ? "on" : "off")}: {ex.Message}");
+
+                // Guarded: a subscriber throwing on the property-changed
+                // notification would escape this catch and land right back in
+                // the unobserved-task crash the method exists to prevent.
+                try { Commit(!value); }
+                catch (Exception commitEx)
                 {
-                    _isEnabled = false;
-                    OnPropertyChanged(nameof(IsEnabled));
+                    Core.Logger.WriteConsole(Enums.LoggerTypes.Error,
+                        $"[{Label}] could not be restored to its previous state: {commitEx.Message}");
                 }
-                finally
-                {
-                    _suspendCommit = false;
-                }
+            }
+        }
+
+        private void Commit(bool state)
+        {
+            _suspendCommit = true;
+            try
+            {
+                _isEnabled = state;
+                OnPropertyChanged(nameof(IsEnabled));
+            }
+            finally
+            {
+                _suspendCommit = false;
             }
         }
     }

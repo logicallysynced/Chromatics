@@ -39,12 +39,7 @@ namespace Chromatics.ViewModels
             // LoadMappings has populated _layers — that would create default layers
             // for every device on every launch, overwriting any user customisation.
 
-            var version = typeof(MainWindowViewModel).Assembly.GetName().Version;
-            if (version != null)
-            {
-                var betaSuffix = UpdateService.IsBetaChannel() ? " [BETA]" : string.Empty;
-                Title = $"Chromatics {version.Major}.{version.Minor}.{version.Build}{betaSuffix}";
-            }
+            Title = $"Chromatics {Helpers.VersionHelper.DisplayVersion}";
 
             _isLightTheme = Avalonia.Application.Current?.ActualThemeVariant
                             != Avalonia.Styling.ThemeVariant.Dark;

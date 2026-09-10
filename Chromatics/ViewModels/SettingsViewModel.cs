@@ -994,13 +994,20 @@ namespace Chromatics.ViewModels
                     // out from the device list.
                     await ShowDynamicLightingOverlapPopupIfNeededAsync(label).ConfigureAwait(true);
 
-                    load();
+                    // The load/unload delegates reference vendor SDK types, so
+                    // they carry the assembly load that App Control can block.
+                    // Running them through the guard keeps the fault inside the
+                    // lambda where it can be caught, and a blocked provider
+                    // leaves the toggle off rather than saving as enabled.
+                    if (!Helpers.AssemblyLoadGuard.TryRun(label, load))
+                        return false;
+
                     saveFlag(true);
                     return true;
                 },
                 () =>
                 {
-                    unload();
+                    Helpers.AssemblyLoadGuard.TryRun(label, unload);
                     saveFlag(false);
                 });
         }
