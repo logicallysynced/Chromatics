@@ -20,7 +20,8 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         private readonly int _maxRow;
         private List<Peak> peaks;
         private int columnsPerPeak = 2;
-        private WasapiLoopbackCapture capture;
+        private WasapiRecorder capture;
+        private CaptureDataAvailableHandler _onCaptureData;
         private BufferedWaveProvider bufferedWaveProvider;
         private const int fftLength = 1024;
         private Complex[] fftBuffer = new Complex[fftLength];
@@ -53,8 +54,19 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
         {
             try
             {
-                capture = new WasapiLoopbackCapture();
-                capture.DataAvailable += OnDataAvailable;
+                // NAudio 3 retired WasapiLoopbackCapture for the builder. No
+                // device on WithLoopbackCapture means the default render
+                // endpoint, which is the system-wide loopback the old type
+                // captured.
+                capture = new WasapiRecorderBuilder()
+                    .WithLoopbackCapture()
+                    .Build();
+
+                // Kept in a field so OnDetached can unsubscribe the same
+                // instance; the lambda takes its parameter types from the
+                // delegate, which spares us naming the WASAPI flag enum.
+                _onCaptureData = (buffer, flags, devicePosition, qpcPosition) => OnDataAvailable(buffer);
+                capture.DataAvailable += _onCaptureData;
                 bufferedWaveProvider = new BufferedWaveProvider(capture.WaveFormat)
                 {
                     DiscardOnBufferOverflow = true
@@ -67,10 +79,13 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             }
         }
 
-        private void OnDataAvailable(object sender, WaveInEventArgs e)
+        // NAudio 3 hands the WASAPI buffer over as a span that is only valid
+        // for the duration of the call, so copy into the provider here and
+        // never hold on to it.
+        private void OnDataAvailable(ReadOnlySpan<byte> buffer)
         {
             if (bufferedWaveProvider == null) return;
-            bufferedWaveProvider.AddSamples(e.Buffer, 0, e.BytesRecorded);
+            bufferedWaveProvider.AddSamples(buffer);
             ProcessAudioBuffer();
         }
 
@@ -99,10 +114,12 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
 
             if (capture != null)
             {
-                capture.DataAvailable -= OnDataAvailable;
+                if (_onCaptureData != null)
+                    capture.DataAvailable -= _onCaptureData;
                 capture.StopRecording();
                 capture.Dispose();
                 capture = null;
+                _onCaptureData = null;
             }
 
             bufferedWaveProvider = null;
@@ -161,7 +178,7 @@ namespace Chromatics.Extensions.RGB.NET.Decorators
             if (available == 0) return;
 
             var audioBytes = new byte[available];
-            int bytesRead = bufferedWaveProvider.Read(audioBytes, 0, available);
+            int bytesRead = bufferedWaveProvider.Read(audioBytes);
 
             int bytesPerSample = bufferedWaveProvider.WaveFormat.BitsPerSample / 8;
             int channels = bufferedWaveProvider.WaveFormat.Channels;

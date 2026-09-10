@@ -2,6 +2,13 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.4.0
+
+- Added support for FFXIV patch 7.56.
+- **New:** BST support.
+- Minor bug fixes.
+- Updated backend dependencies.
+
 ## 4.3.36
 
 - Updated to Sharlayan 9.2.1.

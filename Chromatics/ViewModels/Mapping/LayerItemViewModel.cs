@@ -249,6 +249,18 @@ namespace Chromatics.ViewModels.Mapping
             { (Actor.Job.SAM, DynamicLayerType.JobGaugeC), "Kaeshi Ready. Indicator that a Kaeshi follow-up is queued for the last Hissatsu used." },
             { (Actor.Job.VPR, DynamicLayerType.JobGaugeC), "Reawakened Timer. Tracks the remaining duration of the Reawakened phase." },
             { (Actor.Job.AST, DynamicLayerType.JobGaugeC), "Draw Type (Astral / Umbral). Indicates which side of the draw cycle is currently active." },
+
+            // ── Limited jobs ─────────────────────────────────────────────────────────
+            // Blue Mage and Beastmaster have no job gauge, so the game gives us
+            // nothing to read. Without an entry these fall through to the generic
+            // description, which reads as though a gauge is coming and then never
+            // lights anything.
+            { (Actor.Job.BLU, DynamicLayerType.JobGaugeA), "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job." },
+            { (Actor.Job.BLU, DynamicLayerType.JobGaugeB), "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job." },
+            { (Actor.Job.BLU, DynamicLayerType.JobGaugeC), "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job." },
+            { (Actor.Job.BST, DynamicLayerType.JobGaugeA), "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job." },
+            { (Actor.Job.BST, DynamicLayerType.JobGaugeB), "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job." },
+            { (Actor.Job.BST, DynamicLayerType.JobGaugeC), "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job." },
         };
 
         public void Dispose()
