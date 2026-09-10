@@ -1011,5 +1011,7 @@
   "This device is disabled on the Mappings tab. Its saved layers can still be copied.": "Dieses Gerät ist auf der Registerkarte „Zuordnungen“ deaktiviert. Seine gespeicherten Ebenen können weiterhin kopiert werden.",
   "Black": "Schwarz",
   "Sets the entire base layer to black. Keys stay dark unless a higher layer paints over them.": "Setzt die gesamte Basisebene auf Schwarz. Tasten bleiben dunkel, sofern sie nicht von einer höheren Ebene übermalt werden.",
-  "Sets the selected keys to black.": "Setzt die ausgewählten Tasten auf Schwarz."
+  "Sets the selected keys to black.": "Setzt die ausgewählten Tasten auf Schwarz.",
+  "BST (Base)": "BST (Basis)",
+  "BST (Highlight)": "BST (Hervorhebung)"
 }

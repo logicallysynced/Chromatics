@@ -223,6 +223,11 @@ namespace Chromatics.Helpers
                         return ColorHelper.ColorToRGBColor(colorPalette.JobBLUBase.Color);
                     else
                         return ColorHelper.ColorToRGBColor(colorPalette.JobBLUHighlight.Color);
+                case Actor.Job.BST:
+                    if (!highlight)
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobBSTBase.Color);
+                    else
+                        return ColorHelper.ColorToRGBColor(colorPalette.JobBSTHighlight.Color);
                 case Actor.Job.GNB:
                     if (!highlight)
                         return ColorHelper.ColorToRGBColor(colorPalette.JobGNBBase.Color);
@@ -305,6 +310,8 @@ namespace Chromatics.Helpers
                         return @"Shows Red Mage's White Mana Gauge.";
                     case Actor.Job.BLU:
                         return @"Blue Mage not implemented.";
+                    case Actor.Job.BST:
+                        return @"Beastmaster has no job gauge.";
                     case Actor.Job.GNB:
                         return @"Shows Gunbreaker's Royal Gaurd.";
                     case Actor.Job.DNC:
@@ -364,6 +371,8 @@ namespace Chromatics.Helpers
                         return @"Shows Red Mage's Black Mana Gauge.";
                     case Actor.Job.BLU:
                         return @"Blue Mage not implemented.";
+                    case Actor.Job.BST:
+                        return @"Beastmaster has no job gauge.";
                     case Actor.Job.GNB:
                         return @"Shows Gunbreaker's Charge count.";
                     case Actor.Job.DNC:

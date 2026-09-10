@@ -1781,6 +1781,8 @@ namespace Chromatics.Models
         public ColorMapping JobPCTHighlight = new("PCT (Highlight)", PaletteTypes.JobClasses, Color.Magenta);
         public ColorMapping JobBLUBase = new("BLU (Base)", PaletteTypes.JobClasses, Color.DeepSkyBlue);
         public ColorMapping JobBLUHighlight = new("BLU (Highlight)", PaletteTypes.JobClasses, Color.Blue);
+        public ColorMapping JobBSTBase = new("BST (Base)", PaletteTypes.JobClasses, Color.SaddleBrown);
+        public ColorMapping JobBSTHighlight = new("BST (Highlight)", PaletteTypes.JobClasses, Color.Peru);
         public ColorMapping JobCPTBase = new("CPT (Base)", PaletteTypes.JobClasses, Color.DarkOrange);
         public ColorMapping JobCPTHighlight = new("CPT (Highlight)", PaletteTypes.JobClasses, Color.Orchid);
         public ColorMapping JobBSMBase = new("BSM (Base)", PaletteTypes.JobClasses, Color.DarkOrange);
@@ -2251,6 +2253,8 @@ namespace Chromatics.Models
         public string ColorMappingJobPCTHighlight { get; set; }
         public string ColorMappingJobBLUBase { get; set; }
         public string ColorMappingJobBLUHighlight { get; set; }
+        public string ColorMappingJobBSTBase { get; set; }
+        public string ColorMappingJobBSTHighlight { get; set; }
         public string ColorMappingJobCPTBase { get; set; }
         public string ColorMappingJobCPTHighlight { get; set; }
         public string ColorMappingJobBSMBase { get; set; }

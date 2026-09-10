@@ -2,6 +2,13 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.4.0
+
+- Added support for FFXIV patch 7.56.
+- **New:** Beastmaster support. BST gets its own base and highlight colours in the Palette tab, and the Experience Tracker layer follows its levelling. Like Blue Mage, Beastmaster has no job gauge, so the Job Gauge layers stay blank for it.
+- Chromatics no longer closes with a crash dialog when a smart light or SDK server refuses a connection in the background. The device is named in the console tab and the rest of your lighting carries on.
+- Updated Avalonia, NAudio, Sentry, the Hue libraries, and the rest of the bundled components to their current releases.
+
 ## 4.3.36
 
 - Updated to Sharlayan 9.2.1.

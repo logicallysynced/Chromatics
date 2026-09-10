@@ -333,6 +333,8 @@ namespace Chromatics.Layers
                     return currentPlayer.PlayerInfo.RDM_CurrentEXP;
                 case Actor.Job.BLU:
                     return currentPlayer.PlayerInfo.BLU_CurrentEXP;
+                case Actor.Job.BST:
+                    return currentPlayer.PlayerInfo.BST_CurrentEXP;
                 case Actor.Job.GNB:
                     return currentPlayer.PlayerInfo.GNB_CurrentEXP;
                 case Actor.Job.DNC:

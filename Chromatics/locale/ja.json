@@ -1012,5 +1012,7 @@
   "This device is disabled on the Mappings tab. Its saved layers can still be copied.": "このデバイスは「マッピング」タブで無効化されています。保存済みのレイヤーは引き続きコピーできます。",
   "Black": "黒",
   "Sets the entire base layer to black. Keys stay dark unless a higher layer paints over them.": "ベースレイヤー全体を黒に設定します。上位のレイヤーで上書きされない限り、キーは暗いままになります。",
-  "Sets the selected keys to black.": "選択したキーを黒に設定します。"
+  "Sets the selected keys to black.": "選択したキーを黒に設定します。",
+  "BST (Base)": "BST（ベース）",
+  "BST (Highlight)": "BST（ハイライト）"
 }
