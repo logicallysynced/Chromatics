@@ -69,7 +69,7 @@ public class WeatherCoverageTests
 
             Assert.NotNull(field);
 
-            var mapping = (ColorMapping)field.GetValue(palette);
+            var mapping = (ColorMapping)field!.GetValue(palette)!;
             Assert.Equal(Chromatics.Enums.Palette.PaletteTypes.ReactiveWeather, mapping.Type);
         }
     }
