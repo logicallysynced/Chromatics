@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace Chromatics.Core
 {
@@ -44,6 +45,7 @@ namespace Chromatics.Core
         private static bool _keyCtrl;
         private static bool _keyShift;
         private static bool _keyAlt;
+        private static int _eventsObserved;
 
         public static void Setup()
         {
@@ -53,6 +55,17 @@ namespace Chromatics.Core
             using var process = Process.GetCurrentProcess();
             using var module  = process.MainModule;
             _hookId = SetWindowsHookEx(WH_KEYBOARD_LL, _hookCallback, GetModuleHandle(module?.ModuleName), 0);
+
+            // The result went unchecked, so a refused hook left every modifier
+            // reading false for the session with nothing said about it. Modified
+            // hotbar keybinds then never light and the cause is invisible.
+            if (_hookId == IntPtr.Zero)
+            {
+                var error = Marshal.GetLastWin32Error();
+                Logger.WriteConsole(Enums.LoggerTypes.Error,
+                    $"Windows refused the keyboard hook (error {error}). Hotbar keybinds that use Ctrl, Alt or Shift will not light up. Restarting Chromatics usually clears this.",
+                    forwardToSentry: false);
+            }
         }
 
         public static void Stop()
@@ -66,11 +79,23 @@ namespace Chromatics.Core
             _keyCtrl  = false;
             _keyShift = false;
             _keyAlt   = false;
+            Volatile.Write(ref _eventsObserved, 0);
         }
 
         public static bool IsCtrlPressed()  => _keyCtrl;
         public static bool IsShiftPressed() => _keyShift;
         public static bool IsAltPressed()   => _keyAlt;
+
+        /// <summary>True once the hook has been installed.</summary>
+        public static bool IsHookInstalled => _hookId != IntPtr.Zero;
+
+        /// <summary>
+        /// True once the hook has actually delivered a keystroke. An installed
+        /// hook that never fires is the shape of the silent failures: Windows
+        /// drops hooks that exceed LowLevelHooksTimeout without telling us, and
+        /// an unelevated process never sees input going to an elevated game.
+        /// </summary>
+        public static bool HasObservedInput => Volatile.Read(ref _eventsObserved) > 0;
 
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
@@ -82,6 +107,9 @@ namespace Chromatics.Core
 
                 if (down || up)
                 {
+                    if (Volatile.Read(ref _eventsObserved) == 0)
+                        Volatile.Write(ref _eventsObserved, 1);
+
                     bool pressed = down;
                     switch (vkCode)
                     {

@@ -2,6 +2,12 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.4.3
+
+- Fixed hotbar keybinds that use Ctrl, Alt or Shift never lighting up outside an English game client. The modifier names are read in the client's language, so German and French clients now work.
+- The console tab now says so when Windows refuses the keyboard hook, or when Chromatics cannot see key presses because the game is running with administrator rights and Chromatics is not. Either case stops modifier keybinds working, and both used to fail silently.
+- A keybind modifier Chromatics does not recognise is now named in the console tab instead of being skipped quietly.
+
 ## 4.4.2
 
 - **New:** Beastmaster job gauge support, added to the game in patch 7.57. Job Gauge A shows your Tactical Points, Job Gauge B the active pet's, and Job Gauge C your Natural Instinct stacks. All four colours are editable in the Palette tab.

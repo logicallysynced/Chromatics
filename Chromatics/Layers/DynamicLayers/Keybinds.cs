@@ -214,9 +214,13 @@ namespace Chromatics.Layers
         {
             if (action.Modifiers.Count == 0) return Modifiers.None;
 
-            var _ctrl = action.Modifiers.Contains("Ctrl");
-            var _alt = action.Modifiers.Contains("Alt");
-            var _shift = action.Modifiers.Contains("Shift");
+            // The game writes these in its own language, so they go through the
+            // parser rather than being compared against the English spellings.
+            var (_ctrl, _alt, _shift) = Helpers.HotbarModifierParser.Parse(
+                action.Modifiers, out var unrecognised);
+
+            if (unrecognised.Count > 0) ReportUnrecognisedModifiers(unrecognised);
+            WarnIfModifiersCannotBeRead();
 
             if (_ctrl && _alt && _shift) return Modifiers.CTRL_ALT_SHIFT;
             if (_alt && _shift) return Modifiers.ALT_SHIFT;
@@ -227,6 +231,41 @@ namespace Chromatics.Layers
             if (_shift) return Modifiers.SHIFT;
 
             return Modifiers.None;
+        }
+
+        // One line per distinct spelling, not per tick. A name we cannot place
+        // is a one-entry fix in HotbarModifierParser, so the console needs to
+        // name it rather than leave the keybind quietly dark.
+        private static readonly HashSet<string> _reportedModifiers = new(StringComparer.OrdinalIgnoreCase);
+
+        private static void ReportUnrecognisedModifiers(IReadOnlyList<string> names)
+        {
+            foreach (var name in names)
+            {
+                bool isNew;
+                lock (_reportedModifiers)
+                    isNew = _reportedModifiers.Add(name);
+
+                if (isNew)
+                    Logger.WriteConsole(LoggerTypes.Devices,
+                        $"Hotbar keybind modifier '{name}' was not recognised, so keybinds using it will not light up. Please report this along with your game's language.",
+                        forwardToSentry: false);
+            }
+        }
+
+        private static bool _hookWarningShown;
+
+        private static void WarnIfModifiersCannotBeRead()
+        {
+            if (_hookWarningShown) return;
+            if (!KeyController.IsHookInstalled || KeyController.HasObservedInput) return;
+
+            // A keybind with a modifier was found but the hook has never
+            // delivered a keystroke, so the comparison can only ever fail.
+            _hookWarningShown = true;
+            Logger.WriteConsole(LoggerTypes.Devices,
+                "Chromatics has not seen any key presses, so hotbar keybinds that use Ctrl, Alt or Shift cannot light up. This usually means Chromatics is running without administrator rights while the game has them.",
+                forwardToSentry: false);
         }
 
         private Modifiers GetPushedModifiers()
