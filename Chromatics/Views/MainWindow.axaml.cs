@@ -264,7 +264,14 @@ namespace Chromatics.Views
                         {
                             Logger.WriteConsole(LoggerTypes.System, "No layer file found. Defaults will be created per device.");
                         }
-                        KeyController.Setup();
+                        // The blocking part (Process.MainModule) stays here, but
+                        // the install itself goes to the UI thread: a low-level
+                        // hook is invoked by posting a message to the thread that
+                        // installed it, so installing it on this background task
+                        // produced a valid handle that never once fired, and every
+                        // modifier keybind stayed dark.
+                        KeyController.PrepareModuleHandle();
+                        Dispatcher.UIThread.Post(KeyController.Setup);
 
                         // Backstop for assembly-load faults that fire when
                         // Setup is JIT-compiled (a blocked DLL resolves at

@@ -258,13 +258,15 @@ namespace Chromatics.Layers
         private static void WarnIfModifiersCannotBeRead()
         {
             if (_hookWarningShown) return;
-            if (!KeyController.IsHookInstalled || KeyController.HasObservedInput) return;
+            if (!KeyController.IsHookBlind()) return;
 
-            // A keybind with a modifier was found but the hook has never
-            // delivered a keystroke, so the comparison can only ever fail.
+            // Windows says a modifier is held right now and the hook never told
+            // us, so the comparison below can only fail. Checked this way rather
+            // than "has the hook ever fired", which is also true of anyone who
+            // has not pressed a key yet and warned every healthy user.
             _hookWarningShown = true;
             Logger.WriteConsole(LoggerTypes.Devices,
-                "Chromatics has not seen any key presses, so hotbar keybinds that use Ctrl, Alt or Shift cannot light up. This usually means Chromatics is running without administrator rights while the game has them.",
+                "Chromatics cannot see modifier keys being held, so hotbar keybinds that use Ctrl, Alt or Shift will not light up. This usually means the game is running with administrator rights and Chromatics is not.",
                 forwardToSentry: false);
         }
 

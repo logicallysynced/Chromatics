@@ -22,6 +22,12 @@ namespace Chromatics.Core
         private const int VK_RSHIFT      = 0xA1;
         private const int VK_LMENU       = 0xA4;  // left Alt
         private const int VK_RMENU       = 0xA5;  // right Alt
+        private const int VK_SHIFT       = 0x10;  // either Shift, for state reads
+        private const int VK_CONTROL     = 0x11;
+        private const int VK_MENU        = 0x12;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern short GetAsyncKeyState(int vKey);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
@@ -45,16 +51,57 @@ namespace Chromatics.Core
         private static bool _keyCtrl;
         private static bool _keyShift;
         private static bool _keyAlt;
-        private static int _eventsObserved;
+        private static IntPtr _moduleHandle;
+        private static bool _moduleHandleResolved;
 
+        /// <summary>
+        /// Resolves the module handle the hook install needs, ahead of time.
+        /// </summary>
+        /// <remarks>
+        /// Split out of <see cref="Setup"/> because Process.MainModule blocks for
+        /// hundreds of milliseconds while Windows walks the loaded-module list,
+        /// and Setup itself has to run somewhere that blocking is unacceptable.
+        /// Safe to call from a background thread.
+        /// </remarks>
+        public static void PrepareModuleHandle()
+        {
+            if (_moduleHandleResolved) return;
+
+            try
+            {
+                using var process = Process.GetCurrentProcess();
+                using var module = process.MainModule;
+                _moduleHandle = GetModuleHandle(module?.ModuleName);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteConsole(Enums.LoggerTypes.Error,
+                    $"Could not resolve the module handle for the keyboard hook: {ex.Message}",
+                    forwardToSentry: false);
+            }
+
+            _moduleHandleResolved = true;
+        }
+
+        /// <summary>
+        /// Installs the keyboard hook. Must be called on a thread with a message
+        /// loop - the UI thread.
+        /// </summary>
+        /// <remarks>
+        /// A low-level hook is invoked by posting a message to the thread that
+        /// installed it, so a thread without a message loop gets a valid handle
+        /// and no callbacks ever. Installing this from a background task left
+        /// every modifier reading false for the session, which is why hotbar
+        /// keybinds using Ctrl, Alt or Shift never lit up.
+        /// </remarks>
         public static void Setup()
         {
             if (_hookId != IntPtr.Zero) return;
 
+            PrepareModuleHandle();
+
             _hookCallback = HookCallback;
-            using var process = Process.GetCurrentProcess();
-            using var module  = process.MainModule;
-            _hookId = SetWindowsHookEx(WH_KEYBOARD_LL, _hookCallback, GetModuleHandle(module?.ModuleName), 0);
+            _hookId = SetWindowsHookEx(WH_KEYBOARD_LL, _hookCallback, _moduleHandle, 0);
 
             // The result went unchecked, so a refused hook left every modifier
             // reading false for the session with nothing said about it. Modified
@@ -79,7 +126,6 @@ namespace Chromatics.Core
             _keyCtrl  = false;
             _keyShift = false;
             _keyAlt   = false;
-            Volatile.Write(ref _eventsObserved, 0);
         }
 
         public static bool IsCtrlPressed()  => _keyCtrl;
@@ -90,12 +136,28 @@ namespace Chromatics.Core
         public static bool IsHookInstalled => _hookId != IntPtr.Zero;
 
         /// <summary>
-        /// True once the hook has actually delivered a keystroke. An installed
-        /// hook that never fires is the shape of the silent failures: Windows
-        /// drops hooks that exceed LowLevelHooksTimeout without telling us, and
-        /// an unelevated process never sees input going to an elevated game.
+        /// True when Windows reports a modifier physically held that the hook
+        /// never told us about, which means the hook is installed but blind.
         /// </summary>
-        public static bool HasObservedInput => Volatile.Read(ref _eventsObserved) > 0;
+        /// <remarks>
+        /// Asking "has the hook ever fired" cannot distinguish a broken hook
+        /// from a user who simply has not pressed a key yet, so it reported a
+        /// problem to everybody. GetAsyncKeyState reads the global key state
+        /// directly, so it still answers when the hook is blind - which covers
+        /// both remaining causes: Windows silently dropping a hook that exceeds
+        /// LowLevelHooksTimeout, and an unelevated process being denied input
+        /// from an elevated game.
+        /// </remarks>
+        public static bool IsHookBlind()
+        {
+            if (_hookId == IntPtr.Zero) return false;   // reported separately at install
+
+            return (IsPhysicallyDown(VK_CONTROL) && !_keyCtrl)
+                || (IsPhysicallyDown(VK_SHIFT) && !_keyShift)
+                || (IsPhysicallyDown(VK_MENU) && !_keyAlt);
+        }
+
+        private static bool IsPhysicallyDown(int virtualKey) => (GetAsyncKeyState(virtualKey) & 0x8000) != 0;
 
         private static IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam)
         {
@@ -107,9 +169,6 @@ namespace Chromatics.Core
 
                 if (down || up)
                 {
-                    if (Volatile.Read(ref _eventsObserved) == 0)
-                        Volatile.Write(ref _eventsObserved, 1);
-
                     bool pressed = down;
                     switch (vkCode)
                     {
