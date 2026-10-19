@@ -1061,5 +1061,11 @@
     "Umbral Duststorms (Base)":  "Umbral Duststorms (Base)",
     "Umbral Duststorms (Highlight)":  "Umbral Duststorms (Highlight)",
     "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.":  "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.",
-    "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.":  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job."
+    "BST: Tactical Points":  "BST: Tactical Points",
+    "BST: Pet Tactical Points":  "BST: Pet Tactical Points",
+    "BST: Natural Instinct":  "BST: Natural Instinct",
+    "BST: Blank Key":  "BST: Blank Key",
+    "Tactical Points (0–100). Your own TP pool, spent on Beastmaster abilities.":  "Tactical Points (0–100). Your own TP pool, spent on Beastmaster abilities.",
+    "Pet Tactical Points (0–100). The active pet's own pool, spent by its abilities rather than yours.":  "Pet Tactical Points (0–100). The active pet's own pool, spent by its abilities rather than yours.",
+    "Natural Instinct (0–3). Stacks built by the Instinctual combo.":  "Natural Instinct (0–3). Stacks built by the Instinctual combo."
 }

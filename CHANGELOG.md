@@ -2,6 +2,11 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.4.2
+
+- **New:** Beastmaster job gauge support, added to the game in patch 7.57. Job Gauge A shows your Tactical Points, Job Gauge B the active pet's, and Job Gauge C your Natural Instinct stacks. All four colours are editable in the Palette tab.
+- Added support for FFXIV patch 7.57.
+
 ## 4.4.1
 
 - Fixed Chromatics closing with a crash dialog when a smart light dropped its connection while being written to. Yeelight bulbs on a busy network hit this repeatedly.

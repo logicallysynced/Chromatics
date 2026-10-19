@@ -653,6 +653,24 @@ namespace Chromatics.Layers
 
 
                     break;
+                case Actor.Job.BST:
+                    // The pet carries its own Tactical Point pool, spent by the pet's
+                    // abilities rather than the player's, so it gets its own slot.
+                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTPetTacticalPoints.Color);
+                    jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTNegative.Color);
+
+                    jobGauge.currentValue = jobResources.JobResourcesContainer.Beastmaster.PetTPGauge;
+                    jobGauge.maxValue = 100;
+                    jobGauge.minValue = 0;
+
+                    if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
+                    if (jobGauge.currentValue <= jobGauge.minValue)
+                    {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTNegative.Color);
+                        jobGauge.currentValue = jobGauge.minValue;
+                    }
+
+                    break;
                 case Actor.Job.Unknown:
                 default:
                     return null;

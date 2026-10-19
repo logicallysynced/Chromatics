@@ -62,4 +62,24 @@ public class JobCoverageTests
         Assert.NotNull(new PaletteColorModel().JobBSTBase);
         Assert.NotNull(new PaletteColorModel().JobBSTHighlight);
     }
+
+    [Fact]
+    public void BeastmasterGaugeColoursAreRegistered()
+    {
+        // BST had no gauge until game patch 7.57, so these arrived after the
+        // job itself. A rename here silently drops a gauge slot back to black.
+        var palette = new PaletteColorModel();
+
+        foreach (var mapping in new[]
+                 {
+                     palette.JobBSTTacticalPoints,
+                     palette.JobBSTPetTacticalPoints,
+                     palette.JobBSTInstinct,
+                     palette.JobBSTNegative,
+                 })
+        {
+            Assert.NotNull(mapping);
+            Assert.Equal(Chromatics.Enums.Palette.PaletteTypes.JobGauges, mapping.Type);
+        }
+    }
 }

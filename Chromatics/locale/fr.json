@@ -1046,5 +1046,11 @@
   "Umbral Duststorms (Base)": "Tempêtes de poussière ombrales (base)",
   "Umbral Duststorms (Highlight)": "Tempêtes de poussière ombrales (surbrillance)",
   "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "Le Mage bleu n’a pas de jauge de job, ce calque reste donc sombre. Choisissez un autre type de calque pour ce job.",
-  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "Le Belluaire n’a pas de jauge de job, ce calque reste donc sombre. Choisissez un autre type de calque pour ce job."
+  "BST: Tactical Points": "BST : points tactiques",
+  "BST: Pet Tactical Points": "BST : points tactiques du familier",
+  "BST: Natural Instinct": "BST : instinct naturel",
+  "BST: Blank Key": "BST : touche vide",
+  "Tactical Points (0–100). Your own TP pool, spent on Beastmaster abilities.": "Points tactiques (0–100). Votre propre réserve de PT, dépensée pour les techniques de Maître des bêtes.",
+  "Pet Tactical Points (0–100). The active pet's own pool, spent by its abilities rather than yours.": "Points tactiques du familier (0–100). La réserve propre du familier actif, dépensée par ses techniques plutôt que par les vôtres.",
+  "Natural Instinct (0–3). Stacks built by the Instinctual combo.": "Instinct naturel (0–3). Cumuls générés par le combo instinctif."
 }

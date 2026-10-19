@@ -1047,5 +1047,11 @@
   "Umbral Duststorms (Base)": "암영 먼지폭풍 (기본)",
   "Umbral Duststorms (Highlight)": "암영 먼지폭풍 (하이라이트)",
   "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "청마도사에는 직업 게이지가 없으므로 이 레이어는 어둡게 유지됩니다. 이 직업에는 다른 레이어 유형을 선택하세요.",
-  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "비스트마스터에는 직업 게이지가 없으므로 이 레이어는 어둡게 유지됩니다. 이 직업에는 다른 레이어 유형을 선택하세요."
+  "BST: Tactical Points": "BST: 전술 포인트",
+  "BST: Pet Tactical Points": "BST: 소환수 전술 포인트",
+  "BST: Natural Instinct": "BST: 자연의 본능",
+  "BST: Blank Key": "BST: 빈 키",
+  "Tactical Points (0–100). Your own TP pool, spent on Beastmaster abilities.": "전술 포인트(0–100). 자신의 TP 자원으로, 비스트마스터 능력 사용에 소모됩니다.",
+  "Pet Tactical Points (0–100). The active pet's own pool, spent by its abilities rather than yours.": "소환수 전술 포인트(0–100). 활성화된 소환수의 자체 자원으로, 당신의 능력이 아니라 소환수의 능력 사용에 소모됩니다.",
+  "Natural Instinct (0–3). Stacks built by the Instinctual combo.": "자연의 본능(0–3). 본능 콤보로 쌓이는 중첩입니다."
 }

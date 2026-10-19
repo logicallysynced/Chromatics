@@ -1046,5 +1046,11 @@
   "Umbral Duststorms (Base)": "Umbrale Staubstürme (Basis)",
   "Umbral Duststorms (Highlight)": "Umbrale Staubstürme (Hervorhebung)",
   "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "Blaumagier hat keinen Job-Balken, daher bleibt diese Ebene dunkel. Wähle für diesen Job einen anderen Ebenentyp.",
-  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "Bestienbändiger hat keinen Job-Balken, daher bleibt diese Ebene dunkel. Wähle für diesen Job einen anderen Ebenentyp."
+  "BST: Tactical Points": "BST: Taktikpunkte",
+  "BST: Pet Tactical Points": "BST: Begleiter-Taktikpunkte",
+  "BST: Natural Instinct": "BST: Natürlicher Instinkt",
+  "BST: Blank Key": "BST: Leere Taste",
+  "Tactical Points (0–100). Your own TP pool, spent on Beastmaster abilities.": "Taktikpunkte (0–100). Dein eigener TP-Vorrat, der für Fähigkeiten des Tierbändigers verbraucht wird.",
+  "Pet Tactical Points (0–100). The active pet's own pool, spent by its abilities rather than yours.": "Begleiter-Taktikpunkte (0–100). Der eigene Vorrat des aktiven Begleiters, der von seinen Fähigkeiten statt von deinen verbraucht wird.",
+  "Natural Instinct (0–3). Stacks built by the Instinctual combo.": "Natürlicher Instinkt (0–3). Stapel, die durch die Instinktiv-Kombo aufgebaut werden."
 }

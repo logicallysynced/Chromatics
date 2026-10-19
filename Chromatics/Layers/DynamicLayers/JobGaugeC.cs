@@ -376,6 +376,22 @@ namespace Chromatics.Layers
                     }
                     break;
 
+                case Actor.Job.BST:
+                    // Natural Instinct stacks. Picked over Chain Count because the
+                    // game packs this into two bits, so the ceiling of 3 is certain
+                    // rather than guessed.
+                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTInstinct.Color);
+                    jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTNegative.Color);
+                    jobGauge.minValue = 0;
+                    jobGauge.maxValue = 3;
+                    jobGauge.currentValue = Math.Min(container.Beastmaster.NaturalInstinct, 3);
+
+                    if (jobGauge.currentValue <= 0)
+                    {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTNegative.Color);
+                    }
+                    break;
+
                 case Actor.Job.Unknown:
                 default:
                     return null;

@@ -708,6 +708,25 @@ namespace Chromatics.Layers
 
 
                     break;
+                case Actor.Job.BST:
+                    // Beastmaster gained a gauge in 7.57; before that the job reported
+                    // only its level and EXP, which is why this slot used to say the
+                    // job had none.
+                    jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTTacticalPoints.Color);
+                    jobGauge.emptyColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTNegative.Color);
+
+                    jobGauge.currentValue = jobResources.JobResourcesContainer.Beastmaster.TPGauge;
+                    jobGauge.maxValue = 100;
+                    jobGauge.minValue = 0;
+
+                    if (jobGauge.currentValue > jobGauge.maxValue) jobGauge.currentValue = jobGauge.maxValue;
+                    if (jobGauge.currentValue <= jobGauge.minValue)
+                    {
+                        jobGauge.fullColor = ColorHelper.ColorToRGBColor(_colorPalette.JobBSTNegative.Color);
+                        jobGauge.currentValue = jobGauge.minValue;
+                    }
+
+                    break;
                 case Actor.Job.Unknown:
                 default:
                     return null;

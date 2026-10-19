@@ -1047,5 +1047,11 @@
   "Umbral Duststorms (Base)": "影の砂嵐（基本）",
   "Umbral Duststorms (Highlight)": "影の砂嵐（ハイライト）",
   "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "青魔道士にはジョブゲージがないため、このレイヤーは暗いままです。このジョブには別のレイヤータイプを選択してください。",
-  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "魔獣使いにはジョブゲージがないため、このレイヤーは暗いままです。このジョブには別のレイヤータイプを選択してください。"
+  "BST: Tactical Points": "BST: 戦術ポイント",
+  "BST: Pet Tactical Points": "BST: ペット戦術ポイント",
+  "BST: Natural Instinct": "BST: 自然本能",
+  "BST: Blank Key": "BST: 空のキー",
+  "Tactical Points (0–100). Your own TP pool, spent on Beastmaster abilities.": "戦術ポイント（0～100）。自分自身のTPプールで、ビーストマスターのアビリティに消費されます。",
+  "Pet Tactical Points (0–100). The active pet's own pool, spent by its abilities rather than yours.": "ペット戦術ポイント（0～100）。アクティブなペット自身のTPプールで、あなたのアビリティではなくペットのアビリティによって消費されます。",
+  "Natural Instinct (0–3). Stacks built by the Instinctual combo.": "自然本能（0～3）。本能コンボによって蓄積されるスタックです。"
 }

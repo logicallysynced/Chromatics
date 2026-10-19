@@ -1046,5 +1046,11 @@
   "Umbral Duststorms (Base)": "暗影尘暴（基础）",
   "Umbral Duststorms (Highlight)": "暗影尘暴（高光）",
   "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "青魔法师没有职业量谱，因此此图层会保持暗淡。请为该职业选择另一种图层类型。",
-  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "驯兽师没有职业量谱，因此此图层会保持暗淡。请为该职业选择另一种图层类型。"
+  "BST: Tactical Points": "BST：战术点数",
+  "BST: Pet Tactical Points": "BST：宠物战术点数",
+  "BST: Natural Instinct": "BST：自然本能",
+  "BST: Blank Key": "BST：空白键",
+  "Tactical Points (0–100). Your own TP pool, spent on Beastmaster abilities.": "战术点数（0–100）。你自己的 TP 储备，用于施放兽王能力。",
+  "Pet Tactical Points (0–100). The active pet's own pool, spent by its abilities rather than yours.": "宠物战术点数（0–100）。当前宠物自己的储备，由它的能力消耗，而不是消耗你的储备。",
+  "Natural Instinct (0–3). Stacks built by the Instinctual combo.": "自然本能（0–3）。通过本能连击积累的层数。"
 }

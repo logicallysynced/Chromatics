@@ -1486,6 +1486,10 @@ namespace Chromatics.Models
         public ColorMapping JobVPRReawakened = new("VPR: Reawakened Timer", PaletteTypes.JobGauges, Color.Gold);
         public ColorMapping JobVPRSerpentCombo = new("VPR: Serpent Combo Ready", PaletteTypes.JobGauges, Color.YellowGreen);
         public ColorMapping JobVPRNegative = new("VPR: Blank Key", PaletteTypes.JobGauges, Color.Black);
+        public ColorMapping JobBSTTacticalPoints = new("BST: Tactical Points", PaletteTypes.JobGauges, Color.Peru);
+        public ColorMapping JobBSTPetTacticalPoints = new("BST: Pet Tactical Points", PaletteTypes.JobGauges, Color.Goldenrod);
+        public ColorMapping JobBSTInstinct = new("BST: Natural Instinct", PaletteTypes.JobGauges, Color.OrangeRed);
+        public ColorMapping JobBSTNegative = new("BST: Blank Key", PaletteTypes.JobGauges, Color.Black);
         public ColorMapping JobPCTPalette = new("PCT: Palette Gauge", PaletteTypes.JobGauges, Color.DodgerBlue);
         public ColorMapping JobPCTLandscape = new("PCT: Canvas Landscape", PaletteTypes.JobGauges, Color.BlueViolet);
         public ColorMapping JobPCTMaw = new("PCT: Canvas Maw", PaletteTypes.JobGauges, Color.Purple);

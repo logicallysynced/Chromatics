@@ -1046,5 +1046,11 @@
   "Umbral Duststorms (Base)": "Tormentas de polvo sombrías (base)",
   "Umbral Duststorms (Highlight)": "Tormentas de polvo sombrías (resaltado)",
   "Blue Mage has no job gauge, so this layer stays dark. Pick another layer type for this job.": "El Mago Azul no tiene indicador de job, por lo que esta capa permanece oscura. Elige otro tipo de capa para este job.",
-  "Beastmaster has no job gauge, so this layer stays dark. Pick another layer type for this job.": "El Maestro de Bestias no tiene indicador de job, por lo que esta capa permanece oscura. Elige otro tipo de capa para este job."
+  "BST: Tactical Points": "BST: Puntos tácticos",
+  "BST: Pet Tactical Points": "BST: Puntos tácticos de la mascota",
+  "BST: Natural Instinct": "BST: Instinto natural",
+  "BST: Blank Key": "BST: Tecla en blanco",
+  "Tactical Points (0–100). Your own TP pool, spent on Beastmaster abilities.": "Puntos tácticos (0–100). Tu propia reserva de PT, que se gasta en habilidades de Maestro de bestias.",
+  "Pet Tactical Points (0–100). The active pet's own pool, spent by its abilities rather than yours.": "Puntos tácticos de la mascota (0–100). La reserva propia de la mascota activa, que gastan sus habilidades en lugar de las tuyas.",
+  "Natural Instinct (0–3). Stacks built by the Instinctual combo.": "Instinto natural (0–3). Acumulaciones generadas por el combo instintivo."
 }
