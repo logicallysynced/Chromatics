@@ -341,7 +341,7 @@ namespace Chromatics
             // WSAECONNABORTED / OperationAborted. They're cosmetic — the
             // dependent task is already on its way out. Crashing the whole
             // app for them spams users with the crash dialog.
-            if (IsBenignBackgroundException(e.Exception))
+            if (Helpers.BackgroundFaultPolicy.IsBenign(e.Exception))
             {
                 // Logged rather than dropped: silently swallowing these left no
                 // trace of which device stopped answering.
@@ -354,45 +354,6 @@ namespace Chromatics
             CrashHandler.HandleCrash(e.Exception);
         }
 
-        private static bool IsBenignBackgroundException(Exception ex)
-        {
-            if (ex is null) return false;
-            if (ex is AggregateException agg)
-            {
-                var flat = agg.Flatten();
-                return flat.InnerExceptions.Count > 0 && flat.InnerExceptions.All(IsBenignBackgroundException);
-            }
-            return ex switch
-            {
-                System.Net.Sockets.SocketException se => IsBenignSocketError(se.SocketErrorCode),
-                System.IO.IOException io => io.InnerException is System.Net.Sockets.SocketException ise && IsBenignSocketError(ise.SocketErrorCode),
-                ObjectDisposedException => true,
-                OperationCanceledException => true,
-                _ => false,
-            };
-        }
-
-        private static bool IsBenignSocketError(System.Net.Sockets.SocketError code) => code switch
-        {
-            System.Net.Sockets.SocketError.OperationAborted => true,
-            System.Net.Sockets.SocketError.ConnectionReset => true,
-            System.Net.Sockets.SocketError.ConnectionAborted => true,
-            System.Net.Sockets.SocketError.Interrupted => true,
-            System.Net.Sockets.SocketError.Shutdown => true,
-            System.Net.Sockets.SocketError.NetworkReset => true,
-
-            // A smart light or SDK server that is switched off, moved, or not
-            // listening is the user's network, never a fault worth killing the
-            // app over. Connection refused reached the crash dialog on 4.3.31
-            // (CHROMATICS-1P) because it was missing here.
-            System.Net.Sockets.SocketError.ConnectionRefused => true,
-            System.Net.Sockets.SocketError.TimedOut => true,
-            System.Net.Sockets.SocketError.HostUnreachable => true,
-            System.Net.Sockets.SocketError.NetworkUnreachable => true,
-            System.Net.Sockets.SocketError.HostDown => true,
-            System.Net.Sockets.SocketError.NetworkDown => true,
-            _ => false,
-        };
 
         private static bool ThereCanOnlyBeOne()
         {

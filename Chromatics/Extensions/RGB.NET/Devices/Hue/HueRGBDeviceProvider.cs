@@ -105,7 +105,13 @@ namespace Chromatics.Extensions.RGB.NET.Devices.Hue
                             // Non-fatal — falls back to light.Type below, which only loses
                             // accurate per-bulb layout/gamut. The bridge would be non-CLIP-v2
                             // for this to fail, which is unsupported anyway.
-                            Logger.WriteConsole(Enums.LoggerTypes.Error, $"[Hue] Failed to enumerate devices for model id lookup: {ex.Message}");
+                            //
+                            // A bridge that times out or refuses the connection is the user's
+                            // network, so it reports to the console tab only (CHROMATICS-1X).
+                            bool unreachable = Chromatics.Helpers.NetworkFailureHelper.IsUnreachable(ex);
+                            Logger.WriteConsole(unreachable ? Enums.LoggerTypes.Devices : Enums.LoggerTypes.Error,
+                                $"[Hue] Failed to enumerate devices for model id lookup: {ex.Message}",
+                                forwardToSentry: !unreachable);
                         }
 
                         // Discover lights on the bridge

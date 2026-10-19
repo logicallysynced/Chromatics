@@ -181,7 +181,7 @@ namespace Chromatics.Core
                     // integration and would otherwise spam the Issues tab; our
                     // own UnobservedTaskExceptionHandler already filters them
                     // from the crash flow on the same criteria.
-                    if (evt.Exception != null && IsBenignBackgroundException(evt.Exception))
+                    if (evt.Exception != null && Helpers.BackgroundFaultPolicy.IsBenign(evt.Exception))
                         return null;
 
                     var s = _settings;
@@ -556,46 +556,6 @@ namespace Chromatics.Core
             _initialized = false;
         }
 
-        // Mirror of Program.IsBenignBackgroundException — kept private to
-        // SentryService so the BeforeSend filter doesn't take a hard dep on
-        // Program. Both must agree on what's "benign" or events get dropped
-        // here while the crash flow still kills the app, or vice versa.
-        private static bool IsBenignBackgroundException(Exception ex)
-        {
-            if (ex is null) return false;
-            if (ex is AggregateException agg)
-            {
-                var flat = agg.Flatten();
-                return flat.InnerExceptions.Count > 0 && flat.InnerExceptions.All(IsBenignBackgroundException);
-            }
-            return ex switch
-            {
-                System.Net.Sockets.SocketException se => IsBenignSocketError(se.SocketErrorCode),
-                System.IO.IOException io => io.InnerException is System.Net.Sockets.SocketException ise && IsBenignSocketError(ise.SocketErrorCode),
-                ObjectDisposedException => true,
-                OperationCanceledException => true,
-                // Avalonia's WndProc raises ShutdownRequested a second time
-                // (e.g. system logoff / WM_CLOSE on a transient window) after
-                // our OnClosed already called desktop.Shutdown(). DoShutdown
-                // throws because _isShuttingDown is already true. We Process.Kill
-                // immediately after, so the throw never affects the user — but
-                // Sentry's UnhandledException integration still captures it as
-                // handled noise. Filter at source.
-                InvalidOperationException ioe when ioe.Message.StartsWith("Application is already shutting down", StringComparison.Ordinal) => true,
-                _ => false,
-            };
-        }
-
-        private static bool IsBenignSocketError(System.Net.Sockets.SocketError code) => code switch
-        {
-            System.Net.Sockets.SocketError.OperationAborted => true,
-            System.Net.Sockets.SocketError.ConnectionReset => true,
-            System.Net.Sockets.SocketError.ConnectionAborted => true,
-            System.Net.Sockets.SocketError.Interrupted => true,
-            System.Net.Sockets.SocketError.Shutdown => true,
-            System.Net.Sockets.SocketError.NetworkReset => true,
-            _ => false,
-        };
     }
 
 }

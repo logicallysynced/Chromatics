@@ -1441,11 +1441,19 @@ namespace Chromatics.Core
         // devices show up in the Mapping tab and never light. Nothing reaches
         // the console tab and nothing reaches our caller.
         //
-        // Initializing with throwExceptions: true lets the probe below decide
-        // per exception. Non-critical ones keep today's behaviour exactly
-        // (logged, provider keeps going); critical ones abort the provider and
-        // are returned to the caller. Either way the exception is caught here,
-        // so one bad provider never stops the others from loading.
+        // The probe below decides per exception instead: ExceptionEventArgs.Throw
+        // is the only gate Throw() checks, and a handler can set it regardless of
+        // what Initialize was passed. Non-critical exceptions keep today's
+        // behaviour (logged, provider keeps going); critical ones abort the
+        // provider and are returned to the caller. Either way the exception is
+        // caught here, so one bad provider never stops the others loading.
+        //
+        // throwExceptions stays false on purpose. Initialize assigns it to the
+        // provider's ThrowsExceptions property and never clears it, so passing
+        // true left every later Throw() call throwing for the rest of the
+        // provider's life - including from update-queue send faults, where a
+        // dropped bulb connection became an unobserved task exception and took
+        // the app down (CHROMATICS-1W/1S/1V/1R/1T).
         private static Exception LoadProviderWithDiagnostics(IRGBDeviceProvider provider)
         {
             Exception captured = null;
@@ -1469,14 +1477,16 @@ namespace Chromatics.Core
             }
 
             provider.Exception += Probe;
+            bool initialized = true;
             try
             {
                 if (!provider.IsInitialized)
-                    provider.Initialize(RGBDeviceType.All, throwExceptions: true);
+                    initialized = provider.Initialize(RGBDeviceType.All, throwExceptions: false);
             }
             catch (Exception ex)
             {
                 captured ??= ex;
+                initialized = false;
             }
             finally
             {
@@ -1490,6 +1500,16 @@ namespace Chromatics.Core
                 Logger.WriteConsole(Enums.LoggerTypes.Error,
                     $"[{label}] failed to start: {captured.Message}", forwardToSentry: false);
                 LogLogitechSdkHintIfNeeded(captured);
+            }
+            else if (!initialized)
+            {
+                // Initialize swallows an RGBDeviceException thrown straight out
+                // of a provider's SDK setup, rather than routing it through
+                // Throw() where the probe would see it, so all we get back is
+                // false. Say the provider failed rather than let it look loaded.
+                Logger.WriteConsole(Enums.LoggerTypes.Error,
+                    $"[{label}] failed to start and gave no reason. Check that the vendor software is installed and running.",
+                    forwardToSentry: false);
             }
             else if (provider.Devices.Count == 0)
             {

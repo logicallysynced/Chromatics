@@ -2,6 +2,12 @@
 
 All notable changes to Chromatics are documented here.
 
+## 4.4.1
+
+- Fixed Chromatics closing with a crash dialog when a smart light dropped its connection while being written to. Yeelight bulbs on a busy network hit this repeatedly.
+- Fixed the same crash when a SteelSeries device was written to during shutdown.
+- A Hue bridge that stops answering during startup now reports to the console tab instead of as an application error.
+
 ## 4.4.0
 
 - Added support for FFXIV patch 7.56.
