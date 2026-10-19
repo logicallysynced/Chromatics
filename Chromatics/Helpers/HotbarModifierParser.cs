@@ -15,37 +15,47 @@ namespace Chromatics.Helpers
     /// Matching the English spellings alone meant every modified keybind was
     /// invisible outside an English client.
     ///
-    /// Spellings for the non-English clients are best effort. Anything this
-    /// cannot place is returned through <c>unrecognised</c> so the caller can
-    /// name it in the console tab, which turns a silent miss into one line a
-    /// user can report and one entry to add here.
+    /// The spellings below are the game's own, read out of the Addon sheet
+    /// rows 7915 (Ctrl), 7916 (Alt) and 7917 (Shift) in every client language:
+    ///
+    ///     en / ja / chs / tc / ko   Ctrl   Alt   Shift
+    ///     de                        Strg   Alt   Umsch
+    ///     fr                        Ctrl   Alt   Maj.
+    ///
+    /// There is no Spanish client, so a Spanish Chromatics install reads
+    /// whichever of these its game is running.
+    ///
+    /// Anything this cannot place is returned through <c>unrecognised</c> so the
+    /// caller can name it in the console tab, which turns a silent miss into one
+    /// line a user can report and one entry to add here.
     /// </remarks>
     public static class HotbarModifierParser
     {
-        // Lower-cased and width-normalised before lookup, so only one spelling
-        // per name is needed here.
+        // Lower-cased, width-folded and stripped of punctuation before lookup,
+        // so "Maj." arrives here as "maj" and needs no entry of its own.
         private static readonly HashSet<string> CtrlNames = new(StringComparer.Ordinal)
         {
-            "ctrl",       // English, French, Japanese, Chinese, Korean
-            "ctl",
+            "ctrl",       // en, fr, ja, chs, tc, ko
+            "strg",       // de
+            "ctl",        // tolerated variants
             "control",
-            "strg",       // German (Steuerung)
             "steuerung",
         };
 
         private static readonly HashSet<string> AltNames = new(StringComparer.Ordinal)
         {
-            "alt",        // same across every client
+            "alt",        // every client
             "altgr",
             "alt gr",
         };
 
         private static readonly HashSet<string> ShiftNames = new(StringComparer.Ordinal)
         {
-            "shift",      // English, Japanese, Chinese, Korean
-            "umschalt",   // German
+            "shift",      // en, ja, chs, tc, ko
+            "umsch",      // de - the sheet abbreviates it, not "Umschalt"
+            "maj",        // fr, from "Maj."
+            "umschalt",   // tolerated variants
             "umschalttaste",
-            "maj",        // French (Majuscule)
             "majuscule",
         };
 

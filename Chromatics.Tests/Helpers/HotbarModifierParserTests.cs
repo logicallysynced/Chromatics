@@ -4,16 +4,18 @@ namespace Chromatics.Tests.Helpers;
 
 public class HotbarModifierParserTests
 {
+    // The exact strings the game ships, from Addon sheet rows 7915 / 7916 / 7917.
     [Theory]
-    // English client.
+    // en, and the same for ja / chs / tc / ko.
     [InlineData("Ctrl", true, false, false)]
     [InlineData("Alt", false, true, false)]
     [InlineData("Shift", false, false, true)]
-    // German: Strg for Ctrl, Umschalt for Shift.
+    // de. The sheet abbreviates Shift to "Umsch", which an earlier guess of
+    // "Umschalt" would have missed, leaving German keybinds dark.
     [InlineData("Strg", true, false, false)]
-    [InlineData("Umschalt", false, false, true)]
-    // French: Maj for Shift.
-    [InlineData("Maj", false, false, true)]
+    [InlineData("Umsch", false, false, true)]
+    // fr, including the trailing period the sheet carries.
+    [InlineData("Maj.", false, false, true)]
     public void EachClientSpellingResolves(string name, bool ctrl, bool alt, bool shift)
     {
         var parsed = HotbarModifierParser.Parse([name], out var unrecognised);
@@ -44,9 +46,11 @@ public class HotbarModifierParserTests
     [Fact]
     public void CombinationsResolveTogether()
     {
-        var parsed = HotbarModifierParser.Parse(["Strg", "Umschalt"], out _);
+        // "Strg+Umsch+1" on a German client.
+        Assert.Equal((true, false, true), HotbarModifierParser.Parse(["Strg", "Umsch"], out _));
 
-        Assert.Equal((true, false, true), parsed);
+        // "Ctrl+Alt+Maj.+1" on a French client.
+        Assert.Equal((true, true, true), HotbarModifierParser.Parse(["Ctrl", "Alt", "Maj."], out _));
     }
 
     [Fact]
